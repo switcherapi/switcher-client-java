@@ -19,6 +19,7 @@ import com.switcher.client.domain.criteria.Domain;
 import com.switcher.client.domain.criteria.Group;
 import com.switcher.client.domain.criteria.Strategy;
 import com.switcher.client.exception.SwitcherInvalidOperationException;
+import com.switcher.client.exception.SwitcherInvalidOperationInputException;
 import com.switcher.client.exception.SwitcherInvalidStrategyException;
 import com.switcher.client.exception.SwitcherInvalidTimeFormat;
 import com.switcher.client.exception.SwitcherKeyNotFoundException;
@@ -178,10 +179,7 @@ public class ClientOfflineServiceFacade {
 		
 		switch (strategy.getOperation()) {
 		case Entry.EXIST:
-			return Arrays.stream(strategy.getValues())
-					.filter(val -> val.equals(switcherInput.getInput()))
-					.findFirst()
-					.isPresent();
+			return Arrays.stream(strategy.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
 		case Entry.NOT_EXIST:
 			strategy.setOperation(Entry.EXIST);
 			return !processValue(strategy, switcherInput);
@@ -194,7 +192,8 @@ public class ClientOfflineServiceFacade {
 		}
 	}
 
-	private boolean processDate(final Strategy strategy, final Entry switcherInput) throws Exception {
+	private boolean processDate(final Strategy strategy, final Entry switcherInput)
+			throws SwitcherInvalidOperationException, SwitcherInvalidTimeFormat, SwitcherInvalidOperationInputException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(DEBUG_STRATEGY, strategy));
@@ -223,6 +222,8 @@ public class ClientOfflineServiceFacade {
 
 					return inputDate.after(stgDate) && inputDate.before(stgDate2);
 				}
+				
+				throw new SwitcherInvalidOperationInputException(Entry.BETWEEN.toString());
 			default:
 				throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 			}
@@ -234,7 +235,8 @@ public class ClientOfflineServiceFacade {
 
 	}
 
-	private boolean processTime(final Strategy strategy, final Entry switcherInput) throws Exception {
+	private boolean processTime(final Strategy strategy, final Entry switcherInput) 
+			throws SwitcherInvalidOperationException, SwitcherInvalidTimeFormat, SwitcherInvalidOperationInputException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(DEBUG_STRATEGY, strategy));
@@ -266,6 +268,8 @@ public class ClientOfflineServiceFacade {
 
 					return inputDate.after(stgDate) && inputDate.before(stgDate2);
 				}
+				
+				throw new SwitcherInvalidOperationInputException(Entry.BETWEEN.toString());
 			default:
 				throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 			}

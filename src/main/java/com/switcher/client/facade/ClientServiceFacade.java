@@ -103,7 +103,7 @@ public class ClientServiceFacade {
 	private void setSilentModeExpiration(final Map<String, Object> properties) throws Exception {
 		
 		if (properties.containsKey(SwitcherContextParam.SILENT_MODE) &&
-				(Boolean) properties.get(SwitcherContextParam.SILENT_MODE)) {
+				(boolean) properties.get(SwitcherContextParam.SILENT_MODE)) {
 			
 			final String addValue = (String) properties.get(SwitcherContextParam.RETRY_AFTER);
 			

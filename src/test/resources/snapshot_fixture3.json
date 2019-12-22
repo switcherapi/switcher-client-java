@@ -37,7 +37,7 @@
                                     "activated": true,
                                     "operation": "BETWEEN",
                                     "values": [
-                                        "10.0.0.1"
+                                        "10.0.0.1", "10.0.0.2"
                                     ]
                                 }
                             ]
@@ -86,6 +86,38 @@
                                     "operation": "EXIST",
                                     "values": [
                                         "12:00", "01:00"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "key": "USECASE16",
+                            "description": "It contains an invalid strategy operation values. Should have 2",
+                            "activated": true,
+                            "components": ["switcher-client"],
+                            "strategies": [
+                                {
+                                    "strategy": "DATE_VALIDATION",
+                                    "activated": true,
+                                    "operation": "BETWEEN",
+                                    "values": [
+                                        "2019-12-10"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "key": "USECASE17",
+                            "description": "It contains an invalid strategy operation values. Should have 2",
+                            "activated": true,
+                            "components": ["switcher-client"],
+                            "strategies": [
+                                {
+                                    "strategy": "TIME_VALIDATION",
+                                    "activated": true,
+                                    "operation": "BETWEEN",
+                                    "values": [
+                                        "12:00"
                                     ]
                                 }
                             ]

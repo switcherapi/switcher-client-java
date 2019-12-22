@@ -61,7 +61,7 @@ public class SwitcherOnline implements SwitcherExecutor {
 	private boolean executeSilentCriteria(final Switcher switcher, final Exception e) throws Exception {
 		
 		if (properties.containsKey(SwitcherContextParam.SILENT_MODE) &&
-				(Boolean) properties.get(SwitcherContextParam.SILENT_MODE)) {
+				(boolean) properties.get(SwitcherContextParam.SILENT_MODE)) {
 			final Domain domain = SnapshotLoader.loadSnapshot((String) this.properties.get(SwitcherContextParam.SNAPSHOT_LOCATION));
 			final CriteriaResponse response = ClientOfflineServiceFacade.getInstance().executeCriteria(switcher, domain);
 			logger.debug(String.format("[Silent] response: %s", response));

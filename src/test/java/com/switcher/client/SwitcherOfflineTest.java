@@ -18,6 +18,7 @@ import com.switcher.client.domain.AuthRequest;
 import com.switcher.client.domain.Entry;
 import com.switcher.client.domain.Switcher;
 import com.switcher.client.exception.SwitcherInvalidOperationException;
+import com.switcher.client.exception.SwitcherInvalidOperationInputException;
 import com.switcher.client.exception.SwitcherInvalidStrategyException;
 import com.switcher.client.exception.SwitcherInvalidTimeFormat;
 import com.switcher.client.exception.SwitcherKeyNotFoundException;
@@ -512,5 +513,24 @@ public class SwitcherOfflineTest {
 		switcher.isItOn();
 	}
 
+	@Test(expected = SwitcherInvalidOperationInputException.class)
+	public void offlineShouldReturnError_InvalidValuesForDate() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE16");
+		switcher.prepareEntry(new Entry(Entry.DATE, "2019-12-10"));
+		switcher.isItOn();
+	}
+	
+	@Test(expected = SwitcherInvalidOperationInputException.class)
+	public void offlineShouldReturnError_InvalidValuesForTime() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE17");
+		switcher.prepareEntry(new Entry(Entry.TIME, "12:00"));
+		switcher.isItOn();
+	}
 
 }
