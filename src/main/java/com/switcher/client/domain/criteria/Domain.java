@@ -5,8 +5,6 @@ import java.util.Arrays;
 public class Domain extends SwitcherElement {
 	
 	private Group[] group;
-	
-	public Domain() {}
 
 	public Group[] getGroup() {
 		

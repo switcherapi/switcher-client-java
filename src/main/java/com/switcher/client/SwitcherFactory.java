@@ -13,7 +13,7 @@ import com.switcher.client.utils.SwitcherContextParam;
 
 public class SwitcherFactory {
 	
-	final static Logger logger = Logger.getLogger(SwitcherFactory.class);
+	private static final Logger logger = Logger.getLogger(SwitcherFactory.class);
 	
 	private static SwitcherExecutor instance;
 	

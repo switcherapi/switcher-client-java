@@ -5,8 +5,6 @@ import java.util.Arrays;
 public class Group extends SwitcherElement {
 	
 	private Config[] config;
-	
-	public Group() {}
 
 	public Config[] getConfig() {
 		

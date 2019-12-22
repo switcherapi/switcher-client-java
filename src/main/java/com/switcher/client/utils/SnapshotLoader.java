@@ -14,7 +14,7 @@ import com.switcher.client.exception.SwitcherSnapshotLoadException;
 
 public class SnapshotLoader {
 	
-	final static Logger logger = Logger.getLogger(SnapshotLoader.class);
+	private static final Logger logger = Logger.getLogger(SnapshotLoader.class);
 
 	public static Domain loadSnapshot(final String snapshotLocation) throws SwitcherSnapshotLoadException {
 		

@@ -6,8 +6,6 @@ public class AuthRequest {
 	private String component;
 	private String environment;
 	
-	public AuthRequest() {}
-	
 	public String getDomain() {
 		
 		return domain;

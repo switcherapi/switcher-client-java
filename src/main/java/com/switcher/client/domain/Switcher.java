@@ -29,7 +29,7 @@ public class Switcher {
 	public void prepareEntry(final Entry entry, final boolean add) {
 		
 		if (this.entry == null) {
-			this.entry = new ArrayList<Entry>();
+			this.entry = new ArrayList<>();
 		}
 		
 		if (!add) this.entry.clear();

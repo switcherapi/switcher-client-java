@@ -7,8 +7,6 @@ public class Config extends SwitcherElement {
 	private String key;
 	private Strategy[] strategies;
 	
-	public Config() {}
-	
 	public String getKey() {
 		
 		return key;

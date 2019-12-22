@@ -20,7 +20,7 @@ import com.switcher.client.utils.SwitcherUtils;
 
 public class ClientServiceFacade {
 	
-	final static Logger logger = Logger.getLogger(ClientServiceFacade.class);
+	private static final Logger logger = Logger.getLogger(ClientServiceFacade.class);
 	
 	private static ClientServiceFacade instance;
 	

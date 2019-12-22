@@ -15,7 +15,7 @@ import com.switcher.client.utils.SwitcherContextParam;
 
 public class SwitcherOnline implements SwitcherExecutor {
 	
-	final static Logger logger = Logger.getLogger(SwitcherOnline.class);
+	private static final Logger logger = Logger.getLogger(SwitcherOnline.class);
 
 	private Map<String, Object> properties;
 	

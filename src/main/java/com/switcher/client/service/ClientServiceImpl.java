@@ -18,7 +18,7 @@ import com.switcher.client.utils.SwitcherContextParam;
 
 public class ClientServiceImpl implements ClientService {
 	
-	final static Logger logger = Logger.getLogger(ClientServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(ClientServiceImpl.class);
 	
 	private Client client;
 	

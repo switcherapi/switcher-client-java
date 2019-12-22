@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 
 public class SwitcherUtils {
 	
-	final static Logger logger = Logger.getLogger(SwitcherUtils.class);
+	private static final Logger logger = Logger.getLogger(SwitcherUtils.class);
 	
 	public static Date addTimeDuration(final String addValue, final Date date) throws Exception {
 		

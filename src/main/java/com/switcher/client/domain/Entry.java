@@ -43,6 +43,8 @@ public class Entry {
 		
 		this.input = input;
 	}
+	
+	
 
 	@Override
 	public String toString() {
@@ -50,6 +52,15 @@ public class Entry {
 		return "Entry [strategy=" + strategy + ", input=" + input + "]";
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((input == null) ? 0 : input.hashCode());
+		result = prime * result + ((strategy == null) ? 0 : strategy.hashCode());
+		return result;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		

@@ -90,7 +90,7 @@ public class SwitcherOnlineTest {
 	
 	@Test
 	public void shouldReturnTrue_differentCalls() throws Exception {
-		List<Entry> entries = new ArrayList<Entry>();
+		List<Entry> entries = new ArrayList<>();
 		entries.add(new Entry(Entry.DATE, "2019-12-10"));
 		
 		Switcher switcher = generateSwitcherMockTrue(200);
@@ -101,7 +101,7 @@ public class SwitcherOnlineTest {
 	
 	@Test
 	public void shouldReturnInputRequest() throws Exception {
-		List<Entry> entries = new ArrayList<Entry>();
+		List<Entry> entries = new ArrayList<>();
 		entries.add(new Entry(Entry.DATE, "2019-12-10"));
 		
 		Switcher switcher = generateSwitcherMockTrue(200);

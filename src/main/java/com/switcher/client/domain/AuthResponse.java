@@ -5,8 +5,6 @@ public class AuthResponse {
 	private String token;
 	private long exp;
 	
-	public AuthResponse() {}
-
 	public String getToken() {
 		
 		return this.token;

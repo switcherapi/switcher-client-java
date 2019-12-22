@@ -8,8 +8,6 @@ public class Strategy extends SwitcherElement {
 	private String operation;
 	private String[] values;
 	
-	public Strategy() {}
-	
 	public String getStrategy() {
 		
 		return strategy;

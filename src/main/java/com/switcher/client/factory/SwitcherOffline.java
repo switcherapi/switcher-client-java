@@ -13,7 +13,7 @@ import com.switcher.client.utils.SwitcherContextParam;
 
 public class SwitcherOffline implements SwitcherExecutor {
 	
-	final static Logger logger = Logger.getLogger(SwitcherOffline.class);
+	private static final Logger logger = Logger.getLogger(SwitcherOffline.class);
 	
 	private String snapshotLocation;
 	

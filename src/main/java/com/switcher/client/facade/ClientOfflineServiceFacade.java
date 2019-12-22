@@ -23,7 +23,10 @@ import com.switcher.client.utils.SwitcherUtils;
 
 public class ClientOfflineServiceFacade {
 	
-	final static Logger logger = Logger.getLogger(ClientOfflineServiceFacade.class);
+	private static final String DEBUG_SWITCHER_INPUT = "switcherInput: %s";
+	private static final String DEBUG_STRATEGY = "strategy: %s";
+
+	private static final Logger logger = Logger.getLogger(ClientOfflineServiceFacade.class);
 	
 	public static final String DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
 	public static final String CIDR_REGEX = "^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))";
@@ -134,8 +137,8 @@ public class ClientOfflineServiceFacade {
 	private boolean processNetwork(final Strategy strategy, final Entry switcherInput) {
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("strategy: %s", strategy));
-			logger.debug(String.format("switcherInput: %s", switcherInput));
+			logger.debug(String.format(DEBUG_STRATEGY, strategy));
+			logger.debug(String.format(DEBUG_SWITCHER_INPUT, switcherInput));
 		}
 
 		SubnetUtils subUtils;
@@ -167,8 +170,8 @@ public class ClientOfflineServiceFacade {
 	private boolean processValue(final Strategy strategy, final Entry switcherInput) {
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("strategy: %s", strategy));
-			logger.debug(String.format("switcherInput: %s", switcherInput));
+			logger.debug(String.format(DEBUG_STRATEGY, strategy));
+			logger.debug(String.format(DEBUG_SWITCHER_INPUT, switcherInput));
 		}
 		
 		switch (strategy.getOperation()) {
@@ -193,8 +196,8 @@ public class ClientOfflineServiceFacade {
 	private boolean processDate(final Strategy strategy, final Entry switcherInput) throws Exception {
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("strategy: %s", strategy));
-			logger.debug(String.format("switcherInput: %s", switcherInput));
+			logger.debug(String.format(DEBUG_STRATEGY, strategy));
+			logger.debug(String.format(DEBUG_SWITCHER_INPUT, switcherInput));
 		}
 		
 		try {
@@ -234,8 +237,8 @@ public class ClientOfflineServiceFacade {
 	private boolean processTime(final Strategy strategy, final Entry switcherInput) throws Exception {
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("strategy: %s", strategy));
-			logger.debug(String.format("switcherInput: %s", switcherInput));
+			logger.debug(String.format(DEBUG_STRATEGY, strategy));
+			logger.debug(String.format(DEBUG_SWITCHER_INPUT, switcherInput));
 		}
 		
 		try {
