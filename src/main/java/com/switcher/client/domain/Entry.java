@@ -29,22 +29,10 @@ public class Entry {
 		return strategy;
 	}
 	
-	public void setStrategy(String strategy) {
-		
-		this.strategy = strategy;
-	}
-	
 	public String getInput() {
 		
 		return input;
 	}
-	
-	public void setInput(String input) {
-		
-		this.input = input;
-	}
-	
-	
 
 	@Override
 	public String toString() {

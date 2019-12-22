@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.switcher.client.SwitcherFactory;
-import com.switcher.client.domain.Entry;
 import com.switcher.client.domain.Switcher;
 import com.switcher.client.utils.SwitcherContextParam;
 

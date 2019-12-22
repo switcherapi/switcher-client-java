@@ -49,9 +49,4 @@ public class SwitcherOffline implements SwitcherExecutor {
 		this.snapshotLocation = (String) properties.get(SwitcherContextParam.SNAPSHOT_LOCATION);
 	}
 
-	public String getSnapshotLocation() {
-		
-		return this.snapshotLocation;
-	}
-
 }

@@ -9,15 +9,4 @@ public class Criteria {
 		return domain;
 	}
 
-	public void setDomain(Domain domain) {
-		
-		this.domain = domain;
-	}
-
-	@Override
-	public String toString() {
-		
-		return "Criteria [domain=" + domain + "]";
-	}
-
 }

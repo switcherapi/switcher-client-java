@@ -9,20 +9,10 @@ abstract class SwitcherElement {
 		
 		return description;
 	}
-
-	public void setDescription(String description) {
-		
-		this.description = description;
-	}
-
+	
 	public boolean isActivated() {
 		
 		return activated;
-	}
-	
-	public void setActivated(boolean activated) {
-		
-		this.activated = activated;
 	}
 
 }

@@ -18,7 +18,11 @@ import com.switcher.client.domain.criteria.Config;
 import com.switcher.client.domain.criteria.Domain;
 import com.switcher.client.domain.criteria.Group;
 import com.switcher.client.domain.criteria.Strategy;
+import com.switcher.client.exception.SwitcherInvalidOperationException;
+import com.switcher.client.exception.SwitcherInvalidStrategyException;
+import com.switcher.client.exception.SwitcherInvalidTimeFormat;
 import com.switcher.client.exception.SwitcherKeyNotFoundException;
+import com.switcher.client.exception.SwitcherNoInputReceivedException;
 import com.switcher.client.utils.SwitcherUtils;
 
 public class ClientOfflineServiceFacade {
@@ -61,6 +65,7 @@ public class ClientOfflineServiceFacade {
 					.orElse(null);
 
 			if (configFound != null) {
+				
 				if (!group.isActivated()) {
 					return new CriteriaResponse(false, DISABLED_GROUP);
 				}
@@ -70,13 +75,9 @@ public class ClientOfflineServiceFacade {
 				}
 
 				if (ArrayUtils.isNotEmpty(configFound.getStrategies())) {
-					try {
-						this.processOperation(configFound.getStrategies(), switcher.getEntry());
-					} catch (Exception e) {
-						logger.error(e);
-						return new CriteriaResponse(false, e.getMessage());
-					}
+					return this.processOperation(configFound.getStrategies(), switcher.getEntry());
 				}
+				
 				break;
 			}
 		}
@@ -88,13 +89,14 @@ public class ClientOfflineServiceFacade {
 		return new CriteriaResponse(true, "Success");
 	}
 
-	private boolean processOperation(final Strategy[] configStrategies, final List<Entry> input) throws Exception {
+	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input) throws Exception {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("configStrategies: %s", Arrays.toString(configStrategies)));
 			logger.debug(String.format("input: %s", Arrays.toString(input != null ? input.toArray() : ArrayUtils.EMPTY_STRING_ARRAY)));
 		}
 		
+		boolean result = true;
 		for (final Strategy strategy : configStrategies) {
 			
 			if (!strategy.isActivated()) {
@@ -105,10 +107,9 @@ public class ClientOfflineServiceFacade {
 					input.stream().filter(i -> i.getStrategy().equals(strategy.getStrategy())).findFirst().orElse(null) : null;
 
 			if (switcherInput == null) {
-				throw new Exception(String.format("Strategy %s did not receive any input", strategy.getStrategy()));
+				throw new SwitcherNoInputReceivedException(strategy.getStrategy());
 			}
-
-			boolean result = true;
+			
 			switch (strategy.getStrategy()) {
 			case Entry.VALUE:
 				result = this.processValue(strategy, switcherInput);
@@ -123,18 +124,18 @@ public class ClientOfflineServiceFacade {
 				result = this.processTime(strategy, switcherInput);
 				break;
 			default:
-				result = false;	
+				throw new SwitcherInvalidStrategyException(strategy.getStrategy());
 			}
 
 			if (!result) {
-				throw new Exception(String.format("`Strategy %s does not agree", strategy.getStrategy()));
+				return new CriteriaResponse(false, String.format("`Strategy %s does not agree", strategy.getStrategy()));
 			}
 		}
 
-		return false;
+		return new CriteriaResponse(result, "Success");
 	}
 
-	private boolean processNetwork(final Strategy strategy, final Entry switcherInput) {
+	private boolean processNetwork(final Strategy strategy, final Entry switcherInput) throws SwitcherInvalidOperationException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(DEBUG_STRATEGY, strategy));
@@ -162,12 +163,13 @@ public class ClientOfflineServiceFacade {
 			strategy.setOperation(Entry.EXIST);
 			return !processNetwork(strategy, switcherInput);
 		default:
-			break;
+			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 		}
+		
 		return false;
 	}
 
-	private boolean processValue(final Strategy strategy, final Entry switcherInput) {
+	private boolean processValue(final Strategy strategy, final Entry switcherInput) throws SwitcherInvalidOperationException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(DEBUG_STRATEGY, strategy));
@@ -188,9 +190,8 @@ public class ClientOfflineServiceFacade {
 		case Entry.NOT_EQUAL:
 			return strategy.getValues().length == 1 && !strategy.getValues()[0].equals(switcherInput.getInput());
 		default:
-			break;
+			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 		}
-		return false;
 	}
 
 	private boolean processDate(final Strategy strategy, final Entry switcherInput) throws Exception {
@@ -223,15 +224,14 @@ public class ClientOfflineServiceFacade {
 					return inputDate.after(stgDate) && inputDate.before(stgDate2);
 				}
 			default:
-				break;
+				throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 			}
 
 		} catch (ParseException e) {
 			logger.error(e);
-			throw new Exception("Something went wrong while trying to process the date validation", e);
+			throw new SwitcherInvalidTimeFormat(strategy.getStrategy(), e);
 		}
 
-		return false;
 	}
 
 	private boolean processTime(final Strategy strategy, final Entry switcherInput) throws Exception {
@@ -267,15 +267,14 @@ public class ClientOfflineServiceFacade {
 					return inputDate.after(stgDate) && inputDate.before(stgDate2);
 				}
 			default:
-				break;
+				throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 			}
 
 		} catch (ParseException e) {
 			logger.error(e);
-			throw new Exception("Something went wrong while trying to process the time validation", e);
+			throw new SwitcherInvalidTimeFormat(strategy.getStrategy(), e);
 		}
 
-		return false;
 	}
 
 }

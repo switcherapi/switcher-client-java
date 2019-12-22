@@ -12,19 +12,9 @@ public class Config extends SwitcherElement {
 		return key;
 	}
 	
-	public void setKey(String key) {
-		
-		this.key = key;
-	}
-	
 	public Strategy[] getStrategies() {
 		
 		return strategies;
-	}
-	
-	public void setStrategies(Strategy[] strategies) {
-		
-		this.strategies = strategies;
 	}
 
 	@Override

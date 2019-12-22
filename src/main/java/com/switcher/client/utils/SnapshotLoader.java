@@ -37,10 +37,6 @@ public class SnapshotLoader {
 			return data.getDomain();
 		}
 		
-		@Override
-		public String toString() {
-			return "Data [data=" + data + "]";
-		}
 	}
 
 }

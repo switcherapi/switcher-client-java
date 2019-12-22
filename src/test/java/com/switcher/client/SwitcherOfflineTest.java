@@ -17,7 +17,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.switcher.client.domain.AuthRequest;
 import com.switcher.client.domain.Entry;
 import com.switcher.client.domain.Switcher;
+import com.switcher.client.exception.SwitcherInvalidOperationException;
+import com.switcher.client.exception.SwitcherInvalidStrategyException;
+import com.switcher.client.exception.SwitcherInvalidTimeFormat;
 import com.switcher.client.exception.SwitcherKeyNotFoundException;
+import com.switcher.client.exception.SwitcherNoInputReceivedException;
 import com.switcher.client.utils.SwitcherContextParam;
 
 @RunWith(PowerMockRunner.class)
@@ -165,7 +169,7 @@ public class SwitcherOfflineTest {
 		assertFalse(switcher.isItOn());
 	}
 	
-	@Test
+	@Test(expected = SwitcherInvalidTimeFormat.class)
 	public void offlineShouldReturnFalse_dateValidationWrongFormat() throws Exception {
 		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
@@ -174,7 +178,7 @@ public class SwitcherOfflineTest {
 		Entry input = new Entry(Entry.DATE, "2019/121/13");
 		
 		switcher.prepareEntry(input);
-		assertFalse(switcher.isItOn());
+		switcher.isItOn();
 	}
 	
 	@Test
@@ -345,7 +349,7 @@ public class SwitcherOfflineTest {
 		assertFalse(switcher.isItOn());
 	}
 	
-	@Test
+	@Test(expected = SwitcherInvalidTimeFormat.class)
 	public void offlineShouldReturnFalse_timeValidationWrongFormat() throws Exception {
 		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
@@ -354,7 +358,7 @@ public class SwitcherOfflineTest {
 		Entry input = new Entry(Entry.TIME, "2019-12-10");
 		
 		switcher.prepareEntry(input);
-		assertFalse(switcher.isItOn());
+		switcher.isItOn();
 	}
 	
 	@Test
@@ -429,13 +433,13 @@ public class SwitcherOfflineTest {
 		assertFalse(switcher.isItOn());
 	}
 	
-	@Test
+	@Test(expected = SwitcherNoInputReceivedException.class)
 	public void offlineShouldReturnFalse_strategyRequiresInput() throws Exception {
 		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE63");
-		assertFalse(switcher.isItOn());
+		switcher.isItOn();
 	}
 	
 	@Test
@@ -448,6 +452,65 @@ public class SwitcherOfflineTest {
 		assertNotNull(authRequest.toString());
 	}
 	
+	@Test(expected = SwitcherNoInputReceivedException.class)
+	public void offlineShouldReturnError_InvalidStrategyInput() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE33");
+		switcher.prepareEntry(new Entry("INVALID_STRATEGY_NAME", "Value"));
+		switcher.isItOn();
+	}
+	
+	@Test(expected = SwitcherInvalidStrategyException.class)
+	public void offlineShouldReturnError_InvalidSnapshotStrategy() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
+		switcher.prepareEntry(new Entry("INVALID_NAME_FOR_VALIDATION", "Value"));
+		switcher.isItOn();
+	}
+	
+	@Test(expected = SwitcherInvalidOperationException.class)
+	public void offlineShouldReturnError_InvalidSnapshotOperationForNetwork() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE12");
+		switcher.prepareEntry(new Entry(Entry.NETWORK, "10.0.0.1"));
+		switcher.isItOn();
+	}
+	
+	@Test(expected = SwitcherInvalidOperationException.class)
+	public void offlineShouldReturnError_InvalidSnapshotOperationForValue() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE13");
+		switcher.prepareEntry(new Entry(Entry.VALUE, "Value"));
+		switcher.isItOn();
+	}
+	
+	@Test(expected = SwitcherInvalidOperationException.class)
+	public void offlineShouldReturnError_InvalidSnapshotOperationForDate() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE14");
+		switcher.prepareEntry(new Entry(Entry.DATE, "2019-12-10"));
+		switcher.isItOn();
+	}
+	
+	@Test(expected = SwitcherInvalidOperationException.class)
+	public void offlineShouldReturnError_InvalidSnapshotOperationForTime() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE15");
+		switcher.prepareEntry(new Entry(Entry.TIME, "12:00"));
+		switcher.isItOn();
+	}
 
 
 }

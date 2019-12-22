@@ -13,11 +13,6 @@ public class Strategy extends SwitcherElement {
 		return strategy;
 	}
 	
-	public void setStrategy(String strategy) {
-		
-		this.strategy = strategy;
-	}
-	
 	public String getOperation() {
 		
 		return operation;
@@ -31,11 +26,6 @@ public class Strategy extends SwitcherElement {
 	public String[] getValues() {
 		
 		return values;
-	}
-
-	public void setValues(String[] values) {
-		
-		this.values = values;
 	}
 
 	@Override

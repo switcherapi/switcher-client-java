@@ -6,31 +6,15 @@ public class AuthRequest {
 	private String component;
 	private String environment;
 	
-	public String getDomain() {
-		
-		return domain;
-	}
-	
 	public void setDomain(String domain) {
 		
 		this.domain = domain;
-	}
-	
-	public String getComponent() {
-		
-		return component;
 	}
 	
 	public void setComponent(String component) {
 		
 		this.component = component;
 	}
-	
-	public String getEnvironment() {
-		
-		return environment;
-	}
-	
 	public void setEnvironment(String environment) {
 		
 		this.environment = environment;

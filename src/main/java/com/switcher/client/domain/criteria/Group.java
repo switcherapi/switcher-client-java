@@ -11,11 +11,6 @@ public class Group extends SwitcherElement {
 		return config;
 	}
 
-	public void setConfig(Config[] config) {
-		
-		this.config = config;
-	}
-
 	@Override
 	public String toString() {
 		

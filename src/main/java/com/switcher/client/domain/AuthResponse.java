@@ -15,11 +15,6 @@ public class AuthResponse {
 		this.token = token;
 	}
 
-	public long getExp() {
-		
-		return this.exp;
-	}
-
 	public void setExp(long exp) {
 		
 		this.exp = exp;
@@ -28,12 +23,6 @@ public class AuthResponse {
 	public boolean isExpired() {
 		
 		return this.exp*1000 < System.currentTimeMillis();
-	}
-
-	@Override
-	public String toString() {
-		
-		return "AuthResponse [token=" + token + ", exp=" + exp + "]";
 	}
 	
 }

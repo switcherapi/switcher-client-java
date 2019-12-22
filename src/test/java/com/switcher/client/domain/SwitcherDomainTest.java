@@ -1,5 +1,6 @@
 package com.switcher.client.domain;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -33,6 +34,7 @@ public class SwitcherDomainTest {
 		assertTrue(!entry1.equals(entry2));
 		assertTrue(entry1.equals(entry1));
 		assertNotNull(entry1.toString());
+		assertNotEquals(entry1.hashCode(), entry2.hashCode());
 	}
 
 }
