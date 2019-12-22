@@ -9,7 +9,4 @@ addons:
       secure: ${SONAR_TOKEN}
       
 script:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=switcher-client-java 
-  
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=switcher-client-java
