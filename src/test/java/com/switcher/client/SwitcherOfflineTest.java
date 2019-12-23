@@ -451,6 +451,9 @@ public class SwitcherOfflineTest {
 		authRequest.setEnvironment((String) properties.get(SwitcherContextParam.ENVIRONMENT));
 		
 		assertNotNull(authRequest.toString());
+		assertNotNull(authRequest.getComponent());
+		assertNotNull(authRequest.getDomain());
+		assertNotNull(authRequest.getEnvironment());
 	}
 	
 	@Test(expected = SwitcherNoInputReceivedException.class)

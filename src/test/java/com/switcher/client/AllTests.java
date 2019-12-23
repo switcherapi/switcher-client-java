@@ -13,7 +13,8 @@ import com.switcher.client.utils.SwitcherUtilsTest;
         SwitcherOnlineTest.class,
         SwitcherFactoryTest.class,
         SwitcherUtilsTest.class,
-        SwitcherDomainTest.class})
+        SwitcherDomainTest.class,
+        SwitcherBypassTest.class })
 public class AllTests {
 	
 }

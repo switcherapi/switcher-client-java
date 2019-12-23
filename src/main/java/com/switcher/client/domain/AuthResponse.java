@@ -1,5 +1,8 @@
 package com.switcher.client.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonSerialize
 public class AuthResponse {
 	
 	private String token;

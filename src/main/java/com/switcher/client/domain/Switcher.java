@@ -1,7 +1,9 @@
 package com.switcher.client.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.switcher.client.factory.SwitcherExecutor;
 
@@ -14,11 +16,13 @@ public class Switcher {
 	private SwitcherExecutor context;
 	private String key;
 	private List<Entry> entry;
+	private Map<String, Boolean> bypass;
 	
 	public Switcher(final String key, final SwitcherExecutor context) {
 		
 		this.key = key;
 		this.context = context;
+		this.bypass = new HashMap<>();
 	}
 	
 	public void prepareEntry(final List<Entry> entry) {
@@ -64,7 +68,21 @@ public class Switcher {
 	
 	public boolean isItOn() throws Exception {
 		
+		if (this.bypass.containsKey(key)) {
+			return this.bypass.get(key);
+		}
+		
 		return this.context.executeCriteria(this);
+	}
+	
+	public void assume(final String key, boolean expepectedResult) {
+		
+		this.bypass.put(key, expepectedResult);
+	}
+	
+	public void forget(final String key) {
+		
+		this.bypass.remove(key);
 	}
 	
 	public GsonInputRequest getInputRequest() {

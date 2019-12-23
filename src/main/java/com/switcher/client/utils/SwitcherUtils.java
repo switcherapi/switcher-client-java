@@ -13,6 +13,8 @@ public class SwitcherUtils {
 	
 	private static final Logger logger = Logger.getLogger(SwitcherUtils.class);
 	
+	private SwitcherUtils() {}
+	
 	public static Date addTimeDuration(final String addValue, final Date date) throws Exception {
 		
 		if (logger.isDebugEnabled()) {

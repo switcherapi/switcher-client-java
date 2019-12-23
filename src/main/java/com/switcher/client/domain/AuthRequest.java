@@ -1,5 +1,8 @@
 package com.switcher.client.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonSerialize
 public class AuthRequest {
 	
 	private String domain;
@@ -15,9 +18,25 @@ public class AuthRequest {
 		
 		this.component = component;
 	}
+	
 	public void setEnvironment(String environment) {
 		
 		this.environment = environment;
+	}
+
+	public String getDomain() {
+		
+		return domain;
+	}
+	
+	public String getComponent() {
+		
+		return component;
+	}
+
+	public String getEnvironment() {
+		
+		return environment;
 	}
 
 	@Override

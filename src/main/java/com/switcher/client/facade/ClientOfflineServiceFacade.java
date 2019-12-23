@@ -90,7 +90,9 @@ public class ClientOfflineServiceFacade {
 		return new CriteriaResponse(true, "Success");
 	}
 
-	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input) throws Exception {
+	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input) 
+			throws SwitcherNoInputReceivedException, SwitcherInvalidStrategyException, 
+			SwitcherInvalidOperationException, SwitcherInvalidTimeFormat, SwitcherInvalidOperationInputException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("configStrategies: %s", Arrays.toString(configStrategies)));
@@ -223,7 +225,7 @@ public class ClientOfflineServiceFacade {
 					return inputDate.after(stgDate) && inputDate.before(stgDate2);
 				}
 				
-				throw new SwitcherInvalidOperationInputException(Entry.BETWEEN.toString());
+				throw new SwitcherInvalidOperationInputException(Entry.BETWEEN);
 			default:
 				throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 			}
@@ -269,7 +271,7 @@ public class ClientOfflineServiceFacade {
 					return inputDate.after(stgDate) && inputDate.before(stgDate2);
 				}
 				
-				throw new SwitcherInvalidOperationInputException(Entry.BETWEEN.toString());
+				throw new SwitcherInvalidOperationInputException(Entry.BETWEEN);
 			default:
 				throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 			}
