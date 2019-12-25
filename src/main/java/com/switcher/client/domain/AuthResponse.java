@@ -2,6 +2,10 @@ package com.switcher.client.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+/**
+ * @author rogerio
+ * @since 2019-12-24
+ */
 @JsonSerialize
 public class AuthResponse {
 	

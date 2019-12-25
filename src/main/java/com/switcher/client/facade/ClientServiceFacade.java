@@ -18,6 +18,10 @@ import com.switcher.client.service.ClientServiceImpl;
 import com.switcher.client.utils.SwitcherContextParam;
 import com.switcher.client.utils.SwitcherUtils;
 
+/**
+ * @author rogerio
+ * @since 2019-12-24
+ */
 public class ClientServiceFacade {
 	
 	private static final Logger logger = Logger.getLogger(ClientServiceFacade.class);

@@ -1,5 +1,9 @@
 package com.switcher.client.domain;
 
+/**
+ * @author rogerio
+ * @since 2019-12-24
+ */
 public class CriteriaResponse {
 	
 	private boolean result;

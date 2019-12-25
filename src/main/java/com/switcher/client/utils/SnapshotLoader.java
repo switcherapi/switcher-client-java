@@ -12,6 +12,10 @@ import com.switcher.client.domain.criteria.Criteria;
 import com.switcher.client.domain.criteria.Domain;
 import com.switcher.client.exception.SwitcherSnapshotLoadException;
 
+/**
+ * @author rogerio
+ * @since 2019-12-24
+ */
 public class SnapshotLoader {
 	
 	private static final Logger logger = Logger.getLogger(SnapshotLoader.class);

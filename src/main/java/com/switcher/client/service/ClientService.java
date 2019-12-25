@@ -6,6 +6,10 @@ import javax.ws.rs.core.Response;
 
 import com.switcher.client.domain.Switcher;
 
+/**
+ * @author rogerio
+ * @since 2019-12-24
+ */
 public interface ClientService {
 	
 	String AUTH_RESPONSE = "authResponse";

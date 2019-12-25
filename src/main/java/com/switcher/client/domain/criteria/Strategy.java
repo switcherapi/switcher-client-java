@@ -2,6 +2,10 @@ package com.switcher.client.domain.criteria;
 
 import java.util.Arrays;
 
+/**
+ * @author rogerio
+ * @since 2019-12-24
+ */
 public class Strategy extends SwitcherElement {
 	
 	private String strategy;

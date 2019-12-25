@@ -9,6 +9,10 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 
+/**
+ * @author rogerio
+ * @since 2019-12-24
+ */
 public class SwitcherUtils {
 	
 	private static final Logger logger = Logger.getLogger(SwitcherUtils.class);

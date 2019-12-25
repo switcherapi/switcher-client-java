@@ -16,6 +16,10 @@ import com.switcher.client.domain.AuthResponse;
 import com.switcher.client.domain.Switcher;
 import com.switcher.client.utils.SwitcherContextParam;
 
+/**
+ * @author rogerio
+ * @since 2019-12-24
+ */
 public class ClientServiceImpl implements ClientService {
 	
 	private static final Logger logger = Logger.getLogger(ClientServiceImpl.class);

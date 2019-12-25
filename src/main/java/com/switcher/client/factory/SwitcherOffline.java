@@ -7,10 +7,15 @@ import org.apache.log4j.Logger;
 import com.switcher.client.domain.CriteriaResponse;
 import com.switcher.client.domain.Switcher;
 import com.switcher.client.domain.criteria.Domain;
+import com.switcher.client.exception.SwitcherException;
 import com.switcher.client.facade.ClientOfflineServiceFacade;
 import com.switcher.client.utils.SnapshotLoader;
 import com.switcher.client.utils.SwitcherContextParam;
 
+/**
+ * @author rogerio
+ * @since 2019-12-24
+ */
 public class SwitcherOffline implements SwitcherExecutor {
 	
 	private static final Logger logger = Logger.getLogger(SwitcherOffline.class);
@@ -28,7 +33,7 @@ public class SwitcherOffline implements SwitcherExecutor {
 	}
 	
 	@Override
-	public boolean executeCriteria(final Switcher switcher) throws Exception {
+	public boolean executeCriteria(final Switcher switcher) throws SwitcherException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("switcher: %s", switcher));

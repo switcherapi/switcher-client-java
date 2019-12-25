@@ -11,6 +11,15 @@ import com.switcher.client.factory.SwitcherOffline;
 import com.switcher.client.factory.SwitcherOnline;
 import com.switcher.client.utils.SwitcherContextParam;
 
+/**
+ * Configure context (using {@link #buildContext(Map, boolean)} and claim switcher (using {@link #getSwitcher(String)} by using this factory.
+ * 
+ * @author rogerio
+ * @since 2019-12-24
+ * 
+ * @see #buildContext(Map, boolean)
+ * @see #getSwitcher(String)
+ */
 public class SwitcherFactory {
 	
 	private static final Logger logger = Logger.getLogger(SwitcherFactory.class);
@@ -19,6 +28,26 @@ public class SwitcherFactory {
 	
 	private SwitcherFactory() {}
 	
+	/**
+	 * Configure the context by populating these required informations
+	 * 
+	 * @param properties 
+	 * <br> <b>Required</b>
+	 * <br>	{@link SwitcherContextParam#URL}
+	 * <br> {@link SwitcherContextParam#APIKEY}
+	 * <br> {@link SwitcherContextParam#DOMAIN}
+	 * <br> {@link SwitcherContextParam#COMPONENT}
+	 * <br> {@link SwitcherContextParam#ENVIRONMENT}
+	 * <br>
+	 * <br> <b>Optional</b>
+	 * <br> {@link SwitcherContextParam#SNAPSHOT_LOCATION}
+	 * <br> {@link SwitcherContextParam#SILENT_MODE}
+	 * <br> {@link SwitcherContextParam#RETRY_AFTER}
+	 * <br>
+	 * @param offline If set to true, this client will find the configuration inside the configured snapshot file
+	 * 
+	 * @see SwitcherContextParam
+	 */
 	public static void buildContext(final Map<String, Object> properties, boolean offline) {
 		
 		if (logger.isDebugEnabled()) {
@@ -37,6 +66,15 @@ public class SwitcherFactory {
 		}
 	}
 	
+	/**
+	 * Return a ready-to-use Switcher that will invoke the criteria configured into the Switcher API or Snapshot
+	 * 
+	 * @param key
+	 * @return
+	 * @throws SwitcherFactoryContextException If the context hasn't been configured. To avoid this exception, it's required to invoke {@link #buildContext(Map, boolean)} first
+	 * 
+	 * @see {@link Switcher}
+	 */
 	public static Switcher getSwitcher(final String key) throws SwitcherFactoryContextException {
 		
 		if (logger.isDebugEnabled()) {

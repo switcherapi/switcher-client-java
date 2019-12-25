@@ -18,6 +18,7 @@ import com.switcher.client.domain.criteria.Config;
 import com.switcher.client.domain.criteria.Domain;
 import com.switcher.client.domain.criteria.Group;
 import com.switcher.client.domain.criteria.Strategy;
+import com.switcher.client.exception.SwitcherException;
 import com.switcher.client.exception.SwitcherInvalidOperationException;
 import com.switcher.client.exception.SwitcherInvalidOperationInputException;
 import com.switcher.client.exception.SwitcherInvalidStrategyException;
@@ -26,6 +27,10 @@ import com.switcher.client.exception.SwitcherKeyNotFoundException;
 import com.switcher.client.exception.SwitcherNoInputReceivedException;
 import com.switcher.client.utils.SwitcherUtils;
 
+/**
+ * @author rogerio
+ * @since 2019-12-24
+ */
 public class ClientOfflineServiceFacade {
 	
 	private static final String DEBUG_SWITCHER_INPUT = "switcherInput: %s";
@@ -52,7 +57,7 @@ public class ClientOfflineServiceFacade {
 		return instance;
 	}
 
-	public CriteriaResponse executeCriteria(final Switcher switcher, final Domain domain) throws Exception {
+	public CriteriaResponse executeCriteria(final Switcher switcher, final Domain domain) throws SwitcherException {
 
 		if (!domain.isActivated()) {
 			return new CriteriaResponse(false, DISABLED_DOMAIN);
@@ -90,9 +95,7 @@ public class ClientOfflineServiceFacade {
 		return new CriteriaResponse(true, "Success");
 	}
 
-	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input) 
-			throws SwitcherNoInputReceivedException, SwitcherInvalidStrategyException, 
-			SwitcherInvalidOperationException, SwitcherInvalidTimeFormat, SwitcherInvalidOperationInputException {
+	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input) throws SwitcherException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("configStrategies: %s", Arrays.toString(configStrategies)));

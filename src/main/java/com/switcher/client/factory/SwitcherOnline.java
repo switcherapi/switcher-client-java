@@ -8,11 +8,16 @@ import com.switcher.client.domain.CriteriaResponse;
 import com.switcher.client.domain.Switcher;
 import com.switcher.client.domain.criteria.Domain;
 import com.switcher.client.exception.SwitcherAPIConnectionException;
+import com.switcher.client.exception.SwitcherException;
 import com.switcher.client.facade.ClientOfflineServiceFacade;
 import com.switcher.client.facade.ClientServiceFacade;
 import com.switcher.client.utils.SnapshotLoader;
 import com.switcher.client.utils.SwitcherContextParam;
 
+/**
+ * @author rogerio
+ * @since 2019-12-24
+ */
 public class SwitcherOnline implements SwitcherExecutor {
 	
 	private static final Logger logger = Logger.getLogger(SwitcherOnline.class);
@@ -30,7 +35,7 @@ public class SwitcherOnline implements SwitcherExecutor {
 	}
 
 	@Override
-	public boolean executeCriteria(final Switcher switcher) throws Exception {
+	public boolean executeCriteria(final Switcher switcher) throws SwitcherException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("switcher: %s", switcher));
@@ -47,9 +52,6 @@ public class SwitcherOnline implements SwitcherExecutor {
 		} catch (final SwitcherAPIConnectionException e) {
 			logger.error(e);
 			return executeSilentCriteria(switcher, e);
-		} catch (Exception e) {
-			logger.error(e);
-			throw e;
 		}
 	}
 	
@@ -58,7 +60,7 @@ public class SwitcherOnline implements SwitcherExecutor {
 		this.properties = properties;
 	}
 	
-	private boolean executeSilentCriteria(final Switcher switcher, final Exception e) throws Exception {
+	private boolean executeSilentCriteria(final Switcher switcher, final SwitcherAPIConnectionException e) throws SwitcherException {
 		
 		if (properties.containsKey(SwitcherContextParam.SILENT_MODE) &&
 				(boolean) properties.get(SwitcherContextParam.SILENT_MODE)) {
