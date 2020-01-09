@@ -1,4 +1,4 @@
-![Build Status](https://travis-ci.com/petruki/switcher-client.svg?branch=master)
+[![Build Status](https://travis-ci.com/petruki/switcher-client.svg?branch=master)](https://travis-ci.com/petruki/switcher-client)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=switcher-client-java&metric=alert_status)](https://sonarcloud.io/dashboard?id=switcher-client-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.petruki/switcher-client.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.petruki%22%20AND%20a:%22switcher-client%22)
