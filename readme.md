@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.petruki/switcher-client.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.petruki%22%20AND%20a:%22switcher-client%22)
 
-![Switcher API: Java Client: Cloud-based Feature Flag API](https://github.com/petruki/switcher-client/blob/master/images/switcherclient.png)
+![Switcher API: Java Client: Cloud-based Feature Flag API](https://github.com/petruki/switcherapi-assets/blob/master/logo/switcherapi_java_client.png)
 
 # Install  
 - Using the source code
