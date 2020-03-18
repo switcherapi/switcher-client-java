@@ -1,12 +1,9 @@
-sudo: false
-
 language: java
 
 addons:
   sonarcloud:
     organization: "petruki"
-    token:
-      secure: ${SONAR_TOKEN}
+    token: ${SONAR_TOKEN}
 
 cache:
   directories:
