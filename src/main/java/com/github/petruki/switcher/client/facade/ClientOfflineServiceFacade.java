@@ -9,7 +9,8 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.net.util.SubnetUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.domain.CriteriaResponse;
 import com.github.petruki.switcher.client.domain.Entry;
@@ -36,7 +37,7 @@ public class ClientOfflineServiceFacade {
 	private static final String DEBUG_SWITCHER_INPUT = "switcherInput: %s";
 	private static final String DEBUG_STRATEGY = "strategy: %s";
 
-	private static final Logger logger = Logger.getLogger(ClientOfflineServiceFacade.class);
+	private static final Logger logger = LogManager.getLogger(ClientOfflineServiceFacade.class);
 	
 	public static final String DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
 	public static final String CIDR_REGEX = "^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))";

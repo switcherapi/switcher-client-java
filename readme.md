@@ -15,7 +15,7 @@
 <dependency>
   <groupId>com.github.petruki</groupId>
   <artifactId>switcher-client</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```	
 
@@ -76,3 +76,7 @@ switcher.isItOn(); // Now, it's going to return 'false'
 switcher.forget("FF2FOR2020");
 switcher.isItOn(); // Now, it's going to return 'true'
 ```
+
+# Version Log
+- 1.0.1: Security patch - Log4J has been updated
+- 1.0.0: Working release

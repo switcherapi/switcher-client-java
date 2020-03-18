@@ -5,7 +5,8 @@ import java.util.Date;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
@@ -15,7 +16,7 @@ import com.google.gson.Gson;
  */
 public class SwitcherUtils {
 	
-	private static final Logger logger = Logger.getLogger(SwitcherUtils.class);
+	private static final Logger logger = LogManager.getLogger(SwitcherUtils.class);
 	
 	private SwitcherUtils() {}
 	

@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.petruki.switcher.client.SwitcherFactory;
@@ -36,6 +37,7 @@ import com.github.petruki.switcher.client.service.ClientServiceImpl;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 import com.github.petruki.switcher.client.utils.SwitcherUtils;
 
+@PowerMockIgnore({"javax.management.*", "org.apache.log4j.*", "javax.xml.*", "javax.script.*"})
 @RunWith(PowerMockRunner.class)
 public class SwitcherOnlineTest {
 	

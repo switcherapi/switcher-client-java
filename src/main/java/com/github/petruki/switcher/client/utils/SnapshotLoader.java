@@ -3,7 +3,8 @@ package com.github.petruki.switcher.client.utils;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.domain.criteria.Criteria;
 import com.github.petruki.switcher.client.domain.criteria.Domain;
@@ -18,7 +19,7 @@ import com.google.gson.JsonSyntaxException;
  */
 public class SnapshotLoader {
 	
-	private static final Logger logger = Logger.getLogger(SnapshotLoader.class);
+	private static final Logger logger = LogManager.getLogger(SnapshotLoader.class);
 
 	public static Domain loadSnapshot(final String snapshotLocation) throws SwitcherSnapshotLoadException {
 		

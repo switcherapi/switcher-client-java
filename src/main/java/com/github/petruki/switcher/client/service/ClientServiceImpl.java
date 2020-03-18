@@ -9,7 +9,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.domain.AuthRequest;
 import com.github.petruki.switcher.client.domain.AuthResponse;
@@ -22,7 +23,7 @@ import com.github.petruki.switcher.client.utils.SwitcherContextParam;
  */
 public class ClientServiceImpl implements ClientService {
 	
-	private static final Logger logger = Logger.getLogger(ClientServiceImpl.class);
+	private static final Logger logger = LogManager.getLogger(ClientServiceImpl.class);
 	
 	private Client client;
 	

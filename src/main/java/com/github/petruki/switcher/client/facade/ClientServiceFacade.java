@@ -6,7 +6,8 @@ import java.util.Map;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.domain.AuthResponse;
 import com.github.petruki.switcher.client.domain.CriteriaResponse;
@@ -24,7 +25,7 @@ import com.github.petruki.switcher.client.utils.SwitcherUtils;
  */
 public class ClientServiceFacade {
 	
-	private static final Logger logger = Logger.getLogger(ClientServiceFacade.class);
+	private static final Logger logger = LogManager.getLogger(ClientServiceFacade.class);
 	
 	private static ClientServiceFacade instance;
 	

@@ -8,7 +8,7 @@
   	<groupId>com.github.petruki</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	
  	<name>Switcher Client</name>
 	<description>Switcher Client for working with Switcher API</description>
@@ -55,7 +55,7 @@
    		<commons-net.version>3.3</commons-net.version>
    		
    		<!-- test -->
-   		<log4j.version>1.2.17</log4j.version>
+   		<log4j.version>2.13.1</log4j.version>
    		<powermock-module-junit4.version>2.0.2</powermock-module-junit4.version>
 	</properties>
 	
@@ -100,9 +100,14 @@
 		    <version>${commons-net.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>log4j</groupId>
-		    <artifactId>log4j</artifactId>
-		    <version>${log4j.version}</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
 		</dependency>
 		
         <!-- test -->

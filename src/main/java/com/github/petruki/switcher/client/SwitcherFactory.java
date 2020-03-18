@@ -2,7 +2,8 @@ package com.github.petruki.switcher.client;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.domain.Switcher;
 import com.github.petruki.switcher.client.exception.SwitcherFactoryContextException;
@@ -22,7 +23,7 @@ import com.github.petruki.switcher.client.utils.SwitcherContextParam;
  */
 public class SwitcherFactory {
 	
-	private static final Logger logger = Logger.getLogger(SwitcherFactory.class);
+	private static final Logger logger = LogManager.getLogger(SwitcherFactory.class);
 	
 	private static SwitcherExecutor instance;
 	

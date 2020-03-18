@@ -2,7 +2,8 @@ package com.github.petruki.switcher.client.factory;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.domain.CriteriaResponse;
 import com.github.petruki.switcher.client.domain.Switcher;
@@ -18,7 +19,7 @@ import com.github.petruki.switcher.client.utils.SwitcherContextParam;
  */
 public class SwitcherOffline implements SwitcherExecutor {
 	
-	private static final Logger logger = Logger.getLogger(SwitcherOffline.class);
+	private static final Logger logger = LogManager.getLogger(SwitcherOffline.class);
 	
 	private String snapshotLocation;
 	

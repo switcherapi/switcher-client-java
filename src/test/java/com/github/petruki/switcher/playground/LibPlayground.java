@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.SwitcherFactory;
 import com.github.petruki.switcher.client.domain.Switcher;
@@ -13,7 +14,7 @@ import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 
 public class LibPlayground {
 	
-	final static Logger logger = Logger.getLogger(LibPlayground.class);
+	final static Logger logger = LogManager.getLogger(LibPlayground.class);
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources/";
 	
