@@ -39,7 +39,7 @@ public class SwitcherBypassTest {
 	
 	@Test
 	public void shouldReturnFalse_afterAssumingItsFalse() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
@@ -51,7 +51,7 @@ public class SwitcherBypassTest {
 	
 	@Test
 	public void shouldReturnTrue_afterAssumingItsTrue() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture2.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture2.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE111");
@@ -63,7 +63,7 @@ public class SwitcherBypassTest {
 	
 	@Test
 	public void shouldReturnTrue_afterForgettingItWasFalse() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
@@ -78,7 +78,7 @@ public class SwitcherBypassTest {
 	
 	@Test
 	public void shouldReturnFalse_afterAssumingItsTrue() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture2.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture2.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE111");

@@ -13,6 +13,6 @@ public interface SwitcherExecutor {
 	
 	public boolean executeCriteria(final Switcher switcher) throws SwitcherException;
 	
-	public void updateContext(final Map<String, Object> properties);
+	public void updateContext(final Map<String, Object> properties) throws SwitcherException;
 
 }

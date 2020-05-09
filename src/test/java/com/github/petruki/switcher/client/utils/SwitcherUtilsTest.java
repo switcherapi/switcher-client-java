@@ -44,7 +44,17 @@ public class SwitcherUtilsTest {
 	@Test(expected = SwitcherSnapshotLoadException.class)
 	public void shouldReturnError_snapshotNotFound() throws Exception {
 		
-		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "UNKWNOW_SNAPSHOT_FILE.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "UNKWNOW_SNAPSHOT_FILE.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
+		switcher.isItOn();
+	}
+	
+	@Test(expected = SwitcherSnapshotLoadException.class)
+	public void shouldReturnError_envSnapshot_snapshotNotFound() throws Exception {
+		
+		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "UNKNOWN_FOLDER/");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");

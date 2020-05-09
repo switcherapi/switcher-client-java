@@ -34,7 +34,12 @@ public interface SwitcherContextParam {
 	String ENVIRONMENT = "environment";
 	
 	/**
-	 * (String) Complete path of the snapshot file, including the name of the file.
+	 * (String) Complete path of the snapshot file, including the file's name.
+	 */
+	String SNAPSHOT_FILE = "snapshotFile";
+	
+	/**
+	 * (String) Folder path where all snapshot files are located.
 	 */
 	String SNAPSHOT_LOCATION = "snapshotLocation";
 	

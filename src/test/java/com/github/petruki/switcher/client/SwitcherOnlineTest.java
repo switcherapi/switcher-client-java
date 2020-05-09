@@ -54,7 +54,7 @@ public class SwitcherOnlineTest {
 		properties.put(SwitcherContextParam.DOMAIN, "switcher-domain");
 		properties.put(SwitcherContextParam.COMPONENT, "switcher-client");
 		properties.put(SwitcherContextParam.ENVIRONMENT, "default");
-		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
 	}
 	
 	private Switcher generateSwitcherMockTrue(final int executionStatus) throws Exception {

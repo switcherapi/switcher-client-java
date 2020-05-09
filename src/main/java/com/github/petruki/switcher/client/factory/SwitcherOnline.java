@@ -7,12 +7,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.domain.CriteriaResponse;
 import com.github.petruki.switcher.client.domain.Switcher;
-import com.github.petruki.switcher.client.domain.criteria.Domain;
 import com.github.petruki.switcher.client.exception.SwitcherAPIConnectionException;
 import com.github.petruki.switcher.client.exception.SwitcherException;
-import com.github.petruki.switcher.client.facade.ClientOfflineServiceFacade;
+import com.github.petruki.switcher.client.exception.SwitcherSnapshotLoadException;
 import com.github.petruki.switcher.client.facade.ClientServiceFacade;
-import com.github.petruki.switcher.client.utils.SnapshotLoader;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 
 /**
@@ -25,14 +23,17 @@ public class SwitcherOnline implements SwitcherExecutor {
 
 	private Map<String, Object> properties;
 	
-	public SwitcherOnline(final Map<String, Object> properties) {
+	private SwitcherOffline switcherOffline;
+	
+	public SwitcherOnline(final Map<String, Object> properties) throws SwitcherSnapshotLoadException {
 		
 		this.init(properties);
 	}
 	
-	public void init(final Map<String, Object> properties) {
+	public void init(final Map<String, Object> properties) throws SwitcherSnapshotLoadException {
 		
 		this.properties = properties;
+		this.switcherOffline = new SwitcherOffline(this.properties);
 	}
 
 	@Override
@@ -58,6 +59,7 @@ public class SwitcherOnline implements SwitcherExecutor {
 	
 	@Override
 	public void updateContext(Map<String, Object> properties) {
+		
 		this.properties = properties;
 	}
 	
@@ -65,10 +67,9 @@ public class SwitcherOnline implements SwitcherExecutor {
 		
 		if (properties.containsKey(SwitcherContextParam.SILENT_MODE) &&
 				(boolean) properties.get(SwitcherContextParam.SILENT_MODE)) {
-			final Domain domain = SnapshotLoader.loadSnapshot((String) this.properties.get(SwitcherContextParam.SNAPSHOT_LOCATION));
-			final CriteriaResponse response = ClientOfflineServiceFacade.getInstance().executeCriteria(switcher, domain);
+			boolean response = this.switcherOffline.executeCriteria(switcher);
 			logger.debug(String.format("[Silent] response: %s", response));
-			return response.isItOn();
+			return response;
 		} else {
 			throw e;
 		}

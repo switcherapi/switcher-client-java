@@ -6,7 +6,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.domain.Switcher;
+import com.github.petruki.switcher.client.exception.SwitcherException;
 import com.github.petruki.switcher.client.exception.SwitcherFactoryContextException;
+import com.github.petruki.switcher.client.exception.SwitcherSnapshotLoadException;
 import com.github.petruki.switcher.client.factory.SwitcherExecutor;
 import com.github.petruki.switcher.client.factory.SwitcherOffline;
 import com.github.petruki.switcher.client.factory.SwitcherOnline;
@@ -42,14 +44,16 @@ public class SwitcherFactory {
 	 * <br>
 	 * <br> <b>Optional</b>
 	 * <br> {@link SwitcherContextParam#SNAPSHOT_LOCATION}
+	 * <br> {@link SwitcherContextParam#SNAPSHOT_FILE}
 	 * <br> {@link SwitcherContextParam#SILENT_MODE}
 	 * <br> {@link SwitcherContextParam#RETRY_AFTER}
 	 * <br>
 	 * @param offline If set to true, this client will find the configuration inside the configured snapshot file
+	 * @throws SwitcherSnapshotLoadException 
 	 * 
 	 * @see SwitcherContextParam
 	 */
-	public static void buildContext(final Map<String, Object> properties, boolean offline) {
+	public static void buildContext(final Map<String, Object> properties, boolean offline)  throws SwitcherException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("properties: %s", properties));
@@ -58,7 +62,7 @@ public class SwitcherFactory {
 		
 		if (instance == null) {
 			if (offline) {
-				instance = new SwitcherOffline((String) properties.get(SwitcherContextParam.SNAPSHOT_LOCATION));
+				instance = new SwitcherOffline(properties);
 			} else {
 				instance = new SwitcherOnline(properties);
 			}

@@ -21,16 +21,44 @@ public class SnapshotLoader {
 	
 	private static final Logger logger = LogManager.getLogger(SnapshotLoader.class);
 
-	public static Domain loadSnapshot(final String snapshotLocation) throws SwitcherSnapshotLoadException {
+	/**
+	 * Load a specific snapshot file
+	 * 
+	 * @param snapshotFile location and file name must be provided
+	 * @return
+	 * @throws SwitcherSnapshotLoadException
+	 */
+	public static Domain loadSnapshot(final String snapshotFile) throws SwitcherSnapshotLoadException {
 		
 		final Gson gson = new Gson();
 
 		try {
-			final Data data = gson.fromJson(new FileReader(snapshotLocation), Data.class);
+			final Data data = gson.fromJson(new FileReader(snapshotFile), Data.class);
 			return data.getDomain();
 		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 			logger.error(e);
-			throw new SwitcherSnapshotLoadException(snapshotLocation, e);
+			throw new SwitcherSnapshotLoadException(snapshotFile, e);
+		}
+	}
+	
+	/**
+	 * Load snapshot from the current running environment
+	 * 
+	 * @param snapshotLocation
+	 * @param environment
+	 * @return
+	 * @throws SwitcherSnapshotLoadException
+	 */
+	public static Domain loadSnapshot(final String snapshotLocation, final String environment) throws SwitcherSnapshotLoadException {
+		
+		final Gson gson = new Gson();
+
+		try {
+			final Data data = gson.fromJson(new FileReader(String.format("%s/%s.json", snapshotLocation, environment)), Data.class);
+			return data.getDomain();
+		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+			logger.error(e);
+			throw new SwitcherSnapshotLoadException(String.format("%s/%s.json", snapshotLocation, environment), e);
 		}
 	}
 	

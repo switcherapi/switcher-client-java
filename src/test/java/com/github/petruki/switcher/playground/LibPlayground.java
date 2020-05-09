@@ -25,12 +25,12 @@ public class LibPlayground {
 		properties.put(SwitcherContextParam.DOMAIN, "currency-api");
 		properties.put(SwitcherContextParam.COMPONENT, "Android");
 		properties.put(SwitcherContextParam.ENVIRONMENT, "default");
-		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
 		properties.put(SwitcherContextParam.SILENT_MODE, false);
 		properties.put(SwitcherContextParam.RETRY_AFTER, "5s");
 
-		SwitcherFactory.buildContext(properties, true);
 		try {
+			SwitcherFactory.buildContext(properties, true);
 			Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
 			logger.info(switcher.isItOn());
 		} catch (Exception e) {
