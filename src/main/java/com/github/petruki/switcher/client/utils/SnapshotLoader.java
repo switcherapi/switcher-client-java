@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.apache.logging.log4j.LogManager;
@@ -93,7 +92,7 @@ public class SnapshotLoader {
             wr.write(gson.toJson(snapshot));
             wr.close();
             bw.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.error(e);
 			throw new SwitcherSnapshotWriteException(String.format("%s/%s.json", snapshotLocation, environment), e);
 		}	

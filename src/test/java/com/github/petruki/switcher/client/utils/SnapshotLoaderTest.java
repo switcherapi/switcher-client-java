@@ -189,16 +189,5 @@ public class SnapshotLoaderTest {
 	public void shouldNotLoadDomainFromDefectSnapshot_byEnv() throws Exception {
 		SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL, "defect_default");
 	}
-	
-	@Test(expected = SwitcherSnapshotWriteException.class)
-	public void shouldNotSaveSnapshot_BadFileName() throws Exception {
-		final Domain domain = SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-		final Snapshot snapshot = new Snapshot();
-		final Criteria criteria = new Criteria();
-		criteria.setDomain(domain);
-		snapshot.setData(criteria);
-		
-		SnapshotLoader.saveSnapshot(snapshot, SNAPSHOTS_LOCAL, "?");
-	}
 
 }
