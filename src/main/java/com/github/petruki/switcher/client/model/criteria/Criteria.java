@@ -1,4 +1,4 @@
-package com.github.petruki.switcher.client.domain.criteria;
+package com.github.petruki.switcher.client.model.criteria;
 
 /**
  * @author rogerio
@@ -11,6 +11,11 @@ public class Criteria {
 	public Domain getDomain() {
 		
 		return domain;
+	}
+
+	public void setDomain(Domain domain) {
+		
+		this.domain = domain;
 	}
 
 }

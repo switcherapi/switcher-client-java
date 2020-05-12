@@ -17,8 +17,8 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.petruki.switcher.client.SwitcherFactory;
-import com.github.petruki.switcher.client.domain.Switcher;
 import com.github.petruki.switcher.client.exception.SwitcherSnapshotLoadException;
+import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 import com.github.petruki.switcher.client.utils.SwitcherUtils;
 
@@ -26,7 +26,7 @@ import com.github.petruki.switcher.client.utils.SwitcherUtils;
 @RunWith(PowerMockRunner.class)
 public class SwitcherUtilsTest {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources/";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
 	private Map<String, Object> properties;
 	
@@ -34,7 +34,7 @@ public class SwitcherUtilsTest {
 	public void setupContext() {
 
 		properties = new HashMap<String, Object>();
-		properties.put(SwitcherContextParam.URL, "http://localhost:3000/criteria");
+		properties.put(SwitcherContextParam.URL, "http://localhost:3000");
 		properties.put(SwitcherContextParam.APIKEY, "$2b$08$S2Wj/wG/Rfs3ij0xFbtgveDtyUAjML1/TOOhocDg5dhOaU73CEXfK");
 		properties.put(SwitcherContextParam.DOMAIN, "switcher-domain");
 		properties.put(SwitcherContextParam.COMPONENT, "switcher-client");
@@ -43,8 +43,7 @@ public class SwitcherUtilsTest {
 	
 	@Test(expected = SwitcherSnapshotLoadException.class)
 	public void shouldReturnError_snapshotNotFound() throws Exception {
-		
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "UNKWNOW_SNAPSHOT_FILE.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
@@ -53,8 +52,7 @@ public class SwitcherUtilsTest {
 	
 	@Test(expected = SwitcherSnapshotLoadException.class)
 	public void shouldReturnError_envSnapshot_snapshotNotFound() throws Exception {
-		
-		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "UNKNOWN_FOLDER/");
+		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "/UNKNOWN_FOLDER/");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");

@@ -1,15 +1,22 @@
 package com.github.petruki.switcher.client.utils;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.petruki.switcher.client.domain.criteria.Criteria;
-import com.github.petruki.switcher.client.domain.criteria.Domain;
 import com.github.petruki.switcher.client.exception.SwitcherSnapshotLoadException;
+import com.github.petruki.switcher.client.exception.SwitcherSnapshotWriteException;
+import com.github.petruki.switcher.client.model.criteria.Domain;
+import com.github.petruki.switcher.client.model.criteria.Snapshot;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
@@ -33,7 +40,7 @@ public class SnapshotLoader {
 		final Gson gson = new Gson();
 
 		try {
-			final Data data = gson.fromJson(new FileReader(snapshotFile), Data.class);
+			final Snapshot data = gson.fromJson(new FileReader(snapshotFile), Snapshot.class);
 			return data.getDomain();
 		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 			logger.error(e);
@@ -49,26 +56,47 @@ public class SnapshotLoader {
 	 * @return
 	 * @throws SwitcherSnapshotLoadException
 	 */
-	public static Domain loadSnapshot(final String snapshotLocation, final String environment) throws SwitcherSnapshotLoadException {
+	public static Domain loadSnapshot(final String snapshotLocation, final String environment) 
+			throws SwitcherSnapshotLoadException, FileNotFoundException {
 		
 		final Gson gson = new Gson();
 
 		try {
-			final Data data = gson.fromJson(new FileReader(String.format("%s/%s.json", snapshotLocation, environment)), Data.class);
+			final Snapshot data = gson.fromJson(new FileReader(String.format("%s/%s.json", snapshotLocation, environment)), Snapshot.class);
 			return data.getDomain();
-		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+		} catch (JsonSyntaxException | JsonIOException e) {
 			logger.error(e);
 			throw new SwitcherSnapshotLoadException(String.format("%s/%s.json", snapshotLocation, environment), e);
+		} catch (FileNotFoundException e) {
+			throw e;
 		}
 	}
 	
-	class Data {
+	/**
+	 * Writes snapshot loaded from the API
+	 * 
+	 * @param snapshot
+	 * @param snapshotLocation
+	 * @param environment
+	 * @throws SwitcherSnapshotWriteException
+	 */
+	public static void saveSnapshot(final Snapshot snapshot, final String snapshotLocation, 
+			final String environment) throws SwitcherSnapshotWriteException {
 		
-		private Criteria data;
+		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		
-		public Domain getDomain() {
-			return data.getDomain();
-		}
+		try {
+			final FileWriter fileWriter = new FileWriter(new File(String.format("%s/%s.json", snapshotLocation, environment)));
+			final BufferedWriter bw = new BufferedWriter(fileWriter);
+	        final PrintWriter wr = new PrintWriter(bw);
+
+            wr.write(gson.toJson(snapshot));
+            wr.close();
+            bw.close();
+		} catch (IOException e) {
+			logger.error(e);
+			throw new SwitcherSnapshotWriteException(String.format("%s/%s.json", snapshotLocation, environment), e);
+		}	
 		
 	}
 

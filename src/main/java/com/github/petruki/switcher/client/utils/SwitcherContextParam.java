@@ -44,6 +44,11 @@ public interface SwitcherContextParam {
 	String SNAPSHOT_LOCATION = "snapshotLocation";
 	
 	/**
+	 * (boolean) Activate snapshot auto load which will try to retrieve the snapshot from the API if the file does not exist.
+	 */
+	String SNAPSHOT_AUTO_LOAD = "snapshotAutoLoad";
+	
+	/**
 	 * (boolean) Activate silent mode when the Switcher API is become offline.
 	 */
 	String SILENT_MODE = "silentMode";

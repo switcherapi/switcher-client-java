@@ -12,13 +12,6 @@ import org.apache.commons.net.util.SubnetUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.petruki.switcher.client.domain.CriteriaResponse;
-import com.github.petruki.switcher.client.domain.Entry;
-import com.github.petruki.switcher.client.domain.Switcher;
-import com.github.petruki.switcher.client.domain.criteria.Config;
-import com.github.petruki.switcher.client.domain.criteria.Domain;
-import com.github.petruki.switcher.client.domain.criteria.Group;
-import com.github.petruki.switcher.client.domain.criteria.Strategy;
 import com.github.petruki.switcher.client.exception.SwitcherException;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidOperationException;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidOperationInputException;
@@ -26,6 +19,13 @@ import com.github.petruki.switcher.client.exception.SwitcherInvalidStrategyExcep
 import com.github.petruki.switcher.client.exception.SwitcherInvalidTimeFormat;
 import com.github.petruki.switcher.client.exception.SwitcherKeyNotFoundException;
 import com.github.petruki.switcher.client.exception.SwitcherNoInputReceivedException;
+import com.github.petruki.switcher.client.model.CriteriaResponse;
+import com.github.petruki.switcher.client.model.Entry;
+import com.github.petruki.switcher.client.model.Switcher;
+import com.github.petruki.switcher.client.model.criteria.Config;
+import com.github.petruki.switcher.client.model.criteria.Domain;
+import com.github.petruki.switcher.client.model.criteria.Group;
+import com.github.petruki.switcher.client.model.criteria.Strategy;
 import com.github.petruki.switcher.client.utils.SwitcherUtils;
 
 /**

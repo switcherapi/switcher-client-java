@@ -1,4 +1,4 @@
-package com.github.petruki.switcher.client.domain;
+package com.github.petruki.switcher.client.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;

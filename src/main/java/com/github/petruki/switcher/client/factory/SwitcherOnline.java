@@ -5,12 +5,11 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.petruki.switcher.client.domain.CriteriaResponse;
-import com.github.petruki.switcher.client.domain.Switcher;
 import com.github.petruki.switcher.client.exception.SwitcherAPIConnectionException;
 import com.github.petruki.switcher.client.exception.SwitcherException;
-import com.github.petruki.switcher.client.exception.SwitcherSnapshotLoadException;
 import com.github.petruki.switcher.client.facade.ClientServiceFacade;
+import com.github.petruki.switcher.client.model.CriteriaResponse;
+import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 
 /**
@@ -25,12 +24,12 @@ public class SwitcherOnline implements SwitcherExecutor {
 	
 	private SwitcherOffline switcherOffline;
 	
-	public SwitcherOnline(final Map<String, Object> properties) throws SwitcherSnapshotLoadException {
+	public SwitcherOnline(final Map<String, Object> properties) throws SwitcherException {
 		
 		this.init(properties);
 	}
 	
-	public void init(final Map<String, Object> properties) throws SwitcherSnapshotLoadException {
+	public void init(final Map<String, Object> properties) throws SwitcherException {
 		
 		this.properties = properties;
 		this.switcherOffline = new SwitcherOffline(this.properties);

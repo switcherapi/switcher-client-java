@@ -5,13 +5,13 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.petruki.switcher.client.domain.Switcher;
 import com.github.petruki.switcher.client.exception.SwitcherException;
 import com.github.petruki.switcher.client.exception.SwitcherFactoryContextException;
 import com.github.petruki.switcher.client.exception.SwitcherSnapshotLoadException;
 import com.github.petruki.switcher.client.factory.SwitcherExecutor;
 import com.github.petruki.switcher.client.factory.SwitcherOffline;
 import com.github.petruki.switcher.client.factory.SwitcherOnline;
+import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 
 /**

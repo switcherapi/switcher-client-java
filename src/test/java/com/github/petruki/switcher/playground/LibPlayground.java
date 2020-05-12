@@ -9,23 +9,24 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.SwitcherFactory;
-import com.github.petruki.switcher.client.domain.Switcher;
+import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 
 public class LibPlayground {
 	
 	final static Logger logger = LogManager.getLogger(LibPlayground.class);
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources/";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
 	public LibPlayground() {
 		Map<String, Object> properties = new HashMap<String, Object>();
-		properties.put(SwitcherContextParam.URL, "http://localhost:3000/criteria");
-		properties.put(SwitcherContextParam.APIKEY, "$2b$08$S2Wj/wG/Rfs3ij0xFbtgveDtyUAjML1/TOOhocDg5dhOaU73CEXfK");
-		properties.put(SwitcherContextParam.DOMAIN, "currency-api");
+		properties.put(SwitcherContextParam.URL, "http://localhost:3000");
+		properties.put(SwitcherContextParam.APIKEY, "$2b$08$7U/KJBVgG.FQtYEKKnbLe.o6p7vBrfHFRgMipZTaokSmVFiduXq/y");
+		properties.put(SwitcherContextParam.DOMAIN, "My Domain");
 		properties.put(SwitcherContextParam.COMPONENT, "Android");
 		properties.put(SwitcherContextParam.ENVIRONMENT, "default");
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL);
+		properties.put(SwitcherContextParam.SNAPSHOT_AUTO_LOAD, true);
 		properties.put(SwitcherContextParam.SILENT_MODE, false);
 		properties.put(SwitcherContextParam.RETRY_AFTER, "5s");
 

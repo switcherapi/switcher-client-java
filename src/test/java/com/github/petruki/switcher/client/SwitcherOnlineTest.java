@@ -25,13 +25,13 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.petruki.switcher.client.SwitcherFactory;
-import com.github.petruki.switcher.client.domain.AuthResponse;
-import com.github.petruki.switcher.client.domain.CriteriaResponse;
-import com.github.petruki.switcher.client.domain.Entry;
-import com.github.petruki.switcher.client.domain.Switcher;
 import com.github.petruki.switcher.client.exception.SwitcherAPIConnectionException;
 import com.github.petruki.switcher.client.exception.SwitcherKeyNotFoundException;
 import com.github.petruki.switcher.client.facade.ClientServiceFacade;
+import com.github.petruki.switcher.client.model.AuthResponse;
+import com.github.petruki.switcher.client.model.CriteriaResponse;
+import com.github.petruki.switcher.client.model.Entry;
+import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.service.ClientService;
 import com.github.petruki.switcher.client.service.ClientServiceImpl;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
@@ -41,7 +41,7 @@ import com.github.petruki.switcher.client.utils.SwitcherUtils;
 @RunWith(PowerMockRunner.class)
 public class SwitcherOnlineTest {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources/";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
 	private Map<String, Object> properties;
 	
@@ -49,12 +49,12 @@ public class SwitcherOnlineTest {
 	public void setupContext() {
 
 		properties = new HashMap<String, Object>();
-		properties.put(SwitcherContextParam.URL, "http://localhost:3000/criteria");
+		properties.put(SwitcherContextParam.URL, "http://localhost:3000");
 		properties.put(SwitcherContextParam.APIKEY, "$2b$08$S2Wj/wG/Rfs3ij0xFbtgveDtyUAjML1/TOOhocDg5dhOaU73CEXfK");
 		properties.put(SwitcherContextParam.DOMAIN, "switcher-domain");
 		properties.put(SwitcherContextParam.COMPONENT, "switcher-client");
 		properties.put(SwitcherContextParam.ENVIRONMENT, "default");
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 	}
 	
 	private Switcher generateSwitcherMockTrue(final int executionStatus) throws Exception {
@@ -168,7 +168,7 @@ public class SwitcherOnlineTest {
 		Response responseMock = PowerMockito.mock(Response.class);
 		Builder builderMock = PowerMockito.mock(Builder.class);
 
-		PowerMockito.when(clientMock.target((String) properties.get(SwitcherContextParam.URL))).thenReturn(webTargetMock);
+		PowerMockito.when(clientMock.target(String.format(ClientService.CRITERIA_URL, properties.get(SwitcherContextParam.URL)))).thenReturn(webTargetMock);
 		PowerMockito.when(webTargetMock.queryParam(Switcher.KEY, switcher.getKey())).thenReturn(webTargetMock);
 		PowerMockito.when(webTargetMock.queryParam(Switcher.SHOW_REASON, Boolean.TRUE)).thenReturn(webTargetMock);
 		PowerMockito.when(webTargetMock.queryParam(Switcher.BYPASS_METRIC, properties.containsKey(Switcher.BYPASS_METRIC) ? 

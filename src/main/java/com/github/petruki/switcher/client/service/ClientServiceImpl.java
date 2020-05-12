@@ -12,9 +12,9 @@ import javax.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.petruki.switcher.client.domain.AuthRequest;
-import com.github.petruki.switcher.client.domain.AuthResponse;
-import com.github.petruki.switcher.client.domain.Switcher;
+import com.github.petruki.switcher.client.model.AuthRequest;
+import com.github.petruki.switcher.client.model.AuthResponse;
+import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 
 /**
@@ -31,6 +31,7 @@ public class ClientServiceImpl implements ClientService {
 		this.setClient(ClientBuilder.newClient());
 	}
 	
+	@Override
 	public Response executeCriteriaService(final Map<String, Object> properties, 
 			final Switcher switcher) throws Exception {
 		
@@ -38,7 +39,7 @@ public class ClientServiceImpl implements ClientService {
 			logger.debug(String.format("switcher: %s", switcher));
 		}
 		
-		final WebTarget myResource = client.target((String) properties.get(SwitcherContextParam.URL))
+		final WebTarget myResource = client.target(String.format(CRITERIA_URL, properties.get(SwitcherContextParam.URL)))
 				.queryParam(Switcher.KEY, switcher.getKey())
 				.queryParam(Switcher.SHOW_REASON, Boolean.TRUE)
 				.queryParam(Switcher.BYPASS_METRIC, properties.containsKey(Switcher.BYPASS_METRIC) ? 
@@ -51,6 +52,7 @@ public class ClientServiceImpl implements ClientService {
 		return response;
 	}
 	
+	@Override
 	public Response auth(final Map<String, Object> properties) throws Exception {
 		
 		final AuthRequest authRequest = new AuthRequest();
@@ -63,6 +65,29 @@ public class ClientServiceImpl implements ClientService {
 			.header(HEADER_APIKEY, properties.get(SwitcherContextParam.APIKEY))
 			.post(Entity.json(authRequest));	
 
+		return response;
+	}
+	
+	@Override
+	public Response resolveSnapshot(Map<String, Object> properties) throws Exception {
+		
+		final String domain = (String) properties.get(SwitcherContextParam.DOMAIN);
+		final String environment = (String) properties.get(SwitcherContextParam.ENVIRONMENT);
+		
+		final StringBuffer query = new StringBuffer();
+		query.append("{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\") { ");
+		query.append("name version description activated ");
+		query.append("group { name description activated ");
+		query.append("config { key description activated ");
+		query.append("strategies { strategy activated operation values } ");
+		query.append("components } } } }\"}");
+		
+		final WebTarget myResource = client.target(String.format(SNAPSHOT_URL, properties.get(SwitcherContextParam.URL)));
+		
+		final Response response = myResource.request(MediaType.APPLICATION_JSON)
+			.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, ((AuthResponse) properties.get(AUTH_RESPONSE)).getToken()))
+			.post(Entity.json(String.format(query.toString(), domain, environment)));
+		
 		return response;
 	}
 

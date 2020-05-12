@@ -9,11 +9,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.petruki.switcher.client.domain.AuthResponse;
-import com.github.petruki.switcher.client.domain.CriteriaResponse;
-import com.github.petruki.switcher.client.domain.Switcher;
 import com.github.petruki.switcher.client.exception.SwitcherAPIConnectionException;
 import com.github.petruki.switcher.client.exception.SwitcherKeyNotFoundException;
+import com.github.petruki.switcher.client.model.AuthResponse;
+import com.github.petruki.switcher.client.model.CriteriaResponse;
+import com.github.petruki.switcher.client.model.Switcher;
+import com.github.petruki.switcher.client.model.criteria.Snapshot;
 import com.github.petruki.switcher.client.service.ClientService;
 import com.github.petruki.switcher.client.service.ClientServiceImpl;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
@@ -64,6 +65,27 @@ public class ClientServiceFacade {
 		} catch (final SwitcherKeyNotFoundException e) {
 			logger.error(e);
 			throw e;
+		} catch (final Exception e) {
+			logger.error(e);
+			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
+					(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY, e);
+		}
+		
+	}
+	
+	public Snapshot resolveSnapshot(final Map<String, Object> properties) 
+			throws SwitcherAPIConnectionException {
+		
+		try {
+			if (!this.isTokenValid(properties)) {
+				this.auth(properties);
+			}
+					
+			final Response response = this.clientService.resolveSnapshot(properties);
+			
+			final Snapshot snapshot = response.readEntity(Snapshot.class);
+			response.close();
+			return snapshot;
 		} catch (final Exception e) {
 			logger.error(e);
 			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 

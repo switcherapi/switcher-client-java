@@ -2,8 +2,8 @@ package com.github.petruki.switcher.client.factory;
 
 import java.util.Map;
 
-import com.github.petruki.switcher.client.domain.Switcher;
 import com.github.petruki.switcher.client.exception.SwitcherException;
+import com.github.petruki.switcher.client.model.Switcher;
 
 /**
  * @author rogerio

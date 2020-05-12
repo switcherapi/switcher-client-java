@@ -16,22 +16,22 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.petruki.switcher.client.SwitcherFactory;
-import com.github.petruki.switcher.client.domain.AuthRequest;
-import com.github.petruki.switcher.client.domain.Entry;
-import com.github.petruki.switcher.client.domain.Switcher;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidOperationException;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidOperationInputException;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidStrategyException;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidTimeFormat;
 import com.github.petruki.switcher.client.exception.SwitcherKeyNotFoundException;
 import com.github.petruki.switcher.client.exception.SwitcherNoInputReceivedException;
+import com.github.petruki.switcher.client.model.AuthRequest;
+import com.github.petruki.switcher.client.model.Entry;
+import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 
 @PowerMockIgnore({"javax.management.*", "org.apache.log4j.*", "javax.xml.*", "javax.script.*"})
 @RunWith(PowerMockRunner.class)
 public class SwitcherOfflineTest {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources/";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
 	private Map<String, Object> properties;
 	
@@ -39,7 +39,7 @@ public class SwitcherOfflineTest {
 	public void setupContext() {
 
 		properties = new HashMap<String, Object>();
-		properties.put(SwitcherContextParam.URL, "http://localhost:3000/criteria");
+		properties.put(SwitcherContextParam.URL, "http://localhost:3000");
 		properties.put(SwitcherContextParam.APIKEY, "$2b$08$S2Wj/wG/Rfs3ij0xFbtgveDtyUAjML1/TOOhocDg5dhOaU73CEXfK");
 		properties.put(SwitcherContextParam.DOMAIN, "switcher-domain");
 		properties.put(SwitcherContextParam.COMPONENT, "switcher-client");
@@ -48,7 +48,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
@@ -66,7 +66,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE12");
@@ -84,7 +84,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_groupDisabled() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE21");
@@ -93,7 +93,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_domainDisabled() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture2.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture2.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE111");
@@ -102,7 +102,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_strategyDisabled() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		// There is a disabled strategy requiring value validation.
@@ -112,7 +112,7 @@ public class SwitcherOfflineTest {
 	
 	@Test(expected = SwitcherKeyNotFoundException.class)
 	public void offlineShouldNotReturn_keyNotFound() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("NOT_FOUND_KEY");
@@ -121,7 +121,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_dateValidationGreater() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE31");
@@ -133,7 +133,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_dateValidationGreater() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE31");
@@ -145,7 +145,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_dateValidationLower() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE32");
@@ -157,7 +157,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_dateValidationLower() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE32");
@@ -169,7 +169,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_dateValidationBetween() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE33");
@@ -181,7 +181,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_dateValidationBetween() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE33");
@@ -193,7 +193,7 @@ public class SwitcherOfflineTest {
 	
 	@Test(expected = SwitcherInvalidTimeFormat.class)
 	public void offlineShouldReturnFalse_dateValidationWrongFormat() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE33");
@@ -205,7 +205,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_valueValidationExist() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE41");
@@ -217,7 +217,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_valueValidationExist() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE41");
@@ -229,7 +229,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_valueValidationNotExist() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE42");
@@ -241,7 +241,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_valueValidationNotExist() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE42");
@@ -253,7 +253,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_valueValidationEqual() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE43");
@@ -265,7 +265,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_valueValidationEqual() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE43");
@@ -277,7 +277,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_valueValidationNotEqual() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE44");
@@ -289,7 +289,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_valueValidationNotEqual() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE44");
@@ -301,7 +301,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_timeValidationGreater() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE51");
@@ -313,7 +313,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_timeValidationGreater() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE51");
@@ -325,7 +325,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_timeValidationLower() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE52");
@@ -337,7 +337,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_timeValidationLower() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE52");
@@ -349,7 +349,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_timeValidationBetween() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE53");
@@ -361,7 +361,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_timeValidationBetween() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE53");
@@ -373,7 +373,7 @@ public class SwitcherOfflineTest {
 	
 	@Test(expected = SwitcherInvalidTimeFormat.class)
 	public void offlineShouldReturnFalse_timeValidationWrongFormat() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE53");
@@ -385,7 +385,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_networkValidationExistCIDR() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE61");
@@ -397,7 +397,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_networkValidationExistCIDR() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE61");
@@ -409,7 +409,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_networkValidationNotExistCIDR() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE62");
@@ -421,7 +421,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_networkValidationNotExistCIDR() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE62");
@@ -433,7 +433,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnTrue_networkValidationExist() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE63");
@@ -445,7 +445,7 @@ public class SwitcherOfflineTest {
 	
 	@Test
 	public void offlineShouldReturnFalse_networkValidationExist() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE63");
@@ -457,7 +457,7 @@ public class SwitcherOfflineTest {
 	
 	@Test(expected = SwitcherNoInputReceivedException.class)
 	public void offlineShouldReturnFalse_strategyRequiresInput() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE63");
@@ -479,7 +479,7 @@ public class SwitcherOfflineTest {
 	
 	@Test(expected = SwitcherNoInputReceivedException.class)
 	public void offlineShouldReturnError_InvalidStrategyInput() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture1.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE33");
@@ -489,7 +489,7 @@ public class SwitcherOfflineTest {
 	
 	@Test(expected = SwitcherInvalidStrategyException.class)
 	public void offlineShouldReturnError_InvalidSnapshotStrategy() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture3.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
@@ -499,7 +499,7 @@ public class SwitcherOfflineTest {
 	
 	@Test(expected = SwitcherInvalidOperationException.class)
 	public void offlineShouldReturnError_InvalidSnapshotOperationForNetwork() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture3.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE12");
@@ -509,7 +509,7 @@ public class SwitcherOfflineTest {
 	
 	@Test(expected = SwitcherInvalidOperationException.class)
 	public void offlineShouldReturnError_InvalidSnapshotOperationForValue() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture3.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE13");
@@ -519,7 +519,7 @@ public class SwitcherOfflineTest {
 	
 	@Test(expected = SwitcherInvalidOperationException.class)
 	public void offlineShouldReturnError_InvalidSnapshotOperationForDate() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture3.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE14");
@@ -529,7 +529,7 @@ public class SwitcherOfflineTest {
 	
 	@Test(expected = SwitcherInvalidOperationException.class)
 	public void offlineShouldReturnError_InvalidSnapshotOperationForTime() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture3.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE15");
@@ -539,7 +539,7 @@ public class SwitcherOfflineTest {
 
 	@Test(expected = SwitcherInvalidOperationInputException.class)
 	public void offlineShouldReturnError_InvalidValuesForDate() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture3.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE16");
@@ -549,7 +549,7 @@ public class SwitcherOfflineTest {
 	
 	@Test(expected = SwitcherInvalidOperationInputException.class)
 	public void offlineShouldReturnError_InvalidValuesForTime() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "snapshot_fixture3.json");
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture3.json");
 		SwitcherFactory.buildContext(properties, true);
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE17");
