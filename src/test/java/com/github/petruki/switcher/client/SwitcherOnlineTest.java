@@ -169,7 +169,7 @@ public class SwitcherOnlineTest {
 		Builder builderMock = PowerMockito.mock(Builder.class);
 
 		PowerMockito.when(clientMock.target(String.format(ClientService.CRITERIA_URL, properties.get(SwitcherContextParam.URL)))).thenReturn(webTargetMock);
-		PowerMockito.when(webTargetMock.queryParam(Switcher.KEY, switcher.getKey())).thenReturn(webTargetMock);
+		PowerMockito.when(webTargetMock.queryParam(Switcher.KEY, switcher.getSwitcherKey())).thenReturn(webTargetMock);
 		PowerMockito.when(webTargetMock.queryParam(Switcher.SHOW_REASON, Boolean.TRUE)).thenReturn(webTargetMock);
 		PowerMockito.when(webTargetMock.queryParam(Switcher.BYPASS_METRIC, properties.containsKey(Switcher.BYPASS_METRIC) ? 
 				properties.get(Switcher.BYPASS_METRIC) : false)).thenReturn(webTargetMock);
@@ -181,6 +181,7 @@ public class SwitcherOnlineTest {
 		
 		clientService.setClient(clientMock);
 		
+		// It returns null but the idea is to check if no exception is thrown during this process
 		clientService.executeCriteriaService(properties, switcher);
 	}
 	

@@ -28,32 +28,31 @@ public class ClientServiceImpl implements ClientService {
 	private Client client;
 	
 	public ClientServiceImpl() {
+		
 		this.setClient(ClientBuilder.newClient());
 	}
 	
 	@Override
 	public Response executeCriteriaService(final Map<String, Object> properties, 
-			final Switcher switcher) throws Exception {
+			final Switcher switcher) {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("switcher: %s", switcher));
 		}
 		
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, properties.get(SwitcherContextParam.URL)))
-				.queryParam(Switcher.KEY, switcher.getKey())
+				.queryParam(Switcher.KEY, switcher.getSwitcherKey())
 				.queryParam(Switcher.SHOW_REASON, Boolean.TRUE)
 				.queryParam(Switcher.BYPASS_METRIC, properties.containsKey(Switcher.BYPASS_METRIC) ? 
 						properties.get(Switcher.BYPASS_METRIC) : false);
 		
-		final Response response = myResource.request(MediaType.APPLICATION_JSON)
+		return myResource.request(MediaType.APPLICATION_JSON)
 			.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, ((AuthResponse) properties.get(AUTH_RESPONSE)).getToken()))
 			.post(Entity.json(switcher.getInputRequest()));
-		
-		return response;
 	}
 	
 	@Override
-	public Response auth(final Map<String, Object> properties) throws Exception {
+	public Response auth(final Map<String, Object> properties) {
 		
 		final AuthRequest authRequest = new AuthRequest();
 		authRequest.setDomain((String) properties.get(SwitcherContextParam.DOMAIN));
@@ -61,20 +60,19 @@ public class ClientServiceImpl implements ClientService {
 		authRequest.setEnvironment((String) properties.get(SwitcherContextParam.ENVIRONMENT));
 
 		final WebTarget myResource = client.target(String.format(AUTH_URL, properties.get(SwitcherContextParam.URL)));
-		final Response response = myResource.request(MediaType.APPLICATION_JSON)
+		
+		return myResource.request(MediaType.APPLICATION_JSON)
 			.header(HEADER_APIKEY, properties.get(SwitcherContextParam.APIKEY))
-			.post(Entity.json(authRequest));	
-
-		return response;
+			.post(Entity.json(authRequest));
 	}
 	
 	@Override
-	public Response resolveSnapshot(Map<String, Object> properties) throws Exception {
+	public Response resolveSnapshot(Map<String, Object> properties) {
 		
 		final String domain = (String) properties.get(SwitcherContextParam.DOMAIN);
 		final String environment = (String) properties.get(SwitcherContextParam.ENVIRONMENT);
 		
-		final StringBuffer query = new StringBuffer();
+		final StringBuilder query = new StringBuilder();
 		query.append("{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\") { ");
 		query.append("name version description activated ");
 		query.append("group { name description activated ");
@@ -84,11 +82,9 @@ public class ClientServiceImpl implements ClientService {
 		
 		final WebTarget myResource = client.target(String.format(SNAPSHOT_URL, properties.get(SwitcherContextParam.URL)));
 		
-		final Response response = myResource.request(MediaType.APPLICATION_JSON)
+		return myResource.request(MediaType.APPLICATION_JSON)
 			.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, ((AuthResponse) properties.get(AUTH_RESPONSE)).getToken()))
 			.post(Entity.json(String.format(query.toString(), domain, environment)));
-		
-		return response;
 	}
 
 	public void setClient(Client client) {

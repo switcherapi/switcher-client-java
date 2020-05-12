@@ -67,7 +67,7 @@ public class ClientOfflineServiceFacade {
 		Config configFound = null;
 		for (final Group group : domain.getGroup()) {
 			configFound = Arrays.stream(group.getConfig())
-					.filter(config -> config.getKey().equals(switcher.getKey()))
+					.filter(config -> config.getKey().equals(switcher.getSwitcherKey()))
 					.findFirst()
 					.orElse(null);
 
@@ -90,7 +90,7 @@ public class ClientOfflineServiceFacade {
 		}
 
 		if (configFound == null) {
-			throw new SwitcherKeyNotFoundException(switcher.getKey());
+			throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
 		}
 
 		return new CriteriaResponse(true, "Success");

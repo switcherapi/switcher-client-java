@@ -27,8 +27,6 @@ public class SwitcherOffline implements SwitcherExecutor {
 	
 	private static final Logger logger = LogManager.getLogger(SwitcherOffline.class);
 	
-	private String snapshotFile;
-	
 	private String snapshotLocation;
 	
 	private String environment;
@@ -48,12 +46,13 @@ public class SwitcherOffline implements SwitcherExecutor {
 	 */
 	public void init(final Map<String, Object> properties) throws SwitcherException {
 		
+		final String snapshotFile = (String) properties.get(SwitcherContextParam.SNAPSHOT_FILE);
+		
 		this.snapshotLocation = (String) properties.get(SwitcherContextParam.SNAPSHOT_LOCATION);
-		this.snapshotFile = (String) properties.get(SwitcherContextParam.SNAPSHOT_FILE);
 		this.environment = (String) properties.get(SwitcherContextParam.ENVIRONMENT);
 		
-		if (this.snapshotFile != null) {
-			this.domain = SnapshotLoader.loadSnapshot(this.snapshotFile);
+		if (snapshotFile != null) {
+			this.domain = SnapshotLoader.loadSnapshot(snapshotFile);
 		} else {
 			try {
 				this.domain = SnapshotLoader.loadSnapshot(this.snapshotLocation, this.environment);

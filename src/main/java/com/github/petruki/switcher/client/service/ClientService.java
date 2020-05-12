@@ -23,10 +23,10 @@ public interface ClientService {
 	public static final String SNAPSHOT_URL = "%s/graphql";
 	
 	public Response executeCriteriaService(final Map<String, Object> properties, 
-			final Switcher switcher) throws Exception;
+			final Switcher switcher);
 	
-	public Response auth(final Map<String, Object> properties) throws Exception;
+	public Response auth(final Map<String, Object> properties);
 	
-	public Response resolveSnapshot(final Map<String, Object> properties) throws Exception;
+	public Response resolveSnapshot(final Map<String, Object> properties);
 
 }

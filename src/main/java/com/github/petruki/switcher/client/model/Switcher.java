@@ -29,19 +29,19 @@ public class Switcher {
 	public static final String BYPASS_METRIC = "bypassMetric";
 	
 	private SwitcherExecutor context;
-	private String key;
+	private String switcherKey;
 	private List<Entry> entry;
 	private Map<String, Boolean> bypass;
 	
 	/**
 	 * Use {@link SwitcherFactory#buildContext(Map, boolean)} to create this object.
 	 * 
-	 * @param key name of the key created
+	 * @param switcherKey name of the key created
 	 * @param context configuration object containing all information to start using switchers
 	 */
-	public Switcher(final String key, final SwitcherExecutor context) {
+	public Switcher(final String switcherKey, final SwitcherExecutor context) {
 		
-		this.key = key;
+		this.switcherKey = switcherKey;
 		this.context = context;
 		this.bypass = new HashMap<>();
 	}
@@ -123,7 +123,7 @@ public class Switcher {
 	 */
 	public boolean isItOn(final String key) throws SwitcherException {
 		
-		this.key = key;
+		this.switcherKey = key;
 		return this.isItOn();
 	}
 	
@@ -140,8 +140,8 @@ public class Switcher {
 	 */
 	public boolean isItOn() throws SwitcherException {
 		
-		if (this.bypass.containsKey(key)) {
-			return this.bypass.get(key);
+		if (this.bypass.containsKey(switcherKey)) {
+			return this.bypass.get(switcherKey);
 		}
 		
 		return this.context.executeCriteria(this);
@@ -178,9 +178,9 @@ public class Switcher {
 		return new GsonInputRequest(this.entry != null ? this.entry.toArray(new Entry[this.entry.size()]) : null);
 	}
 
-	public String getKey() {
+	public String getSwitcherKey() {
 		
-		return this.key;
+		return this.switcherKey;
 	}
 
 	public List<Entry> getEntry() {
@@ -191,7 +191,7 @@ public class Switcher {
 	@Override
 	public String toString() {
 		
-		return "Switcher [key=" + key + ", entry=" + entry + "]";
+		return "Switcher [switcherKey=" + switcherKey + ", entry=" + entry + "]";
 	}
 	
 	public class GsonInputRequest {

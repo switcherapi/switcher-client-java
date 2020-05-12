@@ -56,7 +56,7 @@ public class ClientServiceFacade {
 			final Response response = this.clientService.executeCriteriaService(properties, switcher);
 			
 			if (response.getStatus() != 200) {
-				throw new SwitcherKeyNotFoundException(switcher.getKey());
+				throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
 			}
 			
 			final CriteriaResponse criteriaReponse = response.readEntity(CriteriaResponse.class);

@@ -1,5 +1,6 @@
 package com.github.petruki.switcher.client.utils;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -11,9 +12,9 @@ import java.util.Map;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.ResponseProcessingException;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -23,12 +24,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.petruki.switcher.client.SwitcherFactory;
 import com.github.petruki.switcher.client.exception.SwitcherAPIConnectionException;
 import com.github.petruki.switcher.client.exception.SwitcherSnapshotLoadException;
-import com.github.petruki.switcher.client.exception.SwitcherSnapshotWriteException;
 import com.github.petruki.switcher.client.facade.ClientServiceFacade;
 import com.github.petruki.switcher.client.model.AuthResponse;
 import com.github.petruki.switcher.client.model.Switcher;
@@ -40,6 +41,7 @@ import com.github.petruki.switcher.client.service.ClientServiceImpl;
 
 @PowerMockIgnore({"javax.management.*", "org.apache.log4j.*", "javax.xml.*", "javax.script.*"})
 @RunWith(PowerMockRunner.class)
+@PrepareForTest(Entity.class)
 public class SnapshotLoaderTest {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
@@ -96,22 +98,23 @@ public class SnapshotLoaderTest {
 		ClientServiceImpl clientService = new ClientServiceImpl();
 		
 		final AuthResponse authResponse = new AuthResponse();
-		authResponse.setExp(SwitcherUtils.addTimeDuration("2s", new Date()).getTime()/1000);
+		authResponse.setExp(SwitcherUtils.addTimeDuration("60s", new Date()).getTime()/1000);
 		authResponse.setToken("123lkjsuoi23487skjfh28dskjn29");
-		properties.put(ClientService.AUTH_RESPONSE, authResponse);
+		this.properties.put(ClientService.AUTH_RESPONSE, authResponse);
 		
-		WebTarget webTargetMock = PowerMockito.mock(WebTarget.class);
 		Client clientMock = PowerMockito.mock(Client.class);
+		WebTarget webTargetMock = PowerMockito.mock(WebTarget.class);
+		Builder buildHeaderMock = PowerMockito.mock(Builder.class);
+		Builder buildPostMock = PowerMockito.mock(Builder.class);
 		Response responseMock = PowerMockito.mock(Response.class);
-		Builder builderMock = PowerMockito.mock(Builder.class);
 
-		PowerMockito.when(clientMock.target(String.format(ClientService.SNAPSHOT_URL, properties.get(SwitcherContextParam.URL)))).thenReturn(webTargetMock);
-		PowerMockito.when(webTargetMock.request(MediaType.APPLICATION_JSON)).thenReturn(builderMock);
-		PowerMockito.when(builderMock.header(
+		PowerMockito.when(clientMock.target(String.format(ClientService.SNAPSHOT_URL, this.properties.get(SwitcherContextParam.URL)))).thenReturn(webTargetMock);
+		PowerMockito.when(webTargetMock.request(MediaType.APPLICATION_JSON)).thenReturn(buildHeaderMock);
+		PowerMockito.when(buildHeaderMock.header(
 				ClientService.HEADER_AUTHORIZATION, String.format(ClientService.TOKEN_TEXT, 
-						((AuthResponse) properties.get(ClientService.AUTH_RESPONSE)).getToken()))).thenReturn(builderMock);
+						((AuthResponse) this.properties.get(ClientService.AUTH_RESPONSE)).getToken()))).thenReturn(buildPostMock);
 		
-		final StringBuffer query = new StringBuffer();
+		final StringBuilder query = new StringBuilder();
 		query.append("{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\") { ");
 		query.append("name version description activated ");
 		query.append("group { name description activated ");
@@ -119,12 +122,17 @@ public class SnapshotLoaderTest {
 		query.append("strategies { strategy activated operation values } ");
 		query.append("components } } } }\"}");
 		
-		PowerMockito.when(builderMock.post(Entity.json(String.format(query.toString(), "switcher-domain", "generated_default"))))
-			.thenReturn(responseMock);
+		final String mockQuery = String.format(query.toString(), "switcher-domain", "generated_default");
+		final Entity<String> mockEntityQuery = Entity.json(mockQuery);
+		PowerMockito.when(buildPostMock.post(mockEntityQuery)).thenReturn(responseMock);
+		PowerMockito.when(responseMock.getStatus()).thenReturn(200);
+		
+		PowerMockito.mockStatic(Entity.class);
+		PowerMockito.when(Entity.json(mockQuery)).thenReturn(mockEntityQuery);
 		
 		clientService.setClient(clientMock);
-		
-		clientService.resolveSnapshot(properties);
+
+		assertEquals(200, clientService.resolveSnapshot(this.properties).getStatus());
 	}
 	
 	@Test(expected = SwitcherAPIConnectionException.class)
@@ -146,7 +154,7 @@ public class SnapshotLoaderTest {
 				ClientService.HEADER_AUTHORIZATION, String.format(ClientService.TOKEN_TEXT, 
 						((AuthResponse) properties.get(ClientService.AUTH_RESPONSE)).getToken()))).thenReturn(builderMock);
 		
-		final StringBuffer query = new StringBuffer();
+		final StringBuilder query = new StringBuilder();
 		query.append("{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\") { ");
 		query.append("name version description activated ");
 		query.append("group { name description activated ");

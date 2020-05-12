@@ -26,6 +26,10 @@ import com.google.gson.JsonSyntaxException;
 public class SnapshotLoader {
 	
 	private static final Logger logger = LogManager.getLogger(SnapshotLoader.class);
+	
+	private static final String SNAPSHOT_FILE_FORMAT = "%s/%s.json";
+	
+	private SnapshotLoader() {}
 
 	/**
 	 * Load a specific snapshot file
@@ -61,11 +65,11 @@ public class SnapshotLoader {
 		final Gson gson = new Gson();
 
 		try {
-			final Snapshot data = gson.fromJson(new FileReader(String.format("%s/%s.json", snapshotLocation, environment)), Snapshot.class);
+			final Snapshot data = gson.fromJson(new FileReader(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment)), Snapshot.class);
 			return data.getDomain();
 		} catch (JsonSyntaxException | JsonIOException e) {
 			logger.error(e);
-			throw new SwitcherSnapshotLoadException(String.format("%s/%s.json", snapshotLocation, environment), e);
+			throw new SwitcherSnapshotLoadException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
 		} catch (FileNotFoundException e) {
 			throw e;
 		}
@@ -86,14 +90,14 @@ public class SnapshotLoader {
 
 		try (
 				final FileWriter fileWriter = new FileWriter(
-						new File(String.format("%s/%s.json", snapshotLocation, environment)));
+						new File(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment)));
 				final BufferedWriter bw = new BufferedWriter(fileWriter);
 				final PrintWriter wr = new PrintWriter(bw);
 				) {
 			wr.write(gson.toJson(snapshot));
 		} catch (Exception e) {
 			logger.error(e);
-			throw new SwitcherSnapshotWriteException(String.format("%s/%s.json", snapshotLocation, environment), e);
+			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
 		}	
 
 	}

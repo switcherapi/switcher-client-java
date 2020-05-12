@@ -43,10 +43,10 @@ public class ModelTest {
 		String[] strategyValues = new String[] { "Value" };
 		strategy.setValues(strategyValues);
 		
-		assertSame(strategy.getDescription(), "Description");
-		assertSame(strategy.getOperation(), "Operation");
-		assertSame(strategy.getStrategy(), "Strategy");
-		assertSame(strategy.getValues(), strategyValues);
+		assertSame("Description", strategy.getDescription());
+		assertSame("Operation", strategy.getOperation());
+		assertSame("Strategy", strategy.getStrategy());
+		assertSame(strategyValues, strategy.getValues());
 		
 		final Config config = new Config();
 		config.setActivated(true);
@@ -57,10 +57,10 @@ public class ModelTest {
 		Strategy[] strategies = new Strategy[] { strategy };
 		config.setStrategies(strategies);
 		
-		assertSame(config.getDescription(), "Description");
-		assertSame(config.getKey(), "Key");
-		assertSame(config.getComponents(), configComponents);
-		assertSame(config.getStrategies(), strategies);
+		assertSame("Description", config.getDescription());
+		assertSame("Key", config.getKey());
+		assertSame(configComponents, config.getComponents());
+		assertSame(strategies, config.getStrategies());
 		
 		final Group group = new Group();
 		group.setActivated(true);
@@ -69,9 +69,9 @@ public class ModelTest {
 		Config[] configs = new Config[] { config };
 		group.setConfig(configs);
 		
-		assertSame(group.getDescription(), "Description");
-		assertSame(group.getName(), "Name");
-		assertSame(group.getConfig(), configs);
+		assertSame("Description", group.getDescription());
+		assertSame("Name", group.getName());
+		assertSame(configs, group.getConfig());
 		
 		final Domain domain = new Domain();
 		domain.setActivated(true);
@@ -81,10 +81,10 @@ public class ModelTest {
 		Group[] groups = new Group[] { group };
 		domain.setGroup(groups);
 		
-		assertSame(domain.getDescription(), "Description");
-		assertSame(domain.getName(), "Name");
-		assertEquals(domain.getVersion(), 10000000000l);
-		assertSame(domain.getGroup(), groups);
+		assertSame("Description", domain.getDescription());
+		assertSame("Name", domain.getName());
+		assertEquals(10000000000l, domain.getVersion());
+		assertSame(groups, domain.getGroup());
 		
 		final Criteria criteria = new Criteria();
 		criteria.setDomain(domain);
@@ -92,7 +92,7 @@ public class ModelTest {
 		final Snapshot snapsot = new Snapshot();
 		snapsot.setData(criteria);
 		
-		assertSame(snapsot.getData(), criteria);
+		assertSame(criteria, snapsot.getData());
 	}
 
 }
