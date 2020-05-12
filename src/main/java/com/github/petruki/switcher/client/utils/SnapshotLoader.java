@@ -81,22 +81,21 @@ public class SnapshotLoader {
 	 */
 	public static void saveSnapshot(final Snapshot snapshot, final String snapshotLocation, 
 			final String environment) throws SwitcherSnapshotWriteException {
-		
-		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		
-		try {
-			final FileWriter fileWriter = new FileWriter(new File(String.format("%s/%s.json", snapshotLocation, environment)));
-			final BufferedWriter bw = new BufferedWriter(fileWriter);
-	        final PrintWriter wr = new PrintWriter(bw);
 
-            wr.write(gson.toJson(snapshot));
-            wr.close();
-            bw.close();
+		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+		try (
+				final FileWriter fileWriter = new FileWriter(
+						new File(String.format("%s/%s.json", snapshotLocation, environment)));
+				final BufferedWriter bw = new BufferedWriter(fileWriter);
+				final PrintWriter wr = new PrintWriter(bw);
+				) {
+			wr.write(gson.toJson(snapshot));
 		} catch (Exception e) {
 			logger.error(e);
 			throw new SwitcherSnapshotWriteException(String.format("%s/%s.json", snapshotLocation, environment), e);
 		}	
-		
+
 	}
 
 }
