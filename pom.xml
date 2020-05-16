@@ -57,6 +57,7 @@
    		<!-- test -->
    		<log4j.version>2.13.1</log4j.version>
    		<powermock-module-junit4.version>2.0.2</powermock-module-junit4.version>
+   		<awaitility.version>3.0.0</awaitility.version>
    		
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -130,6 +131,12 @@
             <version>${powermock-module-junit4.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+		    <groupId>org.awaitility</groupId>
+		    <artifactId>awaitility</artifactId>
+		    <version>${awaitility.version}</version>
+		    <scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<!-- 

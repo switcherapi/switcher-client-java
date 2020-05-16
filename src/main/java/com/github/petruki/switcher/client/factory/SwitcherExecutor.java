@@ -54,7 +54,7 @@ public abstract class SwitcherExecutor {
 		}
 	}
 	
-	public Domain initializeSnapshotFromAPI(final Map<String, Object> properties) throws SwitcherException {
+	public Domain initializeSnapshotFromAPI() throws SwitcherException {
 		
 		final String snapshotLocation = this.getSnapshotLocation();
 		final String environment = this.getEnvironment();

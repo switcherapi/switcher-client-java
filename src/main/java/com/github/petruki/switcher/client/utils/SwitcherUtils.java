@@ -83,8 +83,7 @@ public class SwitcherUtils {
         }
     }
 	
-	public static void watchSnapshot(final SwitcherExecutor executorInstance) 
-			throws SwitcherSnapshotWatcherException {
+	public static void watchSnapshot(final SwitcherExecutor executorInstance) {
 		
 		if (watcher == null)
 			watcher = new SnapshotWatcher(executorInstance);

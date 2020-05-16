@@ -35,31 +35,26 @@ public class SnapshotWatcher implements Runnable {
 	@Override
 	public void run() {
 		
+		WatchKey key;
+		
 		try {
 			
 			watcher = FileSystems.getDefault().newWatchService();
 			final Path dir = Paths.get(executorInstance.getSnapshotLocation());
-			WatchKey key = dir.register(watcher,
+			key = dir.register(watcher,
 		    		StandardWatchEventKinds.ENTRY_DELETE,
 		    		StandardWatchEventKinds.ENTRY_MODIFY);
 
 		    for (;;) {
-		    	
 			    key = watcher.take();
 			    Thread.sleep(1000); // Gap between writing events so it will load just once
 			    
 		    	for (WatchEvent<?> event: key.pollEvents()) {
-		    		
-		    		WatchEvent.Kind<?> kind = event.kind();
-		    		
-		    		if (kind == StandardWatchEventKinds.OVERFLOW) 
-		    			continue;
-		    		
 		    		@SuppressWarnings("unchecked")
 		    		WatchEvent<Path> ev = (WatchEvent<Path>) event;
 		    		Path filename = ev.context();
 		    		
-	    			logger.debug(String.format("File %s has been changed", filename.toString()));
+	    			logger.debug("File {0} has been changed", filename.toString());
 		    		executorInstance.notifyChange(filename.toString());
 		    		break;
 		    	}
@@ -71,6 +66,7 @@ public class SnapshotWatcher implements Runnable {
 		    }
 		} catch (IOException | InterruptedException e) {
 			logger.error(e);
+			Thread.currentThread().interrupt();
 		} catch (ClosedWatchServiceException e) {
 			this.executorInstance = null;
 		}

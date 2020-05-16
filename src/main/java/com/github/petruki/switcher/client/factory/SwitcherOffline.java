@@ -52,7 +52,7 @@ public class SwitcherOffline extends SwitcherExecutor {
 				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
 			} catch (FileNotFoundException e) {
 				if (super.isSnapshotAutoLoad()) {
-					this.domain = this.initializeSnapshotFromAPI(this.properties);
+					this.domain = this.initializeSnapshotFromAPI();
 				} else {
 					throw new SwitcherSnapshotLoadException(String.format("%s/%s.json", snapshotLocation, environment), e);
 				}
@@ -86,7 +86,7 @@ public class SwitcherOffline extends SwitcherExecutor {
 	@Override
 	public void updateSnapshot() throws SwitcherException {
 		
-		this.domain = super.initializeSnapshotFromAPI(this.properties);
+		this.domain = super.initializeSnapshotFromAPI();
 	}
 	
 	@Override

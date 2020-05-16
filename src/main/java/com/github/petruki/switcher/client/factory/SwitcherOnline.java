@@ -75,7 +75,7 @@ public class SwitcherOnline extends SwitcherExecutor {
 	@Override
 	public void updateSnapshot() throws SwitcherException {
 		
-		super.initializeSnapshotFromAPI(this.properties);
+		super.initializeSnapshotFromAPI();
 	}
 	
 	@Override
