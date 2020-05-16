@@ -98,7 +98,7 @@ public class SnapshotLoader {
 		} catch (Exception e) {
 			logger.error(e);
 			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
-		}	
+		}
 
 	}
 

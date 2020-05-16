@@ -11,7 +11,7 @@ public class Snapshot {
 	
 	public Domain getDomain() {
 		
-		return data.getDomain();
+		return data != null ? data.getDomain() : new Domain();
 	}
 
 	public Criteria getData() {

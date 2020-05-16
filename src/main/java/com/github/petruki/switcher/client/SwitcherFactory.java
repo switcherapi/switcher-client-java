@@ -12,7 +12,9 @@ import com.github.petruki.switcher.client.factory.SwitcherExecutor;
 import com.github.petruki.switcher.client.factory.SwitcherOffline;
 import com.github.petruki.switcher.client.factory.SwitcherOnline;
 import com.github.petruki.switcher.client.model.Switcher;
+import com.github.petruki.switcher.client.service.ClientService;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
+import com.github.petruki.switcher.client.utils.SwitcherUtils;
 
 /**
  * Configure context (using {@link #buildContext(Map, boolean)} and claim switcher (using {@link #getSwitcher(String)} by using this factory.
@@ -89,6 +91,43 @@ public class SwitcherFactory {
 		}
 		
 		return new Switcher(key, instance);
+	}
+	
+	/**
+	 * Validate and update local snapshot file
+	 * 
+	 * @throws SwitcherException
+	 *  If an error has occrured when invoking {@link ClientService#SNAPSHOT_URL} and {@link ClientService#SNAPSHOT_VERSION_CHECK}
+	 */
+	public static void validateSnapshot() throws SwitcherException {
+		
+		if (instance == null) {
+			throw new SwitcherFactoryContextException();
+		}
+		
+		if (!instance.checkSnapshotVersion()) {
+			instance.updateSnapshot();
+		}
+	}
+	
+	/**
+	 * Start watching snapshot file for changes. As it has changed, it will update the domain in memory
+	 * 
+	 * @throws SwitcherException if watch thread fails to run
+	 */
+	public static void watchSnapshot() throws SwitcherException {
+		
+		SwitcherUtils.watchSnapshot(instance);
+	}
+	
+	/**
+	 * Unregister snapshot location and terminates the Thread watcher
+	 * 
+	 * @throws SwitcherException if watch thread never started
+	 */
+	public static void stopWatchingSnapshot() throws SwitcherException {
+		
+		SwitcherUtils.stopWatchingSnapshot();
 	}
 
 }

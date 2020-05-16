@@ -1,4 +1,4 @@
-package com.github.petruki.switcher.client.model;
+package com.github.petruki.switcher.client.model.response;
 
 /**
  * @author rogerio

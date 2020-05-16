@@ -11,10 +11,11 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.exception.SwitcherAPIConnectionException;
 import com.github.petruki.switcher.client.exception.SwitcherKeyNotFoundException;
-import com.github.petruki.switcher.client.model.AuthResponse;
-import com.github.petruki.switcher.client.model.CriteriaResponse;
 import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.model.criteria.Snapshot;
+import com.github.petruki.switcher.client.model.response.AuthResponse;
+import com.github.petruki.switcher.client.model.response.CriteriaResponse;
+import com.github.petruki.switcher.client.model.response.SnapshotVersionResponse;
 import com.github.petruki.switcher.client.service.ClientService;
 import com.github.petruki.switcher.client.service.ClientServiceImpl;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
@@ -86,6 +87,28 @@ public class ClientServiceFacade {
 			final Snapshot snapshot = response.readEntity(Snapshot.class);
 			response.close();
 			return snapshot;
+		} catch (final Exception e) {
+			logger.error(e);
+			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
+					(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY, e);
+		}
+		
+	}
+	
+	public boolean checkSnapshotVersion(final Map<String, Object> properties, final long version)
+			throws SwitcherAPIConnectionException {
+		
+		try {
+			if (!this.isTokenValid(properties)) {
+				this.auth(properties);
+			}
+					
+			final Response response = this.clientService.checkSnapshotVersion(properties, version);
+			
+			final SnapshotVersionResponse snapshotVersionResponse = response.readEntity(SnapshotVersionResponse.class);
+			response.close();
+			
+			return snapshotVersionResponse.isUpdated();
 		} catch (final Exception e) {
 			logger.error(e);
 			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 

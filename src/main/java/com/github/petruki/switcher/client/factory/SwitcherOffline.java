@@ -3,33 +3,25 @@ package com.github.petruki.switcher.client.factory;
 import java.io.FileNotFoundException;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.petruki.switcher.client.exception.SwitcherAPIConnectionException;
 import com.github.petruki.switcher.client.exception.SwitcherException;
 import com.github.petruki.switcher.client.exception.SwitcherSnapshotLoadException;
-import com.github.petruki.switcher.client.exception.SwitcherSnapshotWriteException;
 import com.github.petruki.switcher.client.facade.ClientOfflineServiceFacade;
-import com.github.petruki.switcher.client.facade.ClientServiceFacade;
-import com.github.petruki.switcher.client.model.CriteriaResponse;
 import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.model.criteria.Domain;
-import com.github.petruki.switcher.client.model.criteria.Snapshot;
+import com.github.petruki.switcher.client.model.response.CriteriaResponse;
 import com.github.petruki.switcher.client.utils.SnapshotLoader;
-import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 
 /**
  * @author rogerio
  * @since 2019-12-24
  */
-public class SwitcherOffline implements SwitcherExecutor {
+public class SwitcherOffline extends SwitcherExecutor {
 	
 	private static final Logger logger = LogManager.getLogger(SwitcherOffline.class);
-	
-	private String snapshotLocation;
-	
-	private String environment;
 	
 	private Domain domain;
 	
@@ -44,22 +36,23 @@ public class SwitcherOffline implements SwitcherExecutor {
 	 * @param properties
 	 * @throws SwitcherSnapshotLoadException 
 	 */
+	@Override
 	public void init(final Map<String, Object> properties) throws SwitcherException {
 		
-		final String snapshotFile = (String) properties.get(SwitcherContextParam.SNAPSHOT_FILE);
+		this.properties = properties;
 		
-		this.snapshotLocation = (String) properties.get(SwitcherContextParam.SNAPSHOT_LOCATION);
-		this.environment = (String) properties.get(SwitcherContextParam.ENVIRONMENT);
+		final String snapshotFile = super.getSnapshotFile();
+		final String snapshotLocation = super.getSnapshotLocation();
+		final String environment = super.getEnvironment();
 		
-		if (snapshotFile != null) {
+		if (StringUtils.isNotBlank(snapshotFile)) {
 			this.domain = SnapshotLoader.loadSnapshot(snapshotFile);
 		} else {
 			try {
-				this.domain = SnapshotLoader.loadSnapshot(this.snapshotLocation, this.environment);
+				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
 			} catch (FileNotFoundException e) {
-				if (properties.containsKey(SwitcherContextParam.SNAPSHOT_AUTO_LOAD) &&
-						(boolean) properties.get(SwitcherContextParam.SNAPSHOT_AUTO_LOAD)) {
-					this.initializeSnapshotFromAPI(properties);
+				if (super.isSnapshotAutoLoad()) {
+					this.domain = this.initializeSnapshotFromAPI(this.properties);
 				} else {
 					throw new SwitcherSnapshotLoadException(String.format("%s/%s.json", snapshotLocation, environment), e);
 				}
@@ -83,33 +76,39 @@ public class SwitcherOffline implements SwitcherExecutor {
 		return response.isItOn();
 	}
 	
+	
+	@Override
+	public boolean checkSnapshotVersion() throws SwitcherException {
+		
+		return super.checkSnapshotVersion(this.domain);
+	}
+
+	@Override
+	public void updateSnapshot() throws SwitcherException {
+		
+		this.domain = super.initializeSnapshotFromAPI(this.properties);
+	}
+	
+	@Override
+	public void notifyChange(final String snapshotFile) {
+		
+		final String environment = super.getEnvironment();
+		final String snapshotLocation = super.getSnapshotLocation();
+		
+		try {
+			if (snapshotFile.equals(String.format("%s.json", environment))) {
+				logger.debug("Updating domain");
+				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
+			}
+		} catch (SwitcherSnapshotLoadException | FileNotFoundException e) {
+			logger.error(e);
+		}
+	}
+	
 	@Override
 	public void updateContext(final Map<String, Object> properties) throws SwitcherException {
 		
 		this.init(properties);
-	}
-	
-	/**
-	 * Load snapshot, save into a file and load in the memory
-	 * 
-	 * @param properties
-	 * @throws SwitcherException
-	 */
-	private void initializeSnapshotFromAPI(final Map<String, Object> properties) throws SwitcherException {
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("initializing snapshot from API - environment: %s", this.environment));
-		}
-		
-		try {
-			final Snapshot snapshot = ClientServiceFacade.getInstance().resolveSnapshot(properties);
-			SnapshotLoader.saveSnapshot(snapshot, this.snapshotLocation, this.environment);
-			
-			this.domain = snapshot.getDomain();
-		} catch (SwitcherAPIConnectionException | SwitcherSnapshotWriteException e) {
-			logger.error(e);
-			throw e;
-		}
 	}
 
 }

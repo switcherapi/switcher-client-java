@@ -19,13 +19,13 @@ import com.github.petruki.switcher.client.exception.SwitcherInvalidStrategyExcep
 import com.github.petruki.switcher.client.exception.SwitcherInvalidTimeFormat;
 import com.github.petruki.switcher.client.exception.SwitcherKeyNotFoundException;
 import com.github.petruki.switcher.client.exception.SwitcherNoInputReceivedException;
-import com.github.petruki.switcher.client.model.CriteriaResponse;
 import com.github.petruki.switcher.client.model.Entry;
 import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.model.criteria.Config;
 import com.github.petruki.switcher.client.model.criteria.Domain;
 import com.github.petruki.switcher.client.model.criteria.Group;
 import com.github.petruki.switcher.client.model.criteria.Strategy;
+import com.github.petruki.switcher.client.model.response.CriteriaResponse;
 import com.github.petruki.switcher.client.utils.SwitcherUtils;
 
 /**
@@ -34,10 +34,10 @@ import com.github.petruki.switcher.client.utils.SwitcherUtils;
  */
 public class ClientOfflineServiceFacade {
 	
+	private static final Logger logger = LogManager.getLogger(ClientOfflineServiceFacade.class);
+	
 	private static final String DEBUG_SWITCHER_INPUT = "switcherInput: %s";
 	private static final String DEBUG_STRATEGY = "strategy: %s";
-
-	private static final Logger logger = LogManager.getLogger(ClientOfflineServiceFacade.class);
 	
 	public static final String DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
 	public static final String CIDR_REGEX = "^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))";

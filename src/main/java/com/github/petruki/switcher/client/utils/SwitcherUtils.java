@@ -8,6 +8,8 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.petruki.switcher.client.exception.SwitcherSnapshotWatcherException;
+import com.github.petruki.switcher.client.factory.SwitcherExecutor;
 import com.google.gson.Gson;
 
 /**
@@ -17,6 +19,8 @@ import com.google.gson.Gson;
 public class SwitcherUtils {
 	
 	private static final Logger logger = LogManager.getLogger(SwitcherUtils.class);
+	
+	private static SnapshotWatcher watcher;
 	
 	private SwitcherUtils() {}
 	
@@ -78,5 +82,22 @@ public class SwitcherUtils {
             return false;
         }
     }
+	
+	public static void watchSnapshot(final SwitcherExecutor executorInstance) 
+			throws SwitcherSnapshotWatcherException {
+		
+		if (watcher == null)
+			watcher = new SnapshotWatcher(executorInstance);
+		
+		new Thread(watcher, SnapshotWatcher.class.toString()).start();
+	}
+	
+	public static void stopWatchingSnapshot() throws SwitcherSnapshotWatcherException {
+		
+		if (watcher == null)
+			throw new SwitcherSnapshotWatcherException("Snapshot watcher was not running", null);
+		
+		watcher.terminate();
+	}
 
 }

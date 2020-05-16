@@ -6,6 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.github.petruki.switcher.client.model.ModelTest;
 import com.github.petruki.switcher.client.utils.SnapshotLoaderTest;
+import com.github.petruki.switcher.client.utils.SnapshotWatcherTest;
 import com.github.petruki.switcher.client.utils.SwitcherUtilsTest;
 
 @RunWith(Suite.class)
@@ -16,6 +17,7 @@ import com.github.petruki.switcher.client.utils.SwitcherUtilsTest;
         SwitcherUtilsTest.class,
         SwitcherBypassTest.class,
         SnapshotLoaderTest.class,
+        SnapshotWatcherTest.class,
         ModelTest.class
 })
 public class AllTests {

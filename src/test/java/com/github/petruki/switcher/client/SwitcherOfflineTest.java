@@ -22,9 +22,9 @@ import com.github.petruki.switcher.client.exception.SwitcherInvalidStrategyExcep
 import com.github.petruki.switcher.client.exception.SwitcherInvalidTimeFormat;
 import com.github.petruki.switcher.client.exception.SwitcherKeyNotFoundException;
 import com.github.petruki.switcher.client.exception.SwitcherNoInputReceivedException;
-import com.github.petruki.switcher.client.model.AuthRequest;
 import com.github.petruki.switcher.client.model.Entry;
 import com.github.petruki.switcher.client.model.Switcher;
+import com.github.petruki.switcher.client.model.response.AuthRequest;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 
 @PowerMockIgnore({"javax.management.*", "org.apache.log4j.*", "javax.xml.*", "javax.script.*"})

@@ -2,6 +2,7 @@
     "data": {
         "domain": {
             "name": "switcher-domain",
+            "version": 1588557288037,
             "description": "Fixture #1",
             "activated": true,
             "group": [
