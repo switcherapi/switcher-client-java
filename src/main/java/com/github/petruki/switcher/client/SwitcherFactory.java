@@ -112,10 +112,8 @@ public class SwitcherFactory {
 	
 	/**
 	 * Start watching snapshot file for changes. As it has changed, it will update the domain in memory
-	 * 
-	 * @throws SwitcherException if watch thread fails to run
 	 */
-	public static void watchSnapshot() throws SwitcherException {
+	public static void watchSnapshot() {
 		
 		SwitcherUtils.watchSnapshot(instance);
 	}

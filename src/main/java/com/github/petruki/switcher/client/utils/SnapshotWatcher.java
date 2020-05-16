@@ -41,7 +41,7 @@ public class SnapshotWatcher implements Runnable {
 			
 			watcher = FileSystems.getDefault().newWatchService();
 			final Path dir = Paths.get(executorInstance.getSnapshotLocation());
-			key = dir.register(watcher,
+			dir.register(watcher,
 		    		StandardWatchEventKinds.ENTRY_DELETE,
 		    		StandardWatchEventKinds.ENTRY_MODIFY);
 
@@ -54,9 +54,8 @@ public class SnapshotWatcher implements Runnable {
 		    		WatchEvent<Path> ev = (WatchEvent<Path>) event;
 		    		Path filename = ev.context();
 		    		
-	    			logger.debug("File {0} has been changed", filename.toString());
+	    			logger.debug("Snapshot has been changed");
 		    		executorInstance.notifyChange(filename.toString());
-		    		break;
 		    	}
 			    
 			    boolean valid = key.reset();
