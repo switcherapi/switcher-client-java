@@ -6,7 +6,7 @@
 
 ![Switcher API: Java Client: Cloud-based Feature Flag API](https://github.com/petruki/switcherapi-assets/blob/master/logo/switcherapi_java_client.png)
 
-# About  
+# About
 Client Java for working with Switcher-API.
 https://github.com/petruki/switcher-api
 
@@ -56,7 +56,7 @@ switcher.isItOn();
 - SNAPSHOT_LOCATION: Set the folder location where snapshot files will be saved.
 - SNAPSHOT_AUTO_LOAD: (boolean) Set the module to automatically download the snapshot configuration.
 
-## - Executing
+## Executing
 There are a few different ways to call the API using the java library.
 Here are some examples:
 
