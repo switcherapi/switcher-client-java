@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,8 +26,8 @@ public class ModelTest {
 		Entry entry1 = new Entry(Entry.DATE, "2019-12-10");
 		Entry entry2 = new Entry(Entry.VALUE, "Value");
 		
-		assertTrue(!entry1.equals(entry2));
-		assertTrue(entry1.equals(entry1));
+		assertNotEquals(true, entry1.equals(entry2));
+		assertEquals(true, entry1.equals(entry1));
 		assertNotNull(entry1.toString());
 		assertNotEquals(entry1.hashCode(), entry2.hashCode());
 	}
