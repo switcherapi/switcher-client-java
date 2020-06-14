@@ -1,7 +1,6 @@
 package com.github.petruki.switcher.client.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +30,6 @@ public class Switcher {
 	private SwitcherExecutor context;
 	private String switcherKey;
 	private List<Entry> entry;
-	private Map<String, Boolean> bypass;
 	
 	/**
 	 * Use {@link SwitcherFactory#buildContext(Map, boolean)} to create this object.
@@ -43,7 +41,6 @@ public class Switcher {
 		
 		this.switcherKey = switcherKey;
 		this.context = context;
-		this.bypass = new HashMap<>();
 	}
 	
 	/**
@@ -140,32 +137,11 @@ public class Switcher {
 	 */
 	public boolean isItOn() throws SwitcherException {
 		
-		if (this.bypass.containsKey(switcherKey)) {
-			return this.bypass.get(switcherKey);
+		if (SwitcherExecutor.getBypass().containsKey(switcherKey)) {
+			return SwitcherExecutor.getBypass().get(switcherKey);
 		}
 		
 		return this.context.executeCriteria(this);
-	}
-	
-	/**
-	 * It manipulates the result of a given key.
-	 * 
-	 * @param key name of the key that you want to change the result
-	 * @param expepectedResult result that will be returned when performing isItOn
-	 */
-	public void assume(final String key, boolean expepectedResult) {
-		
-		this.bypass.put(key, expepectedResult);
-	}
-	
-	/**
-	 * It will clean up any result manipulation added before by invoking {@link Switcher#assume(String, boolean)}
-	 * 
-	 * @param key name of the key you want to remove
-	 */
-	public void forget(final String key) {
-		
-		this.bypass.remove(key);
 	}
 	
 	/**

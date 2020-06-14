@@ -1,5 +1,6 @@
 package com.github.petruki.switcher.client.factory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +26,8 @@ public abstract class SwitcherExecutor {
 	private static final Logger logger = LogManager.getLogger(SwitcherExecutor.class);
 	
 	protected Map<String, Object> properties;
+	
+	private static Map<String, Boolean> bypass = new HashMap<>();
 	
 	public abstract void init(final Map<String, Object> properties) throws SwitcherException;
 	
@@ -103,5 +106,30 @@ public abstract class SwitcherExecutor {
 		return properties.containsKey(SwitcherContextParam.SILENT_MODE) &&
 				(boolean) properties.get(SwitcherContextParam.SILENT_MODE);
 	}
+	
+	/**
+	 * It manipulates the result of a given key.
+	 * 
+	 * @param key name of the key that you want to change the result
+	 * @param expepectedResult result that will be returned when performing isItOn
+	 */
+	public static void assume(final String key, boolean expepectedResult) {
+		
+		bypass.put(key, expepectedResult);
+	}
+	
+	/**
+	 * It will clean up any result manipulation added before by invoking {@link Switcher#assume(String, boolean)}
+	 * 
+	 * @param key name of the key you want to remove
+	 */
+	public static void forget(final String key) {
+		
+		bypass.remove(key);
+	}
 
+	public static Map<String, Boolean> getBypass() {
+		
+		return bypass;
+	}
 }

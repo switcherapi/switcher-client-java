@@ -15,6 +15,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.petruki.switcher.client.SwitcherFactory;
+import com.github.petruki.switcher.client.factory.SwitcherExecutor;
 import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 
@@ -45,7 +46,7 @@ public class SwitcherBypassTest {
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
 		assertTrue(switcher.isItOn());
 		
-		switcher.assume("USECASE11", false);
+		SwitcherExecutor.assume("USECASE11", false);
 		assertFalse(switcher.isItOn());
 	}
 	
@@ -57,7 +58,7 @@ public class SwitcherBypassTest {
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE111");
 		assertFalse(switcher.isItOn());
 		
-		switcher.assume("USECASE111", true);
+		SwitcherExecutor.assume("USECASE111", true);
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -69,10 +70,10 @@ public class SwitcherBypassTest {
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
 		assertTrue(switcher.isItOn());
 		
-		switcher.assume("USECASE11", false);
+		SwitcherExecutor.assume("USECASE11", false);
 		assertFalse(switcher.isItOn());
 		
-		switcher.forget("USECASE11");
+		SwitcherExecutor.forget("USECASE11");
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -84,10 +85,10 @@ public class SwitcherBypassTest {
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE111");
 		assertFalse(switcher.isItOn());
 		
-		switcher.assume("USECASE111", true);
+		SwitcherExecutor.assume("USECASE111", true);
 		assertTrue(switcher.isItOn());
 		
-		switcher.forget("USECASE111");
+		SwitcherExecutor.forget("USECASE111");
 		assertFalse(switcher.isItOn());
 	}
 

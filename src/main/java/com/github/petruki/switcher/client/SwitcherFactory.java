@@ -70,6 +70,7 @@ public class SwitcherFactory {
 			}
 		} else {
 			instance.updateContext(properties);
+			SwitcherExecutor.getBypass().clear();
 		}
 	}
 	
