@@ -33,10 +33,6 @@ public class SnapshotLoader {
 
 	/**
 	 * Load a specific snapshot file
-	 * 
-	 * @param snapshotFile location and file name must be provided
-	 * @return
-	 * @throws SwitcherSnapshotLoadException
 	 */
 	public static Domain loadSnapshot(final String snapshotFile) throws SwitcherSnapshotLoadException {
 		
@@ -53,11 +49,6 @@ public class SnapshotLoader {
 	
 	/**
 	 * Load snapshot from the current running environment
-	 * 
-	 * @param snapshotLocation
-	 * @param environment
-	 * @return
-	 * @throws SwitcherSnapshotLoadException
 	 */
 	public static Domain loadSnapshot(final String snapshotLocation, final String environment) 
 			throws SwitcherSnapshotLoadException, FileNotFoundException {
@@ -77,11 +68,6 @@ public class SnapshotLoader {
 	
 	/**
 	 * Writes snapshot loaded from the API
-	 * 
-	 * @param snapshot
-	 * @param snapshotLocation
-	 * @param environment
-	 * @throws SwitcherSnapshotWriteException
 	 */
 	public static void saveSnapshot(final Snapshot snapshot, final String snapshotLocation, 
 			final String environment) throws SwitcherSnapshotWriteException {

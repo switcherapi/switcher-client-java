@@ -33,8 +33,8 @@ public class SwitcherOffline extends SwitcherExecutor {
 	/**
 	 * Initialize snapshot in memory. It priotizes direct file path over environment based snapshot
 	 * 
-	 * @param properties
-	 * @throws SwitcherSnapshotLoadException 
+	 * @param properties store all necessary data to build the context
+	 * @throws SwitcherSnapshotLoadException in case it was not possible to load snapshot automatically
 	 */
 	@Override
 	public void init(final Map<String, Object> properties) throws SwitcherException {

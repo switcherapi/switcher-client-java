@@ -51,7 +51,7 @@ public class SwitcherFactory {
 	 * <br> {@link SwitcherContextParam#RETRY_AFTER}
 	 * <br>
 	 * @param offline If set to true, this client will find the configuration inside the configured snapshot file
-	 * @throws SwitcherSnapshotLoadException 
+	 * @throws SwitcherSnapshotLoadException in case it was not possible to load snapshot
 	 * 
 	 * @see SwitcherContextParam
 	 */

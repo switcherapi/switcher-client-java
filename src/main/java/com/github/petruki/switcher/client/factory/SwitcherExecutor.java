@@ -119,7 +119,7 @@ public abstract class SwitcherExecutor {
 	}
 	
 	/**
-	 * It will clean up any result manipulation added before by invoking {@link Switcher#assume(String, boolean)}
+	 * It will clean up any result manipulation added before by invoking {@link SwitcherExecutor#assume(String, boolean)}
 	 * 
 	 * @param key name of the key you want to remove
 	 */
