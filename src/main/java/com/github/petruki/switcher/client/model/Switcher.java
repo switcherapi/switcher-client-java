@@ -1,7 +1,6 @@
-package com.github.petruki.switcher.client.domain;
+package com.github.petruki.switcher.client.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,21 +28,19 @@ public class Switcher {
 	public static final String BYPASS_METRIC = "bypassMetric";
 	
 	private SwitcherExecutor context;
-	private String key;
+	private String switcherKey;
 	private List<Entry> entry;
-	private Map<String, Boolean> bypass;
 	
 	/**
 	 * Use {@link SwitcherFactory#buildContext(Map, boolean)} to create this object.
 	 * 
-	 * @param key name of the key created
+	 * @param switcherKey name of the key created
 	 * @param context configuration object containing all information to start using switchers
 	 */
-	public Switcher(final String key, final SwitcherExecutor context) {
+	public Switcher(final String switcherKey, final SwitcherExecutor context) {
 		
-		this.key = key;
+		this.switcherKey = switcherKey;
 		this.context = context;
-		this.bypass = new HashMap<>();
 	}
 	
 	/**
@@ -123,7 +120,7 @@ public class Switcher {
 	 */
 	public boolean isItOn(final String key) throws SwitcherException {
 		
-		this.key = key;
+		this.switcherKey = key;
 		return this.isItOn();
 	}
 	
@@ -140,32 +137,11 @@ public class Switcher {
 	 */
 	public boolean isItOn() throws SwitcherException {
 		
-		if (this.bypass.containsKey(key)) {
-			return this.bypass.get(key);
+		if (SwitcherExecutor.getBypass().containsKey(switcherKey)) {
+			return SwitcherExecutor.getBypass().get(switcherKey);
 		}
 		
 		return this.context.executeCriteria(this);
-	}
-	
-	/**
-	 * It manipulates the result of a given key.
-	 * 
-	 * @param key name of the key that you want to change the result
-	 * @param expepectedResult result that will be returned when performing isItOn
-	 */
-	public void assume(final String key, boolean expepectedResult) {
-		
-		this.bypass.put(key, expepectedResult);
-	}
-	
-	/**
-	 * It will clean up any result manipulation added before by invoking {@link Switcher#assume(String, boolean)}
-	 * 
-	 * @param key name of the key you want to remove
-	 */
-	public void forget(final String key) {
-		
-		this.bypass.remove(key);
 	}
 	
 	/**
@@ -178,9 +154,9 @@ public class Switcher {
 		return new GsonInputRequest(this.entry != null ? this.entry.toArray(new Entry[this.entry.size()]) : null);
 	}
 
-	public String getKey() {
+	public String getSwitcherKey() {
 		
-		return this.key;
+		return this.switcherKey;
 	}
 
 	public List<Entry> getEntry() {
@@ -191,7 +167,7 @@ public class Switcher {
 	@Override
 	public String toString() {
 		
-		return "Switcher [key=" + key + ", entry=" + entry + "]";
+		return "Switcher [switcherKey=" + switcherKey + ", entry=" + entry + "]";
 	}
 	
 	public class GsonInputRequest {

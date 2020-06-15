@@ -8,7 +8,7 @@
   	<groupId>com.github.petruki</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	
  	<name>Switcher Client</name>
 	<description>Switcher Client for working with Switcher API</description>
@@ -57,12 +57,14 @@
    		<!-- test -->
    		<log4j.version>2.13.1</log4j.version>
    		<powermock-module-junit4.version>2.0.2</powermock-module-junit4.version>
+   		<awaitility.version>3.0.0</awaitility.version>
    		
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.jacoco.reportPath>${project.basedir}/target/coverage-reports/jacoco-unit.exec</sonar.jacoco.reportPath>
 		<sonar.language>java</sonar.language>
+		<sonar.coverage.exclusions>com/github/petruki/switcher/client/model/*</sonar.coverage.exclusions>
 	</properties>
 	
 	<dependencies>
@@ -129,6 +131,12 @@
             <version>${powermock-module-junit4.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+		    <groupId>org.awaitility</groupId>
+		    <artifactId>awaitility</artifactId>
+		    <version>${awaitility.version}</version>
+		    <scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<!-- 

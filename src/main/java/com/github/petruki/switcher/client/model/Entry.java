@@ -1,4 +1,4 @@
-package com.github.petruki.switcher.client.domain;
+package com.github.petruki.switcher.client.model;
 
 /**
  * Creates the input used after by invoking isItOn().

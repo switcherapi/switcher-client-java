@@ -1,4 +1,4 @@
-package com.github.petruki.switcher.client.domain.criteria;
+package com.github.petruki.switcher.client.model.criteria;
 
 /**
  * @author rogerio
@@ -7,6 +7,7 @@ package com.github.petruki.switcher.client.domain.criteria;
 abstract class SwitcherElement {
 	
 	protected String description;
+	
 	protected boolean activated;
 	
 	public String getDescription() {
@@ -17,6 +18,16 @@ abstract class SwitcherElement {
 	public boolean isActivated() {
 		
 		return activated;
+	}
+
+	public void setDescription(String description) {
+		
+		this.description = description;
+	}
+
+	public void setActivated(boolean activated) {
+		
+		this.activated = activated;
 	}
 
 }

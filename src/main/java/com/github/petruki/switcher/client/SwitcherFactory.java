@@ -5,12 +5,16 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.petruki.switcher.client.domain.Switcher;
+import com.github.petruki.switcher.client.exception.SwitcherException;
 import com.github.petruki.switcher.client.exception.SwitcherFactoryContextException;
+import com.github.petruki.switcher.client.exception.SwitcherSnapshotLoadException;
 import com.github.petruki.switcher.client.factory.SwitcherExecutor;
 import com.github.petruki.switcher.client.factory.SwitcherOffline;
 import com.github.petruki.switcher.client.factory.SwitcherOnline;
+import com.github.petruki.switcher.client.model.Switcher;
+import com.github.petruki.switcher.client.service.ClientService;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
+import com.github.petruki.switcher.client.utils.SwitcherUtils;
 
 /**
  * Configure context (using {@link #buildContext(Map, boolean)} and claim switcher (using {@link #getSwitcher(String)} by using this factory.
@@ -42,14 +46,16 @@ public class SwitcherFactory {
 	 * <br>
 	 * <br> <b>Optional</b>
 	 * <br> {@link SwitcherContextParam#SNAPSHOT_LOCATION}
+	 * <br> {@link SwitcherContextParam#SNAPSHOT_FILE}
 	 * <br> {@link SwitcherContextParam#SILENT_MODE}
 	 * <br> {@link SwitcherContextParam#RETRY_AFTER}
 	 * <br>
 	 * @param offline If set to true, this client will find the configuration inside the configured snapshot file
+	 * @throws SwitcherSnapshotLoadException in case it was not possible to load snapshot
 	 * 
 	 * @see SwitcherContextParam
 	 */
-	public static void buildContext(final Map<String, Object> properties, boolean offline) {
+	public static void buildContext(final Map<String, Object> properties, boolean offline)  throws SwitcherException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("properties: %s", properties));
@@ -58,12 +64,13 @@ public class SwitcherFactory {
 		
 		if (instance == null) {
 			if (offline) {
-				instance = new SwitcherOffline((String) properties.get(SwitcherContextParam.SNAPSHOT_LOCATION));
+				instance = new SwitcherOffline(properties);
 			} else {
 				instance = new SwitcherOnline(properties);
 			}
 		} else {
 			instance.updateContext(properties);
+			SwitcherExecutor.getBypass().clear();
 		}
 	}
 	
@@ -85,6 +92,41 @@ public class SwitcherFactory {
 		}
 		
 		return new Switcher(key, instance);
+	}
+	
+	/**
+	 * Validate and update local snapshot file
+	 * 
+	 * @throws SwitcherException
+	 *  If an error has occrured when invoking {@link ClientService#SNAPSHOT_URL} and {@link ClientService#SNAPSHOT_VERSION_CHECK}
+	 */
+	public static void validateSnapshot() throws SwitcherException {
+		
+		if (instance == null) {
+			throw new SwitcherFactoryContextException();
+		}
+		
+		if (!instance.checkSnapshotVersion()) {
+			instance.updateSnapshot();
+		}
+	}
+	
+	/**
+	 * Start watching snapshot file for changes. As it has changed, it will update the domain in memory
+	 */
+	public static void watchSnapshot() {
+		
+		SwitcherUtils.watchSnapshot(instance);
+	}
+	
+	/**
+	 * Unregister snapshot location and terminates the Thread watcher
+	 * 
+	 * @throws SwitcherException if watch thread never started
+	 */
+	public static void stopWatchingSnapshot() throws SwitcherException {
+		
+		SwitcherUtils.stopWatchingSnapshot();
 	}
 
 }

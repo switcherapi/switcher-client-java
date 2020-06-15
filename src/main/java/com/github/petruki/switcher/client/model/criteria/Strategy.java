@@ -1,4 +1,4 @@
-package com.github.petruki.switcher.client.domain.criteria;
+package com.github.petruki.switcher.client.model.criteria;
 
 import java.util.Arrays;
 
@@ -9,7 +9,9 @@ import java.util.Arrays;
 public class Strategy extends SwitcherElement {
 	
 	private String strategy;
+	
 	private String operation;
+	
 	private String[] values;
 	
 	public String getStrategy() {
@@ -32,11 +34,21 @@ public class Strategy extends SwitcherElement {
 		return values;
 	}
 
+	public void setStrategy(String strategy) {
+		
+		this.strategy = strategy;
+	}
+
+	public void setValues(String[] values) {
+		
+		this.values = values;
+	}
+
 	@Override
 	public String toString() {
 		
-		return "Strategy [strategy=" + strategy + ", operation=" + operation + ", values=" + Arrays.toString(values)
-				+ ", description=" + description + ", activated=" + activated + "]";
+		return String.format("Strategy [strategy = %s, operation = %s, description = %s, activated = %s, values = %s]", 
+				strategy, operation, description, activated, Arrays.toString(values));
 	}
 	
 }

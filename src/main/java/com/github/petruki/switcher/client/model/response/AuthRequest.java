@@ -1,4 +1,4 @@
-package com.github.petruki.switcher.client.domain;
+package com.github.petruki.switcher.client.model.response;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
