@@ -55,7 +55,7 @@
    		<commons-net.version>3.3</commons-net.version>
    		
    		<!-- test -->
-   		<log4j.version>2.13.1</log4j.version>
+   		<log4j.version>2.13.3</log4j.version>
    		<powermock-module-junit4.version>2.0.2</powermock-module-junit4.version>
    		<awaitility.version>3.0.0</awaitility.version>
    		
