@@ -267,6 +267,9 @@ public class ClientOfflineServiceFacade {
 				final double numericSecondValue = NumberUtils.createNumber(strategy.getValues()[1]).doubleValue();
 				return numericInput >= numericFirstValue && numericFirstValue <= numericSecondValue;
 			}
+			break;
+		default:
+			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 		}
 		
 		throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());

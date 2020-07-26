@@ -673,6 +673,16 @@ public class SwitcherOfflineTest {
 	}
 	
 	@Test(expected = SwitcherInvalidOperationException.class)
+	public void offlineShouldReturnError_InvalidValuesForNumericValidation() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture3.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE19");
+		switcher.prepareEntry(new Entry(Entry.NUMERIC, "1"));
+		switcher.isItOn();
+	}
+	
+	@Test(expected = SwitcherInvalidOperationException.class)
 	public void offlineShouldReturnError_InvalidSnapshotOperationForDate() throws Exception {
 		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture3.json");
 		SwitcherFactory.buildContext(properties, true);

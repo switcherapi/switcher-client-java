@@ -138,6 +138,22 @@
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "key": "USECASE19",
+                            "description": "It contains an invalid number of values for the given operation",
+                            "activated": true,
+                            "components": ["switcher-client"],
+                            "strategies": [
+                                {
+                                    "strategy": "NUMERIC_VALIDATION",
+                                    "activated": true,
+                                    "operation": "BETWEEN",
+                                    "values": [
+                                        "1"
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }
