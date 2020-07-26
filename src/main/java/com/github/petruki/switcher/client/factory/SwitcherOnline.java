@@ -59,7 +59,10 @@ public class SwitcherOnline extends SwitcherExecutor {
 		
 		if (super.isSilentMode()) {
 			boolean response = this.switcherOffline.executeCriteria(switcher);
-			logger.debug(String.format("[Silent] response: %s", response));
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("[Silent] response: %s", response));
+			}
+			
 			return response;
 		} else {
 			throw e;

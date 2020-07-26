@@ -8,6 +8,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.petruki.switcher.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.petruki.switcher.client.exception.SwitcherSnapshotWatcherException;
 import com.github.petruki.switcher.client.factory.SwitcherExecutor;
 import com.google.gson.Gson;
@@ -20,45 +21,59 @@ public class SwitcherUtils {
 	
 	private static final Logger logger = LogManager.getLogger(SwitcherUtils.class);
 	
+	private static final String LOG_DATE = "date: %s";
+	
+	private static final String LOG_TME = "time: %s";
+	
+	private static final String LOG_ADDVALUE = "addValue: %s";
+	
+	/**
+	 * [0] = s (seconds) [1] = m (minutes) [2] = h (hours) [3] = d (days)
+	 */
+	private static final String[] DURATION = { "s", "m", "h", "d" };
+	
+	private static final String FULL_DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
+	
 	private static SnapshotWatcher watcher;
 	
 	private SwitcherUtils() {}
 	
-	public static Date addTimeDuration(final String addValue, final Date date) throws Exception {
+	public static Date addTimeDuration(final String addValue, final Date date) 
+			throws SwitcherInvalidDateTimeArgumentException {
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("addValue: %s", addValue));
-			logger.debug(String.format("date: %s", date));
+			logger.debug(String.format(LOG_ADDVALUE, addValue));
+			logger.debug(String.format(LOG_DATE, date));
 		}
 		
-		if (addValue.endsWith("s")) {
-			return DateUtils.addSeconds(date, Integer.parseInt(addValue.replace("s", StringUtils.EMPTY)));
-		} else if (addValue.endsWith("m")) {
-			return DateUtils.addMinutes(date, Integer.parseInt(addValue.replace("m", StringUtils.EMPTY)));
-		} else if (addValue.endsWith("h")) {
-			return DateUtils.addHours(date, Integer.parseInt(addValue.replace("h", StringUtils.EMPTY)));
-		} else if (addValue.endsWith("d")) {
-			return DateUtils.addDays(date, Integer.parseInt(addValue.replace("d", StringUtils.EMPTY)));
+		if (addValue.endsWith(DURATION[0])) {
+			return DateUtils.addSeconds(date, Integer.parseInt(addValue.replace(DURATION[0], StringUtils.EMPTY)));
+		} else if (addValue.endsWith(DURATION[1])) {
+			return DateUtils.addMinutes(date, Integer.parseInt(addValue.replace(DURATION[1], StringUtils.EMPTY)));
+		} else if (addValue.endsWith(DURATION[2])) {
+			return DateUtils.addHours(date, Integer.parseInt(addValue.replace(DURATION[2], StringUtils.EMPTY)));
+		} else if (addValue.endsWith(DURATION[3])) {
+			return DateUtils.addDays(date, Integer.parseInt(addValue.replace(DURATION[3], StringUtils.EMPTY)));
 		}
 		
-		throw new Exception(String.format("Something went wrong. It was not possible to convert this time duration %s", addValue));
+		throw new SwitcherInvalidDateTimeArgumentException(addValue);
 	}
 	
 	public static String getFullDate(final String date) {
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("date: %s", date));
+			logger.debug(String.format(LOG_DATE, date));
 		}
 		
-		final String time = RegExUtils.removePattern(date, "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))").trim();
+		final String time = RegExUtils.removePattern(date, FULL_DATE_REGEX).trim();
 		return getFullTime(date, time);
 	}
 
 	public static String getFullTime(final String date, final String time) {
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("date: %s", date));
-			logger.debug(String.format("time: %s", time));
+			logger.debug(String.format(LOG_DATE, date));
+			logger.debug(String.format(LOG_TME, time));
 		}
 		
 		if (StringUtils.isBlank(time)) {

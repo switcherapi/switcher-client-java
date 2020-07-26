@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.net.util.SubnetUtils;
+import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -149,28 +150,31 @@ public class ClientOfflineServiceFacade {
 			logger.debug(String.format(DEBUG_SWITCHER_INPUT, switcherInput));
 		}
 
-		SubnetUtils subUtils;
 		switch (strategy.getOperation()) {
 		case Entry.EXIST:
-			for (final String value : strategy.getValues()) {
-				if (value.matches(CIDR_REGEX)) {
-					subUtils = new SubnetUtils(value);
-
-					if (subUtils.getInfo().isInRange(switcherInput.getInput())) {
-						return true;
-					}
-				} else {
-					if (value.equals(switcherInput.getInput())) {
-						return true;
-					}
-				}
-			}
-			break;
+			return verifyIfAddressExistInNetwork(strategy, switcherInput);
 		case Entry.NOT_EXIST:
 			strategy.setOperation(Entry.EXIST);
 			return !processNetwork(strategy, switcherInput);
 		default:
 			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
+		}
+	}
+
+	private boolean verifyIfAddressExistInNetwork(final Strategy strategy, final Entry switcherInput) {
+		SubnetInfo subnetInfo;
+		for (final String value : strategy.getValues()) {
+			if (value.matches(CIDR_REGEX)) {
+				subnetInfo = new SubnetUtils(value).getInfo();
+
+				if (subnetInfo.isInRange(switcherInput.getInput())) {
+					return true;
+				}
+			} else {
+				if (value.equals(switcherInput.getInput())) {
+					return true;
+				}
+			}
 		}
 		
 		return false;
