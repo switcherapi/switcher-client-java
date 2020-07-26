@@ -16,6 +16,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.petruki.switcher.client.SwitcherFactory;
+import com.github.petruki.switcher.client.exception.SwitcherInvalidNumericFormat;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidOperationException;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidOperationInputException;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidStrategyException;
@@ -300,6 +301,150 @@ public class SwitcherOfflineTest {
 	}
 	
 	@Test
+	public void offlineShouldReturnTrue_numericValidationExist() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE81");
+		Entry input = new Entry(Entry.NUMERIC, "2");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_numericValidationExist() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE81");
+		Entry input = new Entry(Entry.NUMERIC, "4");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_numericValidationDoesNotExist() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE82");
+		Entry input = new Entry(Entry.NUMERIC, "4");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_numericValidationDoesNotExist() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE82");
+		Entry input = new Entry(Entry.NUMERIC, "2");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_numericValidationEqual() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE83");
+		Entry input = new Entry(Entry.NUMERIC, "1");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_numeircValidationEqual() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE83");
+		Entry input = new Entry(Entry.NUMERIC, "2");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_numericValidationNotEqual() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE84");
+		Entry input = new Entry(Entry.NUMERIC, "2");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_numericValidationNotEqual() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE84");
+		Entry input = new Entry(Entry.NUMERIC, "1");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test(expected = SwitcherInvalidNumericFormat.class)
+	public void offlineShouldReturnException_invalidNumericInput() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE81");
+		Entry input = new Entry(Entry.NUMERIC, "INVALID_NUMBER");
+		
+		switcher.prepareEntry(input);
+		switcher.isItOn();
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_numericValidationLower() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE85");
+		Entry input = new Entry(Entry.NUMERIC, "0.99");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_numericValidationGreater() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE86");
+		Entry input = new Entry(Entry.NUMERIC, "1.09");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_numericValidationBetween() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE87");
+		Entry input = new Entry(Entry.NUMERIC, "2");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
 	public void offlineShouldReturnTrue_timeValidationGreater() throws Exception {
 		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherFactory.buildContext(properties, true);
@@ -514,6 +659,16 @@ public class SwitcherOfflineTest {
 		
 		Switcher switcher = SwitcherFactory.getSwitcher("USECASE13");
 		switcher.prepareEntry(new Entry(Entry.VALUE, "Value"));
+		switcher.isItOn();
+	}
+	
+	@Test(expected = SwitcherInvalidOperationException.class)
+	public void offlineShouldReturnError_InvalidSnapshotOperationForNumeric() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture3.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE18");
+		switcher.prepareEntry(new Entry(Entry.NUMERIC, "1"));
 		switcher.isItOn();
 	}
 	

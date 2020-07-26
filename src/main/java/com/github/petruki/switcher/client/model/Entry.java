@@ -14,6 +14,11 @@ public class Entry {
 	public static final String VALUE = "VALUE_VALIDATION";
 	
 	/**
+	 * Execute a numeric validation using a provided input
+	 */
+	public static final String NUMERIC = "NUMERIC_VALIDATION";
+	
+	/**
 	 * Execute a network validation using a provided input.
 	 * <br>- It works only with IPv4 format.
 	 */

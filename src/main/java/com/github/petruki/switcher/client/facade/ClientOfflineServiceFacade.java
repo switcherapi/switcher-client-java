@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.net.util.SubnetUtils;
 import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
@@ -14,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.exception.SwitcherException;
+import com.github.petruki.switcher.client.exception.SwitcherInvalidNumericFormat;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidOperationException;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidOperationInputException;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidStrategyException;
@@ -58,7 +60,16 @@ public class ClientOfflineServiceFacade {
 		}
 		return instance;
 	}
-
+	
+	/**
+	 * Execute the criteria validation based on the configuration three.
+	 * It starts validating from the top of the node (Domain) ascending to the lower level (Strategy)
+	 * 
+	 * @param switcher Configuration switcher to be validate
+	 * @param domain Top level of the configuration three
+	 * @return The criteria result
+	 * @throws SwitcherException If encountered either invalid input or misconfiguration
+	 */
 	public CriteriaResponse executeCriteria(final Switcher switcher, final Domain domain) throws SwitcherException {
 
 		if (!domain.isActivated()) {
@@ -67,6 +78,7 @@ public class ClientOfflineServiceFacade {
 
 		Config configFound = null;
 		for (final Group group : domain.getGroup()) {
+			// validate in which group the switcher is configured
 			configFound = Arrays.stream(group.getConfig())
 					.filter(config -> config.getKey().equals(switcher.getSwitcherKey()))
 					.findFirst()
@@ -97,7 +109,16 @@ public class ClientOfflineServiceFacade {
 		return new CriteriaResponse(true, "Success");
 	}
 
-	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input) throws SwitcherException {
+	/**
+	 * Validate a found strategy based on both input and its configuration
+	 * 
+	 * @param configStrategies Strategies registered inside a Switcher component
+	 * @param input Input sent by the client
+	 * @return CristeriaResponse containing the result of the validation
+	 * @throws SwitcherException If encountered either invalid input or misconfiguration
+	 */
+	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input) 
+			throws SwitcherException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("configStrategies: %s", Arrays.toString(configStrategies)));
@@ -121,6 +142,9 @@ public class ClientOfflineServiceFacade {
 			switch (strategy.getStrategy()) {
 			case Entry.VALUE:
 				result = this.processValue(strategy, switcherInput);
+				break;
+			case Entry.NUMERIC:
+				result = this.processNumeric(strategy, switcherInput);
 				break;
 			case Entry.NETWORK:
 				result = this.processNetwork(strategy, switcherInput);
@@ -200,6 +224,52 @@ public class ClientOfflineServiceFacade {
 		default:
 			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 		}
+	}
+	
+	private boolean processNumeric(final Strategy strategy, final Entry switcherInput) throws SwitcherException {
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format(DEBUG_STRATEGY, strategy));
+			logger.debug(String.format(DEBUG_SWITCHER_INPUT, switcherInput));
+		}
+		
+		if (!NumberUtils.isCreatable(switcherInput.getInput()))
+			throw new SwitcherInvalidNumericFormat(switcherInput.getInput());
+		
+		switch (strategy.getOperation()) {
+		case Entry.EXIST:
+			return Arrays.stream(strategy.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
+		case Entry.NOT_EXIST:
+			strategy.setOperation(Entry.EXIST);
+			return !processNumeric(strategy, switcherInput);
+		case Entry.EQUAL:
+			return strategy.getValues().length == 1 && strategy.getValues()[0].equals(switcherInput.getInput());
+		case Entry.NOT_EQUAL:
+			return strategy.getValues().length == 1 && !strategy.getValues()[0].equals(switcherInput.getInput());
+		case Entry.LOWER:
+			if (strategy.getValues().length == 1) {
+				final double numericInput = NumberUtils.createNumber(switcherInput.getInput()).doubleValue();
+				final double numericValue = NumberUtils.createNumber(strategy.getValues()[0]).doubleValue();
+				return numericInput < numericValue;
+			}
+			break;
+		case Entry.GREATER:
+			if (strategy.getValues().length == 1) {
+				final double numericInput = NumberUtils.createNumber(switcherInput.getInput()).doubleValue();
+				final double numericValue = NumberUtils.createNumber(strategy.getValues()[0]).doubleValue();
+				return numericInput > numericValue;
+			}
+			break;
+		case Entry.BETWEEN:
+			if (strategy.getValues().length == 2) {
+				final double numericInput = NumberUtils.createNumber(switcherInput.getInput()).doubleValue();
+				final double numericFirstValue = NumberUtils.createNumber(strategy.getValues()[0]).doubleValue();
+				final double numericSecondValue = NumberUtils.createNumber(strategy.getValues()[1]).doubleValue();
+				return numericInput >= numericFirstValue && numericFirstValue <= numericSecondValue;
+			}
+		}
+		
+		throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 	}
 
 	private boolean processDate(final Strategy strategy, final Entry switcherInput)

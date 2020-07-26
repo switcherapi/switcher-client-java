@@ -122,6 +122,22 @@
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "key": "USECASE18",
+                            "description": "It contains an invalid strategy operation",
+                            "activated": true,
+                            "components": ["switcher-client"],
+                            "strategies": [
+                                {
+                                    "strategy": "NUMERIC_VALIDATION",
+                                    "activated": true,
+                                    "operation": "NOT_BETWEEN",
+                                    "values": [
+                                        "1", "3"
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }
