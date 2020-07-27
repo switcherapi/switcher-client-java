@@ -118,6 +118,7 @@ switcher.isItOn(); // Now, it's going to return the result retrieved from the AP
 ```
 
 # Version Log
+- 1.0.5: Security patch - Jersey has been updated - 2.28 to 2.31
 - 1.0.4: Added Numeric Validation
 - 1.0.3: Security patch - Log4J has been updated - 2.13.1 to 2.13.3
 - 1.0.2: 
