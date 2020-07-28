@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.exception.SwitcherAPIConnectionException;
+import com.github.petruki.switcher.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.petruki.switcher.client.exception.SwitcherKeyNotFoundException;
 import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.model.criteria.Snapshot;
@@ -150,7 +151,8 @@ public class ClientServiceFacade {
 		return false;
 	}
 	
-	private void setSilentModeExpiration(final Map<String, Object> properties) throws Exception {
+	private void setSilentModeExpiration(final Map<String, Object> properties) 
+			throws SwitcherInvalidDateTimeArgumentException {
 		
 		if (properties.containsKey(SwitcherContextParam.SILENT_MODE) &&
 				(boolean) properties.get(SwitcherContextParam.SILENT_MODE)) {

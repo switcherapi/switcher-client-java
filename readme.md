@@ -118,6 +118,11 @@ switcher.isItOn(); // Now, it's going to return the result retrieved from the AP
 ```
 
 # Version Log
+- 1.0.6: Updated depencencies
+	- jersey-hk2 from 2.28 to 2.31
+	- commons-net from 3.3 to 3.6.
+	- commons-lang3 from 3.8.1 to 3.10.
+	- gson from 2.8.5 to 2.8.6.
 - 1.0.5: Security patch - Jersey has been updated - 2.28 to 2.31
 - 1.0.4: Added Numeric Validation
 - 1.0.3: Security patch - Log4J has been updated - 2.13.1 to 2.13.3
