@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.switcher.client.exception.SwitcherAPIConnectionException;
+import com.github.petruki.switcher.client.exception.SwitcherException;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.petruki.switcher.client.exception.SwitcherKeyNotFoundException;
 import com.github.petruki.switcher.client.model.Switcher;
@@ -118,7 +119,7 @@ public class ClientServiceFacade {
 		
 	}
 	
-	private void auth(final Map<String, Object> properties) throws Exception {
+	private void auth(final Map<String, Object> properties) throws SwitcherException {
 		try {
 			final Response response = this.clientService.auth(properties);
 				
