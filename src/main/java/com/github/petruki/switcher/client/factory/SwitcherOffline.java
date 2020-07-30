@@ -61,7 +61,7 @@ public class SwitcherOffline extends SwitcherExecutor {
 	}
 	
 	@Override
-	public boolean executeCriteria(final Switcher switcher) throws SwitcherException {
+	public CriteriaResponse executeCriteria(final Switcher switcher) throws SwitcherException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("switcher: %s", switcher));
@@ -73,7 +73,7 @@ public class SwitcherOffline extends SwitcherExecutor {
 			logger.debug(String.format("[Offline] response: %s", response));
 		}
 		
-		return response.isItOn();
+		return response;
 	}
 	
 	

@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.github.petruki.switcher.client.exception.SwitcherAPIConnectionException;
 import com.github.petruki.switcher.client.exception.SwitcherException;
 import com.github.petruki.switcher.client.exception.SwitcherInvalidDateTimeArgumentException;
+import com.github.petruki.switcher.client.exception.SwitcherKeyNotAvailableForComponentException;
 import com.github.petruki.switcher.client.exception.SwitcherKeyNotFoundException;
 import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.model.criteria.Snapshot;
@@ -49,7 +50,7 @@ public class ClientServiceFacade {
 	}
 	
 	public CriteriaResponse executeCriteria(final Map<String, Object> properties, final Switcher switcher) 
-			throws SwitcherAPIConnectionException, SwitcherKeyNotFoundException {
+			throws SwitcherException {
 		
 		try {
 			if (!this.isTokenValid(properties)) {
@@ -58,14 +59,18 @@ public class ClientServiceFacade {
 					
 			final Response response = this.clientService.executeCriteriaService(properties, switcher);
 			
-			if (response.getStatus() != 200) {
+			if (response.getStatus() == 401) {
+				throw new SwitcherKeyNotAvailableForComponentException(
+						properties.get(SwitcherContextParam.COMPONENT).toString(), switcher.getSwitcherKey());
+			} else if (response.getStatus() != 200) {
 				throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
 			}
 			
 			final CriteriaResponse criteriaReponse = response.readEntity(CriteriaResponse.class);
+			criteriaReponse.setSwitcherKey(switcher.getSwitcherKey());
 			response.close();
 			return criteriaReponse;
-		} catch (final SwitcherKeyNotFoundException e) {
+		} catch (final SwitcherKeyNotFoundException | SwitcherKeyNotAvailableForComponentException e) {
 			logger.error(e);
 			throw e;
 		} catch (final Exception e) {

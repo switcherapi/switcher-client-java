@@ -14,6 +14,7 @@ import com.github.petruki.switcher.client.facade.ClientServiceFacade;
 import com.github.petruki.switcher.client.model.Switcher;
 import com.github.petruki.switcher.client.model.criteria.Domain;
 import com.github.petruki.switcher.client.model.criteria.Snapshot;
+import com.github.petruki.switcher.client.model.response.CriteriaResponse;
 import com.github.petruki.switcher.client.utils.SnapshotLoader;
 import com.github.petruki.switcher.client.utils.SwitcherContextParam;
 
@@ -31,7 +32,7 @@ public abstract class SwitcherExecutor {
 	
 	public abstract void init(final Map<String, Object> properties) throws SwitcherException;
 	
-	public abstract boolean executeCriteria(final Switcher switcher) throws SwitcherException;
+	public abstract CriteriaResponse executeCriteria(final Switcher switcher) throws SwitcherException;
 	
 	public abstract void updateContext(final Map<String, Object> properties) throws SwitcherException;
 	

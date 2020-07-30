@@ -34,7 +34,7 @@ public class SwitcherFactory {
 	private SwitcherFactory() {}
 	
 	/**
-	 * Configure the context by populating these required informations
+	 * Configure the library context which should contain the properties below
 	 * 
 	 * @param properties 
 	 * <br> <b>Required</b>
@@ -112,7 +112,7 @@ public class SwitcherFactory {
 	}
 	
 	/**
-	 * Start watching snapshot file for changes. As it has changed, it will update the domain in memory
+	 * Start watching snapshot files for modifications. As it has changed, it will update the domain in memory
 	 */
 	public static void watchSnapshot() {
 		

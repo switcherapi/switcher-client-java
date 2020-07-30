@@ -76,7 +76,8 @@ public class Entry {
 	@Override
 	public String toString() {
 		
-		return "Entry [strategy=" + strategy + ", input=" + input + "]";
+		return String.format("Entry [strategy = %s, input = %s]", 
+				strategy, input);
 	}
 	
 	@Override

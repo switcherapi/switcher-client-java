@@ -8,13 +8,14 @@ public class CriteriaResponse {
 	
 	private boolean result;
 	private String reason;
+	private String switcherKey;
 	
 	public CriteriaResponse() {}
 	
-	public CriteriaResponse(final boolean result, final String reason) {
-		
+	public CriteriaResponse(final boolean result, final String reason, final String switcherKey) {
 		this.result = result;
 		this.reason = reason;
+		this.switcherKey = switcherKey;
 	}
 	
 	public boolean isItOn() {
@@ -37,10 +38,25 @@ public class CriteriaResponse {
 		this.reason = reason;
 	}
 
+	public String getSwitcherKey() {
+		return switcherKey;
+	}
+
+	public void setSwitcherKey(String switcherKey) {
+		this.switcherKey = switcherKey;
+	}
+
 	@Override
 	public String toString() {
+		StringBuilder toString = new StringBuilder();
+		toString.append("CriteriaResponse [");
+		toString.append("switcherKey=").append(switcherKey);
+		toString.append(", result=").append(result);
+		if (reason != null)
+			toString.append(", reason=").append(reason);
+		toString.append(" ]");
 		
-		return "CriteriaResponse [result=" + result + ", reason=" + reason + "]";
+		return toString.toString();
 	}
 	
 }

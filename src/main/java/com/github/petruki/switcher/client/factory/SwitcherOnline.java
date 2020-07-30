@@ -34,7 +34,7 @@ public class SwitcherOnline extends SwitcherExecutor {
 	}
 
 	@Override
-	public boolean executeCriteria(final Switcher switcher) throws SwitcherException {
+	public CriteriaResponse executeCriteria(final Switcher switcher) throws SwitcherException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("switcher: %s", switcher));
@@ -47,18 +47,18 @@ public class SwitcherOnline extends SwitcherExecutor {
 				logger.debug(String.format("[Online] response: %s", response));
 			}
 			
-			return response.isItOn();
+			return response;
 		} catch (final SwitcherAPIConnectionException e) {
 			logger.error(e);
 			return executeSilentCriteria(switcher, e);
 		}
 	}
 	
-	private boolean executeSilentCriteria(final Switcher switcher, final SwitcherAPIConnectionException e) 
+	private CriteriaResponse executeSilentCriteria(final Switcher switcher, final SwitcherAPIConnectionException e) 
 			throws SwitcherException {
 		
 		if (super.isSilentMode()) {
-			boolean response = this.switcherOffline.executeCriteria(switcher);
+			CriteriaResponse response = this.switcherOffline.executeCriteria(switcher);
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("[Silent] response: %s", response));
 			}

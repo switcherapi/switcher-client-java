@@ -1,5 +1,8 @@
 package com.github.petruki.switcher.client;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Paths;
@@ -24,8 +27,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.github.petruki.switcher.client.SwitcherFactory;
 import com.github.petruki.switcher.client.exception.SwitcherAPIConnectionException;
+import com.github.petruki.switcher.client.exception.SwitcherKeyNotAvailableForComponentException;
 import com.github.petruki.switcher.client.exception.SwitcherKeyNotFoundException;
 import com.github.petruki.switcher.client.facade.ClientServiceFacade;
 import com.github.petruki.switcher.client.model.Entry;
@@ -58,6 +61,10 @@ public class SwitcherOnlineTest {
 	}
 	
 	private Switcher generateSwitcherMockTrue(final int executionStatus) throws Exception {
+		return generateSwitcherMockTrue(executionStatus, false);
+	}
+	
+	private Switcher generateSwitcherMockTrue(final int executionStatus, boolean noExecutionReason) throws Exception {
 		SwitcherFactory.buildContext(properties, false);
 		final Switcher switcher = SwitcherFactory.getSwitcher("ONLINE_KEY");
 		
@@ -70,7 +77,8 @@ public class SwitcherOnlineTest {
 		authResponse.setToken("123lkjsuoi23487skjfh28dskjn29");
 		
 		final CriteriaResponse criteriaResponse = new CriteriaResponse();
-		criteriaResponse.setReason("Success");
+		if (noExecutionReason)
+			criteriaResponse.setReason("Success");
 		criteriaResponse.setResult(true);
 		
 		PowerMockito.when(mockClientServiceImpl.auth(this.properties)).thenReturn(mockResponseAuth);
@@ -93,13 +101,49 @@ public class SwitcherOnlineTest {
 	
 	@Test
 	public void shouldReturnTrue_differentCalls() throws Exception {
+		//given
 		List<Entry> entries = new ArrayList<>();
 		entries.add(new Entry(Entry.DATE, "2019-12-10"));
 		
 		Switcher switcher = generateSwitcherMockTrue(200);
+		switcher.setBypassMetrics(true);
+		
+		//test
 		assertTrue(switcher.isItOn(entries));
 		assertTrue(switcher.isItOn("NEW_KEY"));
 		assertTrue(switcher.isItOn("NEW_KEY", new Entry(Entry.VALUE, "Value"), false));
+		assertNotNull(switcher.getHistoryExecution());
+		assertEquals(3, switcher.getHistoryExecution().size());
+	}
+	
+	@Test
+	public void shouldHideExecutionReason() throws Exception {
+		//given
+		List<Entry> entries = new ArrayList<>();
+		entries.add(new Entry(Entry.DATE, "2019-12-10"));
+		
+		Switcher switcher = generateSwitcherMockTrue(200);
+		
+		//test
+		assertTrue(switcher.isItOn(entries));
+		assertNotNull(switcher.getHistoryExecution());
+		assertNull(switcher.getHistoryExecution().get(0).getReason());
+	}
+	
+	@Test
+	public void shouldShowExecutionReason() throws Exception {
+		//given
+		List<Entry> entries = new ArrayList<>();
+		entries.add(new Entry(Entry.DATE, "2019-12-10"));
+		
+		Switcher switcher = generateSwitcherMockTrue(200, true);
+		switcher.setShowReason(true); // this has no effect in here because the mock has been already generated
+		
+		//test
+		assertTrue(switcher.isItOn(entries));
+		assertNotNull(switcher.getHistoryExecution());
+		assertNotNull(switcher.getHistoryExecution().get(0).getReason());
+		assertEquals(switcher.getSwitcherKey(), switcher.getHistoryExecution().get(0).getSwitcherKey());
 	}
 	
 	@Test
@@ -115,6 +159,12 @@ public class SwitcherOnlineTest {
 	@Test(expected = SwitcherKeyNotFoundException.class)
 	public void shouldReturnError_keyNotFound() throws Exception {
 		Switcher switcher = generateSwitcherMockTrue(404);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test(expected = SwitcherKeyNotAvailableForComponentException.class)
+	public void shouldReturnError_componentNotregistered() throws Exception {
+		Switcher switcher = generateSwitcherMockTrue(401);
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -170,9 +220,10 @@ public class SwitcherOnlineTest {
 
 		PowerMockito.when(clientMock.target(String.format(ClientService.CRITERIA_URL, properties.get(SwitcherContextParam.URL)))).thenReturn(webTargetMock);
 		PowerMockito.when(webTargetMock.queryParam(Switcher.KEY, switcher.getSwitcherKey())).thenReturn(webTargetMock);
-		PowerMockito.when(webTargetMock.queryParam(Switcher.SHOW_REASON, Boolean.TRUE)).thenReturn(webTargetMock);
+		PowerMockito.when(webTargetMock.queryParam(Switcher.SHOW_REASON, properties.containsKey(Switcher.SHOW_REASON) ? 
+				properties.get(Switcher.SHOW_REASON) : Boolean.FALSE)).thenReturn(webTargetMock);
 		PowerMockito.when(webTargetMock.queryParam(Switcher.BYPASS_METRIC, properties.containsKey(Switcher.BYPASS_METRIC) ? 
-				properties.get(Switcher.BYPASS_METRIC) : false)).thenReturn(webTargetMock);
+				properties.get(Switcher.BYPASS_METRIC) : Boolean.FALSE)).thenReturn(webTargetMock);
 		PowerMockito.when(webTargetMock.request(MediaType.APPLICATION_JSON)).thenReturn(builderMock);
 		PowerMockito.when(builderMock.header(
 				ClientService.HEADER_AUTHORIZATION, String.format(ClientService.TOKEN_TEXT, 

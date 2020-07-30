@@ -42,9 +42,8 @@ public class ClientServiceImpl implements ClientService {
 		
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, properties.get(SwitcherContextParam.URL)))
 				.queryParam(Switcher.KEY, switcher.getSwitcherKey())
-				.queryParam(Switcher.SHOW_REASON, Boolean.TRUE)
-				.queryParam(Switcher.BYPASS_METRIC, properties.containsKey(Switcher.BYPASS_METRIC) ? 
-						properties.get(Switcher.BYPASS_METRIC) : false);
+				.queryParam(Switcher.SHOW_REASON, switcher.isShowReason())
+				.queryParam(Switcher.BYPASS_METRIC, switcher.isBypassMetrics());
 		
 		return myResource.request(MediaType.APPLICATION_JSON)
 			.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, ((AuthResponse) properties.get(AUTH_RESPONSE)).getToken()))

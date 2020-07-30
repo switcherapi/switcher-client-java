@@ -1,7 +1,7 @@
 package com.github.petruki.switcher.client.utils;
 
 /**
- * Contains required and optionals key to setup the context
+ * Contains required and optional keys to set up the context
  * 
  * @author rogerio
  * @since 2019-12-24
@@ -34,7 +34,7 @@ public interface SwitcherContextParam {
 	String ENVIRONMENT = "environment";
 	
 	/**
-	 * (String) Complete path of the snapshot file, including the file's name.
+	 * (String) The absolute path of the snapshot file, including the file's name.
 	 */
 	String SNAPSHOT_FILE = "snapshotFile";
 	
@@ -44,17 +44,17 @@ public interface SwitcherContextParam {
 	String SNAPSHOT_LOCATION = "snapshotLocation";
 	
 	/**
-	 * (boolean) Activate snapshot auto load which will try to retrieve the snapshot from the API if the file does not exist.
+	 * (boolean) Activate snapshot autoload which will try to retrieve the snapshot from the API if the file does not exist.
 	 */
 	String SNAPSHOT_AUTO_LOAD = "snapshotAutoLoad";
 	
 	/**
-	 * (boolean) Activate silent mode when the Switcher API is become offline.
+	 * (boolean) Activate silent mode when the Switcher API becomes offline.
 	 */
 	String SILENT_MODE = "silentMode";
 	
 	/**
-	 * (String) Time that this client will retry to reach the online Switcher API after using the silent mode.
+	 * (String) Time given to the library retry reaching the online Switcher API after using the silent mode.
 	 */
 	String RETRY_AFTER = "retryAfter";
 	

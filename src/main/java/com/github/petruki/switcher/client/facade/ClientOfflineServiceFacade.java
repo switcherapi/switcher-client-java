@@ -73,7 +73,7 @@ public class ClientOfflineServiceFacade {
 	public CriteriaResponse executeCriteria(final Switcher switcher, final Domain domain) throws SwitcherException {
 
 		if (!domain.isActivated()) {
-			return new CriteriaResponse(false, DISABLED_DOMAIN);
+			return new CriteriaResponse(false, DISABLED_DOMAIN, switcher.getSwitcherKey());
 		}
 
 		Config configFound = null;
@@ -87,15 +87,15 @@ public class ClientOfflineServiceFacade {
 			if (configFound != null) {
 				
 				if (!group.isActivated()) {
-					return new CriteriaResponse(false, DISABLED_GROUP);
+					return new CriteriaResponse(false, DISABLED_GROUP, switcher.getSwitcherKey());
 				}
 
 				if (!configFound.isActivated()) {
-					return new CriteriaResponse(false, DISABLED_CONFIG);
+					return new CriteriaResponse(false, DISABLED_CONFIG, switcher.getSwitcherKey());
 				}
 
 				if (ArrayUtils.isNotEmpty(configFound.getStrategies())) {
-					return this.processOperation(configFound.getStrategies(), switcher.getEntry());
+					return this.processOperation(configFound.getStrategies(), switcher.getEntry(), switcher.getSwitcherKey());
 				}
 				
 				break;
@@ -106,7 +106,7 @@ public class ClientOfflineServiceFacade {
 			throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
 		}
 
-		return new CriteriaResponse(true, "Success");
+		return new CriteriaResponse(true, "Success", switcher.getSwitcherKey());
 	}
 
 	/**
@@ -117,8 +117,8 @@ public class ClientOfflineServiceFacade {
 	 * @return CristeriaResponse containing the result of the validation
 	 * @throws SwitcherException If encountered either invalid input or misconfiguration
 	 */
-	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input) 
-			throws SwitcherException {
+	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input,
+			final String switcherKey) throws SwitcherException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("configStrategies: %s", Arrays.toString(configStrategies)));
@@ -160,11 +160,11 @@ public class ClientOfflineServiceFacade {
 			}
 
 			if (!result) {
-				return new CriteriaResponse(false, String.format("`Strategy %s does not agree", strategy.getStrategy()));
+				return new CriteriaResponse(false, String.format("`Strategy %s does not agree", strategy.getStrategy()), switcherKey);
 			}
 		}
 
-		return new CriteriaResponse(result, "Success");
+		return new CriteriaResponse(result, "Success", switcherKey);
 	}
 
 	private boolean processNetwork(final Strategy strategy, final Entry switcherInput) throws SwitcherInvalidOperationException {

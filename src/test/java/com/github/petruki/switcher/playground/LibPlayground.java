@@ -21,9 +21,9 @@ public class LibPlayground {
 	public LibPlayground() {
 		Map<String, Object> properties = new HashMap<String, Object>();
 		properties.put(SwitcherContextParam.URL, "http://localhost:3000");
-		properties.put(SwitcherContextParam.APIKEY, "$2b$08$7U/KJBVgG.FQtYEKKnbLe.o6p7vBrfHFRgMipZTaokSmVFiduXq/y");
+		properties.put(SwitcherContextParam.APIKEY, "$2b$08$e6EUI0358sk5QBAZlxrBF.Eg5jwhLSRfoKLvCAcbctCnKMoqcM5Fi");
 		properties.put(SwitcherContextParam.DOMAIN, "My Domain");
-		properties.put(SwitcherContextParam.COMPONENT, "Android");
+		properties.put(SwitcherContextParam.COMPONENT, "CustomerAPI");
 		properties.put(SwitcherContextParam.ENVIRONMENT, "default");
 		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL);
 		properties.put(SwitcherContextParam.SNAPSHOT_AUTO_LOAD, true);
@@ -32,7 +32,7 @@ public class LibPlayground {
 
 		try {
 			SwitcherFactory.buildContext(properties, true);
-			Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
+			Switcher switcher = SwitcherFactory.getSwitcher("FEATURE01");
 			logger.info(switcher.isItOn());
 		} catch (Exception e) {
 			logger.error(e);

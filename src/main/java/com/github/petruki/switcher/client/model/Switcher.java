@@ -7,10 +7,13 @@ import java.util.Map;
 import com.github.petruki.switcher.client.SwitcherFactory;
 import com.github.petruki.switcher.client.exception.SwitcherException;
 import com.github.petruki.switcher.client.factory.SwitcherExecutor;
+import com.github.petruki.switcher.client.model.response.CriteriaResponse;
 
 /**
- * Switchers are responsible for create calls between your application and Switcher API.
- * <br>To invoke the criteria, please use one of the available methods: {@link #isItOn()}.
+ * Switchers are responsible for wrapping the input and output coming from the Switcher API.
+ * <br>To execute a criteria evaluation, use one of the available methods: {@link #isItOn()}.
+ * 
+ * <p>To assign an input value for this Switcher, you can use one of the chained methods: prepareEntry
  * 
  * @author rogerio
  * @since 2019-12-24
@@ -24,12 +27,22 @@ import com.github.petruki.switcher.client.factory.SwitcherExecutor;
 public class Switcher {
 	
 	public static final String KEY = "key";
+	
 	public static final String SHOW_REASON = "showReason";
+	
 	public static final String BYPASS_METRIC = "bypassMetric";
 	
 	private SwitcherExecutor context;
+	
 	private String switcherKey;
+	
 	private List<Entry> entry;
+	
+	private List<CriteriaResponse> historyExecution;
+	
+	private boolean bypassMetrics = Boolean.FALSE;
+	
+	private boolean showReason = Boolean.FALSE;
 	
 	/**
 	 * Use {@link SwitcherFactory#buildContext(Map, boolean)} to create this object.
@@ -41,25 +54,27 @@ public class Switcher {
 		
 		this.switcherKey = switcherKey;
 		this.context = context;
+		this.historyExecution = new ArrayList<>();
 	}
 	
 	/**
-	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterwards.
+	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.
 	 * 
 	 * @param entry input object
 	 */
-	public void prepareEntry(final List<Entry> entry) {
+	public Switcher prepareEntry(final List<Entry> entry) {
 		
 		this.entry = entry;
+		return this;
 	}
 	
 	/**
-	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterwards.
+	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.
 	 * 
 	 * @param entry input object
 	 * @param add if false, the list will be cleaned and the entry provided will be the only input for this Switcher.
 	 */
-	public void prepareEntry(final Entry entry, final boolean add) {
+	public Switcher prepareEntry(final Entry entry, final boolean add) {
 		
 		if (this.entry == null) {
 			this.entry = new ArrayList<>();
@@ -70,6 +85,8 @@ public class Switcher {
 		if (!this.entry.contains(entry)) {
 			this.entry.add(entry);
 		}
+		
+		return this;
 	}
 	
 	/**
@@ -78,13 +95,13 @@ public class Switcher {
 	 * 
 	 * @param entry input object
 	 */
-	public void prepareEntry(final Entry entry) {
+	public Switcher prepareEntry(final Entry entry) {
 		
-		this.prepareEntry(entry, true);
+		return this.prepareEntry(entry, true);
 	}
 	
 	/**
-	 * Convinient method to send all the information necessary to run the criteria with input.
+	 * Convenient method to send all the information necessary to run the criteria with input.
 	 * 
 	 * @param key name of the key created
 	 * @param entry input object
@@ -125,11 +142,12 @@ public class Switcher {
 	}
 	
 	/**
-	 * Invoke a given key provided via {@link SwitcherFactory#getSwitcher(String)}.
-	 * <br>It's possible to chanage the key name for the Switcher even after its creation.
+	 * Execute criteria based on a given switcher key provided via {@link SwitcherFactory#getSwitcher(String)}.
+	 * <br>The detailed result is available in list of {@link CriteriaResponse}.
+	 * <br>It's possible to change the switcher key even after instantiating a Switcher object.
 	 * <br>
 	 * <br> For example:
-	 * <br> You can create a Switcher invoking SwitcherFactory#getSwitcher("MY_KEY"), however, you can also change this key value by another using
+	 * <br> You can create a Switcher by invoking SwitcherFactory#getSwitcher("MY_KEY"), plus, you can also change this key value by another using
 	 * {@link #isItOn(String)}.
 	 * 
 	 * @return criteria result
@@ -141,17 +159,39 @@ public class Switcher {
 			return SwitcherExecutor.getBypass().get(switcherKey);
 		}
 		
-		return this.context.executeCriteria(this);
+		final CriteriaResponse response = this.context.executeCriteria(this);
+		this.historyExecution.add(response);
+		return response.isItOn();
 	}
 	
 	/**
-	 * This method build up the request made by the client to reach the Switcher API.
+	 * This method builds up the request made by the client to reach the Switcher API.
 	 * 
 	 * @return json input request
 	 */
 	public GsonInputRequest getInputRequest() {
 		
 		return new GsonInputRequest(this.entry != null ? this.entry.toArray(new Entry[this.entry.size()]) : null);
+	}
+
+	public boolean isBypassMetrics() {
+		
+		return bypassMetrics;
+	}
+
+	public void setBypassMetrics(boolean bypassMetrics) {
+		
+		this.bypassMetrics = bypassMetrics;
+	}
+
+	public boolean isShowReason() {
+		
+		return showReason;
+	}
+
+	public void setShowReason(boolean showReason) {
+		
+		this.showReason = showReason;
 	}
 
 	public String getSwitcherKey() {
@@ -163,11 +203,17 @@ public class Switcher {
 		
 		return this.entry;
 	}
-	
+
+	public List<CriteriaResponse> getHistoryExecution() {
+		
+		return this.historyExecution;
+	}
+
 	@Override
 	public String toString() {
 		
-		return "Switcher [switcherKey=" + switcherKey + ", entry=" + entry + "]";
+		return String.format("Switcher [switcherKey= %s, entry= %s, bypassMetrics= %s, showReason= %s]", 
+				switcherKey, entry, bypassMetrics, showReason);
 	}
 	
 	public class GsonInputRequest {
@@ -175,10 +221,12 @@ public class Switcher {
 		private Entry[] entry;
 		
 		public GsonInputRequest(final Entry[] entry) {
+			
 			this.entry = entry;
 		}
 
 		public Entry[] getEntry() {
+			
 			return this.entry;
 		}
 	}
