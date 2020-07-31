@@ -67,7 +67,13 @@ public class SnapshotLoaderTest {
 		this.removeFixture();
 	}
 	
-	private void generateLoaderMock(final int executionStatus) throws Exception {
+	/**
+	 * The premisses for this mock scenario are:
+	 * 
+	 * <li> Auth token will expire in 2s.
+	 * <li> Snapshot will be loaded from {@link #SNAPSHOTS_LOCAL}/default.json file.
+	 */
+	private void generateLoaderMock() throws Exception {
 		
 		final ClientService mockClientServiceImpl = PowerMockito.mock(ClientService.class);
 		final Response mockResponseAuth = PowerMockito.mock(Response.class);
@@ -91,7 +97,15 @@ public class SnapshotLoaderTest {
 		ClientServiceFacade.getInstance().setClientService(mockClientServiceImpl);
 	}
 	
-	private void generateSnapshotVersionMock(final int executionStatus, boolean status) throws Exception {
+	/**
+	 * The premisses for this mock scenario are:
+	 * 
+	 * <li> Auth token will expire in 2s.
+	 * <li> Snapshot will be loaded from {@link #SNAPSHOTS_LOCAL}/default.json file.
+	 * <li> Status can be false for outdate or true for update.
+	 * <li> The snapshot version coming from the file should be compared with 1588557288037.
+	 */
+	private void generateSnapshotVersionMock(boolean status) throws Exception {
 		
 		final ClientService mockClientServiceImpl = PowerMockito.mock(ClientService.class);
 		final Response mockResponseAuth = PowerMockito.mock(Response.class);
@@ -132,6 +146,7 @@ public class SnapshotLoaderTest {
 	
 	@Test
 	public void shouldInvokeResolveSnapshotWithNoErrors() throws Exception {
+		//given
 		ClientServiceImpl clientService = new ClientServiceImpl();
 		
 		final AuthResponse authResponse = new AuthResponse();
@@ -169,11 +184,13 @@ public class SnapshotLoaderTest {
 		
 		clientService.setClient(clientMock);
 
+		//test
 		assertEquals(200, clientService.resolveSnapshot(this.properties).getStatus());
 	}
 	
 	@Test(expected = SwitcherAPIConnectionException.class)
 	public void shouldInvokeResolveSnapshotWithErrors() throws Exception {
+		//given
 		ClientServiceImpl clientService = new ClientServiceImpl();
 		
 		final AuthResponse authResponse = new AuthResponse();
@@ -205,12 +222,13 @@ public class SnapshotLoaderTest {
 		
 		ClientServiceFacade.getInstance().setClientService(clientService);
 		
+		//test
 		SwitcherFactory.buildContext(properties, true);
 	}
 	
 	@Test
 	public void offlineShouldLoadSnapshotFromAPIBeforeExecuting() throws Exception {
-		this.generateLoaderMock(200);
+		this.generateLoaderMock();
 		SwitcherFactory.buildContext(properties, true);
 		final Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
 		
@@ -237,7 +255,7 @@ public class SnapshotLoaderTest {
 	
 	@Test
 	public void shouldReturnSnapshotUpdated() throws Exception {
-		this.generateSnapshotVersionMock(200, true);
+		this.generateSnapshotVersionMock(true);
 		SwitcherFactory.buildContext(properties, true);
 		SwitcherFactory.validateSnapshot();
 		final Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
@@ -248,7 +266,7 @@ public class SnapshotLoaderTest {
 	
 	@Test
 	public void shouldReturnSnapshotNotUpdated() throws Exception {
-		this.generateSnapshotVersionMock(200, false);
+		this.generateSnapshotVersionMock(false);
 		SwitcherFactory.buildContext(properties, true);
 		SwitcherFactory.validateSnapshot();
 		final Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
@@ -260,7 +278,7 @@ public class SnapshotLoaderTest {
 	@Test(expected = SwitcherSnapshotWriteException.class)
 	public void shouldNotSaveSnapshot() throws Exception {
 		this.properties.put(SwitcherContextParam.ENVIRONMENT, "cause_error/generated_default");
-		this.generateSnapshotVersionMock(200, false);
+		this.generateSnapshotVersionMock(false);
 		SwitcherFactory.buildContext(properties, true);
 	}
 	
@@ -273,6 +291,7 @@ public class SnapshotLoaderTest {
 	
 	@Test
 	public void shouldInvokeCheckSnapshotVersionWithNoErrors() throws Exception {
+		//given
 		ClientServiceImpl clientService = new ClientServiceImpl();
 		
 		final AuthResponse authResponse = new AuthResponse();
@@ -297,12 +316,13 @@ public class SnapshotLoaderTest {
 		clientService.setClient(clientMock);
 		ClientServiceFacade.getInstance().setClientService(clientService);
 
+		//test
 		assertNotNull(clientService.checkSnapshotVersion(this.properties, 1l));
 	}
 	
 	@Test(expected = SwitcherAPIConnectionException.class)
 	public void shouldInvokeCheckSnapshotVersionWithErrors() throws Exception {
-		
+		//given
 		final ClientService mockClientServiceImpl = PowerMockito.mock(ClientService.class);
 		final Response mockResponseAuth = PowerMockito.mock(Response.class);
 		final Response mockResponseResolveSnapshot = PowerMockito.mock(Response.class);
@@ -328,6 +348,7 @@ public class SnapshotLoaderTest {
 		SwitcherFactory.buildContext(this.properties, true);
 		this.removeFixture();
 		
+		//test
 		SwitcherFactory.validateSnapshot();
 	}
 

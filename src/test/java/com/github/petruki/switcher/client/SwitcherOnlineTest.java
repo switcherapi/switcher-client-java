@@ -64,6 +64,18 @@ public class SwitcherOnlineTest {
 		return generateSwitcherMockTrue(executionStatus, false);
 	}
 	
+	/**
+	 * The premisses for this mock scenario are:
+	 * 
+	 * <li> Auth token will expire in 2s.
+	 * <li> Criteria response will return true as result, in case executionStatus code = 200, otherwise, exceptions
+	 * might be rised
+	 * 
+	 * @param executionStatus
+	 * @param noExecutionReason
+	 * @return
+	 * @throws Exception
+	 */
 	private Switcher generateSwitcherMockTrue(final int executionStatus, boolean noExecutionReason) throws Exception {
 		SwitcherFactory.buildContext(properties, false);
 		final Switcher switcher = SwitcherFactory.getSwitcher("ONLINE_KEY");
@@ -205,6 +217,7 @@ public class SwitcherOnlineTest {
 	
 	@Test
 	public void shouldInvokeClientExecuteCriteriaWithNoErrors() throws Exception {
+		//given
 		ClientServiceImpl clientService = new ClientServiceImpl();
 		final Switcher switcher = new Switcher("ONLINE_KEY", null);
 		
@@ -232,12 +245,14 @@ public class SwitcherOnlineTest {
 		
 		clientService.setClient(clientMock);
 		
+		//test
 		// It returns null but the idea is to check if no exception is thrown during this process
 		clientService.executeCriteriaService(properties, switcher);
 	}
 	
 	@Test
 	public void shouldInvokeClientAuthWithNoErrors() throws Exception {
+		//given
 		ClientServiceImpl clientService = new ClientServiceImpl();
 		
 		Client clientMock = PowerMockito.mock(Client.class);
@@ -252,6 +267,7 @@ public class SwitcherOnlineTest {
 		
 		clientService.setClient(clientMock);
 		
+		//test
 		clientService.auth(properties);
 	}
 
