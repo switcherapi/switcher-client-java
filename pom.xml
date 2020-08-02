@@ -12,7 +12,7 @@
 	
  	<name>Switcher Client</name>
 	<description>Switcher Client for working with Switcher API</description>
-	<url>https://github.com/petruki/switcher-client</url>
+	<url>https://github.com/switcherapi/switcher-client</url>
 	
 	<licenses>
 		<license>
@@ -23,17 +23,17 @@
 	
 	<developers>
 		<developer>
-			<name>Rogerio Petruki</name>
+			<name>Roger Floriano</name>
 			<email>switcher.project@gmail.com</email>
-			<organization>Petruki</organization>
-			<organizationUrl>https://github.com/petruki</organizationUrl>
+			<organization>switcherapi</organization>
+			<organizationUrl>https://github.com/switcherapi</organizationUrl>
 		</developer>
  	</developers>
 	 
 	<scm>
-		<connection>scm:git:git://github.com:petruki/switcher-client.git</connection>
-		<developerConnection>scm:git:ssh://github.com:petruki/switcher-client.git</developerConnection>
-		<url>https://github.com/petruki/switcher-client</url>
+		<connection>scm:git:git://github.com:switcherapi/switcher-client.git</connection>
+		<developerConnection>scm:git:ssh://github.com:switcherapi/switcher-client.git</developerConnection>
+		<url>https://github.com/switcherapi/switcher-client</url>
 	</scm>
 
 	<properties>

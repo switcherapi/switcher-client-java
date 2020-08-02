@@ -1,15 +1,15 @@
-[![Build Status](https://travis-ci.com/petruki/switcher-client.svg?branch=master)](https://travis-ci.com/petruki/switcher-client)
+[![Build Status](https://travis-ci.com/switcherapi/switcher-client.svg?branch=master)](https://travis-ci.com/switcherapi/switcher-client)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=switcher-client-java&metric=alert_status)](https://sonarcloud.io/dashboard?id=switcher-client-java)
-[![Known Vulnerabilities](https://snyk.io/test/github/petruki/switcher-client/badge.svg)](https://snyk.io/test/github/petruki/switcher-client)
+[![Known Vulnerabilities](https://snyk.io/test/github/switcherapi/switcher-client/badge.svg?targetFile=pom.xml)](https://snyk.io/test/github/switcherapi/switcher-client?targetFile=pom.xml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.petruki/switcher-client.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.petruki%22%20AND%20a:%22switcher-client%22)
 [![Slack: Switcher-HQ](https://img.shields.io/badge/slack-@switcher/hq-blue.svg?logo=slack)](https://switcher-hq.slack.com/)
 
-![Switcher API: Java Client: Cloud-based Feature Flag API](https://github.com/petruki/switcherapi-assets/blob/master/logo/switcherapi_java_client.png)
+![Switcher API: Java Client: Cloud-based Feature Flag API](https://github.com/switcherapi/switcherapi-assets/blob/master/logo/switcherapi_java_client.png)
 
 # About
 Client Java for working with Switcher-API.
-https://github.com/petruki/switcher-api
+https://github.com/switcherapi/switcher-api
 
 - Flexible and robust functions that will keep your code clean and maintainable.
 - Able to work offline using a snapshot file downloaded from your remote Switcher-API Domain.
@@ -26,7 +26,7 @@ https://github.com/petruki/switcher-api
 <dependency>
   <groupId>com.github.petruki</groupId>
   <artifactId>switcher-client</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.6</version>
 </dependency>
 ```	
 
