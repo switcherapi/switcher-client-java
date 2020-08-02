@@ -11,9 +11,10 @@
 Client Java for working with Switcher-API.
 https://github.com/switcherapi/switcher-api
 
+- Flexible and robust functions that will keep your code clean and maintainable.
 - Able to work offline using a snapshot file downloaded from your remote Switcher-API Domain.
-- Silent mode automatically enables a contingent sub-process in case of connectivity issues.
-- Built-in mock implementation for automated testing.
+- Silent mode is a hybrid configuration that automatically enables a contingent sub-process in case of any connectivity issue.
+- Built-in mock implementation for clear and easy implementation of automated testing.
 - Easy to setup. Switcher Context is responsible to manage all the complexity between your application and API.
 
 # Usage
@@ -120,9 +121,9 @@ switcher.isItOn(); // Now, it's going to return the result retrieved from the AP
 # Version Log
 - 1.0.6: Updated depencencies & new features
 	- Updated dependency jersey-hk2 from 2.28 to 2.31
-	- Updated dependencycommons-net from 3.3 to 3.6.
-	- Updated dependencycommons-lang3 from 3.8.1 to 3.10.
-	- Updated dependencygson from 2.8.5 to 2.8.6.
+	- Updated dependency commons-net from 3.3 to 3.6.
+	- Updated dependency commons-lang3 from 3.8.1 to 3.10.
+	- Updated dependency gson from 2.8.5 to 2.8.6.
 	- Added execution log to Switcher.
 	- Added bypass metrics and show detailed criteria evaluation options to Switcher objects.
 - 1.0.5: Security patch - Jersey has been updated - 2.28 to 2.31
