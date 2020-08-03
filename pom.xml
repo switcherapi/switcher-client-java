@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	  <modelVersion>4.0.0</modelVersion>
 	
-  	<groupId>com.github.petruki</groupId>
+  	<groupId>com.github.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.6</version>
@@ -64,7 +64,7 @@
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.jacoco.reportPath>${project.basedir}/target/coverage-reports/jacoco-unit.exec</sonar.jacoco.reportPath>
 		<sonar.language>java</sonar.language>
-		<sonar.coverage.exclusions>com/github/petruki/switcher/client/model/*</sonar.coverage.exclusions>
+		<sonar.coverage.exclusions>com/github/switcherapi/client/model/*</sonar.coverage.exclusions>
 	</properties>
 	
 	<dependencies>
@@ -181,34 +181,34 @@
             </resource>
         </resources>
 
-	<plugins>
-		<!-- Tells Sonar to pick up testing results -->
-		<plugin>
-			<groupId>org.jacoco</groupId>
-			<artifactId>jacoco-maven-plugin</artifactId>
-			<configuration>
-				<destFile>${sonar.jacoco.reportPath}</destFile>
-				<dataFile>${sonar.jacoco.reportPath}</dataFile>
-				<append>true</append>
-			</configuration>
-			<executions>
-				<execution>
-					<id>jacoco-initialize</id>
-					<goals>
-						<goal>prepare-agent</goal>
-					</goals>
-				</execution>
-				<execution>
-					<id>jacoco-site</id>
-					<phase>package</phase>
-					<goals>
-						<goal>report</goal>
-					</goals>
-				</execution>
-			</executions>
-		</plugin>
+		<plugins>
+			<!-- Tells Sonar to pick up testing results -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<destFile>${sonar.jacoco.reportPath}</destFile>
+					<dataFile>${sonar.jacoco.reportPath}</dataFile>
+					<append>true</append>
+				</configuration>
+				<executions>
+					<execution>
+						<id>jacoco-initialize</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jacoco-site</id>
+						<phase>package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			
-        <!-- Generate and sign all artifacts 
+        	<!-- Generate and sign all artifacts 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -249,7 +249,7 @@
 					</execution>
 				</executions>
 			</plugin>
-		-->
+			-->
 		</plugins>
 		
     </build>
