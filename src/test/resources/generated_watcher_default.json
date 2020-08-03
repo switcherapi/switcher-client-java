@@ -341,7 +341,7 @@
         }
       ],
       "description": "Fixture #1",
-      "activated": false
+      "activated": true
     }
   }
 }
