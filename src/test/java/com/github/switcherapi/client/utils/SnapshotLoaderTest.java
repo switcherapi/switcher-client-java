@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
+import org.awaitility.Awaitility;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +32,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.switcherapi.client.SwitcherFactory;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
+import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherFactoryContextException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
@@ -42,9 +45,6 @@ import com.github.switcherapi.client.model.response.AuthResponse;
 import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
 import com.github.switcherapi.client.service.ClientService;
 import com.github.switcherapi.client.service.ClientServiceImpl;
-import com.github.switcherapi.client.utils.SnapshotLoader;
-import com.github.switcherapi.client.utils.SwitcherContextParam;
-import com.github.switcherapi.client.utils.SwitcherUtils;
 
 @PowerMockIgnore({"javax.management.*", "org.apache.log4j.*", "javax.xml.*", "javax.script.*"})
 @RunWith(PowerMockRunner.class)
@@ -76,7 +76,7 @@ public class SnapshotLoaderTest {
 	 * <li> Auth token will expire in 2s.
 	 * <li> Snapshot will be loaded from {@link #SNAPSHOTS_LOCAL}/default.json file.
 	 */
-	private void generateLoaderMock() throws Exception {
+	private void generateLoaderMock(final int authStatus) throws Exception {
 		
 		final ClientService mockClientServiceImpl = PowerMockito.mock(ClientService.class);
 		final Response mockResponseAuth = PowerMockito.mock(Response.class);
@@ -87,6 +87,7 @@ public class SnapshotLoaderTest {
 		authResponse.setToken("123lkjsuoi23487skjfh28dskjn29");
 		
 		PowerMockito.when(mockClientServiceImpl.auth(this.properties)).thenReturn(mockResponseAuth);
+		PowerMockito.when(mockResponseAuth.getStatus()).thenReturn(authStatus);
 		PowerMockito.when(mockResponseAuth.readEntity(AuthResponse.class)).thenReturn(authResponse);
 		
 		final Snapshot mockedSnapshot = new Snapshot();
@@ -231,12 +232,26 @@ public class SnapshotLoaderTest {
 	
 	@Test
 	public void offlineShouldLoadSnapshotFromAPIBeforeExecuting() throws Exception {
-		this.generateLoaderMock();
+		this.generateLoaderMock(200);
 		SwitcherFactory.buildContext(properties, true);
 		final Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
 		
 		assertTrue(switcher.isItOn());
 		this.removeFixture();
+	}
+	
+	@Test(expected = SwitcherException.class)
+	public void offlineShouldNotLoadSnapshotFromAPI_unauthorizedAPIaccess() throws Exception {
+		this.generateLoaderMock(401);
+		SwitcherFactory.buildContext(properties, true);
+		final Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
+		
+		try {
+			switcher.isItOn();
+		} catch (Exception e) {
+			assertEquals("Something went wrong: Unauthorized API access", e.getMessage());
+			throw e;
+		}
 	}
 	
 	@Test
@@ -352,7 +367,62 @@ public class SnapshotLoaderTest {
 		this.removeFixture();
 		
 		//test
-		SwitcherFactory.validateSnapshot();
+		try {
+			SwitcherFactory.validateSnapshot();
+		} catch (Exception e) {
+			assertEquals(
+					String.format(
+							"Something went wrong: It was not possible to reach the Switcher-API on this endpoint: %s", 
+							properties.get(SwitcherContextParam.URL)), 
+					e.getMessage());
+			throw e;
+		} finally {
+			ClientServiceFacade.getInstance().setClientService(null);
+		}
+	}
+	
+	@Test(expected = SwitcherException.class)
+	public void shouldInvokeCheckSnapshotVersionWithErrors_unauthorizedAPIaccess() throws Exception {
+		//given
+		ClientService mockClientServiceImpl = PowerMockito.mock(ClientService.class);
+		Response mockResponseAuth = PowerMockito.mock(Response.class);
+		final Response mockResponseResolveSnapshot = PowerMockito.mock(Response.class);
+		
+		final AuthResponse authResponse = new AuthResponse();
+		authResponse.setExp(SwitcherUtils.addTimeDuration("2s", new Date()).getTime()/1000);
+		authResponse.setToken("123lkjsuoi23487skjfh28dskjn29");
+		
+		PowerMockito.when(mockClientServiceImpl.auth(this.properties)).thenReturn(mockResponseAuth);
+		PowerMockito.when(mockResponseAuth.readEntity(AuthResponse.class)).thenReturn(authResponse);
+		
+		final Snapshot mockedSnapshot = new Snapshot();
+		final Criteria criteria = new Criteria();
+		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/default.json"));
+		mockedSnapshot.setData(criteria);
+		
+		PowerMockito.when(mockClientServiceImpl.resolveSnapshot(this.properties)).thenReturn(mockResponseResolveSnapshot);
+		PowerMockito.when(mockResponseResolveSnapshot.readEntity(Snapshot.class)).thenReturn(mockedSnapshot);
+		PowerMockito.when(mockClientServiceImpl.checkSnapshotVersion(this.properties, 1588557288037l)).thenThrow(ResponseProcessingException.class);
+		
+		ClientServiceFacade.getInstance().setClientService(mockClientServiceImpl);
+		
+		SwitcherFactory.buildContext(this.properties, true);
+		this.removeFixture();
+		
+		PowerMockito.when(mockResponseAuth.getStatus()).thenReturn(401);
+		
+		ClientServiceFacade.getInstance().setClientService(mockClientServiceImpl);
+		Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(() -> true);
+		
+		//test
+		try {
+			SwitcherFactory.validateSnapshot();
+		} catch (Exception e) {
+			assertEquals("Something went wrong: Unauthorized API access", e.getMessage());
+			throw e;
+		} finally {
+			ClientServiceFacade.getInstance().setClientService(null);
+		}
 	}
 
 }

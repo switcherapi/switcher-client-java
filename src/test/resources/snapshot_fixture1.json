@@ -419,6 +419,77 @@
                             "components": ["switcher-client"]
                         }
                     ]
+                },
+                {
+                    "name": "Group 9",
+                    "description": "Regex Validation",
+                    "activated": true,
+                    "config": [
+                        {
+                            "key": "USECASE91",
+                            "description": "Config with Regex Validation [EXIST]",
+                            "activated": true,
+                            "strategies": [
+                                {
+                                    "strategy": "REGEX_VALIDATION",
+                                    "activated": true,
+                                    "operation": "EXIST",
+                                    "values": [
+                                        "\\bUSER_[0-9]{1,2}\\b", "\\buser-[0-9]{1,2}\\b"
+                                    ]
+                                }
+                            ],
+                            "components": ["switcher-client"]
+                        },
+                        {
+                            "key": "USECASE92",
+                            "description": "Config with Regex Validation [NOT_EXIST]",
+                            "activated": true,
+                            "strategies": [
+                                {
+                                    "strategy": "REGEX_VALIDATION",
+                                    "activated": true,
+                                    "operation": "NOT_EXIST",
+                                    "values": [
+                                         "\\bUSER_[0-9]{1,2}\\b", "\\buser-[0-9]{1,2}\\b"
+                                    ]
+                                }
+                            ],
+                            "components": ["switcher-client"]
+                        },
+                        {
+                            "key": "USECASE93",
+                            "description": "Config with Regex Validation [EQUAL]",
+                            "activated": true,
+                            "strategies": [
+                                {
+                                    "strategy": "REGEX_VALIDATION",
+                                    "activated": true,
+                                    "operation": "EQUAL",
+                                    "values": [
+                                       "USER_[0-9]{1,2}"
+                                    ]
+                                }
+                            ],
+                            "components": ["switcher-client"]
+                        },
+                        {
+                            "key": "USECASE94",
+                            "description": "Config with Regex Validation [NOT_EQUAL]",
+                            "activated": true,
+                            "strategies": [
+                                {
+                                    "strategy": "REGEX_VALIDATION",
+                                    "activated": true,
+                                    "operation": "NOT_EQUAL",
+                                    "values": [
+                                        "USER_[0-9]{1,2}"
+                                    ]
+                                }
+                            ],
+                            "components": ["switcher-client"]
+                        }
+                    ]
                 }
             ]
         }

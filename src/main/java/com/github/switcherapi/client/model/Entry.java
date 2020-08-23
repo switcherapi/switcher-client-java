@@ -42,6 +42,11 @@ public class Entry {
 	 */
 	public static final String TIME = "TIME_VALIDATION";
 	
+	/**
+	 * Execute a regular expression based validation
+	 */
+	public static final String REGEX = "REGEX_VALIDATION";
+	
 	public static final String EQUAL = "EQUAL";
 	public static final String NOT_EQUAL = "NOT_EQUAL";
 	public static final String EXIST = "EXIST";

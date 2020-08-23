@@ -44,6 +44,7 @@ public class ClientOfflineServiceFacade {
 	
 	public static final String DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
 	public static final String CIDR_REGEX = "^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))";
+	public static final String DELIMITER_REGEX = "\\b%s\\b";
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	public static final String DISABLED_DOMAIN = "Domain disabled";
 	public static final String DISABLED_GROUP = "Group disabled";
@@ -154,6 +155,9 @@ public class ClientOfflineServiceFacade {
 				break;
 			case Entry.TIME:
 				result = this.processTime(strategy, switcherInput);
+				break;
+			case Entry.REGEX:
+				result = this.processRegex(strategy, switcherInput);
 				break;
 			default:
 				throw new SwitcherInvalidStrategyException(strategy.getStrategy());
@@ -362,6 +366,31 @@ public class ClientOfflineServiceFacade {
 			throw new SwitcherInvalidTimeFormat(strategy.getStrategy(), e);
 		}
 
+	}
+	
+	private boolean processRegex(final Strategy strategy, final Entry switcherInput) 
+			throws SwitcherInvalidOperationException {
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format(DEBUG_STRATEGY, strategy));
+			logger.debug(String.format(DEBUG_SWITCHER_INPUT, switcherInput));
+		}
+		
+		switch (strategy.getOperation()) {
+		case Entry.EXIST:
+			return Arrays.stream(strategy.getValues()).anyMatch(val -> switcherInput.getInput().matches(val));
+		case Entry.NOT_EXIST:
+			strategy.setOperation(Entry.EXIST);
+			return !processRegex(strategy, switcherInput);
+		case Entry.EQUAL:
+			return strategy.getValues().length == 1 && 
+				switcherInput.getInput().matches(String.format(DELIMITER_REGEX, strategy.getValues()[0]));
+		case Entry.NOT_EQUAL:
+			return strategy.getValues().length == 1 && 
+				!switcherInput.getInput().matches(String.format(DELIMITER_REGEX, strategy.getValues()[0]));
+		default:
+			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
+		}
 	}
 
 }

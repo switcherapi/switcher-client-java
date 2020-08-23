@@ -52,7 +52,7 @@ public abstract class SwitcherExecutor {
 		
 		try {
 			return ClientServiceFacade.getInstance().checkSnapshotVersion(this.properties, domain.getVersion());
-		} catch (SwitcherAPIConnectionException e) {
+		} catch (SwitcherException e) {
 			logger.error(e);
 			throw e;
 		}

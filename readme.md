@@ -119,6 +119,7 @@ switcher.isItOn(); // Now, it's going to return the result retrieved from the AP
 ```
 
 # Version Log
+- 1.0.7: Added Regex Validation
 - 1.0.6: Updated depencencies & new features
 	- Updated dependency jersey-hk2 from 2.28 to 2.31
 	- Updated dependency commons-net from 3.3 to 3.6.
