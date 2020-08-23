@@ -24,12 +24,12 @@ public class AuthResponse {
 
 	public void setExp(long exp) {
 		
-		this.exp = exp;
+		this.exp = exp*1000;
 	}
 	
 	public boolean isExpired() {
 		
-		return this.exp*1000 < System.currentTimeMillis();
+		return this.exp < System.currentTimeMillis();
 	}
 	
 }

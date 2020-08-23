@@ -721,5 +721,111 @@ public class SwitcherOfflineTest {
 		switcher.prepareEntry(new Entry(Entry.TIME, "12:00"));
 		switcher.isItOn();
 	}
+	
+	@Test
+	public void offlineShouldReturnTrue_regexValidationExist() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE91");
+		Entry input = new Entry(Entry.REGEX, "USER_10");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_regexValidationExist() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE91");
+		Entry input = new Entry(Entry.REGEX, "USER_100");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_regexValidationNotExist() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE92");
+		Entry input = new Entry(Entry.REGEX, "user-100");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_regexValidationNotExist() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE92");
+		Entry input = new Entry(Entry.REGEX, "user-10");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_regexValidationEqual() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE93");
+		Entry input = new Entry(Entry.REGEX, "USER_10");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_regexValidationEqual() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE93");
+		Entry input = new Entry(Entry.REGEX, "user-10");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_regexValidationNotEqual() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE94");
+		Entry input = new Entry(Entry.REGEX, "user-10");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_regexValidationNotEqual() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE94");
+		Entry input = new Entry(Entry.REGEX, "USER_10");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test(expected = SwitcherInvalidOperationException.class)
+	public void offlineShouldReturnError_InvalidSnapshotOperationForRegex() throws Exception {
+		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture3.json");
+		SwitcherFactory.buildContext(properties, true);
+		
+		Switcher switcher = SwitcherFactory.getSwitcher("USECASE20");
+		switcher.prepareEntry(new Entry(Entry.REGEX, "1"));
+		switcher.isItOn();
+	}
 
 }

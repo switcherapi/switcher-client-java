@@ -154,6 +154,22 @@
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "key": "USECASE20",
+                            "description": "It contains an invalid strategy operation",
+                            "activated": true,
+                            "components": ["switcher-client"],
+                            "strategies": [
+                                {
+                                    "strategy": "REGEX_VALIDATION",
+                                    "activated": true,
+                                    "operation": "BETWEEN",
+                                    "values": [
+                                        "[0-9]", "[a-Z]"
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }

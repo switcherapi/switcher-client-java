@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
+import org.awaitility.Awaitility;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +31,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.switcherapi.client.SwitcherFactory;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
+import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForComponentException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.facade.ClientServiceFacade;
@@ -62,7 +65,7 @@ public class SwitcherOnlineTest {
 	}
 	
 	private Switcher generateSwitcherMockTrue(final int executionStatus) throws Exception {
-		return generateSwitcherMockTrue(executionStatus, false);
+		return generateSwitcherMockTrue(executionStatus, 200, false);
 	}
 	
 	/**
@@ -77,7 +80,9 @@ public class SwitcherOnlineTest {
 	 * @return
 	 * @throws Exception
 	 */
-	private Switcher generateSwitcherMockTrue(final int executionStatus, boolean noExecutionReason) throws Exception {
+	private Switcher generateSwitcherMockTrue(final int executionStatus, final int authStatus, boolean noExecutionReason) 
+			throws Exception {
+		
 		SwitcherFactory.buildContext(properties, false);
 		final Switcher switcher = SwitcherFactory.getSwitcher("ONLINE_KEY");
 		
@@ -95,6 +100,7 @@ public class SwitcherOnlineTest {
 		criteriaResponse.setResult(true);
 		
 		PowerMockito.when(mockClientServiceImpl.auth(this.properties)).thenReturn(mockResponseAuth);
+		PowerMockito.when(mockResponseAuth.getStatus()).thenReturn(authStatus);
 		PowerMockito.when(mockResponseAuth.readEntity(AuthResponse.class)).thenReturn(authResponse);
 		
 		PowerMockito.when(mockClientServiceImpl.executeCriteriaService(this.properties, switcher)).thenReturn(mockResponseExecute);
@@ -149,7 +155,7 @@ public class SwitcherOnlineTest {
 		List<Entry> entries = new ArrayList<>();
 		entries.add(new Entry(Entry.DATE, "2019-12-10"));
 		
-		Switcher switcher = generateSwitcherMockTrue(200, true);
+		Switcher switcher = generateSwitcherMockTrue(200, 200, true);
 		switcher.setShowReason(true); // this has no effect in here because the mock has been already generated
 		
 		//test
@@ -188,6 +194,18 @@ public class SwitcherOnlineTest {
 		switcher.isItOn();
 	}
 	
+	@Test(expected = SwitcherException.class)
+	public void shouldReturnError_unauthorizedAPIaccess() throws Exception {
+		Switcher switcher = generateSwitcherMockTrue(200, 401, true);
+		
+		try {
+			switcher.isItOn();
+		} catch (Exception e) {
+			assertEquals("Something went wrong: Unauthorized API access", e.getMessage());
+			throw e;
+		}
+	}
+	
 	@Test
 	public void shouldReturnTrue_silentMode() throws Exception {
 		properties.put(SwitcherContextParam.SILENT_MODE, true);
@@ -198,7 +216,7 @@ public class SwitcherOnlineTest {
 		assertTrue(switcher.isItOn());
 		assertTrue(switcher.isItOn());
 		
-		Thread.sleep(2000);
+		Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(() -> true);
 		
 		assertTrue(switcher.isItOn());
 	}
@@ -208,11 +226,11 @@ public class SwitcherOnlineTest {
 		// Generate token with 2 secods expiration time
 		Switcher switcher = generateSwitcherMockTrue(200);
 		assertTrue(switcher.isItOn());
-		Thread.sleep(500);
+		Awaitility.await().pollDelay(500, TimeUnit.MILLISECONDS).until(() -> true);
 		assertTrue(switcher.isItOn());
 		
 		// It should renew token here
-		Thread.sleep(2000);
+		Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(() -> true);
 		assertTrue(switcher.isItOn());
 	}
 	

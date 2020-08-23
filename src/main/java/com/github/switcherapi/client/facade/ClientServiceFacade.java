@@ -70,19 +70,15 @@ public class ClientServiceFacade {
 			criteriaReponse.setSwitcherKey(switcher.getSwitcherKey());
 			response.close();
 			return criteriaReponse;
-		} catch (final SwitcherKeyNotFoundException | SwitcherKeyNotAvailableForComponentException e) {
+		} catch (final SwitcherException e) {
 			logger.error(e);
 			throw e;
-		} catch (final Exception e) {
-			logger.error(e);
-			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
-					(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY, e);
 		}
 		
 	}
 	
 	public Snapshot resolveSnapshot(final Map<String, Object> properties) 
-			throws SwitcherAPIConnectionException {
+			throws SwitcherException {
 		
 		try {
 			if (!this.isTokenValid(properties)) {
@@ -94,6 +90,9 @@ public class ClientServiceFacade {
 			final Snapshot snapshot = response.readEntity(Snapshot.class);
 			response.close();
 			return snapshot;
+		} catch (final SwitcherException e) {
+			logger.error(e);
+			throw e;
 		} catch (final Exception e) {
 			logger.error(e);
 			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
@@ -103,7 +102,7 @@ public class ClientServiceFacade {
 	}
 	
 	public boolean checkSnapshotVersion(final Map<String, Object> properties, final long version)
-			throws SwitcherAPIConnectionException {
+			throws SwitcherException {
 		
 		try {
 			if (!this.isTokenValid(properties)) {
@@ -116,6 +115,9 @@ public class ClientServiceFacade {
 			response.close();
 			
 			return snapshotVersionResponse.isUpdated();
+		} catch (final SwitcherException e) {
+			logger.error(e);
+			throw e;
 		} catch (final Exception e) {
 			logger.error(e);
 			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
@@ -127,10 +129,17 @@ public class ClientServiceFacade {
 	private void auth(final Map<String, Object> properties) throws SwitcherException {
 		try {
 			final Response response = this.clientService.auth(properties);
-				
+			
+			if (response.getStatus() == 401) {
+				throw new SwitcherException("Unauthorized API access", null); 
+			}
+			
 			final AuthResponse authResponse = response.readEntity(AuthResponse.class);
 			properties.put(ClientService.AUTH_RESPONSE, authResponse);
 			response.close();
+		} catch (final SwitcherException e) {
+			this.setSilentModeExpiration(properties);
+			throw e;
 		} catch (final Exception e) {
 			logger.error(e);
 			this.setSilentModeExpiration(properties);
@@ -153,7 +162,6 @@ public class ClientServiceFacade {
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	
