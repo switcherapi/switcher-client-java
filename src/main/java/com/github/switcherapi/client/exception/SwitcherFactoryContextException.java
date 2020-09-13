@@ -12,5 +12,10 @@ public class SwitcherFactoryContextException extends SwitcherException {
 		
 		super("Context was not initialized. Call 'buildContext' to set up the factory", null);
 	}
+	
+	public SwitcherFactoryContextException(String error) {
+		
+		super(String.format("Context has errors - %s", error), null);
+	} 
 
 }

@@ -47,7 +47,7 @@ public class SwitcherOffline extends SwitcherExecutor {
 		
 		if (StringUtils.isNotBlank(snapshotFile)) {
 			this.domain = SnapshotLoader.loadSnapshot(snapshotFile);
-		} else {
+		} else if (StringUtils.isNotBlank(snapshotLocation)) {
 			try {
 				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
 			} catch (FileNotFoundException e) {

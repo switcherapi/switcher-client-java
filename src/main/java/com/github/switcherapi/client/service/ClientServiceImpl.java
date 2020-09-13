@@ -96,6 +96,17 @@ public class ClientServiceImpl implements ClientService {
 				.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, ((AuthResponse) properties.get(AUTH_RESPONSE)).getToken()))
 				.get();
 	}
+	
+	@Override
+	public boolean isAlive(final Map<String, Object> properties) {
+		try {
+			final WebTarget myResource = client.target(String.format(CHECK_URL, properties.get(SwitcherContextParam.URL)));
+			final Response response = myResource.request(MediaType.APPLICATION_JSON).get();
+			return response.getStatus() == 200;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 
 	public void setClient(Client client) {
 		

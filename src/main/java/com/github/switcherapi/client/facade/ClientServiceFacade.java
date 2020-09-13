@@ -6,8 +6,6 @@ import java.util.Map;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherException;
@@ -29,8 +27,6 @@ import com.github.switcherapi.client.utils.SwitcherUtils;
  * @since 2019-12-24
  */
 public class ClientServiceFacade {
-	
-	private static final Logger logger = LogManager.getLogger(ClientServiceFacade.class);
 	
 	private static ClientServiceFacade instance;
 	
@@ -71,7 +67,6 @@ public class ClientServiceFacade {
 			response.close();
 			return criteriaReponse;
 		} catch (final SwitcherException e) {
-			logger.error(e);
 			throw e;
 		}
 		
@@ -91,10 +86,8 @@ public class ClientServiceFacade {
 			response.close();
 			return snapshot;
 		} catch (final SwitcherException e) {
-			logger.error(e);
 			throw e;
 		} catch (final Exception e) {
-			logger.error(e);
 			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
 					(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY, e);
 		}
@@ -116,10 +109,8 @@ public class ClientServiceFacade {
 			
 			return snapshotVersionResponse.isUpdated();
 		} catch (final SwitcherException e) {
-			logger.error(e);
 			throw e;
 		} catch (final Exception e) {
-			logger.error(e);
 			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
 					(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY, e);
 		}
@@ -138,30 +129,36 @@ public class ClientServiceFacade {
 			properties.put(ClientService.AUTH_RESPONSE, authResponse);
 			response.close();
 		} catch (final SwitcherException e) {
-			this.setSilentModeExpiration(properties);
 			throw e;
 		} catch (final Exception e) {
-			logger.error(e);
 			this.setSilentModeExpiration(properties);
 			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
 					(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY, e);
 		}
 	}
 	
-	private boolean isTokenValid(final Map<String, Object> properties) throws SwitcherAPIConnectionException {
+	private boolean isTokenValid(final Map<String, Object> properties) 
+			throws SwitcherAPIConnectionException, SwitcherInvalidDateTimeArgumentException {
 		
 		if (properties.containsKey(ClientService.AUTH_RESPONSE)) {
 			final AuthResponse authResponse = (AuthResponse) properties.get(ClientService.AUTH_RESPONSE);
 			
-			if (authResponse.getToken().equals(SwitcherContextParam.SILENT_MODE) && !authResponse.isExpired()) {
-				throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
-						(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY);
-			}
-			
-			if (!authResponse.isExpired()) {
-				return true;
+			if (authResponse.getToken().equals(SwitcherContextParam.SILENT_MODE)) {
+				if (!authResponse.isExpired()) {
+					throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
+							(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY);
+				}
+			} else {
+				if (!this.clientService.isAlive(properties)) {
+					this.setSilentModeExpiration(properties);
+					throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
+							(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY);
+				}
+				
+				return !authResponse.isExpired();
 			}
 		}
+		
 		return false;
 	}
 	
@@ -178,6 +175,7 @@ public class ClientServiceFacade {
 			authResponse.setExp(SwitcherUtils.addTimeDuration(addValue, new Date()).getTime()/1000);
 			properties.put(ClientService.AUTH_RESPONSE, authResponse);
 		}
+		
 	}
 
 	public void setClientService(ClientService clientService) {

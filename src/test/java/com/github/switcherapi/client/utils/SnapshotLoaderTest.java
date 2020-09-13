@@ -120,6 +120,8 @@ public class SnapshotLoaderTest {
 		authResponse.setExp(SwitcherUtils.addTimeDuration("2s", new Date()).getTime()/1000);
 		authResponse.setToken("123lkjsuoi23487skjfh28dskjn29");
 		
+		PowerMockito.when(mockClientServiceImpl.isAlive(properties)).thenReturn(true);
+		
 		PowerMockito.when(mockClientServiceImpl.auth(this.properties)).thenReturn(mockResponseAuth);
 		PowerMockito.when(mockResponseAuth.readEntity(AuthResponse.class)).thenReturn(authResponse);
 		
@@ -349,6 +351,8 @@ public class SnapshotLoaderTest {
 		authResponse.setExp(SwitcherUtils.addTimeDuration("2s", new Date()).getTime()/1000);
 		authResponse.setToken("123lkjsuoi23487skjfh28dskjn29");
 		
+		PowerMockito.when(mockClientServiceImpl.isAlive(properties)).thenReturn(true);
+		
 		PowerMockito.when(mockClientServiceImpl.auth(this.properties)).thenReturn(mockResponseAuth);
 		PowerMockito.when(mockResponseAuth.readEntity(AuthResponse.class)).thenReturn(authResponse);
 		
@@ -381,6 +385,47 @@ public class SnapshotLoaderTest {
 		}
 	}
 	
+	@Test(expected = SwitcherAPIConnectionException.class)
+	public void shouldInvokeCheckSnapshotVersionWithException() throws Exception {
+		//given
+		final ClientService mockClientServiceImpl = PowerMockito.mock(ClientService.class);
+		final Response mockResponseAuth = PowerMockito.mock(Response.class);
+		
+		final AuthResponse authResponse = new AuthResponse();
+		authResponse.setExp(SwitcherUtils.addTimeDuration("2s", new Date()).getTime()/1000);
+		authResponse.setToken("123lkjsuoi23487skjfh28dskjn29");
+		
+		PowerMockito.when(mockClientServiceImpl.isAlive(properties)).thenReturn(true);
+		
+		PowerMockito.when(mockClientServiceImpl.auth(this.properties)).thenReturn(mockResponseAuth);
+		PowerMockito.when(mockResponseAuth.readEntity(AuthResponse.class)).thenReturn(authResponse);
+		
+		final Snapshot mockedSnapshot = new Snapshot();
+		final Criteria criteria = new Criteria();
+		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/default.json"));
+		mockedSnapshot.setData(criteria);
+		
+		PowerMockito.when(mockClientServiceImpl.resolveSnapshot(this.properties)).thenThrow(ResponseProcessingException.class);
+		ClientServiceFacade.getInstance().setClientService(mockClientServiceImpl);
+		
+		SwitcherFactory.buildContext(this.properties, true);
+		this.removeFixture();
+		
+		//test
+		try {
+			SwitcherFactory.validateSnapshot();
+		} catch (Exception e) {
+			assertEquals(
+					String.format(
+							"Something went wrong: It was not possible to reach the Switcher-API on this endpoint: %s", 
+							properties.get(SwitcherContextParam.URL)), 
+					e.getMessage());
+			throw e;
+		} finally {
+			ClientServiceFacade.getInstance().setClientService(null);
+		}
+	}
+	
 	@Test(expected = SwitcherException.class)
 	public void shouldInvokeCheckSnapshotVersionWithErrors_unauthorizedAPIaccess() throws Exception {
 		//given
@@ -391,6 +436,8 @@ public class SnapshotLoaderTest {
 		final AuthResponse authResponse = new AuthResponse();
 		authResponse.setExp(SwitcherUtils.addTimeDuration("2s", new Date()).getTime()/1000);
 		authResponse.setToken("123lkjsuoi23487skjfh28dskjn29");
+		
+		PowerMockito.when(mockClientServiceImpl.isAlive(properties)).thenReturn(true);
 		
 		PowerMockito.when(mockClientServiceImpl.auth(this.properties)).thenReturn(mockResponseAuth);
 		PowerMockito.when(mockResponseAuth.readEntity(AuthResponse.class)).thenReturn(authResponse);

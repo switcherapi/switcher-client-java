@@ -39,8 +39,9 @@ properties.put(SwitcherContextParam.APIKEY, "API_KEY");
 properties.put(SwitcherContextParam.DOMAIN, "MyDomain");
 properties.put(SwitcherContextParam.COMPONENT, "MyApp");
 properties.put(SwitcherContextParam.ENVIRONMENT, "default");
-properties.put(SwitcherContextParam.SILENT_MODE, true);
+properties.put(SwitcherContextParam.SILENT_MODE, true); //require RETRY_AFTER
 properties.put(SwitcherContextParam.RETRY_AFTER, "5s");
+properties.put(SwitcherContextParam.SNAPSHOT_AUTO_LOAD, true); //require SNAPSHOT_LOCATION
 properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, "/src/resources");
 
 SwitcherFactory.buildContext(properties, false);
@@ -86,7 +87,17 @@ switcher.isItOn();
 switcher.isItOn(entries);
 ```
 
-3. **Strategy validation - all-in-one execution**
+3. **Strategy validation - chained call**
+Create chained calls using 'getSwitcher' then 'prepareEntry' then 'isItOn' functions.
+
+```java
+Switcher switcher = SwitcherFactory.getSwitcher("FEATURE01")
+	.prepareEntry(new Entry(Entry.VALUE, "My value"))
+	.prepareEntry(new Entry(Entry.NETWORK, "10.0.0.1"))
+	.isItOn();
+```
+
+4. **Strategy validation - all-in-one execution**
 All-in-one method is fast and include everything you need to execute a complex call to the API. Stack inputs changing the last parameter to *true* in case you need to add more values to the strategy validator.
 
 ```java
@@ -104,6 +115,24 @@ Switcher switcher = SwitcherFactory.getSwitcher("FEATURE01");
 switcher.isItOn();
 ```
 
+## Real-time snapshot updater
+Let the Switcher Client manage your application local snapshot file.
+
+In order to minimize roundtrips and unnecessary file parsing, try to use one of these features to improve the overall performance when accessing snapshots locally.
+
+1. This feature will update the in-memory Snapshot every time a modification on the file occurs.
+
+```java
+SwitcherFactory.watchSnapshot();
+SwitcherFactory.stopWatchingSnapshot();
+```
+
+2. You can tell the Switcher Client to check if the snapshot file is updated. This will ensure that your application is running the most recent version of your cloud configuration.
+
+```java
+SwitcherFactory.validateSnapshot();
+```
+
 ## Built-in mock feature
 Write automated tests using this built-in mock mechanism to guide your test scenario according to what you want to test.
 </br>*SwitcherExecutor* implementation has 2 methods that can make mock tests easier. Use assume to force a value to a switcher and forget to reset its original state.
@@ -119,6 +148,11 @@ switcher.isItOn(); // Now, it's going to return the result retrieved from the AP
 ```
 
 # Version Log
+- 1.0.8:
+	- Fixed issues when using Silent Mode
+	- Fixed error when using only access to online API
+	- Improved validation when verifying whether API is accessible
+	- Added validations when preparing the Switcher Context
 - 1.0.7: Added Regex Validation
 - 1.0.6: Updated depencencies & new features
 	- Updated dependency jersey-hk2 from 2.28 to 2.31
