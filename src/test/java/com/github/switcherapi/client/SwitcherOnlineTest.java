@@ -309,7 +309,7 @@ public class SwitcherOnlineTest {
 		clientService.setClient(clientMock);
 		
 		//test
-		clientService.isAlive(properties);
+		assertTrue(clientService.isAlive(properties));
 	}
 
 

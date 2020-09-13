@@ -52,7 +52,7 @@
    		
    		<!-- utils -->
    		<commons-lang3.version>3.11</commons-lang3.version>
-   		<commons-net.version>3.6</commons-net.version>
+   		<commons-net.version>3.7</commons-net.version>
    		
    		<!-- test -->
    		<log4j.version>2.13.3</log4j.version>
