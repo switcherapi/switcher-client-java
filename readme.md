@@ -153,14 +153,15 @@ switcher.isItOn(); // Now, it's going to return the result retrieved from the AP
 	- Fixed error when using only access to online API
 	- Improved validation when verifying whether API is accessible
 	- Added validations when preparing the Switcher Context
+	- Updated dependency commons-net.version from 3.6 to 3.7
 - 1.0.7: Added Regex Validation
 - 1.0.6: Updated depencencies & new features
 	- Updated dependency jersey-hk2 from 2.28 to 2.31
-	- Updated dependency commons-net from 3.3 to 3.6.
-	- Updated dependency commons-lang3 from 3.8.1 to 3.10.
-	- Updated dependency gson from 2.8.5 to 2.8.6.
-	- Added execution log to Switcher.
-	- Added bypass metrics and show detailed criteria evaluation options to Switcher objects.
+	- Updated dependency commons-net from 3.3 to 3.6
+	- Updated dependency commons-lang3 from 3.8.1 to 3.10
+	- Updated dependency gson from 2.8.5 to 2.8.6
+	- Added execution log to Switcher
+	- Added bypass metrics and show detailed criteria evaluation options to Switcher objects
 - 1.0.5: Security patch - Jersey has been updated - 2.28 to 2.31
 - 1.0.4: Added Numeric Validation
 - 1.0.3: Security patch - Log4J has been updated - 2.13.1 to 2.13.3

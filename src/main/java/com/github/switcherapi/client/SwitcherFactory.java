@@ -161,17 +161,15 @@ public class SwitcherFactory {
 		}
 		
 		if (properties.containsKey(SwitcherContextParam.SNAPSHOT_AUTO_LOAD) &&
-				Boolean.parseBoolean(properties.get(SwitcherContextParam.SNAPSHOT_AUTO_LOAD).toString())) {
-			if (!properties.containsKey(SwitcherContextParam.SNAPSHOT_LOCATION)) {
+				Boolean.parseBoolean(properties.get(SwitcherContextParam.SNAPSHOT_AUTO_LOAD).toString()) &&
+				!properties.containsKey(SwitcherContextParam.SNAPSHOT_LOCATION)) {
 				throw new SwitcherFactoryContextException("SwitcherContextParam.SNAPSHOT_LOCATION not found");
-			}
 		}
 		
 		if (properties.containsKey(SwitcherContextParam.SILENT_MODE) &&
-				Boolean.parseBoolean(properties.get(SwitcherContextParam.SILENT_MODE).toString())) {
-			if (!properties.containsKey(SwitcherContextParam.RETRY_AFTER)) {
+				Boolean.parseBoolean(properties.get(SwitcherContextParam.SILENT_MODE).toString()) && 
+				!properties.containsKey(SwitcherContextParam.RETRY_AFTER)) {
 				throw new SwitcherFactoryContextException("SwitcherContextParam.RETRY_AFTER not found");
-			}
 		}
 	}
 

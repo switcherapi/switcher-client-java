@@ -47,29 +47,23 @@ public class ClientServiceFacade {
 	
 	public CriteriaResponse executeCriteria(final Map<String, Object> properties, final Switcher switcher) 
 			throws SwitcherException {
+		if (!this.isTokenValid(properties)) {
+			this.auth(properties);
+		}
+				
+		final Response response = this.clientService.executeCriteriaService(properties, switcher);
 		
-		try {
-			if (!this.isTokenValid(properties)) {
-				this.auth(properties);
-			}
-					
-			final Response response = this.clientService.executeCriteriaService(properties, switcher);
-			
-			if (response.getStatus() == 401) {
-				throw new SwitcherKeyNotAvailableForComponentException(
-						properties.get(SwitcherContextParam.COMPONENT).toString(), switcher.getSwitcherKey());
-			} else if (response.getStatus() != 200) {
-				throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
-			}
-			
-			final CriteriaResponse criteriaReponse = response.readEntity(CriteriaResponse.class);
-			criteriaReponse.setSwitcherKey(switcher.getSwitcherKey());
-			response.close();
-			return criteriaReponse;
-		} catch (final SwitcherException e) {
-			throw e;
+		if (response.getStatus() == 401) {
+			throw new SwitcherKeyNotAvailableForComponentException(
+					properties.get(SwitcherContextParam.COMPONENT).toString(), switcher.getSwitcherKey());
+		} else if (response.getStatus() != 200) {
+			throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
 		}
 		
+		final CriteriaResponse criteriaReponse = response.readEntity(CriteriaResponse.class);
+		criteriaReponse.setSwitcherKey(switcher.getSwitcherKey());
+		response.close();
+		return criteriaReponse;
 	}
 	
 	public Snapshot resolveSnapshot(final Map<String, Object> properties) 
@@ -88,8 +82,7 @@ public class ClientServiceFacade {
 		} catch (final SwitcherException e) {
 			throw e;
 		} catch (final Exception e) {
-			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
-					(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY, e);
+			throw new SwitcherAPIConnectionException(getAPIConnectionException(properties), e);
 		}
 		
 	}
@@ -111,8 +104,7 @@ public class ClientServiceFacade {
 		} catch (final SwitcherException e) {
 			throw e;
 		} catch (final Exception e) {
-			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
-					(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY, e);
+			throw new SwitcherAPIConnectionException(getAPIConnectionException(properties), e);
 		}
 		
 	}
@@ -132,8 +124,7 @@ public class ClientServiceFacade {
 			throw e;
 		} catch (final Exception e) {
 			this.setSilentModeExpiration(properties);
-			throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
-					(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY, e);
+			throw new SwitcherAPIConnectionException(getAPIConnectionException(properties), e);
 		}
 	}
 	
@@ -143,16 +134,12 @@ public class ClientServiceFacade {
 		if (properties.containsKey(ClientService.AUTH_RESPONSE)) {
 			final AuthResponse authResponse = (AuthResponse) properties.get(ClientService.AUTH_RESPONSE);
 			
-			if (authResponse.getToken().equals(SwitcherContextParam.SILENT_MODE)) {
-				if (!authResponse.isExpired()) {
-					throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
-							(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY);
-				}
+			if (authResponse.getToken().equals(SwitcherContextParam.SILENT_MODE) && !authResponse.isExpired()) {
+				throw new SwitcherAPIConnectionException(getAPIConnectionException(properties));
 			} else {
 				if (!this.clientService.isAlive(properties)) {
 					this.setSilentModeExpiration(properties);
-					throw new SwitcherAPIConnectionException(properties.containsKey(SwitcherContextParam.URL) ? 
-							(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY);
+					throw new SwitcherAPIConnectionException(getAPIConnectionException(properties));
 				}
 				
 				return !authResponse.isExpired();
@@ -160,6 +147,11 @@ public class ClientServiceFacade {
 		}
 		
 		return false;
+	}
+
+	private String getAPIConnectionException(final Map<String, Object> properties) {
+		return properties.containsKey(SwitcherContextParam.URL) ? 
+				(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY;
 	}
 	
 	private void setSilentModeExpiration(final Map<String, Object> properties) 
