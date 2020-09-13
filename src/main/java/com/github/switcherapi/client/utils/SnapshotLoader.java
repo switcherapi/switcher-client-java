@@ -5,7 +5,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -74,6 +78,15 @@ public class SnapshotLoader {
 
 		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+		try {
+			Path path = Paths.get(snapshotLocation);
+			if (!path.toFile().exists())
+				Files.createDirectories(path);
+		} catch (IOException ioe) {
+			logger.error(ioe);
+			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), ioe);
+		}
+		
 		try (
 				final FileWriter fileWriter = new FileWriter(
 						new File(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment)));

@@ -49,7 +49,7 @@ public class SwitcherOnline extends SwitcherExecutor {
 			
 			return response;
 		} catch (final SwitcherAPIConnectionException e) {
-			logger.error(e);
+			logger.error("Failed to execute criteria - {}", e.getMessage());
 			return executeSilentCriteria(switcher, e);
 		}
 	}

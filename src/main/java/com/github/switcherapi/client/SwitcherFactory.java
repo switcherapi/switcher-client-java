@@ -55,12 +55,15 @@ public class SwitcherFactory {
 	 * 
 	 * @see SwitcherContextParam
 	 */
-	public static void buildContext(final Map<String, Object> properties, boolean offline)  throws SwitcherException {
+	public static void buildContext(final Map<String, Object> properties, boolean offline) 
+			throws SwitcherException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("properties: %s", properties));
 			logger.debug(String.format("offline: %s", offline));
 		}
+		
+		validateContext(properties, offline);
 		
 		if (instance == null) {
 			if (offline) {
@@ -79,7 +82,8 @@ public class SwitcherFactory {
 	 * 
 	 * @param key name of the key created
 	 * @return a ready to use Switcher
-	 * @throws SwitcherFactoryContextException If the context hasn't been configured. To avoid this exception, it's required to invoke {@link #buildContext(Map, boolean)} first
+	 * @throws SwitcherFactoryContextException If the context hasn't been configured. 
+	 * 	To avoid this exception, it's required to invoke {@link #buildContext(Map, boolean)} first
 	 */
 	public static Switcher getSwitcher(final String key) throws SwitcherFactoryContextException {
 		
@@ -127,6 +131,48 @@ public class SwitcherFactory {
 	public static void stopWatchingSnapshot() throws SwitcherException {
 		
 		SwitcherUtils.stopWatchingSnapshot();
+	}
+	
+	/**
+	 * Verifies if the client context is valid
+	 * 
+	 * @throws SwitcherFactoryContextException 
+	 *  If an error was found, showing then the missing parameter
+	 */
+	public static void validateContext(final Map<String, Object> properties, boolean offline) 
+			throws SwitcherFactoryContextException {
+		
+		if (!offline) {
+			if (!properties.containsKey(SwitcherContextParam.URL)) {
+				throw new SwitcherFactoryContextException("SwitcherContextParam.URL not found");
+			}
+			
+			if (!properties.containsKey(SwitcherContextParam.APIKEY)) {
+				throw new SwitcherFactoryContextException("SwitcherContextParam.APIKEY not found");
+			}
+			
+			if (!properties.containsKey(SwitcherContextParam.DOMAIN)) {
+				throw new SwitcherFactoryContextException("SwitcherContextParam.DOMAIN not found");
+			}
+			
+			if (!properties.containsKey(SwitcherContextParam.COMPONENT)) {
+				throw new SwitcherFactoryContextException("SwitcherContextParam.COMPONENT not found");
+			}
+		}
+		
+		if (properties.containsKey(SwitcherContextParam.SNAPSHOT_AUTO_LOAD) &&
+				Boolean.parseBoolean(properties.get(SwitcherContextParam.SNAPSHOT_AUTO_LOAD).toString())) {
+			if (!properties.containsKey(SwitcherContextParam.SNAPSHOT_LOCATION)) {
+				throw new SwitcherFactoryContextException("SwitcherContextParam.SNAPSHOT_LOCATION not found");
+			}
+		}
+		
+		if (properties.containsKey(SwitcherContextParam.SILENT_MODE) &&
+				Boolean.parseBoolean(properties.get(SwitcherContextParam.SILENT_MODE).toString())) {
+			if (!properties.containsKey(SwitcherContextParam.RETRY_AFTER)) {
+				throw new SwitcherFactoryContextException("SwitcherContextParam.RETRY_AFTER not found");
+			}
+		}
 	}
 
 }

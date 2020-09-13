@@ -29,7 +29,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.github.switcherapi.client.SwitcherFactory;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForComponentException;
@@ -99,13 +98,15 @@ public class SwitcherOnlineTest {
 			criteriaResponse.setReason("Success");
 		criteriaResponse.setResult(true);
 		
-		PowerMockito.when(mockClientServiceImpl.auth(this.properties)).thenReturn(mockResponseAuth);
+		PowerMockito.when(mockClientServiceImpl.isAlive(properties)).thenReturn(true);
+		
 		PowerMockito.when(mockResponseAuth.getStatus()).thenReturn(authStatus);
 		PowerMockito.when(mockResponseAuth.readEntity(AuthResponse.class)).thenReturn(authResponse);
+		PowerMockito.when(mockClientServiceImpl.auth(this.properties)).thenReturn(mockResponseAuth);
 		
-		PowerMockito.when(mockClientServiceImpl.executeCriteriaService(this.properties, switcher)).thenReturn(mockResponseExecute);
 		PowerMockito.when(mockResponseExecute.getStatus()).thenReturn(executionStatus);
 		PowerMockito.when(mockResponseExecute.readEntity(CriteriaResponse.class)).thenReturn(criteriaResponse);
+		PowerMockito.when(mockClientServiceImpl.executeCriteriaService(this.properties, switcher)).thenReturn(mockResponseExecute);
 		
 		ClientServiceFacade.getInstance().setClientService(mockClientServiceImpl);
 		
@@ -288,6 +289,27 @@ public class SwitcherOnlineTest {
 		
 		//test
 		clientService.auth(properties);
+	}
+	
+	@Test
+	public void shouldInvokeClientCheckWithNoErrors() throws Exception {
+		//given
+		ClientServiceImpl clientService = new ClientServiceImpl();
+		
+		Client clientMock = PowerMockito.mock(Client.class);
+		WebTarget webTargetMock = PowerMockito.mock(WebTarget.class);
+		Builder builderMock = PowerMockito.mock(Builder.class);
+		Response responseMock = PowerMockito.mock(Response.class);
+		
+		PowerMockito.when(clientMock.target(String.format(ClientService.CHECK_URL, properties.get(SwitcherContextParam.URL)))).thenReturn(webTargetMock);
+		PowerMockito.when(webTargetMock.request(MediaType.APPLICATION_JSON)).thenReturn(builderMock);
+		PowerMockito.when(builderMock.get()).thenReturn(responseMock);
+		PowerMockito.when(responseMock.getStatus()).thenReturn(200);
+		
+		clientService.setClient(clientMock);
+		
+		//test
+		clientService.isAlive(properties);
 	}
 
 

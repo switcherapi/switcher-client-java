@@ -38,6 +38,11 @@ public interface ClientService {
 	String SNAPSHOT_VERSION_CHECK = "%s/criteria/snapshot_check/%s";
 	
 	/**
+	 * Return { status: 200 } if alive
+	 */
+	String CHECK_URL = "%s/check";
+	
+	/**
 	 * Returns the verification configured for a specific switcher (key)
 	 * 
 	 * @param properties store all necessary data to build the context
@@ -71,5 +76,9 @@ public interface ClientService {
 	 * @return status: true if domain is updated
 	 */
 	public Response checkSnapshotVersion(final Map<String, Object> properties, final long version);
-
+	
+	/**
+	 * Check whether API is online or not
+	 */
+	public boolean isAlive(final Map<String, Object> properties);
 }
