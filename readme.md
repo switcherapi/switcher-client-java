@@ -148,6 +148,11 @@ switcher.isItOn(); // Now, it's going to return the result retrieved from the AP
 ```
 
 # Version Log
+- 1.0.9: Security patch
+	- Updated dependency jersey-client from 2.31 to 2.32
+	- Updated dependency jersey-hk2 from 2.31 to 2.32
+	- Updated dependency jersey-media-json-jackson from 2.31 to 3.0.0
+	- Updated dependency common-net from 3.7 to 3.7.1
 - 1.0.8:
 	- Fixed issues when using Silent Mode
 	- Fixed error when using only access to online API
