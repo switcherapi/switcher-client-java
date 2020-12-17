@@ -26,7 +26,7 @@ https://github.com/switcherapi/switcher-api
 <dependency>
   <groupId>com.github.switcherapi</groupId>
   <artifactId>switcher-client</artifactId>
-  <version>1.0.6</version>
+  <version>1.0.9</version>
 </dependency>
 ```	
 
@@ -148,7 +148,9 @@ switcher.isItOn(); // Now, it's going to return the result retrieved from the AP
 ```
 
 # Version Log
-- 1.0.9: Security patch
+- Milestone - 1.0.10:
+	- Dependency patch: Commons Net from 3.7.1 to 3.7.2
+- Release - 1.0.9: Security patch
 	- Updated dependency jersey-client from 2.31 to 2.32
 	- Updated dependency jersey-hk2 from 2.31 to 2.32
 	- Updated dependency jersey-media-json-jackson from 2.31 to 3.0.0

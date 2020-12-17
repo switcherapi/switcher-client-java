@@ -113,6 +113,13 @@ public class SwitcherOnlineTest {
 		return switcher;
 	}
 	
+	@Test(expected = SwitcherAPIConnectionException.class)
+	public void shouldReturnError_noConnection() throws Exception {
+		SwitcherFactory.buildContext(properties, false);
+		final Switcher switcher = SwitcherFactory.getSwitcher("ONLINE_KEY");
+		switcher.isItOn();
+	}
+	
 	@Test
 	public void shouldReturnTrue() throws Exception {
 		Switcher switcher = generateSwitcherMockTrue(200);
@@ -186,13 +193,6 @@ public class SwitcherOnlineTest {
 	public void shouldReturnError_componentNotregistered() throws Exception {
 		Switcher switcher = generateSwitcherMockTrue(401);
 		assertTrue(switcher.isItOn());
-	}
-	
-	@Test(expected = SwitcherAPIConnectionException.class)
-	public void shouldReturnError_noConnection() throws Exception {
-		SwitcherFactory.buildContext(properties, false);
-		final Switcher switcher = SwitcherFactory.getSwitcher("ONLINE_KEY");
-		switcher.isItOn();
 	}
 	
 	@Test(expected = SwitcherException.class)
