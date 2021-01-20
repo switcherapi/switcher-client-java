@@ -14,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.github.switcherapi.client.SwitcherFactory;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.utils.SwitcherContextParam;
