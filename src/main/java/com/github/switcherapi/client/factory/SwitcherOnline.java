@@ -72,7 +72,7 @@ public class SwitcherOnline extends SwitcherExecutor {
 	@Override
 	public boolean checkSnapshotVersion() throws SwitcherException {
 
-		return Boolean.TRUE;
+		return super.checkSnapshotVersion(this.switcherOffline.getDomain());
 	}
 
 	@Override
