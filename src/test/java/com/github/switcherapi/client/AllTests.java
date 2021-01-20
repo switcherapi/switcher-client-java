@@ -18,6 +18,7 @@ import com.github.switcherapi.client.utils.SwitcherUtilsTest;
         SwitcherBypassTest.class,
         SnapshotLoaderTest.class,
         SnapshotWatcherTest.class,
+        SwitcherApiMockTest.class,
         ModelTest.class
 })
 public class AllTests {
