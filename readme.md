@@ -26,7 +26,7 @@ https://github.com/switcherapi/switcher-api
 <dependency>
   <groupId>com.github.switcherapi</groupId>
   <artifactId>switcher-client</artifactId>
-  <version>1.0.9</version>
+  <version>1.1.0</version>
 </dependency>
 ```	
 
@@ -148,6 +148,9 @@ switcher.isItOn(); // Now, it's going to return the result retrieved from the AP
 ```
 
 # Version Log
+- 1.1.0:
+	- Improved snapshot lookup mechanism
+	- Both online and offline modes can validate/update snapshot version
 - 1.0.10:
 	- Dependency patch: Commons Net from 3.7.1 to 3.7.2
 	- Critical Fix: Downgraded jersey-media-json-jackson 3.0.0 to 2.33

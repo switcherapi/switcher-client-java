@@ -110,5 +110,10 @@ public class SwitcherOffline extends SwitcherExecutor {
 		
 		this.init(properties);
 	}
+	
+	public Domain getDomain() {
+		
+		return domain;
+	}
 
 }
