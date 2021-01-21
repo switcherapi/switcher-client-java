@@ -29,9 +29,6 @@ import com.github.switcherapi.client.exception.SwitcherSnapshotWatcherException;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Snapshot;
-import com.github.switcherapi.client.utils.SnapshotLoader;
-import com.github.switcherapi.client.utils.SwitcherContextParam;
-import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

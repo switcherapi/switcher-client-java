@@ -1,307 +1,347 @@
 {
-    "data": {
-        "domain": {
-            "name": "switcher-domain",
-            "version": 1588557288037,
-            "description": "Fixture #1",
-            "activated": true,
-            "group": [
+  "data": {
+    "domain": {
+      "name": "switcher-domain",
+      "version": 1588557288037,
+      "group": [
+        {
+          "name": "Group 1",
+          "config": [
+            {
+              "key": "USECASE11",
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Simple test - Config enabled",
+              "activated": true
+            },
+            {
+              "key": "USECASE12",
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Simple test - Config disabled",
+              "activated": false
+            }
+          ],
+          "description": "Simple test",
+          "activated": true
+        },
+        {
+          "name": "Group 2",
+          "config": [
+            {
+              "key": "USECASE21",
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Simple test - Config enabled",
+              "activated": true
+            }
+          ],
+          "description": "Simple test - Group disabled",
+          "activated": false
+        },
+        {
+          "name": "Group 3",
+          "config": [
+            {
+              "key": "USECASE31",
+              "strategies": [
                 {
-                    "name": "Group 1",
-                    "description": "Simple test",
-                    "activated": true,
-                    "config": [
-                        {
-                            "key": "USECASE11",
-                            "description": "Simple test - Config enabled",
-                            "activated": true,
-                            "components": ["switcher-client"]
-                        },
-                        {
-                            "key": "USECASE12",
-                            "description": "Simple test - Config disabled",
-                            "activated": false,
-                            "components": ["switcher-client"]
-                        }
-                    ]
-                },
-                {
-                    "name": "Group 2",
-                    "description": "Simple test - Group disabled",
-                    "activated": false,
-                    "config": [
-                        {
-                            "key": "USECASE21",
-                            "description": "Simple test - Config enabled",
-                            "activated": true,
-                            "components": ["switcher-client"]
-                        }
-                    ]
-                },
-                {
-                    "name": "Group 3",
-                    "description": "Date Validation",
-                    "activated": true,
-                    "config": [
-                        {
-                            "key": "USECASE31",
-                            "description": "Config with Date Validation [GREATER]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "DATE_VALIDATION",
-                                    "activated": true,
-                                    "operation": "GREATER",
-                                    "values": [
-                                        "2019-12-10"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        },
-                        {
-                            "key": "USECASE32",
-                            "description": "Config with Date Validation [LOWER]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "DATE_VALIDATION",
-                                    "activated": true,
-                                    "operation": "LOWER",
-                                    "values": [
-                                        "2019-12-10"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        },
-                        {
-                            "key": "USECASE33",
-                            "description": "Config with Date Validation [BETWEEN]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "DATE_VALIDATION",
-                                    "activated": true,
-                                    "operation": "BETWEEN",
-                                    "values": [
-                                        "2019-12-10",
-                                        "2019-12-12"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        }
-                    ]
-                },
-                {
-                    "name": "Group 4",
-                    "description": "Value Validation",
-                    "activated": true,
-                    "config": [
-                        {
-                            "key": "USECASE41",
-                            "description": "Config with Value Validation [EXIST]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "VALUE_VALIDATION",
-                                    "activated": true,
-                                    "operation": "EXIST",
-                                    "values": [
-                                        "Value1", "Value2", "Value3"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        },
-                        {
-                            "key": "USECASE42",
-                            "description": "Config with Value Validation [NOT_EXIST]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "VALUE_VALIDATION",
-                                    "activated": true,
-                                    "operation": "NOT_EXIST",
-                                    "values": [
-                                        "Value1", "Value2", "Value3"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        },
-                        {
-                            "key": "USECASE43",
-                            "description": "Config with Value Validation [EQUAL]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "VALUE_VALIDATION",
-                                    "activated": true,
-                                    "operation": "EQUAL",
-                                    "values": [
-                                        "Value1"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        },
-                        {
-                            "key": "USECASE44",
-                            "description": "Config with Value Validation [NOT_EQUAL]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "VALUE_VALIDATION",
-                                    "activated": true,
-                                    "operation": "NOT_EQUAL",
-                                    "values": [
-                                        "Value1"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        }
-                    ]
-                },
-                {
-                    "name": "Group 5",
-                    "description": "Time Validation",
-                    "activated": true,
-                    "config": [
-                        {
-                            "key": "USECASE51",
-                            "description": "Config with Time Validation [GREATER]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "TIME_VALIDATION",
-                                    "activated": true,
-                                    "operation": "GREATER",
-                                    "values": [
-                                        "10:00"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        },
-                        {
-                            "key": "USECASE52",
-                            "description": "Config with Time Validation [LOWER]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "TIME_VALIDATION",
-                                    "activated": true,
-                                    "operation": "LOWER",
-                                    "values": [
-                                        "10:00"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        },
-                        {
-                            "key": "USECASE53",
-                            "description": "Config with Time Validation [BETWEEN]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "TIME_VALIDATION",
-                                    "activated": true,
-                                    "operation": "BETWEEN",
-                                    "values": [
-                                        "10:00",
-                                        "16:00"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        }
-                    ]
-                },
-                {
-                    "name": "Group 6",
-                    "description": "Network Validation",
-                    "activated": true,
-                    "config": [
-                        {
-                            "key": "USECASE61",
-                            "description": "Config with Network Validation [EXIST]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "NETWORK_VALIDATION",
-                                    "description": "From 10.0.0.0 to 10.0.0.7",
-                                    "activated": true,
-                                    "operation": "EXIST",
-                                    "values": [
-                                        "10.0.0.0/29"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        },
-                        {
-                            "key": "USECASE62",
-                            "description": "Config with Network Validation [NOT_EXIST]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "NETWORK_VALIDATION",
-                                    "description": "From 10.0.0.0 to 10.0.0.7",
-                                    "activated": true,
-                                    "operation": "NOT_EXIST",
-                                    "values": [
-                                        "10.0.0.0/29"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        },
-                        {
-                            "key": "USECASE63",
-                            "description": "Config with Network Validation [EXIST]",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "NETWORK_VALIDATION",
-                                    "activated": true,
-                                    "operation": "EXIST",
-                                    "values": [
-                                        "10.0.0.1", "10.0.0.2", "10.0.0.3"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        }
-                    ]
-                },
-                {
-                    "name": "Group 7",
-                    "description": "Simple test - Strategy disabled",
-                    "activated": true,
-                    "config": [
-                        {
-                            "key": "USECASE71",
-                            "description": "Simple test - Config enabled",
-                            "activated": true,
-                            "strategies": [
-                                {
-                                    "strategy": "VALUE_VALIDATION",
-                                    "activated": false,
-                                    "operation": "EQUAL",
-                                    "values": [
-                                        "Value1"
-                                    ]
-                                }
-                            ],
-                            "components": ["switcher-client"]
-                        }
-                    ]
+                  "strategy": "DATE_VALIDATION",
+                  "operation": "GREATER",
+                  "values": [
+                    "2019-12-10"
+                  ],
+                  "activated": true
                 }
-            ]
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Date Validation [GREATER]",
+              "activated": true
+            },
+            {
+              "key": "USECASE32",
+              "strategies": [
+                {
+                  "strategy": "DATE_VALIDATION",
+                  "operation": "LOWER",
+                  "values": [
+                    "2019-12-10"
+                  ],
+                  "activated": true
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Date Validation [LOWER]",
+              "activated": true
+            },
+            {
+              "key": "USECASE33",
+              "strategies": [
+                {
+                  "strategy": "DATE_VALIDATION",
+                  "operation": "BETWEEN",
+                  "values": [
+                    "2019-12-10",
+                    "2019-12-12"
+                  ],
+                  "activated": true
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Date Validation [BETWEEN]",
+              "activated": true
+            }
+          ],
+          "description": "Date Validation",
+          "activated": true
+        },
+        {
+          "name": "Group 4",
+          "config": [
+            {
+              "key": "USECASE41",
+              "strategies": [
+                {
+                  "strategy": "VALUE_VALIDATION",
+                  "operation": "EXIST",
+                  "values": [
+                    "Value1",
+                    "Value2",
+                    "Value3"
+                  ],
+                  "activated": true
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Value Validation [EXIST]",
+              "activated": true
+            },
+            {
+              "key": "USECASE42",
+              "strategies": [
+                {
+                  "strategy": "VALUE_VALIDATION",
+                  "operation": "NOT_EXIST",
+                  "values": [
+                    "Value1",
+                    "Value2",
+                    "Value3"
+                  ],
+                  "activated": true
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Value Validation [NOT_EXIST]",
+              "activated": true
+            },
+            {
+              "key": "USECASE43",
+              "strategies": [
+                {
+                  "strategy": "VALUE_VALIDATION",
+                  "operation": "EQUAL",
+                  "values": [
+                    "Value1"
+                  ],
+                  "activated": true
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Value Validation [EQUAL]",
+              "activated": true
+            },
+            {
+              "key": "USECASE44",
+              "strategies": [
+                {
+                  "strategy": "VALUE_VALIDATION",
+                  "operation": "NOT_EQUAL",
+                  "values": [
+                    "Value1"
+                  ],
+                  "activated": true
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Value Validation [NOT_EQUAL]",
+              "activated": true
+            }
+          ],
+          "description": "Value Validation",
+          "activated": true
+        },
+        {
+          "name": "Group 5",
+          "config": [
+            {
+              "key": "USECASE51",
+              "strategies": [
+                {
+                  "strategy": "TIME_VALIDATION",
+                  "operation": "GREATER",
+                  "values": [
+                    "10:00"
+                  ],
+                  "activated": true
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Time Validation [GREATER]",
+              "activated": true
+            },
+            {
+              "key": "USECASE52",
+              "strategies": [
+                {
+                  "strategy": "TIME_VALIDATION",
+                  "operation": "LOWER",
+                  "values": [
+                    "10:00"
+                  ],
+                  "activated": true
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Time Validation [LOWER]",
+              "activated": true
+            },
+            {
+              "key": "USECASE53",
+              "strategies": [
+                {
+                  "strategy": "TIME_VALIDATION",
+                  "operation": "BETWEEN",
+                  "values": [
+                    "10:00",
+                    "16:00"
+                  ],
+                  "activated": true
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Time Validation [BETWEEN]",
+              "activated": true
+            }
+          ],
+          "description": "Time Validation",
+          "activated": true
+        },
+        {
+          "name": "Group 6",
+          "config": [
+            {
+              "key": "USECASE61",
+              "strategies": [
+                {
+                  "strategy": "NETWORK_VALIDATION",
+                  "operation": "EXIST",
+                  "values": [
+                    "10.0.0.0/29"
+                  ],
+                  "description": "From 10.0.0.0 to 10.0.0.7",
+                  "activated": true
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Network Validation [EXIST]",
+              "activated": true
+            },
+            {
+              "key": "USECASE62",
+              "strategies": [
+                {
+                  "strategy": "NETWORK_VALIDATION",
+                  "operation": "NOT_EXIST",
+                  "values": [
+                    "10.0.0.0/29"
+                  ],
+                  "description": "From 10.0.0.0 to 10.0.0.7",
+                  "activated": true
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Network Validation [NOT_EXIST]",
+              "activated": true
+            },
+            {
+              "key": "USECASE63",
+              "strategies": [
+                {
+                  "strategy": "NETWORK_VALIDATION",
+                  "operation": "EXIST",
+                  "values": [
+                    "10.0.0.1",
+                    "10.0.0.2",
+                    "10.0.0.3"
+                  ],
+                  "activated": true
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Config with Network Validation [EXIST]",
+              "activated": true
+            }
+          ],
+          "description": "Network Validation",
+          "activated": true
+        },
+        {
+          "name": "Group 7",
+          "config": [
+            {
+              "key": "USECASE71",
+              "strategies": [
+                {
+                  "strategy": "VALUE_VALIDATION",
+                  "operation": "EQUAL",
+                  "values": [
+                    "Value1"
+                  ],
+                  "activated": false
+                }
+              ],
+              "components": [
+                "switcher-client"
+              ],
+              "description": "Simple test - Config enabled",
+              "activated": true
+            }
+          ],
+          "description": "Simple test - Strategy disabled",
+          "activated": true
         }
+      ],
+      "description": "Fixture #1",
+      "activated": true
     }
+  }
 }

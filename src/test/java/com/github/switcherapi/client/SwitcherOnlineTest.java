@@ -29,6 +29,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForComponentException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
@@ -110,6 +111,14 @@ public class SwitcherOnlineTest {
 		ClientServiceFacade.getInstance().setClientService(mockClientServiceImpl);
 		
 		return switcher;
+	}
+	
+	@Test(expected = SwitcherAPIConnectionException.class)
+	public void shouldReturnError_noConnection() throws Exception {
+		properties.put(SwitcherContextParam.URL, "http://localhost:30");
+		SwitcherFactory.buildContext(properties, false);
+		final Switcher switcher = SwitcherFactory.getSwitcher("ONLINE_KEY");
+		switcher.isItOn();
 	}
 	
 	@Test

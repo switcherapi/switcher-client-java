@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.criteria.Config;
 import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Domain;

@@ -173,14 +173,14 @@ public class SnapshotLoaderTest {
 						((AuthResponse) this.properties.get(ClientService.AUTH_RESPONSE)).getToken()))).thenReturn(buildPostMock);
 		
 		final StringBuilder query = new StringBuilder();
-		query.append("{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\") { ");
+		query.append("{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\", _component: \\\"%s\\\") { ");
 		query.append("name version description activated ");
 		query.append("group { name description activated ");
 		query.append("config { key description activated ");
 		query.append("strategies { strategy activated operation values } ");
 		query.append("components } } } }\"}");
 		
-		final String mockQuery = String.format(query.toString(), "switcher-domain", "generated_default");
+		final String mockQuery = String.format(query.toString(), "switcher-domain", "generated_default", "switcher-client");
 		final Entity<String> mockEntityQuery = Entity.json(mockQuery);
 		PowerMockito.when(buildPostMock.post(mockEntityQuery)).thenReturn(responseMock);
 		PowerMockito.when(responseMock.getStatus()).thenReturn(200);

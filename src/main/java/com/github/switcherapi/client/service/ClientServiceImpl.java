@@ -70,9 +70,10 @@ public class ClientServiceImpl implements ClientService {
 		
 		final String domain = (String) properties.get(SwitcherContextParam.DOMAIN);
 		final String environment = (String) properties.get(SwitcherContextParam.ENVIRONMENT);
+		final String component = (String) properties.get(SwitcherContextParam.COMPONENT);
 		
 		final StringBuilder query = new StringBuilder();
-		query.append("{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\") { ");
+		query.append("{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\", _component: \\\"%s\\\") { ");
 		query.append("name version description activated ");
 		query.append("group { name description activated ");
 		query.append("config { key description activated ");
@@ -83,7 +84,7 @@ public class ClientServiceImpl implements ClientService {
 		
 		return myResource.request(MediaType.APPLICATION_JSON)
 			.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, ((AuthResponse) properties.get(AUTH_RESPONSE)).getToken()))
-			.post(Entity.json(String.format(query.toString(), domain, environment)));
+			.post(Entity.json(String.format(query.toString(), domain, environment, component)));
 	}
 	
 	@Override
