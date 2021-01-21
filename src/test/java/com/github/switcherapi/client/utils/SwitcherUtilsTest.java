@@ -19,8 +19,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.github.switcherapi.client.SwitcherFactory;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.utils.SwitcherContextParam;
-import com.github.switcherapi.client.utils.SwitcherUtils;
 
 @PowerMockIgnore({"javax.management.*", "org.apache.log4j.*", "javax.xml.*", "javax.script.*"})
 @RunWith(PowerMockRunner.class)

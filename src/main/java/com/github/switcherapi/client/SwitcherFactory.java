@@ -100,6 +100,7 @@ public class SwitcherFactory {
 	
 	/**
 	 * Validate and update local snapshot file
+	 * It requires offline mode or SwitcherContextParam.SNAPSHOT_LOCATION configured
 	 * 
 	 * @throws SwitcherException
 	 *  If an error has occrured when invoking {@link ClientService#SNAPSHOT_URL} and {@link ClientService#SNAPSHOT_VERSION_CHECK}

@@ -10,6 +10,7 @@ import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.facade.ClientServiceFacade;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.utils.SwitcherContextParam;
 
 /**
  * @author rogerio
@@ -71,8 +72,11 @@ public class SwitcherOnline extends SwitcherExecutor {
 
 	@Override
 	public boolean checkSnapshotVersion() throws SwitcherException {
-
-		return super.checkSnapshotVersion(this.switcherOffline.getDomain());
+		
+		if (properties.containsKey(SwitcherContextParam.SNAPSHOT_LOCATION)) {
+			return super.checkSnapshotVersion(this.switcherOffline.getDomain());
+		}
+		return Boolean.TRUE;
 	}
 
 	@Override
