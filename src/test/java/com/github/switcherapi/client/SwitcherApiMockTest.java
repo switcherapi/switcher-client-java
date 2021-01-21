@@ -1,5 +1,6 @@
 package com.github.switcherapi.client;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -137,13 +138,26 @@ public class SwitcherApiMockTest {
 		//test
 		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL);
 		SwitcherFactory.buildContext(properties, false);
-		SwitcherFactory.validateSnapshot();
+		
+		try {
+			SwitcherFactory.validateSnapshot();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			assertEquals("Something went wrong", e.getMessage());
+			throw e;
+		}
 	}
 	
 	@Test
 	public void shouldNotValidateSnapshot() throws SwitcherException {
 		SwitcherFactory.buildContext(properties, false);
-		SwitcherFactory.validateSnapshot();
+		
+		try {
+			SwitcherFactory.validateSnapshot();
+		} catch (Exception e) {
+			assertEquals("Something went wrong", e.getMessage());
+			throw e;
+		}
 	}
 
 }

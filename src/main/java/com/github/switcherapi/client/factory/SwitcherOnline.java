@@ -92,9 +92,9 @@ public class SwitcherOnline extends SwitcherExecutor {
 	}
 	
 	@Override
-	public void updateContext(Map<String, Object> properties) {
+	public void updateContext(Map<String, Object> properties) throws SwitcherException {
 		
-		this.properties = properties;
+		this.init(properties);
 	}
 
 }
