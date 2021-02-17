@@ -7,7 +7,7 @@ import javax.ws.rs.core.Response;
 import com.github.switcherapi.client.model.Switcher;
 
 /**
- * @author rogerio
+ * @author Roger Floriano {petruki)
  * @since 2019-12-24
  */
 public interface ClientService {

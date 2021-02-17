@@ -3,7 +3,7 @@ package com.github.switcherapi.client.utils;
 /**
  * Contains required and optional keys to set up the context
  * 
- * @author rogerio
+ * @author Roger Floriano {petruki)
  * @since 2019-12-24
  */
 public interface SwitcherContextParam {
@@ -42,6 +42,12 @@ public interface SwitcherContextParam {
 	 * (String) Folder path where all snapshot files are located.
 	 */
 	String SNAPSHOT_LOCATION = "snapshotLocation";
+	
+	/**
+	 * (String) Defines the package and class where a context wrapper is located.
+	 * It is only necessary to use with {@link com.github.switcherapi.client.configuration.SwitcherContext}
+	 */
+	String CONTEXT_LOCATION = "contextLocation";
 	
 	/**
 	 * (boolean) Activate snapshot autoload which will try to retrieve the snapshot from the API if the file does not exist.

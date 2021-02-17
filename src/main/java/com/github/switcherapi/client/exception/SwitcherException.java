@@ -4,7 +4,7 @@ package com.github.switcherapi.client.exception;
  * @author rogerio
  * @since 2019-12-24
  */
-public class SwitcherException extends Exception {
+public class SwitcherException extends RuntimeException {
 	
 	private static final long serialVersionUID = -1748896326811044977L;
 

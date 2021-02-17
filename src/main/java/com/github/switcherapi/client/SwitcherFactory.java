@@ -19,7 +19,7 @@ import com.github.switcherapi.client.utils.SwitcherUtils;
 /**
  * Configure context (using {@link #buildContext(Map, boolean)} and claim switcher (using {@link #getSwitcher(String)} by using this factory.
  * 
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  * 
  * @see #buildContext(Map, boolean)
