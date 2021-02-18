@@ -1,418 +1,294 @@
 package com.github.switcherapi.client;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.github.switcherapi.Switchers;
+import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherInvalidNumericFormat;
-import com.github.switcherapi.client.exception.SwitcherInvalidOperationException;
-import com.github.switcherapi.client.exception.SwitcherInvalidOperationInputException;
-import com.github.switcherapi.client.exception.SwitcherInvalidStrategyException;
 import com.github.switcherapi.client.exception.SwitcherInvalidTimeFormat;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
-import com.github.switcherapi.client.exception.SwitcherNoInputReceivedException;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.response.AuthRequest;
-import com.github.switcherapi.client.utils.SwitcherContextParam;
 
 public class SwitcherOfflineTest {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
-	private Map<String, Object> properties;
-	
 	@BeforeAll
-	public void setupContext() {
-
-		properties = new HashMap<String, Object>();
-		properties.put(SwitcherContextParam.URL, "http://localhost:3000");
-		properties.put(SwitcherContextParam.APIKEY, "$2b$08$S2Wj/wG/Rfs3ij0xFbtgveDtyUAjML1/TOOhocDg5dhOaU73CEXfK");
-		properties.put(SwitcherContextParam.DOMAIN, "switcher-domain");
-		properties.put(SwitcherContextParam.COMPONENT, "switcher-client");
-		properties.put(SwitcherContextParam.ENVIRONMENT, "default");
+	static void setupContext() {
+		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
+		SwitcherContext.getProperties().setOfflineMode(true);
+		SwitcherContext.initializeClient();
 	}
 	
-//	@Test
-//	public void offlineShouldReturnTrue() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_envSnapshot() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL);
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE12");
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_envSnapshot() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL);
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE12");
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_groupDisabled() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE21");
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_domainDisabled() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture2.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE111");
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_strategyDisabled() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		// There is a disabled strategy requiring value validation.
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE71");
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test(expected = SwitcherKeyNotFoundException.class)
-//	public void offlineShouldNotReturn_keyNotFound() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("NOT_FOUND_KEY");
-//		switcher.isItOn();
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_dateValidationGreater() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE31");
-//		Entry input = new Entry(Entry.DATE, "2019-12-11");
-//		
-//		switcher.prepareEntry(input);
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_dateValidationGreater() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE31");
-//		Entry input = new Entry(Entry.DATE, "2019-12-09");
-//		
-//		switcher.prepareEntry(input);
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_dateValidationLower() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE32");
-//		Entry input = new Entry(Entry.DATE, "2019-12-09");
-//		
-//		switcher.prepareEntry(input);
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_dateValidationLower() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE32");
-//		Entry input = new Entry(Entry.DATE, "2019-12-12");
-//		
-//		switcher.prepareEntry(input);
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_dateValidationBetween() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE33");
-//		Entry input = new Entry(Entry.DATE, "2019-12-11");
-//		
-//		switcher.prepareEntry(input);
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_dateValidationBetween() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE33");
-//		Entry input = new Entry(Entry.DATE, "2019-12-13");
-//		
-//		switcher.prepareEntry(input);
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test(expected = SwitcherInvalidTimeFormat.class)
-//	public void offlineShouldReturnFalse_dateValidationWrongFormat() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE33");
-//		Entry input = new Entry(Entry.DATE, "2019/121/13");
-//		
-//		switcher.prepareEntry(input);
-//		switcher.isItOn();
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_valueValidationExist() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE41");
-//		Entry input = new Entry(Entry.VALUE, "Value1");
-//		
-//		switcher.prepareEntry(input);
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_valueValidationExist() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE41");
-//		Entry input = new Entry(Entry.VALUE, "Value5");
-//		
-//		switcher.prepareEntry(input);
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_valueValidationNotExist() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE42");
-//		Entry input = new Entry(Entry.VALUE, "Value5");
-//		
-//		switcher.prepareEntry(input);
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_valueValidationNotExist() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE42");
-//		Entry input = new Entry(Entry.VALUE, "Value1");
-//		
-//		switcher.prepareEntry(input);
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_valueValidationEqual() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE43");
-//		Entry input = new Entry(Entry.VALUE, "Value1");
-//		
-//		switcher.prepareEntry(input);
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_valueValidationEqual() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE43");
-//		Entry input = new Entry(Entry.VALUE, "Value2");
-//		
-//		switcher.prepareEntry(input);
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_valueValidationNotEqual() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE44");
-//		Entry input = new Entry(Entry.VALUE, "Value2");
-//		
-//		switcher.prepareEntry(input);
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_valueValidationNotEqual() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE44");
-//		Entry input = new Entry(Entry.VALUE, "Value1");
-//		
-//		switcher.prepareEntry(input);
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_numericValidationExist() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE81");
-//		Entry input = new Entry(Entry.NUMERIC, "2");
-//		
-//		switcher.prepareEntry(input);
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_numericValidationExist() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE81");
-//		Entry input = new Entry(Entry.NUMERIC, "4");
-//		
-//		switcher.prepareEntry(input);
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_numericValidationDoesNotExist() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE82");
-//		Entry input = new Entry(Entry.NUMERIC, "4");
-//		
-//		switcher.prepareEntry(input);
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_numericValidationDoesNotExist() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE82");
-//		Entry input = new Entry(Entry.NUMERIC, "2");
-//		
-//		switcher.prepareEntry(input);
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_numericValidationEqual() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE83");
-//		Entry input = new Entry(Entry.NUMERIC, "1");
-//		
-//		switcher.prepareEntry(input);
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_numeircValidationEqual() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE83");
-//		Entry input = new Entry(Entry.NUMERIC, "2");
-//		
-//		switcher.prepareEntry(input);
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_numericValidationNotEqual() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE84");
-//		Entry input = new Entry(Entry.NUMERIC, "2");
-//		
-//		switcher.prepareEntry(input);
-//		assertTrue(switcher.isItOn());
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnFalse_numericValidationNotEqual() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE84");
-//		Entry input = new Entry(Entry.NUMERIC, "1");
-//		
-//		switcher.prepareEntry(input);
-//		assertFalse(switcher.isItOn());
-//	}
-//	
-//	@Test(expected = SwitcherInvalidNumericFormat.class)
-//	public void offlineShouldReturnException_invalidNumericInput() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE81");
-//		Entry input = new Entry(Entry.NUMERIC, "INVALID_NUMBER");
-//		
-//		switcher.prepareEntry(input);
-//		switcher.isItOn();
-//	}
-//	
-//	@Test
-//	public void offlineShouldReturnTrue_numericValidationLower() throws Exception {
-//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
-//		SwitcherFactory.buildContext(properties, true);
-//		
-//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE85");
-//		Entry input = new Entry(Entry.NUMERIC, "0.99");
-//		
-//		switcher.prepareEntry(input);
-//		assertTrue(switcher.isItOn());
-//	}
+	@Test
+	public void offlineShouldReturnTrue() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE12);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_groupDisabled() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE21);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_strategyDisabled() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE71);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldNotReturn_keyNotFound() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.NOT_FOUND_KEY);
+		assertThrows(SwitcherKeyNotFoundException.class, () -> {
+			switcher.isItOn();
+		});
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_dateValidationGreater() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE31);
+		Entry input = new Entry(Entry.DATE, "2019-12-11");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_dateValidationGreater() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE31);
+		Entry input = new Entry(Entry.DATE, "2019-12-09");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_dateValidationLower() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE32);
+		Entry input = new Entry(Entry.DATE, "2019-12-09");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_dateValidationLower() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE32);
+		Entry input = new Entry(Entry.DATE, "2019-12-12");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_dateValidationBetween() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
+		Entry input = new Entry(Entry.DATE, "2019-12-11");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_dateValidationBetween() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
+		Entry input = new Entry(Entry.DATE, "2019-12-13");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_dateValidationWrongFormat() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
+		Entry input = new Entry(Entry.DATE, "2019/121/13");
+		
+		switcher.prepareEntry(input);
+		assertThrows(SwitcherInvalidTimeFormat.class, () -> {
+			switcher.isItOn();
+		});
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_valueValidationExist() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE41);
+		Entry input = new Entry(Entry.VALUE, "Value1");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_valueValidationExist() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE41);
+		Entry input = new Entry(Entry.VALUE, "Value5");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_valueValidationNotExist() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE42);
+		Entry input = new Entry(Entry.VALUE, "Value5");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_valueValidationNotExist() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE42);
+		Entry input = new Entry(Entry.VALUE, "Value1");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_valueValidationEqual() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE43);
+		Entry input = new Entry(Entry.VALUE, "Value1");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_valueValidationEqual() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE43);
+		Entry input = new Entry(Entry.VALUE, "Value2");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_valueValidationNotEqual() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE44);
+		Entry input = new Entry(Entry.VALUE, "Value2");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_valueValidationNotEqual() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE44);
+		Entry input = new Entry(Entry.VALUE, "Value1");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_numericValidationExist() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE81);
+		Entry input = new Entry(Entry.NUMERIC, "2");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_numericValidationExist() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE81);
+		Entry input = new Entry(Entry.NUMERIC, "4");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_numericValidationDoesNotExist() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE82);
+		Entry input = new Entry(Entry.NUMERIC, "4");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_numericValidationDoesNotExist() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE82);
+		Entry input = new Entry(Entry.NUMERIC, "2");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_numericValidationEqual() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE83);
+		Entry input = new Entry(Entry.NUMERIC, "1");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_numeircValidationEqual() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE83);
+		Entry input = new Entry(Entry.NUMERIC, "2");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_numericValidationNotEqual() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE84);
+		Entry input = new Entry(Entry.NUMERIC, "2");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnFalse_numericValidationNotEqual() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE84);
+		Entry input = new Entry(Entry.NUMERIC, "1");
+		
+		switcher.prepareEntry(input);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	public void offlineShouldReturnException_invalidNumericInput() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE81);
+		Entry input = new Entry(Entry.NUMERIC, "INVALID_NUMBER");
+		
+		switcher.prepareEntry(input);
+		assertThrows(SwitcherInvalidNumericFormat.class, () -> {
+			switcher.isItOn();
+		});
+	}
+	
+	@Test
+	public void offlineShouldReturnTrue_numericValidationLower() throws Exception {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE85);
+		Entry input = new Entry(Entry.NUMERIC, "0.99");
+		
+		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
 //	
 //	@Test
 //	public void offlineShouldReturnTrue_numericValidationGreater() throws Exception {
@@ -602,6 +478,16 @@ public class SwitcherOfflineTest {
 //		Switcher switcher = SwitcherFactory.getSwitcher("USECASE63");
 //		switcher.isItOn();
 //	}
+	
+//	@Test
+//	public void offlineShouldReturnFalse_domainDisabled() throws Exception {
+//		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/snapshot_fixture2.json");
+//		SwitcherFactory.buildContext(properties, true);
+//		
+//		Switcher switcher = SwitcherFactory.getSwitcher("USECASE111");
+//		assertFalse(switcher.isItOn());
+//	}
+//	
 //	
 //	@Test
 //	public void shouldCreateAuthRequest() throws Exception {
