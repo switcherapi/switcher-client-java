@@ -1,12 +1,10 @@
 package com.github.switcherapi.client.facade;
 
 import java.util.Date;
-import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang3.StringUtils;
-
+import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
@@ -17,45 +15,45 @@ import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.response.AuthResponse;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
-import com.github.switcherapi.client.service.ClientService;
-import com.github.switcherapi.client.service.ClientServiceImpl;
 import com.github.switcherapi.client.utils.SwitcherContextParam;
 import com.github.switcherapi.client.utils.SwitcherUtils;
+import com.github.switcherapi.client.ws.ClientWS;
+import com.github.switcherapi.client.ws.ClientWSImpl;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class ClientServiceFacade {
 	
 	private static ClientServiceFacade instance;
 	
-	private ClientService clientService;
+	private ClientWS clientService;
+	
+	private AuthResponse authResponse;
 	
 	private ClientServiceFacade() {
-		
-		this.clientService = new ClientServiceImpl();
+		this.clientService = new ClientWSImpl();
 	}
 	
 	public static ClientServiceFacade getInstance() {
-		
 		if (instance == null) {
 			instance = new ClientServiceFacade();
 		}
 		return instance;
 	}
 	
-	public CriteriaResponse executeCriteria(final Map<String, Object> properties, final Switcher switcher) 
-			throws SwitcherException {
-		if (!this.isTokenValid(properties)) {
-			this.auth(properties);
+	public CriteriaResponse executeCriteria(final Switcher switcher)  {
+		if (!this.isTokenValid()) {
+			this.auth();
 		}
 				
-		final Response response = this.clientService.executeCriteriaService(properties, switcher);
+		final Response response = this.clientService.executeCriteriaService(
+				switcher, this.authResponse.getToken());
 		
 		if (response.getStatus() == 401) {
 			throw new SwitcherKeyNotAvailableForComponentException(
-					properties.get(SwitcherContextParam.COMPONENT).toString(), switcher.getSwitcherKey());
+					SwitcherContext.getProperties().getComponent(), switcher.getSwitcherKey());
 		} else if (response.getStatus() != 200) {
 			throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
 		}
@@ -66,37 +64,31 @@ public class ClientServiceFacade {
 		return criteriaReponse;
 	}
 	
-	public Snapshot resolveSnapshot(final Map<String, Object> properties) 
-			throws SwitcherException {
-		
+	public Snapshot resolveSnapshot() {
 		try {
-			if (!this.isTokenValid(properties)) {
-				this.auth(properties);
+			if (!this.isTokenValid()) {
+				this.auth();
 			}
 					
-			final Response response = this.clientService.resolveSnapshot(properties);
-			
+			final Response response = this.clientService.resolveSnapshot(this.authResponse.getToken());
 			final Snapshot snapshot = response.readEntity(Snapshot.class);
 			response.close();
 			return snapshot;
 		} catch (final SwitcherException e) {
 			throw e;
 		} catch (final Exception e) {
-			throw new SwitcherAPIConnectionException(getAPIConnectionException(properties), e);
+			throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl(), e);
 		}
 		
 	}
 	
-	public boolean checkSnapshotVersion(final Map<String, Object> properties, final long version)
-			throws SwitcherException {
-		
+	public boolean checkSnapshotVersion(final long version) {
 		try {
-			if (!this.isTokenValid(properties)) {
-				this.auth(properties);
+			if (!this.isTokenValid()) {
+				this.auth();
 			}
 					
-			final Response response = this.clientService.checkSnapshotVersion(properties, version);
-			
+			final Response response = this.clientService.checkSnapshotVersion(version, this.authResponse.getToken());
 			final SnapshotVersionResponse snapshotVersionResponse = response.readEntity(SnapshotVersionResponse.class);
 			response.close();
 			
@@ -104,42 +96,39 @@ public class ClientServiceFacade {
 		} catch (final SwitcherException e) {
 			throw e;
 		} catch (final Exception e) {
-			throw new SwitcherAPIConnectionException(getAPIConnectionException(properties), e);
+			throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl(), e);
 		}
 		
 	}
 	
-	private void auth(final Map<String, Object> properties) throws SwitcherException {
+	private void auth() {
 		try {
-			final Response response = this.clientService.auth(properties);
+			final Response response = this.clientService.auth();
 			
 			if (response.getStatus() == 401) {
 				throw new SwitcherException("Unauthorized API access", null); 
 			}
 			
-			final AuthResponse authResponse = response.readEntity(AuthResponse.class);
-			properties.put(ClientService.AUTH_RESPONSE, authResponse);
+			this.authResponse = response.readEntity(AuthResponse.class);
 			response.close();
 		} catch (final SwitcherException e) {
 			throw e;
 		} catch (final Exception e) {
-			this.setSilentModeExpiration(properties);
-			throw new SwitcherAPIConnectionException(getAPIConnectionException(properties), e);
+			this.setSilentModeExpiration();
+			throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl(), e);
 		}
 	}
 	
-	private boolean isTokenValid(final Map<String, Object> properties) 
-			throws SwitcherAPIConnectionException, SwitcherInvalidDateTimeArgumentException {
+	private boolean isTokenValid() throws SwitcherAPIConnectionException, 
+		SwitcherInvalidDateTimeArgumentException {
 		
-		if (properties.containsKey(ClientService.AUTH_RESPONSE)) {
-			final AuthResponse authResponse = (AuthResponse) properties.get(ClientService.AUTH_RESPONSE);
-			
-			if (authResponse.getToken().equals(SwitcherContextParam.SILENT_MODE) && !authResponse.isExpired()) {
-				throw new SwitcherAPIConnectionException(getAPIConnectionException(properties));
+		if (this.authResponse != null) {
+			if (this.authResponse.getToken().equals(SwitcherContextParam.SILENT_MODE) && !this.authResponse.isExpired()) {
+				throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl());
 			} else {
-				if (!this.clientService.isAlive(properties)) {
-					this.setSilentModeExpiration(properties);
-					throw new SwitcherAPIConnectionException(getAPIConnectionException(properties));
+				if (!this.clientService.isAlive()) {
+					this.setSilentModeExpiration();
+					throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl());
 				}
 				
 				return !authResponse.isExpired();
@@ -148,30 +137,20 @@ public class ClientServiceFacade {
 		
 		return false;
 	}
-
-	private String getAPIConnectionException(final Map<String, Object> properties) {
-		return properties.containsKey(SwitcherContextParam.URL) ? 
-				(String) properties.get(SwitcherContextParam.URL) : StringUtils.EMPTY;
-	}
 	
-	private void setSilentModeExpiration(final Map<String, Object> properties) 
-			throws SwitcherInvalidDateTimeArgumentException {
-		
-		if (properties.containsKey(SwitcherContextParam.SILENT_MODE) &&
-				(boolean) properties.get(SwitcherContextParam.SILENT_MODE)) {
-			
-			final String addValue = (String) properties.get(SwitcherContextParam.RETRY_AFTER);
-			
+	private void setSilentModeExpiration() throws SwitcherInvalidDateTimeArgumentException {
+		if (SwitcherContext.getProperties().isSilentMode()) {
+			final String addValue = SwitcherContext.getProperties().getRetryAfter();
 			final AuthResponse authResponse = new AuthResponse();
-			authResponse.setToken(SwitcherContextParam.SILENT_MODE);
+			
+			authResponse.setToken(SwitcherContextParam.SILENT_MODE.toString());
 			authResponse.setExp(SwitcherUtils.addTimeDuration(addValue, new Date()).getTime()/1000);
-			properties.put(ClientService.AUTH_RESPONSE, authResponse);
+			this.authResponse = authResponse;
 		}
 		
 	}
 
-	public void setClientService(ClientService clientService) {
-		
+	public void setClientWS(ClientWS clientService) {
 		this.clientService = clientService;
 	}
 

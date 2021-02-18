@@ -5,10 +5,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import com.github.switcherapi.client.model.criteria.Config;
 import com.github.switcherapi.client.model.criteria.Criteria;
@@ -17,8 +14,6 @@ import com.github.switcherapi.client.model.criteria.Group;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.criteria.Strategy;
 
-@PowerMockIgnore({"javax.management.*", "org.apache.log4j.*", "javax.xml.*", "javax.script.*"})
-@RunWith(PowerMockRunner.class)
 public class ModelTest {
 	
 	@Test
