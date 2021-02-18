@@ -1,44 +1,129 @@
 package com.github.switcherapi.client.configuration;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.*;
 
-import com.github.switcherapi.client.SwitcherFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherFactoryContextException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
+import com.github.switcherapi.client.factory.SwitcherExecutor;
+import com.github.switcherapi.client.factory.SwitcherOffline;
+import com.github.switcherapi.client.factory.SwitcherOnline;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.utils.SwitcherContextParam;
+import com.github.switcherapi.client.utils.SwitcherUtils;
+import com.github.switcherapi.client.ws.ClientWS;
 
 /**
  * <b>Switcher Context Loader</b>
  * <p>
  * 
- * This implementation is useful to organize all feature keys into one single place.
- * It also helps to configure the context.
+ * This class will load Switcher Properties internally making it ready to use.
+ * By inheriting this class, all Switchers can be placed in one single place.
+ * 
+ * <p>
+ * Annotate your property with @SwitcherKey
  * 
  * @author Roger Floriano (petruki)
  */
 public abstract class SwitcherContext {
 	
-	private static final Map<String, Object> properties;
-	private static final Set<String> switchers;
+	private static final Logger logger = LogManager.getLogger(SwitcherContext.class);
+	
+	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+)\\}";
+	private static final SwitcherProperties switcherProperties;
+	private static Set<String> switchers;
+	private static SwitcherExecutor instance;
 	
 	static {
-		properties = new HashMap<>();
-		switchers = new HashSet<>();
+		switcherProperties = new SwitcherProperties();
 		
-		properties.put(SwitcherContextParam.CONTEXT_LOCATION, "com.github.switcherapi.MyAppFeatures");
-		properties.put(SwitcherContextParam.URL, "https://switcher-load-balance.herokuapp.com");
-		properties.put(SwitcherContextParam.APIKEY, "$2b$08$Hm77RoqpXb.1f7izs06uKendX.B1jjWqTZsfJAzYnFoRzJpEFQXEi");
-		properties.put(SwitcherContextParam.DOMAIN, "Playground");
-		properties.put(SwitcherContextParam.COMPONENT, "switcher-playground");
-		properties.put(SwitcherContextParam.ENVIRONMENT, "default");
-		SwitcherFactory.buildContext(properties, false);
-		
+		try (InputStream input = SwitcherContext.class
+				.getClassLoader().getResourceAsStream("switcherapi.properties")) {
+			
+			Properties prop = new Properties();
+            prop.load(input);
+            
+            switcherProperties.setContextLocation(resolveProperties(CONTEXT_LOCATION, prop));
+            switcherProperties.setUrl(resolveProperties(URL, prop));
+    		switcherProperties.setApiKey(resolveProperties(APIKEY, prop));
+    		switcherProperties.setDomain(resolveProperties(DOMAIN, prop));
+    		switcherProperties.setComponent(resolveProperties(COMPONENT, prop));
+    		switcherProperties.setEnvironment(resolveProperties(ENVIRONMENT, prop));
+    		switcherProperties.setSnapshotFile(resolveProperties(SNAPSHOT_FILE, prop));
+    		switcherProperties.setSnapshotLocation(resolveProperties(SNAPSHOT_LOCATION, prop));
+    		switcherProperties.setSnapshotAutoLoad(Boolean.parseBoolean(resolveProperties(SNAPSHOT_AUTO_LOAD, prop)));
+    		switcherProperties.setSilentMode(Boolean.parseBoolean(resolveProperties(SILENT_MODE, prop)));
+    		switcherProperties.setOfflineMode(Boolean.parseBoolean(resolveProperties(OFFLINE_MODE, prop)));
+    		switcherProperties.setRetryAfter(resolveProperties(RETRY_AFTER, prop));
+
+    		initializeClient();
+        } catch (IOException io) {
+        	throw new SwitcherFactoryContextException(io.getMessage());
+        }
+	}
+	
+	/**
+	 * Initialize Switcher Client
+	 */
+	public static void initializeClient() {
+		validateContext();
 		loadSwitchers();
+		
+		if (switcherProperties.isOfflineMode()) {
+			instance = new SwitcherOffline();
+		} else {
+			instance = new SwitcherOnline();
+		}
+	}
+	
+	/**
+	 * Verifies if the client context is valid
+	 * 
+	 * @throws SwitcherFactoryContextException 
+	 *  If an error was found, showing then the missing parameter
+	 */
+	private static void validateContext() 
+			throws SwitcherFactoryContextException {
+		
+		final SwitcherProperties prop = SwitcherContext.getProperties();
+		if (!switcherProperties.isOfflineMode()) {
+			if (StringUtils.isBlank(prop.getUrl())) {
+				throw new SwitcherFactoryContextException("SwitcherContextParam.URL not found");
+			}
+			
+			if (StringUtils.isBlank(prop.getApiKey())) {
+				throw new SwitcherFactoryContextException("SwitcherContextParam.APIKEY not found");
+			}
+			
+			if (StringUtils.isBlank(prop.getDomain())) {
+				throw new SwitcherFactoryContextException("SwitcherContextParam.DOMAIN not found");
+			}
+			
+			if (StringUtils.isBlank(prop.getComponent())) {
+				throw new SwitcherFactoryContextException("SwitcherContextParam.COMPONENT not found");
+			}
+		}
+		
+		if (prop.isSnapshotAutoLoad() && StringUtils.isBlank(prop.getSnapshotLocation())) {
+			throw new SwitcherFactoryContextException("SwitcherContextParam.SNAPSHOT_LOCATION not found");
+		}
+		
+		if (prop.isSilentMode() && StringUtils.isBlank(prop.getRetryAfter())) {
+			throw new SwitcherFactoryContextException("SwitcherContextParam.RETRY_AFTER not found");
+		}
 	}
 	
 	/**
@@ -47,7 +132,9 @@ public abstract class SwitcherContext {
 	 */
 	private static void loadSwitchers() {
 		try {
-			final Class<?> clazz = Class.forName(properties.get(SwitcherContextParam.CONTEXT_LOCATION).toString());
+			switchers = new HashSet<>();
+			
+			final Class<?> clazz = Class.forName(switcherProperties.getContextLocation());
 			for (Field field : clazz.getFields()) {
 				if (field.isAnnotationPresent(SwitcherKey.class)) {
 					switchers.add(field.getName());
@@ -59,18 +146,97 @@ public abstract class SwitcherContext {
 	}
 	
 	/**
+	 * Resolve properties from switcherapi.properties file.
+	 * It reads environment values when using the following notation: ${VALUE}
+	 * 
+	 * @param input reads values from {@link SwitcherContextParam}
+	 * @param prop from properties file
+	 * @return resolved value
+	 */
+	private static String resolveProperties(String input, Properties prop) {
+		final String value = prop.getProperty(input);
+		
+	    if (StringUtils.isBlank(value)) {
+	        return null;
+	    }
+
+	    Pattern pattern = Pattern.compile(ENV_VARIABLE_PATTERN);
+	    Matcher matcher = pattern.matcher(value);
+	    StringBuffer sBuffer = new StringBuffer();
+	    
+	    while(matcher.find()){
+	        String envVarName = matcher.group(1).isBlank() ? matcher.group(2) : matcher.group(1);
+	        String envVarValue = System.getenv(envVarName);
+	        matcher.appendReplacement(sBuffer, null == envVarValue ? StringUtils.EMPTY : envVarValue);
+	    }
+	    
+	    if (sBuffer.toString().isEmpty())
+	    	return value;
+	       
+	    return sBuffer.toString();
+	}
+	
+	/**
 	 * Return a ready-to-use Switcher that will invoke the criteria configured into the Switcher API or Snapshot
 	 * 
 	 * @param key name of the key created
 	 * @return a ready to use Switcher
 	 * @throws SwitcherKeyNotFoundException in case the key was not properly loaded
+	 * @throws SwitcherFactoryContextException in case context not loaded properly
 	 *  
 	 * @see {@link com.github.switcherapi.client.configuration.SwitcherKey}
 	 */
 	public static Switcher getSwitcher(String key) {
-		if (switchers.contains(key))
-			return SwitcherFactory.getSwitcher(key);
-		throw new SwitcherKeyNotFoundException(key);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("key: %s", key));
+		}
+		
+		if (instance == null) {
+			throw new SwitcherFactoryContextException();
+		}
+		
+		if (!switchers.contains(key)) {
+			throw new SwitcherKeyNotFoundException(key);
+		}
+		
+		return new Switcher(key, instance);
+	}
+	
+	/**
+	 * Validate and update local snapshot file
+	 * It requires offline mode or SwitcherContextParam.SNAPSHOT_LOCATION configured
+	 * 
+	 * @throws SwitcherException
+	 *  If an error has occrured when invoking {@link ClientWS#SNAPSHOT_URL} and {@link ClientWS#SNAPSHOT_VERSION_CHECK}
+	 */
+	public static void validateSnapshot() {
+		if (instance == null) {
+			throw new SwitcherFactoryContextException();
+		}
+		
+		if (!instance.checkSnapshotVersion()) {
+			instance.updateSnapshot();
+		}
+	}
+	
+	/**
+	 * Start watching snapshot files for modifications. As it has changed, it will update the domain in memory
+	 */
+	public static void watchSnapshot() {
+		SwitcherUtils.watchSnapshot(instance);
+	}
+	
+	/**
+	 * Unregister snapshot location and terminates the Thread watcher
+	 * 
+	 * @throws SwitcherException if watch thread never started
+	 */
+	public static void stopWatchingSnapshot() {
+		SwitcherUtils.stopWatchingSnapshot();
+	}
+	
+	public static SwitcherProperties getProperties() {
+		return switcherProperties;
 	}
 	
 }

@@ -1,59 +1,42 @@
 package com.github.switcherapi.client.utils;
 
+import static com.github.switcherapi.Switchers.USECASE11;
 import static org.junit.Assert.assertEquals;
 
 import java.nio.file.Paths;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.github.switcherapi.client.SwitcherFactory;
+import com.github.switcherapi.Switchers;
+import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.github.switcherapi.client.model.Switcher;
 
-@PowerMockIgnore({"javax.management.*", "org.apache.log4j.*", "javax.xml.*", "javax.script.*"})
-@RunWith(PowerMockRunner.class)
 public class SwitcherUtilsTest {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
-	private Map<String, Object> properties;
-	
-	@Before
-	public void setupContext() {
-
-		properties = new HashMap<String, Object>();
-		properties.put(SwitcherContextParam.URL, "http://localhost:3000");
-		properties.put(SwitcherContextParam.APIKEY, "$2b$08$S2Wj/wG/Rfs3ij0xFbtgveDtyUAjML1/TOOhocDg5dhOaU73CEXfK");
-		properties.put(SwitcherContextParam.DOMAIN, "switcher-domain");
-		properties.put(SwitcherContextParam.COMPONENT, "switcher-client");
-		properties.put(SwitcherContextParam.ENVIRONMENT, "default");
-	}
-	
 	@Test(expected = SwitcherSnapshotLoadException.class)
 	public void shouldReturnError_snapshotNotFound() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_FILE, SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json");
-		SwitcherFactory.buildContext(properties, true);
+		//given
+		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json");
+		SwitcherContext.initializeClient();
 		
-		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
+		Switcher switcher = Switchers.getSwitcher(USECASE11);
 		switcher.isItOn();
 	}
 	
 	@Test(expected = SwitcherSnapshotLoadException.class)
 	public void shouldReturnError_envSnapshot_snapshotNotFound() throws Exception {
-		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL + "/UNKNOWN_FOLDER/");
-		SwitcherFactory.buildContext(properties, true);
+		//given
+		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/UNKNOWN_FOLDER/");
+		SwitcherContext.initializeClient();
 		
-		Switcher switcher = SwitcherFactory.getSwitcher("USECASE11");
+		Switcher switcher = Switchers.getSwitcher(USECASE11);
 		switcher.isItOn();
 	}
 	

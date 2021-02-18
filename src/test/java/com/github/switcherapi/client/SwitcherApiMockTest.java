@@ -7,17 +7,14 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
+import com.github.switcherapi.Switchers;
+import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
@@ -25,39 +22,37 @@ import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.utils.SnapshotLoader;
-import com.github.switcherapi.client.utils.SwitcherContextParam;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.google.gson.Gson;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-@PowerMockIgnore({"javax.management.*", "org.apache.log4j.*", "javax.xml.*", "javax.script.*", "javax.net.ssl.*"})
-@RunWith(PowerMockRunner.class)
 public class SwitcherApiMockTest {
 	
 	private final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
-	private Map<String, Object> properties;
-	private MockWebServer mockBackEnd;
+	private static MockWebServer mockBackEnd;
 	
-	@Before
-	public void setup() throws IOException {
+	@BeforeAll
+	static void setup() throws IOException {
+		if (mockBackEnd != null) {
+			return;
+		}
+		
         mockBackEnd = new MockWebServer();
         mockBackEnd.start();
         
         final String baseUrl = String.format("http://localhost:%s", mockBackEnd.getPort());
         
-        properties = new HashMap<>();
-		properties.put(SwitcherContextParam.URL, baseUrl);
-		properties.put(SwitcherContextParam.APIKEY, "API_KEY");
-		properties.put(SwitcherContextParam.DOMAIN, "switcher-domain");
-		properties.put(SwitcherContextParam.COMPONENT, "switcher-client");
-		properties.put(SwitcherContextParam.ENVIRONMENT, "default");
+		SwitcherContext.getProperties().setUrl(baseUrl);
+		SwitcherContext.getProperties().setApiKey("API_KEY");
+		SwitcherContext.getProperties().setEnvironment("default");
+		SwitcherContext.initializeClient();
     }
 	
-	@After
-	public void tearDown() throws IOException {
+	@AfterAll
+	static void tearDown() throws IOException {
         mockBackEnd.shutdown();
     }
 	
@@ -102,8 +97,7 @@ public class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateCriteriaResponse("true"));
 		
 		//test
-		SwitcherFactory.buildContext(properties, false);
-		final Switcher switcher = SwitcherFactory.getSwitcher("ONLINE_KEY");
+		final Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -116,13 +110,12 @@ public class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateCriteriaResponse("false"));
 		
 		//test
-		SwitcherFactory.buildContext(properties, false);
-		final Switcher switcher = SwitcherFactory.getSwitcher("ONLINE_KEY");
+		final Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
 		assertFalse(switcher.isItOn());
 	}
 	
 	@Test
-	public void shouldValidateAndUpdateSnapshot() throws SwitcherException {
+	public void shouldValidateAndUpdateSnapshot() {
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
 		
@@ -136,25 +129,13 @@ public class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateSnapshotResponse());
 		
 		//test
-		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL);
-		SwitcherFactory.buildContext(properties, false);
+		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);;
+		SwitcherContext.initializeClient();
 		
 		try {
-			SwitcherFactory.validateSnapshot();
+			SwitcherContext.validateSnapshot();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			assertEquals("Something went wrong", e.getMessage());
-			throw e;
-		}
-	}
-	
-	@Test
-	public void shouldNotValidateSnapshot() throws SwitcherException {
-		SwitcherFactory.buildContext(properties, false);
-		
-		try {
-			SwitcherFactory.validateSnapshot();
-		} catch (Exception e) {
 			assertEquals("Something went wrong", e.getMessage());
 			throw e;
 		}

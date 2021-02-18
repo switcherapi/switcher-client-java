@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.github.switcherapi.client.SwitcherFactory;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
