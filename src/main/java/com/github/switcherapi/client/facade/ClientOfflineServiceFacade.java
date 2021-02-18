@@ -183,8 +183,7 @@ public class ClientOfflineServiceFacade {
 		case Entry.EXIST:
 			return verifyIfAddressExistInNetwork(strategy, switcherInput);
 		case Entry.NOT_EXIST:
-			strategy.setOperation(Entry.EXIST);
-			return !processNetwork(strategy, switcherInput);
+			return !verifyIfAddressExistInNetwork(strategy, switcherInput);
 		default:
 			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 		}

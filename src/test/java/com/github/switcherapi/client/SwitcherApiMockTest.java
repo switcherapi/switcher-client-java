@@ -45,10 +45,12 @@ public class SwitcherApiMockTest {
         
         final String baseUrl = String.format("http://localhost:%s", mockBackEnd.getPort());
         
-		SwitcherContext.getProperties().setUrl(baseUrl);
-		SwitcherContext.getProperties().setApiKey("API_KEY");
-		SwitcherContext.getProperties().setEnvironment("default");
-		SwitcherContext.initializeClient();
+        Switchers.getProperties().setSnapshotFile(null);
+        Switchers.getProperties().setUrl(baseUrl);
+        Switchers.getProperties().setApiKey("API_KEY");
+        Switchers.getProperties().setEnvironment("default");
+        Switchers.getProperties().setOfflineMode(false);
+        Switchers.initializeClient();
     }
 	
 	@AfterAll
