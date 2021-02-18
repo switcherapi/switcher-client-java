@@ -82,6 +82,7 @@ public abstract class SwitcherContext {
 		validateContext();
 		loadSwitchers();
 		
+		SwitcherExecutor.getBypass().clear();
 		if (switcherProperties.isOfflineMode()) {
 			instance = new SwitcherOffline();
 		} else {

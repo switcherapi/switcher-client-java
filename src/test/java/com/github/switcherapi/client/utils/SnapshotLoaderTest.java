@@ -1,6 +1,7 @@
 package com.github.switcherapi.client.utils;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.github.switcherapi.client.model.criteria.Domain;
 
 public class SnapshotLoaderTest {
@@ -19,7 +21,7 @@ public class SnapshotLoaderTest {
 	private Map<String, Object> properties;
 	
 	@BeforeAll
-	public void setupContext() {
+	static void setupContext() {
 
 	}
 	
@@ -213,13 +215,17 @@ public class SnapshotLoaderTest {
 	}
 	
 	@Test
-	public void shouldNotLoadDomainFromDefectSnapshot_byFile() throws Exception {
-		SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/defect_default.json");
+	public void shouldNotLoadDomainFromDefectSnapshot_byFile() {
+		assertThrows(SwitcherSnapshotLoadException.class, () -> {
+			SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/defect_default.json");
+		});
 	}
 	
 	@Test
-	public void shouldNotLoadDomainFromDefectSnapshot_byEnv() throws Exception {
-		SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL, "defect_default");
+	public void shouldNotLoadDomainFromDefectSnapshot_byEnv() {
+		assertThrows(SwitcherSnapshotLoadException.class, () -> {
+			SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL, "defect_default");
+		});
 	}
 	
 	@Test

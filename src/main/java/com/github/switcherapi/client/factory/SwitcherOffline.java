@@ -35,7 +35,6 @@ public class SwitcherOffline extends SwitcherExecutor {
 	 * @throws SwitcherSnapshotLoadException in case it was not possible to load snapshot automatically
 	 */
 	public void init() {
-		
 		final SwitcherProperties properties = SwitcherContext.getProperties();
 		
 		if (StringUtils.isNotBlank(properties.getSnapshotFile())) {
