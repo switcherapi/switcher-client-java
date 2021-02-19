@@ -1,7 +1,7 @@
 package com.github.switcherapi.client.exception;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2020-07-30
  */
 public class SwitcherKeyNotAvailableForComponentException extends SwitcherException {

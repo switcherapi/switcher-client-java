@@ -3,7 +3,7 @@ package com.github.switcherapi.client.model.criteria;
 import java.util.Arrays;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class Group extends SwitcherElement {

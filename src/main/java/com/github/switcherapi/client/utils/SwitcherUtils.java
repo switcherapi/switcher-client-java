@@ -13,7 +13,7 @@ import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.google.gson.Gson;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class SwitcherUtils {

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.github.switcherapi.Switchers;
-import com.github.switcherapi.client.exception.SwitcherFactoryContextException;
+import com.github.switcherapi.client.exception.SwitcherContextException;
 
 public class SwitcherFactoryTest {
 	
@@ -22,7 +22,7 @@ public class SwitcherFactoryTest {
 	public void shouldThrowError_noUrl() {
 		Switchers.getProperties().setUrl(null);
 		
-		Exception ex = assertThrows(SwitcherFactoryContextException.class, () -> {
+		Exception ex = assertThrows(SwitcherContextException.class, () -> {
 			Switchers.initializeClient();
 		});
 		
@@ -34,7 +34,7 @@ public class SwitcherFactoryTest {
 	public void shouldThrowError_noApi() {
 		Switchers.getProperties().setApiKey(null);
 		
-		Exception ex = assertThrows(SwitcherFactoryContextException.class, () -> {
+		Exception ex = assertThrows(SwitcherContextException.class, () -> {
 			Switchers.initializeClient();
 		});
 		
@@ -46,7 +46,7 @@ public class SwitcherFactoryTest {
 	public void shouldThrowError_noDomain() {
 		Switchers.getProperties().setDomain(null);
 		
-		Exception ex = assertThrows(SwitcherFactoryContextException.class, () -> {
+		Exception ex = assertThrows(SwitcherContextException.class, () -> {
 			Switchers.initializeClient();
 		});
 		
@@ -58,7 +58,7 @@ public class SwitcherFactoryTest {
 	public void shouldThrowError_noComponent() throws Exception {
 		Switchers.getProperties().setComponent(null);
 		
-		Exception ex = assertThrows(SwitcherFactoryContextException.class, () -> {
+		Exception ex = assertThrows(SwitcherContextException.class, () -> {
 			Switchers.initializeClient();
 		});
 		
@@ -71,7 +71,7 @@ public class SwitcherFactoryTest {
 		Switchers.getProperties().setSnapshotLocation(null);
 		Switchers.getProperties().setSnapshotAutoLoad(true);
 		
-		Exception ex = assertThrows(SwitcherFactoryContextException.class, () -> {
+		Exception ex = assertThrows(SwitcherContextException.class, () -> {
 			Switchers.initializeClient();
 		});
 		
@@ -84,7 +84,7 @@ public class SwitcherFactoryTest {
 		Switchers.getProperties().setSilentMode(true);
 		Switchers.getProperties().setRetryAfter(null);;
 		
-		Exception ex = assertThrows(SwitcherFactoryContextException.class, () -> {
+		Exception ex = assertThrows(SwitcherContextException.class, () -> {
 			Switchers.initializeClient();
 		});
 		

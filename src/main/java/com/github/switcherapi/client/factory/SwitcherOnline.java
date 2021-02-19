@@ -10,7 +10,7 @@ import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class SwitcherOnline extends SwitcherExecutor {

@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +23,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class SnapshotLoader {
@@ -82,7 +81,7 @@ public class SnapshotLoader {
 			Path path = Paths.get(snapshotLocation);
 			if (!path.toFile().exists())
 				Files.createDirectories(path);
-		} catch (IOException ioe) {
+		} catch (Exception ioe) {
 			logger.error(ioe);
 			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), ioe);
 		}

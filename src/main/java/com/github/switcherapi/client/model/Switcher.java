@@ -2,8 +2,8 @@ package com.github.switcherapi.client.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
@@ -14,7 +14,7 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
  * 
  * <p>To assign an input value for this Switcher, you can use one of the chained methods: prepareEntry
  * 
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  * 
  * @see #isItOn()
@@ -44,7 +44,7 @@ public class Switcher {
 	private boolean showReason = Boolean.FALSE;
 	
 	/**
-	 * Use {@link SwitcherFactory#buildContext(Map, boolean)} to create this object.
+	 * Use {@link SwitcherContext#getSwitcher(String)} to create this object.
 	 * 
 	 * @param switcherKey name of the key created
 	 * @param context configuration object containing all information to start using switchers
@@ -60,6 +60,7 @@ public class Switcher {
 	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.
 	 * 
 	 * @param entry input object
+	 * @return {@link Switcher}
 	 */
 	public Switcher prepareEntry(final List<Entry> entry) {
 		
@@ -72,6 +73,7 @@ public class Switcher {
 	 * 
 	 * @param entry input object
 	 * @param add if false, the list will be cleaned and the entry provided will be the only input for this Switcher.
+	 * @return {@link Switcher}
 	 */
 	public Switcher prepareEntry(final Entry entry, final boolean add) {
 		
@@ -93,6 +95,7 @@ public class Switcher {
 	 * <br>Under the table it calls {@link #prepareEntry(Entry, boolean)} passing true to the second argument.
 	 * 
 	 * @param entry input object
+	 * @return {@link Switcher}
 	 */
 	public Switcher prepareEntry(final Entry entry) {
 		
@@ -141,12 +144,12 @@ public class Switcher {
 	}
 	
 	/**
-	 * Execute criteria based on a given switcher key provided via {@link SwitcherFactory#getSwitcher(String)}.
+	 * Execute criteria based on a given switcher key provided via {@link SwitcherContext#getSwitcher(String)}.
 	 * <br>The detailed result is available in list of {@link CriteriaResponse}.
 	 * <br>It's possible to change the switcher key even after instantiating a Switcher object.
 	 * <br>
 	 * <br> For example:
-	 * <br> You can create a Switcher by invoking SwitcherFactory#getSwitcher("MY_KEY"), plus, you can also change this key value by another using
+	 * <br> You can create a Switcher by invoking {@link SwitcherContext}#getSwitcher("MY_KEY"), plus, you can also change this key value by another using
 	 * {@link #isItOn(String)}.
 	 * 
 	 * @return criteria result

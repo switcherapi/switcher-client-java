@@ -3,7 +3,7 @@ package com.github.switcherapi.client.model;
 /**
  * Creates the input used after by invoking isItOn().
  * 
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class Entry {
