@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.github.switcherapi.Switchers;
+import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherInvalidOperationException;
 import com.github.switcherapi.client.exception.SwitcherInvalidOperationInputException;
 import com.github.switcherapi.client.exception.SwitcherInvalidStrategyException;
@@ -21,11 +22,11 @@ public class SwitcherOfflineFix3Test {
 	
 	@BeforeAll
 	static void setupContext() {
-		Switchers.getProperties().setSnapshotFile(null);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
-		Switchers.getProperties().setEnvironment("snapshot_fixture3");
-		Switchers.getProperties().setOfflineMode(true);
-		Switchers.initializeClient();
+		SwitcherContext.loadProperties();
+		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
+		SwitcherContext.getProperties().setEnvironment("snapshot_fixture3");
+		SwitcherContext.getProperties().setOfflineMode(true);
+		SwitcherContext.initializeClient();
 	}
 	
 	@Test

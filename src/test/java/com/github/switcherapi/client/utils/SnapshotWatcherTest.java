@@ -78,16 +78,6 @@ public class SnapshotWatcherTest {
 		}
 	}
 	
-//	@Test
-//	public void shouldReturnErrorWhenStopWatching() throws Exception {
-//		this.generateFixture();
-//		
-//		Field field = PowerMockito.field(SwitcherUtils.class, "watcher");
-//		field.set(SwitcherUtils.class, null);
-//		
-//		SwitcherContext.stopWatchingSnapshot();
-//	}
-	
 	@Test
 	public void shouldReloadDomainAfterChangingSnapshot() throws Exception {
 		this.generateFixture();
