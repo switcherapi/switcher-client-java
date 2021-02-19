@@ -16,7 +16,7 @@ import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.response.AuthRequest;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class ClientWSImpl implements ClientWS {

@@ -15,13 +15,13 @@ public class LibPlayground extends SwitcherContext {
 	public static String MY_SWITCHER = "MY_SWITCHER";
 	
 	public LibPlayground() {
-		SwitcherContext.getProperties().setContextLocation("com.github.switcherapi.playground.LibPlayground");
-		SwitcherContext.getProperties().setApiKey("$2b$08$Hm77RoqpXb.1f7izs06uKendX.B1jjWqTZsfJAzYnFoRzJpEFQXEi");
-		SwitcherContext.getProperties().setUrl("https://switcher-load-balance.herokuapp.com");
-		SwitcherContext.getProperties().setDomain("Playground");
-		SwitcherContext.getProperties().setComponent("switcher-playground");
-		SwitcherContext.getProperties().setEnvironment("default");
-		SwitcherContext.initializeClient();
+		getProperties().setContextLocation("com.github.switcherapi.playground.LibPlayground");
+		getProperties().setApiKey("$2b$08$Hm77RoqpXb.1f7izs06uKendX.B1jjWqTZsfJAzYnFoRzJpEFQXEi");
+		getProperties().setUrl("https://switcher-load-balance.herokuapp.com");
+		getProperties().setDomain("Playground");
+		getProperties().setComponent("switcher-playground");
+		getProperties().setEnvironment("default");
+		initializeClient();
 		
 		Switcher switcher = getSwitcher(MY_SWITCHER);
 		switcher.setShowReason(true);

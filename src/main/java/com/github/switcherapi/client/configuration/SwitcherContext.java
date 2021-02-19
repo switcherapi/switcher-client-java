@@ -16,7 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.exception.SwitcherException;
-import com.github.switcherapi.client.exception.SwitcherFactoryContextException;
+import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.factory.SwitcherOffline;
@@ -74,7 +74,7 @@ public abstract class SwitcherContext {
 
     		initializeClient();
         } catch (IOException io) {
-        	throw new SwitcherFactoryContextException(io.getMessage());
+        	throw new SwitcherContextException(io.getMessage());
         }
 	}
 	
@@ -96,37 +96,37 @@ public abstract class SwitcherContext {
 	/**
 	 * Verifies if the client context is valid
 	 * 
-	 * @throws SwitcherFactoryContextException 
+	 * @throws SwitcherContextException 
 	 *  If an error was found, showing then the missing parameter
 	 */
 	private static void validateContext() 
-			throws SwitcherFactoryContextException {
+			throws SwitcherContextException {
 		
 		final SwitcherProperties prop = SwitcherContext.getProperties();
 		if (!switcherProperties.isOfflineMode()) {
 			if (StringUtils.isBlank(prop.getUrl())) {
-				throw new SwitcherFactoryContextException("SwitcherContextParam.URL not found");
+				throw new SwitcherContextException("SwitcherContextParam.URL not found");
 			}
 			
 			if (StringUtils.isBlank(prop.getApiKey())) {
-				throw new SwitcherFactoryContextException("SwitcherContextParam.APIKEY not found");
+				throw new SwitcherContextException("SwitcherContextParam.APIKEY not found");
 			}
 			
 			if (StringUtils.isBlank(prop.getDomain())) {
-				throw new SwitcherFactoryContextException("SwitcherContextParam.DOMAIN not found");
+				throw new SwitcherContextException("SwitcherContextParam.DOMAIN not found");
 			}
 			
 			if (StringUtils.isBlank(prop.getComponent())) {
-				throw new SwitcherFactoryContextException("SwitcherContextParam.COMPONENT not found");
+				throw new SwitcherContextException("SwitcherContextParam.COMPONENT not found");
 			}
 		}
 		
 		if (prop.isSnapshotAutoLoad() && StringUtils.isBlank(prop.getSnapshotLocation())) {
-			throw new SwitcherFactoryContextException("SwitcherContextParam.SNAPSHOT_LOCATION not found");
+			throw new SwitcherContextException("SwitcherContextParam.SNAPSHOT_LOCATION not found");
 		}
 		
 		if (prop.isSilentMode() && StringUtils.isBlank(prop.getRetryAfter())) {
-			throw new SwitcherFactoryContextException("SwitcherContextParam.RETRY_AFTER not found");
+			throw new SwitcherContextException("SwitcherContextParam.RETRY_AFTER not found");
 		}
 	}
 	
@@ -145,7 +145,7 @@ public abstract class SwitcherContext {
 				}
 			}
 		} catch (ClassNotFoundException e) {
-			throw new SwitcherFactoryContextException(e.getMessage());
+			throw new SwitcherContextException(e.getMessage());
 		}
 	}
 	
@@ -186,9 +186,7 @@ public abstract class SwitcherContext {
 	 * @param key name of the key created
 	 * @return a ready to use Switcher
 	 * @throws SwitcherKeyNotFoundException in case the key was not properly loaded
-	 * @throws SwitcherFactoryContextException in case context not loaded properly
-	 *  
-	 * @see {@link com.github.switcherapi.client.configuration.SwitcherKey}
+	 * @throws SwitcherContextException in case context not loaded properly
 	 */
 	public static Switcher getSwitcher(String key) {
 		if (logger.isDebugEnabled()) {
@@ -196,7 +194,7 @@ public abstract class SwitcherContext {
 		}
 		
 		if (instance == null) {
-			throw new SwitcherFactoryContextException();
+			throw new SwitcherContextException();
 		}
 		
 		if (!switchers.contains(key)) {
@@ -215,7 +213,7 @@ public abstract class SwitcherContext {
 	 */
 	public static void validateSnapshot() {
 		if (instance == null) {
-			throw new SwitcherFactoryContextException();
+			throw new SwitcherContextException();
 		}
 		
 		if (!instance.checkSnapshotVersion()) {

@@ -3,7 +3,7 @@ package com.github.switcherapi.client.model.response;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2020-05-13
  */
 @JsonSerialize

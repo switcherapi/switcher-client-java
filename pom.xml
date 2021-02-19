@@ -58,7 +58,6 @@
    		<log4j.version>2.13.3</log4j.version>
    		<okhttp.version>3.14.9</okhttp.version>
    		<junit.version>5.7.0</junit.version>
-   		<awaitility.version>3.0.0</awaitility.version>
    		
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -120,12 +119,6 @@
 		</dependency>
 		
         <!-- test -->
-        <dependency>
-		    <groupId>org.awaitility</groupId>
-		    <artifactId>awaitility</artifactId>
-		    <version>${awaitility.version}</version>
-		    <scope>test</scope>
-		</dependency>
 		<dependency>
 		    <groupId>org.junit.jupiter</groupId>
 		    <artifactId>junit-jupiter-api</artifactId>
@@ -146,7 +139,7 @@
 		</dependency>
 	</dependencies>
 
-	<!-- 
+	<!--
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -189,6 +182,13 @@
         </resources>
 
 		<plugins>
+			<!-- Set up Maven to run with JUnit5 -->
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-surefire-plugin</artifactId>
+	            <version>3.0.0-M5</version>
+	        </plugin>	
+	
 			<!-- Tells Sonar to pick up testing results -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
@@ -197,6 +197,9 @@
 					<destFile>${sonar.jacoco.reportPath}</destFile>
 					<dataFile>${sonar.jacoco.reportPath}</dataFile>
 					<append>true</append>
+					<excludes>
+				        <exclude>com.github.switcherapi.client.model/**</exclude>
+				    </excludes>
 				</configuration>
 				<executions>
 					<execution>
@@ -215,9 +218,11 @@
 				</executions>
 			</plugin>
 			
+			<!-- Exclude log4j2 properties -->
 			<plugin>
 		        <groupId>org.apache.maven.plugins</groupId>
 		        <artifactId>maven-jar-plugin</artifactId>
+		        <version>3.2.0</version>
 		        <configuration>
 		            <excludes>
 		                <exclude>**/log4j2.properties</exclude>
@@ -225,11 +230,11 @@
 		        </configuration>
 		    </plugin>
 			
-        	<!-- Generate and sign all artifacts 
+        	<!-- Generate and sign all artifacts -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -242,7 +247,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -266,7 +271,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			-->
 		</plugins>
 		
     </build>
