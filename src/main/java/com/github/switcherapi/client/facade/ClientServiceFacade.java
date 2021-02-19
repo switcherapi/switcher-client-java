@@ -154,4 +154,8 @@ public class ClientServiceFacade {
 		this.clientService = clientService;
 	}
 
+	public void clearAuthResponse() {
+		this.authResponse = null;
+	}
+
 }

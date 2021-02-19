@@ -22,8 +22,7 @@ public class SwitcherBypassTest {
 	
 	@BeforeAll
 	static void setupContext() {
-		SwitcherContext.getProperties().setUrl("http://localhost:3000");
-		SwitcherContext.getProperties().setEnvironment("default");
+		SwitcherContext.loadProperties();
 		SwitcherContext.getProperties().setOfflineMode(true);
 		SwitcherContext.initializeClient();
 	}

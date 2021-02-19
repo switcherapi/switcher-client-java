@@ -49,7 +49,10 @@ public abstract class SwitcherContext {
 	
 	static {
 		switcherProperties = new SwitcherProperties();
-		
+		loadProperties();
+	}
+	
+	public static void loadProperties() {
 		try (InputStream input = SwitcherContext.class
 				.getClassLoader().getResourceAsStream("switcherapi.properties")) {
 			
