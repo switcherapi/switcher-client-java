@@ -8,8 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherContextException;
+import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 
-class SwitcherFactoryTest {
+class SwitcherContextTest {
 	
 	final String CONTEXT_ERROR = "Something went wrong: Context has errors - %s not found";
 	
@@ -90,6 +91,15 @@ class SwitcherFactoryTest {
 		
 		assertEquals(String.format(
 				CONTEXT_ERROR, "SwitcherContextParam.RETRY_AFTER"), ex.getMessage());
+	}
+	
+	@Test
+	void shouldThrowError_invalidSwitcher() {
+		Exception ex = assertThrows(SwitcherKeyNotFoundException.class, () -> {
+			Switchers.getSwitcher("INVALID_SWITCHER");
+		});
+		
+		assertEquals("Something went wrong: Unable to load a key INVALID_SWITCHER", ex.getMessage());
 	}
 
 }

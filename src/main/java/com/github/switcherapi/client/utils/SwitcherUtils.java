@@ -1,6 +1,9 @@
 package com.github.switcherapi.client.utils;
 
 import java.util.Date;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +35,8 @@ public class SwitcherUtils {
 	private static final String[] DURATION = { "s", "m", "h", "d" };
 	
 	private static final String FULL_DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
+	
+	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+)\\}";
 	
 	private static SnapshotWatcher watcher;
 	
@@ -104,5 +109,37 @@ public class SwitcherUtils {
 		if (watcher != null)
 			watcher.terminate();
 	}
+	
+	/**
+	 * Resolve properties from switcherapi.properties file.
+	 * It reads environment values when using the following notation: ${VALUE}
+	 * 
+	 * @param input reads values from {@link SwitcherContextParam}
+	 * @param prop from properties file
+	 * @return resolved value
+	 */
+	public static String resolveProperties(String input, Properties prop) {
+		final String value = prop.getProperty(input);
+		
+		if (StringUtils.isBlank(value)) {
+	        return null;
+	    }
+
+	    Pattern pattern = Pattern.compile(ENV_VARIABLE_PATTERN);
+	    Matcher matcher = pattern.matcher(value);
+	    StringBuffer sBuffer = new StringBuffer();
+	    
+	    while(matcher.find()){
+	        String envVarName = matcher.group(1).isBlank() ? matcher.group(2) : matcher.group(1);
+	        String envVarValue = System.getenv(envVarName);
+	        matcher.appendReplacement(sBuffer, null == envVarValue ? StringUtils.EMPTY : envVarValue);
+	    }
+	    
+	    if (sBuffer.toString().isEmpty())
+	    	return value;
+	       
+	    return sBuffer.toString();
+	}
+	
 
 }

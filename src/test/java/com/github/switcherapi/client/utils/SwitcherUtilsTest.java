@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -34,14 +35,6 @@ class SwitcherUtilsTest {
 	@Test
 	void shouldReturnError_snapshotNotFound() {
 		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json");
-		assertThrows(SwitcherSnapshotLoadException.class,() -> {
-			SwitcherContext.initializeClient();
-		});
-	}
-	
-	@Test
-	void shouldReturnError_envSnapshot_snapshotNotFound() {
-		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/UNKNOWN_FOLDER/");
 		assertThrows(SwitcherSnapshotLoadException.class,() -> {
 			SwitcherContext.initializeClient();
 		});
@@ -105,6 +98,28 @@ class SwitcherUtilsTest {
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
 		switcher.prepareEntry(entries);
 		assertTrue(SwitcherUtils.isJson(switcher.getInputRequest().toString()));
+	}
+	
+	@Test
+	void shouldReadProperties() {
+		//given
+		Properties prop = new Properties();
+		prop.setProperty(SwitcherContextParam.ENVIRONMENT, "default");
+		
+		//test
+		final String value = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
+		assertEquals("default", value);
+	}
+	
+	@Test
+	void shouldReadEnviromentProperties() {
+		//given
+		Properties prop = new Properties();
+		prop.setProperty(SwitcherContextParam.ENVIRONMENT, String.format("${%s}", "TESTME"));
+		
+		//test
+		final String value = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
+		assertEquals("${TESTME}", value);
 	}
 
 }

@@ -35,22 +35,17 @@ public class SwitcherOffline extends SwitcherExecutor {
 	 * @throws SwitcherSnapshotLoadException in case it was not possible to load snapshot automatically
 	 */
 	public void init() {
-		final SwitcherProperties properties = SwitcherContext.getProperties();
+		final SwitcherProperties props = SwitcherContext.getProperties();
 		
-		if (StringUtils.isNotBlank(properties.getSnapshotFile())) {
-			this.domain = SnapshotLoader.loadSnapshot(properties.getSnapshotFile());
-		} else if (StringUtils.isNotBlank(properties.getSnapshotLocation())) {
+		if (StringUtils.isNotBlank(props.getSnapshotFile())) {
+			this.domain = SnapshotLoader.loadSnapshot(props.getSnapshotFile());
+		} else if (StringUtils.isNotBlank(props.getSnapshotLocation())) {
 			try {
 				this.domain = SnapshotLoader.loadSnapshot(
-						properties.getSnapshotLocation(), properties.getEnvironment());
+						props.getSnapshotLocation(), props.getEnvironment());
 			} catch (FileNotFoundException e) {
-				if (properties.isSnapshotAutoLoad()) {
+				if (props.isSnapshotAutoLoad()) {
 					this.domain = this.initializeSnapshotFromAPI();
-				} else {
-					throw new SwitcherSnapshotLoadException(
-							String.format("%s/%s.json", 
-								properties.getSnapshotLocation(), 
-								properties.getEnvironment()), e);
 				}
 			}
 		}
@@ -58,7 +53,6 @@ public class SwitcherOffline extends SwitcherExecutor {
 	
 	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher) {
-		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("switcher: %s", switcher));
 		}
@@ -85,7 +79,6 @@ public class SwitcherOffline extends SwitcherExecutor {
 	
 	@Override
 	public void notifyChange(final String snapshotFile) {
-		
 		final SwitcherProperties properties = SwitcherContext.getProperties();
 		
 		try {
