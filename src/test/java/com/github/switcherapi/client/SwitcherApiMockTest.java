@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public class SwitcherApiMockTest {
 	
 	@BeforeAll
 	static void setup() throws IOException {
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "\\not_accessable"));
+		
         mockBackEnd = new MockWebServer();
         mockBackEnd.start();
         
@@ -334,27 +337,13 @@ public class SwitcherApiMockTest {
 	}
 	
 	@Test
-	public void shouldNotLookupForSnapshot_invalidLocation() {
+	public void shouldNotLookupForSnapshot_invalidLocation() throws IOException {
 		Switchers.getProperties().setSnapshotAutoLoad(true);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/inv?&|:>//alid");
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessable");
 		
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 10));
-		
-		//mock /graphql
-		mockBackEnd.enqueue(generateSnapshotResponse());
-		
-		//test
-		assertThrows(SwitcherSnapshotWriteException.class, () -> {
-			Switchers.initializeClient();
-		});
-	}
-	
-	@Test
-	public void shouldNotLookupForSnapshot_invalidEnvName() {
-		Switchers.getProperties().setSnapshotAutoLoad(true);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/new_folder");
-		Switchers.getProperties().setEnvironment("inv?&|:>//alid");
+		final RandomAccessFile raFile = new RandomAccessFile(SNAPSHOTS_LOCAL + "/not_accessable", "rw");
+		raFile.getChannel().lock();
+		raFile.close();
 		
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
