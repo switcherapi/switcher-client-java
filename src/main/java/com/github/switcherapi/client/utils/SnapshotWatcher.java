@@ -13,10 +13,11 @@ import java.nio.file.WatchService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2020-05-13
  */
 public class SnapshotWatcher implements Runnable {
@@ -38,9 +39,8 @@ public class SnapshotWatcher implements Runnable {
 		WatchKey key;
 		
 		try {
-			
 			watcher = FileSystems.getDefault().newWatchService();
-			final Path dir = Paths.get(executorInstance.getSnapshotLocation());
+			final Path dir = Paths.get(SwitcherContext.getProperties().getSnapshotLocation());
 			dir.register(watcher,
 		    		StandardWatchEventKinds.ENTRY_DELETE,
 		    		StandardWatchEventKinds.ENTRY_MODIFY);

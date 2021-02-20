@@ -1,0 +1,28 @@
+{
+  "data": {
+    "domain": {
+      "name": "Playground",
+      "version": 1613542022439,
+      "group": [
+        {
+          "name": "Release 1",
+          "config": [
+            {
+              "key": "MY_SWITCHER",
+              "strategies": [],
+              "components": [
+                "switcher-playground"
+              ],
+              "description": "My first switcher",
+              "activated": true
+            }
+          ],
+          "description": "",
+          "activated": true
+        }
+      ],
+      "description": "My playground",
+      "activated": true
+    }
+  }
+}

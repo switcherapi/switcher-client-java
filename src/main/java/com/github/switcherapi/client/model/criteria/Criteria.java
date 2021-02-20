@@ -1,7 +1,7 @@
 package com.github.switcherapi.client.model.criteria;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class Criteria {

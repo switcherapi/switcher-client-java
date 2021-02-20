@@ -32,7 +32,7 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class ClientOfflineServiceFacade {
@@ -71,7 +71,7 @@ public class ClientOfflineServiceFacade {
 	 * @return The criteria result
 	 * @throws SwitcherException If encountered either invalid input or misconfiguration
 	 */
-	public CriteriaResponse executeCriteria(final Switcher switcher, final Domain domain) throws SwitcherException {
+	public CriteriaResponse executeCriteria(final Switcher switcher, final Domain domain) {
 
 		if (!domain.isActivated()) {
 			return new CriteriaResponse(false, DISABLED_DOMAIN, switcher.getSwitcherKey());
@@ -119,7 +119,7 @@ public class ClientOfflineServiceFacade {
 	 * @throws SwitcherException If encountered either invalid input or misconfiguration
 	 */
 	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input,
-			final String switcherKey) throws SwitcherException {
+			final String switcherKey) {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("configStrategies: %s", Arrays.toString(configStrategies)));
@@ -171,7 +171,8 @@ public class ClientOfflineServiceFacade {
 		return new CriteriaResponse(result, "Success", switcherKey);
 	}
 
-	private boolean processNetwork(final Strategy strategy, final Entry switcherInput) throws SwitcherInvalidOperationException {
+	private boolean processNetwork(final Strategy strategy, final Entry switcherInput) 
+			throws SwitcherInvalidOperationException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(DEBUG_STRATEGY, strategy));
@@ -182,8 +183,7 @@ public class ClientOfflineServiceFacade {
 		case Entry.EXIST:
 			return verifyIfAddressExistInNetwork(strategy, switcherInput);
 		case Entry.NOT_EXIST:
-			strategy.setOperation(Entry.EXIST);
-			return !processNetwork(strategy, switcherInput);
+			return !verifyIfAddressExistInNetwork(strategy, switcherInput);
 		default:
 			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 		}
@@ -208,7 +208,8 @@ public class ClientOfflineServiceFacade {
 		return false;
 	}
 
-	private boolean processValue(final Strategy strategy, final Entry switcherInput) throws SwitcherInvalidOperationException {
+	private boolean processValue(final Strategy strategy, final Entry switcherInput) 
+			throws SwitcherInvalidOperationException {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(DEBUG_STRATEGY, strategy));
@@ -219,8 +220,7 @@ public class ClientOfflineServiceFacade {
 		case Entry.EXIST:
 			return Arrays.stream(strategy.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
 		case Entry.NOT_EXIST:
-			strategy.setOperation(Entry.EXIST);
-			return !processValue(strategy, switcherInput);
+			return Arrays.stream(strategy.getValues()).noneMatch(val -> val.equals(switcherInput.getInput()));
 		case Entry.EQUAL:
 			return strategy.getValues().length == 1 && strategy.getValues()[0].equals(switcherInput.getInput());
 		case Entry.NOT_EQUAL:
@@ -230,7 +230,7 @@ public class ClientOfflineServiceFacade {
 		}
 	}
 	
-	private boolean processNumeric(final Strategy strategy, final Entry switcherInput) throws SwitcherException {
+	private boolean processNumeric(final Strategy strategy, final Entry switcherInput) {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(DEBUG_STRATEGY, strategy));
@@ -244,8 +244,7 @@ public class ClientOfflineServiceFacade {
 		case Entry.EXIST:
 			return Arrays.stream(strategy.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
 		case Entry.NOT_EXIST:
-			strategy.setOperation(Entry.EXIST);
-			return !processNumeric(strategy, switcherInput);
+			return Arrays.stream(strategy.getValues()).noneMatch(val -> val.equals(switcherInput.getInput()));
 		case Entry.EQUAL:
 			return strategy.getValues().length == 1 && strategy.getValues()[0].equals(switcherInput.getInput());
 		case Entry.NOT_EQUAL:
@@ -380,8 +379,7 @@ public class ClientOfflineServiceFacade {
 		case Entry.EXIST:
 			return Arrays.stream(strategy.getValues()).anyMatch(val -> switcherInput.getInput().matches(val));
 		case Entry.NOT_EXIST:
-			strategy.setOperation(Entry.EXIST);
-			return !processRegex(strategy, switcherInput);
+			return Arrays.stream(strategy.getValues()).noneMatch(val -> switcherInput.getInput().matches(val));
 		case Entry.EQUAL:
 			return strategy.getValues().length == 1 && 
 				switcherInput.getInput().matches(String.format(DELIMITER_REGEX, strategy.getValues()[0]));

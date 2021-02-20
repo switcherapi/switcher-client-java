@@ -1,78 +1,109 @@
 package com.github.switcherapi.client;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import com.github.switcherapi.Switchers;
+import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherException;
-import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
-import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
+import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForComponentException;
+import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
+import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
+import com.github.switcherapi.client.facade.ClientServiceFacade;
+import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.utils.SnapshotLoader;
-import com.github.switcherapi.client.utils.SwitcherContextParam;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.google.gson.Gson;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-@PowerMockIgnore({"javax.management.*", "org.apache.log4j.*", "javax.xml.*", "javax.script.*", "javax.net.ssl.*"})
-@RunWith(PowerMockRunner.class)
-public class SwitcherApiMockTest {
+class SwitcherApiMockTest {
 	
-	private final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
-	private Map<String, Object> properties;
-	private MockWebServer mockBackEnd;
+	private static MockWebServer mockBackEnd;
 	
-	@Before
-	public void setup() throws IOException {
+	@BeforeAll
+	static void setup() throws IOException {
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "\\not_accessable"));
+		
         mockBackEnd = new MockWebServer();
         mockBackEnd.start();
         
-        final String baseUrl = String.format("http://localhost:%s", mockBackEnd.getPort());
-        
-        properties = new HashMap<>();
-		properties.put(SwitcherContextParam.URL, baseUrl);
-		properties.put(SwitcherContextParam.APIKEY, "API_KEY");
-		properties.put(SwitcherContextParam.DOMAIN, "switcher-domain");
-		properties.put(SwitcherContextParam.COMPONENT, "switcher-client");
-		properties.put(SwitcherContextParam.ENVIRONMENT, "default");
+        Switchers.loadProperties();
+        Switchers.getProperties().setUrl(String.format("http://localhost:%s", mockBackEnd.getPort()));
+        Switchers.initializeClient();
     }
 	
-	@After
-	public void tearDown() throws IOException {
+	@AfterAll
+	static void tearDown() throws IOException {
         mockBackEnd.shutdown();
+        
+    	SwitcherContext.stopWatchingSnapshot();
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "\\new_folder\\generated_on_new_folder.json"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "\\new_folder"));
+		
     }
 	
-	private MockResponse generateMockAuth(String token, int secondsAhead) 
-			throws SwitcherInvalidDateTimeArgumentException {
+	@BeforeEach
+	void resetSwitcherState() {
+		ClientServiceFacade.getInstance().clearAuthResponse();
+		
+		Switchers.getProperties().setSnapshotLocation(null);
+		Switchers.getProperties().setEnvironment("default");
+		Switchers.getProperties().setSilentMode(false);
+		Switchers.getProperties().setSnapshotAutoLoad(false);
+		Switchers.getProperties().setRetryAfter(null);
+		Switchers.initializeClient();
+	}
+	
+	private MockResponse generateMockAuth(String token, int secondsAhead) {
 		return new MockResponse()
 				.setBody(String.format("{ \"token\": \"%s\", \"exp\": \"%s\" }", 
 						token, SwitcherUtils.addTimeDuration(secondsAhead + "s", new Date()).getTime()/1000))
 				.addHeader("Content-Type", "application/json");
 	}
 	
-	private MockResponse generateCriteriaResponse(String result) {
+	private MockResponse generateCriteriaResponse(String result, boolean reason) {
+		String response;
+		if (reason)
+			response = "{ \"result\": \"%s\", \"reason\": \"Success\" }";
+		else
+			response = "{ \"result\": \"%s\" }";
+			
 		return new MockResponse()
-			.setBody(String.format("{ \"result\": \"%s\" }", result))
+			.setBody(String.format(response, result))
 			.addHeader("Content-Type", "application/json");
+	}
+	
+	private MockResponse generateStatusResponse(String code) {
+		return new MockResponse().setStatus(String.format("HTTP/1.1 %s", code));
+	
 	}
 	
 	private MockResponse generateCheckSnapshotVersionResponse(String status) {
@@ -81,7 +112,7 @@ public class SwitcherApiMockTest {
 			.addHeader("Content-Type", "application/json");
 	}
 	
-	private MockResponse generateSnapshotResponse() throws SwitcherSnapshotLoadException {
+	private MockResponse generateSnapshotResponse() {
 		final Snapshot mockedSnapshot = new Snapshot();
 		final Criteria criteria = new Criteria();
 		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/default.json"));
@@ -94,35 +125,178 @@ public class SwitcherApiMockTest {
 	}
 	
 	@Test
-	public void shouldReturnTrue() throws SwitcherException {
+	void shouldReturnTrue() {
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
 		
 		//mock /criteria
-		mockBackEnd.enqueue(generateCriteriaResponse("true"));
+		mockBackEnd.enqueue(generateCriteriaResponse("true", false));
 		
 		//test
-		SwitcherFactory.buildContext(properties, false);
-		final Switcher switcher = SwitcherFactory.getSwitcher("ONLINE_KEY");
+		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
 		assertTrue(switcher.isItOn());
 	}
 	
 	@Test
-	public void shouldReturnFalse() throws SwitcherException {
+	void shouldReturnFalse() {
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
 		
 		//mock /criteria
-		mockBackEnd.enqueue(generateCriteriaResponse("false"));
+		mockBackEnd.enqueue(generateCriteriaResponse("false", false));
 		
 		//test
-		SwitcherFactory.buildContext(properties, false);
-		final Switcher switcher = SwitcherFactory.getSwitcher("ONLINE_KEY");
+		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
 		assertFalse(switcher.isItOn());
 	}
 	
 	@Test
-	public void shouldValidateAndUpdateSnapshot() throws SwitcherException {
+	void shouldHideExecutionReason() {
+		//mock /auth
+		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		
+		//mock /criteria
+		mockBackEnd.enqueue(generateCriteriaResponse("true", false));
+		
+		//given
+		List<Entry> entries = new ArrayList<>();
+		entries.add(new Entry(Entry.DATE, "2019-12-10"));
+		
+		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		
+		//test
+		assertTrue(switcher.isItOn(entries));
+		assertNotNull(switcher.getHistoryExecution());
+		
+		System.out.println(switcher.getHistoryExecution());
+		assertNull(switcher.getHistoryExecution().get(0).getReason());
+	}
+	
+	@Test
+	void shouldShowExecutionReason() {
+		//mock /auth
+		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		
+		//mock /criteria
+		mockBackEnd.enqueue(generateCriteriaResponse("true", true));
+				
+		//given
+		List<Entry> entries = new ArrayList<>();
+		entries.add(new Entry(Entry.DATE, "2019-12-10"));
+		
+		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		switcher.setShowReason(true);
+		
+		//test
+		assertTrue(switcher.isItOn(entries));
+		assertNotNull(switcher.getHistoryExecution());
+		assertNotNull(switcher.getHistoryExecution().get(0).getReason());
+		assertEquals(switcher.getSwitcherKey(), switcher.getHistoryExecution().get(0).getSwitcherKey());
+	}
+	
+	@Test
+	void shouldReturnError_keyNotFound() {
+		//mock /auth
+		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		
+		//mock /criteria
+		mockBackEnd.enqueue(generateStatusResponse("404"));
+		
+		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		assertThrows(SwitcherKeyNotFoundException.class, () -> {
+			switcher.isItOn();
+		});
+	}
+	
+	@Test
+	void shouldReturnError_componentNotregistered() {
+		//mock /auth
+		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		
+		//mock /criteria
+		mockBackEnd.enqueue(generateStatusResponse("401"));
+		
+		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		assertThrows(SwitcherKeyNotAvailableForComponentException.class, () -> {
+			switcher.isItOn();
+		});
+	}
+	
+	
+	@Test
+	void shouldReturnError_unauthorizedAPIaccess() {
+		//mock /auth
+		mockBackEnd.enqueue(generateStatusResponse("401"));
+		
+		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		Exception ex = assertThrows(SwitcherException.class, () -> {
+			switcher.isItOn();
+		});
+		
+		assertEquals("Something went wrong: Unauthorized API access", ex.getMessage());
+	}
+	
+	@Test
+	void shouldReturnTrue_silentMode() throws InterruptedException {
+		//given
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
+		Switchers.getProperties().setEnvironment("snapshot_fixture1");
+		Switchers.getProperties().setSilentMode(true);
+		Switchers.getProperties().setRetryAfter("2s");
+		Switchers.initializeClient();
+		
+		//mock /auth
+		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		
+		//mock /criteria
+		mockBackEnd.enqueue(generateCriteriaResponse("true", false));		
+		
+		//test
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
+		assertTrue(switcher.isItOn());
+		
+		CountDownLatch waiter = new CountDownLatch(1);
+		waiter.await(2, TimeUnit.SECONDS);
+		
+		//mock /isAlive - service unavailable
+		mockBackEnd.enqueue(generateStatusResponse("503"));
+		
+		//test
+		assertTrue(switcher.isItOn());
+	}
+	
+	
+	@Test
+	void shouldReturnTrue_tokenExpired() throws InterruptedException {
+		//mock /auth
+		mockBackEnd.enqueue(generateMockAuth("token", 2));
+		
+		//mock /criteria
+		mockBackEnd.enqueue(generateCriteriaResponse("true", false));	
+		
+		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		
+		//test
+		assertTrue(switcher.isItOn());
+		
+		CountDownLatch waiter = new CountDownLatch(1);
+		waiter.await(2, TimeUnit.SECONDS);
+		
+		//mock /isAlive
+		mockBackEnd.enqueue(generateStatusResponse("200"));
+		
+		//mock /auth
+		mockBackEnd.enqueue(generateMockAuth("token", 2));
+		
+		//mock /criteria
+		mockBackEnd.enqueue(generateCriteriaResponse("true", false));	
+				
+		//test
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	void shouldValidateAndUpdateSnapshot() {
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
 		
@@ -136,28 +310,51 @@ public class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateSnapshotResponse());
 		
 		//test
-		properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, SNAPSHOTS_LOCAL);
-		SwitcherFactory.buildContext(properties, false);
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
 		
-		try {
-			SwitcherFactory.validateSnapshot();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			assertEquals("Something went wrong", e.getMessage());
-			throw e;
-		}
+		assertDoesNotThrow(() -> {
+			Switchers.initializeClient();
+			Switchers.validateSnapshot();
+		});
 	}
 	
 	@Test
-	public void shouldNotValidateSnapshot() throws SwitcherException {
-		SwitcherFactory.buildContext(properties, false);
+	void shouldLookupForSnapshot() {
+		Switchers.getProperties().setSnapshotAutoLoad(true);
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/new_folder");
+		Switchers.getProperties().setEnvironment("generated_on_new_folder");
 		
-		try {
-			SwitcherFactory.validateSnapshot();
-		} catch (Exception e) {
-			assertEquals("Something went wrong", e.getMessage());
-			throw e;
-		}
+		//mock /auth
+		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		
+		//mock /graphql
+		mockBackEnd.enqueue(generateSnapshotResponse());
+		
+		//test
+		assertDoesNotThrow(() -> {
+			Switchers.initializeClient();
+		});
+	}
+	
+	@Test
+	void shouldNotLookupForSnapshot_invalidLocation() throws IOException {
+		Switchers.getProperties().setSnapshotAutoLoad(true);
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessable");
+		
+		final RandomAccessFile raFile = new RandomAccessFile(SNAPSHOTS_LOCAL + "/not_accessable", "rw");
+		raFile.getChannel().lock();
+		raFile.close();
+		
+		//mock /auth
+		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		
+		//mock /graphql
+		mockBackEnd.enqueue(generateSnapshotResponse());
+		
+		//test
+		assertThrows(SwitcherSnapshotWriteException.class, () -> {
+			Switchers.initializeClient();
+		});
 	}
 
 }

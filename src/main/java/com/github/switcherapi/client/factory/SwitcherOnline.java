@@ -1,19 +1,16 @@
 package com.github.switcherapi.client.factory;
 
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
-import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.facade.ClientServiceFacade;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
-import com.github.switcherapi.client.utils.SwitcherContextParam;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class SwitcherOnline extends SwitcherExecutor {
@@ -22,27 +19,19 @@ public class SwitcherOnline extends SwitcherExecutor {
 	
 	private SwitcherOffline switcherOffline;
 	
-	public SwitcherOnline(final Map<String, Object> properties) throws SwitcherException {
-		
-		this.init(properties);
-	}
-	
-	@Override
-	public void init(final Map<String, Object> properties) throws SwitcherException {
-		
-		this.properties = properties;
-		this.switcherOffline = new SwitcherOffline(this.properties);
+	public SwitcherOnline() {
+		this.switcherOffline = new SwitcherOffline();
 	}
 
 	@Override
-	public CriteriaResponse executeCriteria(final Switcher switcher) throws SwitcherException {
+	public CriteriaResponse executeCriteria(final Switcher switcher) {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("switcher: %s", switcher));
 		}
 		
 		try {
-			final CriteriaResponse response = ClientServiceFacade.getInstance().executeCriteria(this.properties, switcher);
+			final CriteriaResponse response = ClientServiceFacade.getInstance().executeCriteria(switcher);
 			
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("[Online] response: %s", response));
@@ -55,10 +44,10 @@ public class SwitcherOnline extends SwitcherExecutor {
 		}
 	}
 	
-	private CriteriaResponse executeSilentCriteria(final Switcher switcher, final SwitcherAPIConnectionException e) 
-			throws SwitcherException {
+	private CriteriaResponse executeSilentCriteria(final Switcher switcher, 
+			final SwitcherAPIConnectionException e) {
 		
-		if (super.isSilentMode()) {
+		if (SwitcherContext.getProperties().isSilentMode()) {
 			CriteriaResponse response = this.switcherOffline.executeCriteria(switcher);
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("[Silent] response: %s", response));
@@ -71,16 +60,16 @@ public class SwitcherOnline extends SwitcherExecutor {
 	}
 
 	@Override
-	public boolean checkSnapshotVersion() throws SwitcherException {
+	public boolean checkSnapshotVersion() {
 		
-		if (properties.containsKey(SwitcherContextParam.SNAPSHOT_LOCATION)) {
+		if (SwitcherContext.getProperties().getSnapshotLocation() != null) {
 			return super.checkSnapshotVersion(this.switcherOffline.getDomain());
 		}
 		return Boolean.TRUE;
 	}
 
 	@Override
-	public void updateSnapshot() throws SwitcherException {
+	public void updateSnapshot() {
 		
 		super.initializeSnapshotFromAPI();
 	}
@@ -89,12 +78,6 @@ public class SwitcherOnline extends SwitcherExecutor {
 	public void notifyChange(String snapshotFile) {
 		
 		this.switcherOffline.notifyChange(snapshotFile);
-	}
-	
-	@Override
-	public void updateContext(Map<String, Object> properties) throws SwitcherException {
-		
-		this.init(properties);
 	}
 
 }

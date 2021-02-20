@@ -2,7 +2,7 @@ package com.github.switcherapi.client.model.criteria;
 
 /**
  * 
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2020--5-9 - v1.0.2
  */
 public class Snapshot {

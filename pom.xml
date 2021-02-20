@@ -8,7 +8,7 @@
   	<groupId>com.github.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.1.0</version>
+	<version>1.2.0-SNAPSHOT</version>
 	
  	<name>Switcher Client</name>
 	<description>Switcher Client for working with Switcher API</description>
@@ -56,8 +56,8 @@
    		
    		<!-- test -->
    		<log4j.version>2.13.3</log4j.version>
-   		<powermock-module-junit4.version>2.0.2</powermock-module-junit4.version>
-   		<awaitility.version>3.0.0</awaitility.version>
+   		<okhttp.version>3.14.9</okhttp.version>
+   		<junit.version>5.7.0</junit.version>
    		
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -119,40 +119,27 @@
 		</dependency>
 		
         <!-- test -->
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>${powermock-module-junit4.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
-            <version>${powermock-module-junit4.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-		    <groupId>org.awaitility</groupId>
-		    <artifactId>awaitility</artifactId>
-		    <version>${awaitility.version}</version>
+		<dependency>
+		    <groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter-api</artifactId>
+		    <version>${junit.version}</version>
 		    <scope>test</scope>
 		</dependency>
-		
 		<dependency>
 		    <groupId>com.squareup.okhttp3</groupId>
 		    <artifactId>okhttp</artifactId>
-		    <version>3.14.9</version>
+		    <version>${okhttp.version}</version>
 		    <scope>test</scope>
 		</dependency>
 		<dependency>
 		    <groupId>com.squareup.okhttp3</groupId>
 		    <artifactId>mockwebserver</artifactId>
-		    <version>3.14.9</version>
+		    <version>${okhttp.version}</version>
 		    <scope>test</scope>
 		</dependency>
 	</dependencies>
 
-	<!-- 
+	<!--
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -195,6 +182,13 @@
         </resources>
 
 		<plugins>
+			<!-- Set up Maven to run with JUnit5 -->
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-surefire-plugin</artifactId>
+	            <version>3.0.0-M5</version>
+	        </plugin>	
+	
 			<!-- Tells Sonar to pick up testing results -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
@@ -203,6 +197,9 @@
 					<destFile>${sonar.jacoco.reportPath}</destFile>
 					<dataFile>${sonar.jacoco.reportPath}</dataFile>
 					<append>true</append>
+					<excludes>
+				        <exclude>com.github.switcherapi.client.model/**</exclude>
+				    </excludes>
 				</configuration>
 				<executions>
 					<execution>
@@ -221,9 +218,11 @@
 				</executions>
 			</plugin>
 			
+			<!-- Exclude log4j2 properties -->
 			<plugin>
 		        <groupId>org.apache.maven.plugins</groupId>
 		        <artifactId>maven-jar-plugin</artifactId>
+		        <version>3.2.0</version>
 		        <configuration>
 		            <excludes>
 		                <exclude>**/log4j2.properties</exclude>
@@ -235,7 +234,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -248,7 +247,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>

@@ -9,12 +9,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
-import com.github.switcherapi.client.exception.SwitcherSnapshotWatcherException;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.google.gson.Gson;
 
 /**
- * @author rogerio
+ * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class SwitcherUtils {
@@ -40,7 +39,6 @@ public class SwitcherUtils {
 	
 	public static Date addTimeDuration(final String addValue, final Date date) 
 			throws SwitcherInvalidDateTimeArgumentException {
-		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(LOG_ADDVALUE, addValue));
 			logger.debug(String.format(LOG_DATE, date));
@@ -60,7 +58,6 @@ public class SwitcherUtils {
 	}
 	
 	public static String getFullDate(final String date) {
-		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(LOG_DATE, date));
 		}
@@ -70,7 +67,6 @@ public class SwitcherUtils {
 	}
 
 	public static String getFullTime(final String date, final String time) {
-		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(LOG_DATE, date));
 			logger.debug(String.format(LOG_TME, time));
@@ -88,7 +84,6 @@ public class SwitcherUtils {
 	}
 	
 	public static boolean isJson(final String Json) {
-		
         final Gson gson = new Gson();
         try {
             gson.fromJson(Json, Object.class);
@@ -99,19 +94,15 @@ public class SwitcherUtils {
     }
 	
 	public static void watchSnapshot(final SwitcherExecutor executorInstance) {
-		
 		if (watcher == null)
 			watcher = new SnapshotWatcher(executorInstance);
 		
 		new Thread(watcher, SnapshotWatcher.class.toString()).start();
 	}
 	
-	public static void stopWatchingSnapshot() throws SwitcherSnapshotWatcherException {
-		
-		if (watcher == null)
-			throw new SwitcherSnapshotWatcherException("Snapshot watcher was not running", null);
-		
-		watcher.terminate();
+	public static void stopWatchingSnapshot() {
+		if (watcher != null)
+			watcher.terminate();
 	}
 
 }
