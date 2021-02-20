@@ -11,8 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.configuration.SwitcherContext;
-import com.github.switcherapi.client.configuration.SwitcherProperties;
 import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherProperties;
 import com.github.switcherapi.client.model.response.AuthRequest;
 
 /**

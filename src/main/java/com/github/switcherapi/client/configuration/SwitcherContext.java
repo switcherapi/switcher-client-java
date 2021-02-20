@@ -22,6 +22,7 @@ import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.factory.SwitcherOffline;
 import com.github.switcherapi.client.factory.SwitcherOnline;
 import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherProperties;
 import com.github.switcherapi.client.utils.SwitcherContextParam;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.github.switcherapi.client.ws.ClientWS;
@@ -47,7 +48,9 @@ public abstract class SwitcherContext {
 	private static Set<String> switchers;
 	private static SwitcherExecutor instance;
 	
-	public SwitcherContext() {}
+	protected SwitcherContext() {
+		logger.debug("Context initialized");
+	}
 	
 	static {
 		switcherProperties = new SwitcherProperties();
