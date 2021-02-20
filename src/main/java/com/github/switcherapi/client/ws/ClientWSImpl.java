@@ -26,13 +26,11 @@ public class ClientWSImpl implements ClientWS {
 	private Client client;
 	
 	public ClientWSImpl() {
-		
 		this.setClient(ClientBuilder.newClient());
 	}
 	
 	@Override
 	public Response executeCriteriaService(final Switcher switcher, final String token) {
-		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("switcher: %s", switcher));
 		}
@@ -107,7 +105,6 @@ public class ClientWSImpl implements ClientWS {
 	}
 
 	public void setClient(Client client) {
-		
 		this.client = client;
 	}
 

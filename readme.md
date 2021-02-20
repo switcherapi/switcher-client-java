@@ -31,6 +31,49 @@ https://github.com/switcherapi/switcher-api
 ```	
 
 ## Context properties
+#### Newest versions - v1.2.0
+SwitcherContext is a toolkit that abstracts all external configurations regarding API access and SDK behaviors.
+This new approach has eliminated unnecessary boilerplates and also has added a new layer for security purposes.
+
+Similarly as frameworks like Spring Boot, Log4j, the SDK also requires creating an external properties file that will contain all the settings.
+
+1. Inside the resources folder, create a file called: switcherapi.properties.
+
+
+```
+#required
+switcher.context -> Your Feature class that extends SwitcherContext
+switcher.url -> Endpoint of your Swither-API
+switcher.apikey -> Switcher-API key generated for your application
+switcher.component -> Application name
+switcher.environment -> Environment name. Production environment is named as 'default'
+switcher.domain -> Domain name
+
+#optional
+switcher.offline -> true/false When offline, it will only use a local snapshot file
+switcher.snapshot.file -> Snapshot file patch
+switcher.snapshot.location -> Folder where snapshots will be saved/read
+switcher.snapshot.auto -> true/false Lookup for snapshot when loading the application
+switcher.silent -> true/false Contingency in case of some problem with connectivity with the API
+switcher.retry -> Time given to the module to re-establish connectivity with the API - e.g. 5s (s: seconds - m: minutes - h: hours)
+```
+
+2. Defining your features
+
+```java
+public class MyAppFeatures extends SwitcherContext {
+	
+	@SwitcherKey
+	public static final String MY_SWITCHER = "MY_SWITCHER";
+
+}
+
+Switcher mySwitcher = MyAppFeatures.getSwitcher(MY_SWITCHER);
+mySwitcher.isItOn();
+```
+
+
+#### Deprecated - available only on v1.1.0
 The context map properties stores all information regarding connectivity and strategy settings. These constants can be accessed using *SwitcherContextParam*.
 
 ```java
@@ -67,10 +110,10 @@ Here are some examples:
 Invoking the API can be done by obtaining the switcher object and calling *isItOn*. It can also be forced to call another key any time you want.
 
 ```java
-Switcher switcher = SwitcherFactory.getSwitcher("FEATURE01");
+Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
 switcher.isItOn();
 //or
-switcher.isItOn("FEATURE01");
+switcher.isItOn(FEATURE01);
 ```
 
 2. **Strategy validation - preparing input**
@@ -91,7 +134,7 @@ switcher.isItOn(entries);
 Create chained calls using 'getSwitcher' then 'prepareEntry' then 'isItOn' functions.
 
 ```java
-Switcher switcher = SwitcherFactory.getSwitcher("FEATURE01")
+Switcher switcher = SwitcherFactory.getSwitcher(FEATURE01)
 	.prepareEntry(new Entry(Entry.VALUE, "My value"))
 	.prepareEntry(new Entry(Entry.NETWORK, "10.0.0.1"))
 	.isItOn();
@@ -101,7 +144,7 @@ Switcher switcher = SwitcherFactory.getSwitcher("FEATURE01")
 All-in-one method is fast and include everything you need to execute a complex call to the API. Stack inputs changing the last parameter to *true* in case you need to add more values to the strategy validator.
 
 ```java
-switcher.isItOn("FEATURE01", new Entry(Entry.NETWORK, "10.0.0.3"), false);
+switcher.isItOn(FEATURE01, new Entry(Entry.NETWORK, "10.0.0.3"), false);
 ```
 
 ## Offline settings
@@ -111,7 +154,7 @@ You can also force the Switcher library to work offline. In this case, the snaps
 properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, "/src/resources");
 SwitcherFactory.buildContext(properties, true);
 
-Switcher switcher = SwitcherFactory.getSwitcher("FEATURE01");
+Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
 switcher.isItOn();
 ```
 
@@ -123,14 +166,14 @@ In order to minimize roundtrips and unnecessary file parsing, try to use one of 
 1. This feature will update the in-memory Snapshot every time a modification on the file occurs.
 
 ```java
-SwitcherFactory.watchSnapshot();
-SwitcherFactory.stopWatchingSnapshot();
+MyAppFeatures.watchSnapshot();
+MyAppFeatures.stopWatchingSnapshot();
 ```
 
 2. You can tell the Switcher Client to check if the snapshot file is updated. This will ensure that your application is running the most recent version of your cloud configuration.
 
 ```java
-SwitcherFactory.validateSnapshot();
+MyAppFeatures.validateSnapshot();
 ```
 
 ## Built-in mock feature
@@ -138,16 +181,23 @@ Write automated tests using this built-in mock mechanism to guide your test scen
 </br>*SwitcherExecutor* implementation has 2 methods that can make mock tests easier. Use assume to force a value to a switcher and forget to reset its original state.
 
 ```java
-Switcher switcher = SwitcherFactory.getSwitcher("FEATURE01");
+Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
 
-SwitcherExecutor.assume("FEATURE01", false);
+SwitcherExecutor.assume(FEATURE01, false);
 switcher.isItOn(); // 'false'
 
-SwitcherExecutor.forget("FEATURE01");
+SwitcherExecutor.forget(FEATURE01);
 switcher.isItOn(); // Now, it's going to return the result retrieved from the API or the Snaopshot file
 ```
 
 # Version Log
+- 1.2.0-SNAPSHOT:
+	- Changed how SwitcherContext is implemented - added support to properties file
+	- Offline mode can programmatically load snapshots
+	- Added extra security layer for verifying features
+	- (In progress) Smoke testing
+	- (Tests) Removed PowerMockito: tests are way simpler to read using Okhttp3
+	- (Tests) Updated to JUnit5
 - 1.1.0:
 	- Improved snapshot lookup mechanism
 	- Both online and offline modes can validate/update snapshot version

@@ -37,6 +37,7 @@ import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
+import com.github.switcherapi.client.ws.ClientWSImpl;
 import com.google.gson.Gson;
 
 import okhttp3.mockwebserver.MockResponse;
@@ -64,16 +65,19 @@ class SwitcherApiMockTest {
 	static void tearDown() throws IOException {
         mockBackEnd.shutdown();
         
+        //clean generated outputs
     	SwitcherContext.stopWatchingSnapshot();
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "\\new_folder\\generated_on_new_folder.json"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "\\new_folder"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "\\generated_mock_default.json"));
 		
     }
 	
 	@BeforeEach
-	void resetSwitcherState() {
+	void resetSwitcherContextState() {
 		ClientServiceFacade.getInstance().clearAuthResponse();
 		
+		Switchers.getProperties().setOfflineMode(false);
 		Switchers.getProperties().setSnapshotLocation(null);
 		Switchers.getProperties().setEnvironment("default");
 		Switchers.getProperties().setSilentMode(false);
@@ -82,13 +86,26 @@ class SwitcherApiMockTest {
 		Switchers.initializeClient();
 	}
 	
-	private MockResponse generateMockAuth(String token, int secondsAhead) {
+	/**
+	 * @see {@link ClientWSImpl#auth()}
+	 * 
+	 * @param secondsAhead time to expire the token
+	 * @return Generated mock /auth response
+	 */
+	private MockResponse generateMockAuth(int secondsAhead) {
 		return new MockResponse()
 				.setBody(String.format("{ \"token\": \"%s\", \"exp\": \"%s\" }", 
-						token, SwitcherUtils.addTimeDuration(secondsAhead + "s", new Date()).getTime()/1000))
+						"mocked_token", SwitcherUtils.addTimeDuration(secondsAhead + "s", new Date()).getTime()/1000))
 				.addHeader("Content-Type", "application/json");
 	}
 	
+	/**
+	 * @see {@link ClientWSImpl#executeCriteriaService(Switcher, String)}
+	 * 
+	 * @param result returned by the criteria execution
+	 * @param reason if want to display along with the result
+	 * @return Generated mock /criteria response
+	 */
 	private MockResponse generateCriteriaResponse(String result, boolean reason) {
 		String response;
 		if (reason)
@@ -101,17 +118,34 @@ class SwitcherApiMockTest {
 			.addHeader("Content-Type", "application/json");
 	}
 	
+	/**
+	 * @see {@link ClientWSImpl#isAlive()}
+	 * 
+	 * @param code HTTP status
+	 * @return Generated mock /check response
+	 */
 	private MockResponse generateStatusResponse(String code) {
 		return new MockResponse().setStatus(String.format("HTTP/1.1 %s", code));
 	
 	}
 	
+	/**
+	 * @see {@link ClientWSImpl#checkSnapshotVersion(long, String)}
+	 * 
+	 * @param status is true when snapshot version is updated
+	 * @return Generated mock /criteria/snapshot_check response
+	 */
 	private MockResponse generateCheckSnapshotVersionResponse(String status) {
 		return new MockResponse()
 			.setBody(String.format("{ \"status\": \"%s\" }", status))
 			.addHeader("Content-Type", "application/json");
 	}
 	
+	/**
+	 * @see {@link ClientWSImpl#resolveSnapshot(String)}
+	 * 
+	 * @return Generated mock /graphql respose based on src/test/resources/default.json
+	 */
 	private MockResponse generateSnapshotResponse() {
 		final Snapshot mockedSnapshot = new Snapshot();
 		final Criteria criteria = new Criteria();
@@ -126,10 +160,10 @@ class SwitcherApiMockTest {
 	
 	@Test
 	void shouldReturnTrue() {
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
 		
-		//mock /criteria
+		//criteria
 		mockBackEnd.enqueue(generateCriteriaResponse("true", false));
 		
 		//test
@@ -139,10 +173,10 @@ class SwitcherApiMockTest {
 	
 	@Test
 	void shouldReturnFalse() {
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
 		
-		//mock /criteria
+		//criteria
 		mockBackEnd.enqueue(generateCriteriaResponse("false", false));
 		
 		//test
@@ -152,10 +186,10 @@ class SwitcherApiMockTest {
 	
 	@Test
 	void shouldHideExecutionReason() {
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
 		
-		//mock /criteria
+		//criteria
 		mockBackEnd.enqueue(generateCriteriaResponse("true", false));
 		
 		//given
@@ -174,10 +208,10 @@ class SwitcherApiMockTest {
 	
 	@Test
 	void shouldShowExecutionReason() {
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
 		
-		//mock /criteria
+		//criteria
 		mockBackEnd.enqueue(generateCriteriaResponse("true", true));
 				
 		//given
@@ -196,10 +230,10 @@ class SwitcherApiMockTest {
 	
 	@Test
 	void shouldReturnError_keyNotFound() {
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
 		
-		//mock /criteria
+		//criteria
 		mockBackEnd.enqueue(generateStatusResponse("404"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
@@ -210,10 +244,10 @@ class SwitcherApiMockTest {
 	
 	@Test
 	void shouldReturnError_componentNotregistered() {
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
 		
-		//mock /criteria
+		//criteria
 		mockBackEnd.enqueue(generateStatusResponse("401"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
@@ -225,7 +259,7 @@ class SwitcherApiMockTest {
 	
 	@Test
 	void shouldReturnError_unauthorizedAPIaccess() {
-		//mock /auth
+		//auth
 		mockBackEnd.enqueue(generateStatusResponse("401"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
@@ -245,10 +279,10 @@ class SwitcherApiMockTest {
 		Switchers.getProperties().setRetryAfter("2s");
 		Switchers.initializeClient();
 		
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
 		
-		//mock /criteria
+		//criteria
 		mockBackEnd.enqueue(generateCriteriaResponse("true", false));		
 		
 		//test
@@ -258,7 +292,7 @@ class SwitcherApiMockTest {
 		CountDownLatch waiter = new CountDownLatch(1);
 		waiter.await(2, TimeUnit.SECONDS);
 		
-		//mock /isAlive - service unavailable
+		//isAlive - service unavailable
 		mockBackEnd.enqueue(generateStatusResponse("503"));
 		
 		//test
@@ -268,10 +302,10 @@ class SwitcherApiMockTest {
 	
 	@Test
 	void shouldReturnTrue_tokenExpired() throws InterruptedException {
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 2));
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(2));
 		
-		//mock /criteria
+		//criteria
 		mockBackEnd.enqueue(generateCriteriaResponse("true", false));	
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
@@ -282,13 +316,13 @@ class SwitcherApiMockTest {
 		CountDownLatch waiter = new CountDownLatch(1);
 		waiter.await(2, TimeUnit.SECONDS);
 		
-		//mock /isAlive
+		//isAlive
 		mockBackEnd.enqueue(generateStatusResponse("200"));
 		
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 2));
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(2));
 		
-		//mock /criteria
+		//criteria
 		mockBackEnd.enqueue(generateCriteriaResponse("true", false));	
 				
 		//test
@@ -297,16 +331,16 @@ class SwitcherApiMockTest {
 	
 	@Test
 	void shouldValidateAndUpdateSnapshot() {
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
 		
-		//mock /criteria/snapshot_check
+		//criteria/snapshot_check
 		mockBackEnd.enqueue(generateCheckSnapshotVersionResponse("false"));
 		
-		//mock /auth isAlive
-		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		//auth isAlive
+		mockBackEnd.enqueue(generateMockAuth(10));
 		
-		//mock /graphql
+		//graphql
 		mockBackEnd.enqueue(generateSnapshotResponse());
 		
 		//test
@@ -320,14 +354,15 @@ class SwitcherApiMockTest {
 	
 	@Test
 	void shouldLookupForSnapshot() {
+		//given
 		Switchers.getProperties().setSnapshotAutoLoad(true);
 		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/new_folder");
 		Switchers.getProperties().setEnvironment("generated_on_new_folder");
 		
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 10));
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
 		
-		//mock /graphql
+		//graphql
 		mockBackEnd.enqueue(generateSnapshotResponse());
 		
 		//test
@@ -337,24 +372,81 @@ class SwitcherApiMockTest {
 	}
 	
 	@Test
-	void shouldNotLookupForSnapshot_invalidLocation() throws IOException {
-		Switchers.getProperties().setSnapshotAutoLoad(true);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessable");
+	void shouldLookupForSnapshot_whenNotAutoLoad() {
+		//given
+		Switchers.getProperties().setSnapshotAutoLoad(false);
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
+		Switchers.getProperties().setEnvironment("generated_mock_default");
+		Switchers.initializeClient();
 		
-		final RandomAccessFile raFile = new RandomAccessFile(SNAPSHOTS_LOCAL + "/not_accessable", "rw");
-		raFile.getChannel().lock();
-		raFile.close();
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
 		
-		//mock /auth
-		mockBackEnd.enqueue(generateMockAuth("token", 10));
-		
-		//mock /graphql
+		//graphql
 		mockBackEnd.enqueue(generateSnapshotResponse());
 		
 		//test
-		assertThrows(SwitcherSnapshotWriteException.class, () -> {
-			Switchers.initializeClient();
+		assertDoesNotThrow(() -> {
+			Switchers.validateSnapshot();
 		});
+	}
+	
+	@Test
+	void shouldValidateAndLoadSnapshot_whenOffline() {
+		//given
+		Switchers.getProperties().setOfflineMode(true);
+		Switchers.getProperties().setSnapshotAutoLoad(false);
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
+		Switchers.getProperties().setEnvironment("default");
+		Switchers.initializeClient();
+		
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
+		
+		//criteria/snapshot_check
+		mockBackEnd.enqueue(generateCheckSnapshotVersionResponse("false"));
+		
+		//auth isAlive
+		mockBackEnd.enqueue(generateMockAuth(10));
+		
+		//graphql
+		mockBackEnd.enqueue(generateSnapshotResponse());
+		
+		//test
+		assertDoesNotThrow(() -> {
+			Switchers.validateSnapshot();
+		});
+	}
+	
+	@Test
+	void shouldNotLookupForSnapshot_invalidLocation() {
+		//given
+		Switchers.getProperties().setSnapshotAutoLoad(true);
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessable");
+		
+		//test
+		assertDoesNotThrow(() -> {
+			try (final RandomAccessFile raFile = 
+					new RandomAccessFile(SNAPSHOTS_LOCAL + "/not_accessable", "rw")) {
+				
+				//given an unacessible folder
+				raFile.getChannel().lock();
+				
+				//auth
+				mockBackEnd.enqueue(generateMockAuth(10));
+				
+				//graphql
+				mockBackEnd.enqueue(generateSnapshotResponse());
+				
+				//test
+				assertThrows(SwitcherSnapshotWriteException.class, () -> {
+					Switchers.initializeClient();
+				});
+			} catch (IOException e) {
+				throw e;
+			}
+		});
+
 	}
 
 }
