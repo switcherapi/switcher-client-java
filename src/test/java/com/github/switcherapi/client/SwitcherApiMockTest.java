@@ -336,7 +336,7 @@ public class SwitcherApiMockTest {
 	@Test
 	public void shouldNotLookupForSnapshot_invalidLocation() {
 		Switchers.getProperties().setSnapshotAutoLoad(true);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/inv*alid");
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/inv?alid");
 		
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
@@ -354,7 +354,7 @@ public class SwitcherApiMockTest {
 	public void shouldNotLookupForSnapshot_invalidEnvName() {
 		Switchers.getProperties().setSnapshotAutoLoad(true);
 		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/new_folder");
-		Switchers.getProperties().setEnvironment("/inv*alid");
+		Switchers.getProperties().setEnvironment("/inv?alid");
 		
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
