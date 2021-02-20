@@ -220,7 +220,7 @@ public class ClientOfflineServiceFacade {
 		case Entry.EXIST:
 			return Arrays.stream(strategy.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
 		case Entry.NOT_EXIST:
-			return !Arrays.stream(strategy.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
+			return Arrays.stream(strategy.getValues()).noneMatch(val -> val.equals(switcherInput.getInput()));
 		case Entry.EQUAL:
 			return strategy.getValues().length == 1 && strategy.getValues()[0].equals(switcherInput.getInput());
 		case Entry.NOT_EQUAL:
@@ -244,7 +244,7 @@ public class ClientOfflineServiceFacade {
 		case Entry.EXIST:
 			return Arrays.stream(strategy.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
 		case Entry.NOT_EXIST:
-			return !Arrays.stream(strategy.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
+			return Arrays.stream(strategy.getValues()).noneMatch(val -> val.equals(switcherInput.getInput()));
 		case Entry.EQUAL:
 			return strategy.getValues().length == 1 && strategy.getValues()[0].equals(switcherInput.getInput());
 		case Entry.NOT_EQUAL:
@@ -379,7 +379,7 @@ public class ClientOfflineServiceFacade {
 		case Entry.EXIST:
 			return Arrays.stream(strategy.getValues()).anyMatch(val -> switcherInput.getInput().matches(val));
 		case Entry.NOT_EXIST:
-			return !Arrays.stream(strategy.getValues()).anyMatch(val -> switcherInput.getInput().matches(val));
+			return Arrays.stream(strategy.getValues()).noneMatch(val -> switcherInput.getInput().matches(val));
 		case Entry.EQUAL:
 			return strategy.getValues().length == 1 && 
 				switcherInput.getInput().matches(String.format(DELIMITER_REGEX, strategy.getValues()[0]));

@@ -9,17 +9,17 @@ import org.junit.jupiter.api.Test;
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 
-public class SwitcherFactoryTest {
+class SwitcherFactoryTest {
 	
 	final String CONTEXT_ERROR = "Something went wrong: Context has errors - %s not found";
 	
 	@BeforeEach
-	public void resetProperties() {
+	void resetProperties() {
 		Switchers.loadProperties();
 	}
 	
 	@Test
-	public void shouldThrowError_noUrl() {
+	void shouldThrowError_noUrl() {
 		Switchers.getProperties().setUrl(null);
 		
 		Exception ex = assertThrows(SwitcherContextException.class, () -> {
@@ -31,7 +31,7 @@ public class SwitcherFactoryTest {
 	}
 	
 	@Test
-	public void shouldThrowError_noApi() {
+	void shouldThrowError_noApi() {
 		Switchers.getProperties().setApiKey(null);
 		
 		Exception ex = assertThrows(SwitcherContextException.class, () -> {
@@ -43,7 +43,7 @@ public class SwitcherFactoryTest {
 	}
 	
 	@Test
-	public void shouldThrowError_noDomain() {
+	void shouldThrowError_noDomain() {
 		Switchers.getProperties().setDomain(null);
 		
 		Exception ex = assertThrows(SwitcherContextException.class, () -> {
@@ -55,7 +55,7 @@ public class SwitcherFactoryTest {
 	}
 	
 	@Test
-	public void shouldThrowError_noComponent() throws Exception {
+	void shouldThrowError_noComponent() throws Exception {
 		Switchers.getProperties().setComponent(null);
 		
 		Exception ex = assertThrows(SwitcherContextException.class, () -> {
@@ -67,7 +67,7 @@ public class SwitcherFactoryTest {
 	}
 	
 	@Test
-	public void shouldThrowErrorWhenAutoLoad_noLocation() {
+	void shouldThrowErrorWhenAutoLoad_noLocation() {
 		Switchers.getProperties().setSnapshotLocation(null);
 		Switchers.getProperties().setSnapshotAutoLoad(true);
 		
@@ -80,7 +80,7 @@ public class SwitcherFactoryTest {
 	}
 	
 	@Test
-	public void shouldThrowErrorWhenSilentMode_noRetryTimer() {
+	void shouldThrowErrorWhenSilentMode_noRetryTimer() {
 		Switchers.getProperties().setSilentMode(true);
 		Switchers.getProperties().setRetryAfter(null);;
 		

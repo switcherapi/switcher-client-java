@@ -27,7 +27,7 @@ import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class SnapshotWatcherTest {
+class SnapshotWatcherTest {
 	
 	private static final Logger logger = LogManager.getLogger(SnapshotWatcherTest.class);
 	
@@ -63,7 +63,7 @@ public class SnapshotWatcherTest {
 	/**
 	 * Manually change the snapshot
 	 */
-	private void changeFixture(boolean domainStatus) {
+	void changeFixture(boolean domainStatus) {
 		final Snapshot mockedSnapshot = new Snapshot();
 		final Criteria criteria = new Criteria();
 		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/default.json"));
@@ -87,7 +87,7 @@ public class SnapshotWatcherTest {
 	}
 	
 	@Test
-	public void shouldReloadDomainAfterChangingSnapshot() throws InterruptedException {
+	void shouldReloadDomainAfterChangingSnapshot() throws InterruptedException {
 		generateFixture();
 		SwitcherContext.watchSnapshot();
 		

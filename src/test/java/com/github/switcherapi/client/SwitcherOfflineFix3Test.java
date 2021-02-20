@@ -16,7 +16,7 @@ import com.github.switcherapi.client.exception.SwitcherInvalidStrategyException;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.Switcher;
 
-public class SwitcherOfflineFix3Test {
+class SwitcherOfflineFix3Test {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
@@ -30,7 +30,7 @@ public class SwitcherOfflineFix3Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnError_InvalidSnapshotStrategy() {
+	void offlineShouldReturnError_InvalidSnapshotStrategy() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
 		switcher.prepareEntry(new Entry("INVALID_NAME_FOR_VALIDATION", "Value"));
 		
@@ -40,7 +40,7 @@ public class SwitcherOfflineFix3Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnError_InvalidSnapshotOperationForNetwork() {
+	void offlineShouldReturnError_InvalidSnapshotOperationForNetwork() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE12);
 		switcher.prepareEntry(new Entry(Entry.NETWORK, "10.0.0.1"));
 		
@@ -50,7 +50,7 @@ public class SwitcherOfflineFix3Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnError_InvalidSnapshotOperationForValue() {
+	void offlineShouldReturnError_InvalidSnapshotOperationForValue() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE13);
 		switcher.prepareEntry(new Entry(Entry.VALUE, "Value"));
 		
@@ -60,7 +60,7 @@ public class SwitcherOfflineFix3Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnError_InvalidSnapshotOperationForNumeric() {
+	void offlineShouldReturnError_InvalidSnapshotOperationForNumeric() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE18);
 		switcher.prepareEntry(new Entry(Entry.NUMERIC, "1"));
 		
@@ -70,7 +70,7 @@ public class SwitcherOfflineFix3Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnError_InvalidValuesForNumericValidation() {
+	void offlineShouldReturnError_InvalidValuesForNumericValidation() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE19);
 		switcher.prepareEntry(new Entry(Entry.NUMERIC, "1"));
 		
@@ -80,7 +80,7 @@ public class SwitcherOfflineFix3Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnError_InvalidSnapshotOperationForDate() {
+	void offlineShouldReturnError_InvalidSnapshotOperationForDate() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE14);
 		switcher.prepareEntry(new Entry(Entry.DATE, "2019-12-10"));
 		
@@ -90,7 +90,7 @@ public class SwitcherOfflineFix3Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnError_InvalidSnapshotOperationForTime() {
+	void offlineShouldReturnError_InvalidSnapshotOperationForTime() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE15);
 		switcher.prepareEntry(new Entry(Entry.TIME, "12:00"));
 		
@@ -100,7 +100,7 @@ public class SwitcherOfflineFix3Test {
 	}
 
 	@Test
-	public void offlineShouldReturnError_InvalidValuesForDate() {
+	void offlineShouldReturnError_InvalidValuesForDate() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE16);
 		switcher.prepareEntry(new Entry(Entry.DATE, "2019-12-10"));
 		
@@ -110,7 +110,7 @@ public class SwitcherOfflineFix3Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnError_InvalidValuesForTime() {
+	void offlineShouldReturnError_InvalidValuesForTime() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE17);
 		switcher.prepareEntry(new Entry(Entry.TIME, "12:00"));
 		
@@ -120,7 +120,7 @@ public class SwitcherOfflineFix3Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnError_InvalidSnapshotOperationForRegex() {
+	void offlineShouldReturnError_InvalidSnapshotOperationForRegex() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE20);
 		switcher.prepareEntry(new Entry(Entry.REGEX, "1"));
 		

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,17 +22,17 @@ import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.Switcher;
 
-public class SwitcherUtilsTest {
+class SwitcherUtilsTest {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
 	@BeforeEach
-	public void reloadProperties() {
+	void reloadProperties() {
 		SwitcherContext.loadProperties();
 	}
 	
 	@Test
-	public void shouldReturnError_snapshotNotFound() {
+	void shouldReturnError_snapshotNotFound() {
 		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json");
 		assertThrows(SwitcherSnapshotLoadException.class,() -> {
 			SwitcherContext.initializeClient();
@@ -39,7 +40,7 @@ public class SwitcherUtilsTest {
 	}
 	
 	@Test
-	public void shouldReturnError_envSnapshot_snapshotNotFound() {
+	void shouldReturnError_envSnapshot_snapshotNotFound() {
 		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/UNKNOWN_FOLDER/");
 		assertThrows(SwitcherSnapshotLoadException.class,() -> {
 			SwitcherContext.initializeClient();
@@ -47,7 +48,7 @@ public class SwitcherUtilsTest {
 	}
 	
 	@Test
-	public void shouldReturnError_snapshotHasErrors() {
+	void shouldReturnError_snapshotHasErrors() {
 		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
 		SwitcherContext.getProperties().setEnvironment("defect_default");
 		
@@ -57,7 +58,7 @@ public class SwitcherUtilsTest {
 	}
 	
 	@Test
-	public void shouldAdd1second() throws Exception {
+	void shouldAdd1second() throws Exception {
 		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
 		date1 = SwitcherUtils.addTimeDuration("1s", date1);
 		String dateString = DateFormatUtils.format(date1, "yyyy-MM-dd HH:mm:ss");
@@ -65,7 +66,7 @@ public class SwitcherUtilsTest {
 	}
 	
 	@Test
-	public void shouldAdd1minute() throws Exception {
+	void shouldAdd1minute() throws Exception {
 		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
 		date1 = SwitcherUtils.addTimeDuration("1m", date1);
 		String dateString = DateFormatUtils.format(date1, "yyyy-MM-dd HH:mm:ss");
@@ -73,7 +74,7 @@ public class SwitcherUtilsTest {
 	}
 	
 	@Test
-	public void shouldAdd1hour() throws Exception {
+	void shouldAdd1hour() throws Exception {
 		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
 		date1 = SwitcherUtils.addTimeDuration("1h", date1);
 		String dateString = DateFormatUtils.format(date1, "yyyy-MM-dd HH:mm:ss");
@@ -81,7 +82,7 @@ public class SwitcherUtilsTest {
 	}
 	
 	@Test
-	public void shouldAdd1day() throws Exception {
+	void shouldAdd1day() throws Exception {
 		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
 		date1 = SwitcherUtils.addTimeDuration("1d", date1);
 		String dateString = DateFormatUtils.format(date1, "yyyy-MM-dd HH:mm:ss");
@@ -89,15 +90,15 @@ public class SwitcherUtilsTest {
 	}
 	
 	@Test
-	public void shouldReturnInvalidFormat() {
-		assertThrows(Exception.class,() -> {
-			Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
-			date1 = SwitcherUtils.addTimeDuration("1w", date1);
+	void shouldReturnInvalidFormat() throws ParseException {
+		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
+		assertThrows(Exception.class, () -> {
+			SwitcherUtils.addTimeDuration("1w", date1);
 		});
 	}
 	
 	@Test
-	public void shouldReturnInputRequest() {
+	void shouldReturnInputRequest() {
 		List<Entry> entries = new ArrayList<>();
 		entries.add(new Entry(Entry.DATE, "2019-12-10"));
 		

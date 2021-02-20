@@ -9,8 +9,6 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,8 +47,7 @@ public class SnapshotWatcher implements Runnable {
 
 		    for (;;) {
 			    key = watcher.take();
-			    CountDownLatch waiter = new CountDownLatch(1);
-				waiter.await(1, TimeUnit.SECONDS); // Gap between writing events so it will load just once
+			    Thread.sleep(1000); // Gap between writing events so it will load just once
 			    
 		    	for (WatchEvent<?> event: key.pollEvents()) {
 		    		@SuppressWarnings("unchecked")

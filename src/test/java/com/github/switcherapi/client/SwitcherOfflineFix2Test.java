@@ -12,7 +12,7 @@ import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.model.Switcher;
 
-public class SwitcherOfflineFix2Test {
+class SwitcherOfflineFix2Test {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
@@ -26,7 +26,7 @@ public class SwitcherOfflineFix2Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_domainDisabled() {
+	void offlineShouldReturnFalse_domainDisabled() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE111);
 		assertFalse(switcher.isItOn());
 	}
