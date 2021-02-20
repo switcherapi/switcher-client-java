@@ -141,11 +141,11 @@ public class ClientServiceFacade {
 	private void setSilentModeExpiration() throws SwitcherInvalidDateTimeArgumentException {
 		if (SwitcherContext.getProperties().isSilentMode()) {
 			final String addValue = SwitcherContext.getProperties().getRetryAfter();
-			final AuthResponse authResponse = new AuthResponse();
+			final AuthResponse response = new AuthResponse();
 			
-			authResponse.setToken(SwitcherContextParam.SILENT_MODE.toString());
-			authResponse.setExp(SwitcherUtils.addTimeDuration(addValue, new Date()).getTime()/1000);
-			this.authResponse = authResponse;
+			response.setToken(SwitcherContextParam.SILENT_MODE);
+			response.setExp(SwitcherUtils.addTimeDuration(addValue, new Date()).getTime()/1000);
+			this.authResponse = response;
 		}
 		
 	}

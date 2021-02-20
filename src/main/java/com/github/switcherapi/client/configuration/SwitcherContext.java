@@ -47,6 +47,8 @@ public abstract class SwitcherContext {
 	private static Set<String> switchers;
 	private static SwitcherExecutor instance;
 	
+	public SwitcherContext() {}
+	
 	static {
 		switcherProperties = new SwitcherProperties();
 		loadProperties();

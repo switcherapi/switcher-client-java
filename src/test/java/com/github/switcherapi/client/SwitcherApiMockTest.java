@@ -42,7 +42,7 @@ import com.google.gson.Gson;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-public class SwitcherApiMockTest {
+class SwitcherApiMockTest {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
@@ -71,7 +71,7 @@ public class SwitcherApiMockTest {
     }
 	
 	@BeforeEach
-	public void resetSwitcherState() {
+	void resetSwitcherState() {
 		ClientServiceFacade.getInstance().clearAuthResponse();
 		
 		Switchers.getProperties().setSnapshotLocation(null);
@@ -125,7 +125,7 @@ public class SwitcherApiMockTest {
 	}
 	
 	@Test
-	public void shouldReturnTrue() {
+	void shouldReturnTrue() {
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
 		
@@ -138,7 +138,7 @@ public class SwitcherApiMockTest {
 	}
 	
 	@Test
-	public void shouldReturnFalse() {
+	void shouldReturnFalse() {
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
 		
@@ -151,7 +151,7 @@ public class SwitcherApiMockTest {
 	}
 	
 	@Test
-	public void shouldHideExecutionReason() {
+	void shouldHideExecutionReason() {
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
 		
@@ -173,7 +173,7 @@ public class SwitcherApiMockTest {
 	}
 	
 	@Test
-	public void shouldShowExecutionReason() {
+	void shouldShowExecutionReason() {
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
 		
@@ -195,7 +195,7 @@ public class SwitcherApiMockTest {
 	}
 	
 	@Test
-	public void shouldReturnError_keyNotFound() {
+	void shouldReturnError_keyNotFound() {
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
 		
@@ -209,7 +209,7 @@ public class SwitcherApiMockTest {
 	}
 	
 	@Test
-	public void shouldReturnError_componentNotregistered() {
+	void shouldReturnError_componentNotregistered() {
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
 		
@@ -224,7 +224,7 @@ public class SwitcherApiMockTest {
 	
 	
 	@Test
-	public void shouldReturnError_unauthorizedAPIaccess() {
+	void shouldReturnError_unauthorizedAPIaccess() {
 		//mock /auth
 		mockBackEnd.enqueue(generateStatusResponse("401"));
 		
@@ -237,7 +237,7 @@ public class SwitcherApiMockTest {
 	}
 	
 	@Test
-	public void shouldReturnTrue_silentMode() throws InterruptedException {
+	void shouldReturnTrue_silentMode() throws InterruptedException {
 		//given
 		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
 		Switchers.getProperties().setEnvironment("snapshot_fixture1");
@@ -267,7 +267,7 @@ public class SwitcherApiMockTest {
 	
 	
 	@Test
-	public void shouldReturnTrue_tokenExpired() throws InterruptedException {
+	void shouldReturnTrue_tokenExpired() throws InterruptedException {
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 2));
 		
@@ -296,7 +296,7 @@ public class SwitcherApiMockTest {
 	}
 	
 	@Test
-	public void shouldValidateAndUpdateSnapshot() {
+	void shouldValidateAndUpdateSnapshot() {
 		//mock /auth
 		mockBackEnd.enqueue(generateMockAuth("token", 10));
 		
@@ -319,7 +319,7 @@ public class SwitcherApiMockTest {
 	}
 	
 	@Test
-	public void shouldLookupForSnapshot() {
+	void shouldLookupForSnapshot() {
 		Switchers.getProperties().setSnapshotAutoLoad(true);
 		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/new_folder");
 		Switchers.getProperties().setEnvironment("generated_on_new_folder");
@@ -337,7 +337,7 @@ public class SwitcherApiMockTest {
 	}
 	
 	@Test
-	public void shouldNotLookupForSnapshot_invalidLocation() throws IOException {
+	void shouldNotLookupForSnapshot_invalidLocation() throws IOException {
 		Switchers.getProperties().setSnapshotAutoLoad(true);
 		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessable");
 		

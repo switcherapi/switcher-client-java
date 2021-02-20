@@ -10,15 +10,15 @@ import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.model.Switcher;
 
-public class SwitcherOnlineUnavailableTest {
+class SwitcherOnlineUnavailableTest {
 	
 	@BeforeEach
-	public void setupContext() {
+	void setupContext() {
 		SwitcherContext.loadProperties();
 	}
 	
 	@Test
-	public void shouldReturnError_noConnection() {
+	void shouldReturnError_noConnection() {
 		//given
 		SwitcherContext.getProperties().setUrl("http://localhost:30");
 		SwitcherContext.initializeClient();

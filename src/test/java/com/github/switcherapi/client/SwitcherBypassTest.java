@@ -16,7 +16,7 @@ import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.model.Switcher;
 
-public class SwitcherBypassTest {
+class SwitcherBypassTest {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
@@ -28,7 +28,7 @@ public class SwitcherBypassTest {
 	}
 	
 	@Test
-	public void shouldReturnFalse_afterAssumingItsFalse() throws Exception {
+	void shouldReturnFalse_afterAssumingItsFalse() throws Exception {
 		//given
 		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherContext.initializeClient();
@@ -42,7 +42,7 @@ public class SwitcherBypassTest {
 	}
 	
 	@Test
-	public void shouldReturnTrue_afterAssumingItsTrue() throws Exception {
+	void shouldReturnTrue_afterAssumingItsTrue() throws Exception {
 		//given
 		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/snapshot_fixture2.json");
 		SwitcherContext.initializeClient();
@@ -55,7 +55,7 @@ public class SwitcherBypassTest {
 	}
 	
 	@Test
-	public void shouldReturnTrue_afterForgettingItWasFalse() throws Exception {
+	void shouldReturnTrue_afterForgettingItWasFalse() throws Exception {
 		//given
 		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherContext.initializeClient();
@@ -72,7 +72,7 @@ public class SwitcherBypassTest {
 	}
 	
 	@Test
-	public void shouldReturnFalse_afterAssumingItsTrue() throws Exception {
+	void shouldReturnFalse_afterAssumingItsTrue() throws Exception {
 		//given
 		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/snapshot_fixture2.json");
 		SwitcherContext.initializeClient();

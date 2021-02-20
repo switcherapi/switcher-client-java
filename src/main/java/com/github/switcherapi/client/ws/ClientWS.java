@@ -10,7 +10,6 @@ import com.github.switcherapi.client.model.Switcher;
  */
 public interface ClientWS {
 	
-//	String AUTH_RESPONSE = "authResponse";
 	String HEADER_AUTHORIZATION = "Authorization";
 	String HEADER_APIKEY = "switcher-api-key";
 	String TOKEN_TEXT = "Bearer %s";

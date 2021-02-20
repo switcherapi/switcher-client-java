@@ -19,7 +19,7 @@ import com.github.switcherapi.client.exception.SwitcherNoInputReceivedException;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.Switcher;
 
-public class SwitcherOfflineFix1Test {
+class SwitcherOfflineFix1Test {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
@@ -33,31 +33,31 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue() {
+	void offlineShouldReturnTrue() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
 		assertTrue(switcher.isItOn());
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse() {
+	void offlineShouldReturnFalse() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE12);
 		assertFalse(switcher.isItOn());
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_groupDisabled() {
+	void offlineShouldReturnFalse_groupDisabled() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE21);
 		assertFalse(switcher.isItOn());
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_strategyDisabled() {
+	void offlineShouldReturnTrue_strategyDisabled() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE71);
 		assertTrue(switcher.isItOn());
 	}
 	
 	@Test
-	public void offlineShouldNotReturn_keyNotFound() {
+	void offlineShouldNotReturn_keyNotFound() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.NOT_FOUND_KEY);
 		assertThrows(SwitcherKeyNotFoundException.class, () -> {
 			switcher.isItOn();
@@ -65,7 +65,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_dateValidationGreater() {
+	void offlineShouldReturnTrue_dateValidationGreater() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE31);
 		Entry input = new Entry(Entry.DATE, "2019-12-11");
 		
@@ -74,7 +74,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_dateValidationGreater() {
+	void offlineShouldReturnFalse_dateValidationGreater() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE31);
 		Entry input = new Entry(Entry.DATE, "2019-12-09");
 		
@@ -83,7 +83,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_dateValidationLower() {
+	void offlineShouldReturnTrue_dateValidationLower() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE32);
 		Entry input = new Entry(Entry.DATE, "2019-12-09");
 		
@@ -92,7 +92,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_dateValidationLower() {
+	void offlineShouldReturnFalse_dateValidationLower() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE32);
 		Entry input = new Entry(Entry.DATE, "2019-12-12");
 		
@@ -101,7 +101,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_dateValidationBetween() {
+	void offlineShouldReturnTrue_dateValidationBetween() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
 		Entry input = new Entry(Entry.DATE, "2019-12-11");
 		
@@ -110,7 +110,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_dateValidationBetween() {
+	void offlineShouldReturnFalse_dateValidationBetween() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
 		Entry input = new Entry(Entry.DATE, "2019-12-13");
 		
@@ -119,7 +119,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_dateValidationWrongFormat() {
+	void offlineShouldReturnFalse_dateValidationWrongFormat() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
 		Entry input = new Entry(Entry.DATE, "2019/121/13");
 		
@@ -130,7 +130,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_valueValidationExist() {
+	void offlineShouldReturnTrue_valueValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE41);
 		Entry input = new Entry(Entry.VALUE, "Value1");
 		
@@ -139,7 +139,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_valueValidationExist() {
+	void offlineShouldReturnFalse_valueValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE41);
 		Entry input = new Entry(Entry.VALUE, "Value5");
 		
@@ -148,7 +148,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_valueValidationNotExist() {
+	void offlineShouldReturnTrue_valueValidationNotExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE42);
 		Entry input = new Entry(Entry.VALUE, "Value5");
 		
@@ -157,7 +157,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_valueValidationNotExist() {
+	void offlineShouldReturnFalse_valueValidationNotExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE42);
 		Entry input = new Entry(Entry.VALUE, "Value1");
 		
@@ -166,7 +166,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_valueValidationEqual() {
+	void offlineShouldReturnTrue_valueValidationEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE43);
 		Entry input = new Entry(Entry.VALUE, "Value1");
 		
@@ -175,7 +175,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_valueValidationEqual() {
+	void offlineShouldReturnFalse_valueValidationEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE43);
 		Entry input = new Entry(Entry.VALUE, "Value2");
 		
@@ -184,7 +184,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_valueValidationNotEqual() {
+	void offlineShouldReturnTrue_valueValidationNotEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE44);
 		Entry input = new Entry(Entry.VALUE, "Value2");
 		
@@ -193,7 +193,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_valueValidationNotEqual() {
+	void offlineShouldReturnFalse_valueValidationNotEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE44);
 		Entry input = new Entry(Entry.VALUE, "Value1");
 		
@@ -202,7 +202,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_numericValidationExist() {
+	void offlineShouldReturnTrue_numericValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE81);
 		Entry input = new Entry(Entry.NUMERIC, "2");
 		
@@ -211,7 +211,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_numericValidationExist() {
+	void offlineShouldReturnFalse_numericValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE81);
 		Entry input = new Entry(Entry.NUMERIC, "4");
 		
@@ -220,7 +220,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_numericValidationDoesNotExist() {
+	void offlineShouldReturnTrue_numericValidationDoesNotExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE82);
 		Entry input = new Entry(Entry.NUMERIC, "4");
 		
@@ -229,7 +229,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_numericValidationDoesNotExist() {
+	void offlineShouldReturnFalse_numericValidationDoesNotExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE82);
 		Entry input = new Entry(Entry.NUMERIC, "2");
 		
@@ -238,7 +238,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_numericValidationEqual() {
+	void offlineShouldReturnTrue_numericValidationEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE83);
 		Entry input = new Entry(Entry.NUMERIC, "1");
 		
@@ -247,7 +247,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_numeircValidationEqual() {
+	void offlineShouldReturnFalse_numeircValidationEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE83);
 		Entry input = new Entry(Entry.NUMERIC, "2");
 		
@@ -256,7 +256,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_numericValidationNotEqual() {
+	void offlineShouldReturnTrue_numericValidationNotEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE84);
 		Entry input = new Entry(Entry.NUMERIC, "2");
 		
@@ -265,7 +265,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_numericValidationNotEqual() {
+	void offlineShouldReturnFalse_numericValidationNotEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE84);
 		Entry input = new Entry(Entry.NUMERIC, "1");
 		
@@ -274,7 +274,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnException_invalidNumericInput() {
+	void offlineShouldReturnException_invalidNumericInput() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE81);
 		Entry input = new Entry(Entry.NUMERIC, "INVALID_NUMBER");
 		
@@ -285,7 +285,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_numericValidationLower() {
+	void offlineShouldReturnTrue_numericValidationLower() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE85);
 		Entry input = new Entry(Entry.NUMERIC, "0.99");
 		
@@ -294,7 +294,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_numericValidationGreater() {
+	void offlineShouldReturnTrue_numericValidationGreater() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE86);
 		Entry input = new Entry(Entry.NUMERIC, "1.09");
 		
@@ -303,7 +303,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_numericValidationBetween() {
+	void offlineShouldReturnTrue_numericValidationBetween() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE87);
 		Entry input = new Entry(Entry.NUMERIC, "2");
 		
@@ -312,7 +312,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_timeValidationGreater() {
+	void offlineShouldReturnTrue_timeValidationGreater() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE51);
 		Entry input = new Entry(Entry.TIME, "11:00");
 		
@@ -321,7 +321,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_timeValidationGreater() {
+	void offlineShouldReturnFalse_timeValidationGreater() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE51);
 		Entry input = new Entry(Entry.TIME, "09:00");
 		
@@ -330,7 +330,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_timeValidationLower() {
+	void offlineShouldReturnTrue_timeValidationLower() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE52);
 		Entry input = new Entry(Entry.TIME, "09:00");
 		
@@ -339,7 +339,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_timeValidationLower() {
+	void offlineShouldReturnFalse_timeValidationLower() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE52);
 		Entry input = new Entry(Entry.TIME, "11:00");
 		
@@ -348,7 +348,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_timeValidationBetween() {
+	void offlineShouldReturnTrue_timeValidationBetween() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE53);
 		Entry input = new Entry(Entry.TIME, "13:00");
 		
@@ -357,7 +357,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_timeValidationBetween() {
+	void offlineShouldReturnFalse_timeValidationBetween() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE53);
 		Entry input = new Entry(Entry.TIME, "18:00");
 		
@@ -366,7 +366,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_timeValidationWrongFormat() {
+	void offlineShouldReturnFalse_timeValidationWrongFormat() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE53);
 		Entry input = new Entry(Entry.TIME, "2019-12-10");
 		
@@ -377,7 +377,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_networkValidationExistCIDR() {
+	void offlineShouldReturnTrue_networkValidationExistCIDR() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE61);
 		Entry input = new Entry(Entry.NETWORK, "10.0.0.4");
 		
@@ -386,7 +386,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_networkValidationExistCIDR() {
+	void offlineShouldReturnFalse_networkValidationExistCIDR() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE61);
 		Entry input = new Entry(Entry.NETWORK, "10.0.0.8");
 		
@@ -395,7 +395,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_networkValidationNotExistCIDR() {
+	void offlineShouldReturnTrue_networkValidationNotExistCIDR() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE62);
 		Entry input = new Entry(Entry.NETWORK, "10.0.0.8");
 		
@@ -404,7 +404,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_networkValidationNotExistCIDR() {
+	void offlineShouldReturnFalse_networkValidationNotExistCIDR() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE62);
 		Entry input = new Entry(Entry.NETWORK, "10.0.0.5");
 		
@@ -413,7 +413,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_networkValidationExist() {
+	void offlineShouldReturnTrue_networkValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE63);
 		Entry input = new Entry(Entry.NETWORK, "10.0.0.2");
 		
@@ -422,7 +422,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_networkValidationExist() {
+	void offlineShouldReturnFalse_networkValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE63);
 		Entry input = new Entry(Entry.NETWORK, "10.0.0.5");
 		
@@ -431,7 +431,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_strategyRequiresInput() {
+	void offlineShouldReturnFalse_strategyRequiresInput() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE63);
 		assertThrows(SwitcherNoInputReceivedException.class, () -> {
 			switcher.isItOn();
@@ -439,7 +439,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnError_InvalidStrategyInput() {
+	void offlineShouldReturnError_InvalidStrategyInput() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
 		switcher.prepareEntry(new Entry("INVALID_STRATEGY_NAME", "Value"));
 		assertThrows(SwitcherNoInputReceivedException.class, () -> {
@@ -448,7 +448,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_regexValidationExist() {
+	void offlineShouldReturnTrue_regexValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE91);
 		Entry input = new Entry(Entry.REGEX, "USER_10");
 		
@@ -457,7 +457,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_regexValidationExist() {
+	void offlineShouldReturnFalse_regexValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE91);
 		Entry input = new Entry(Entry.REGEX, "USER_100");
 		
@@ -466,7 +466,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_regexValidationNotExist() {
+	void offlineShouldReturnTrue_regexValidationNotExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE92);
 		Entry input = new Entry(Entry.REGEX, "user-100");
 		
@@ -475,7 +475,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_regexValidationNotExist() {
+	void offlineShouldReturnFalse_regexValidationNotExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE92);
 		Entry input = new Entry(Entry.REGEX, "user-10");
 		
@@ -484,7 +484,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_regexValidationEqual() {
+	void offlineShouldReturnTrue_regexValidationEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE93);
 		Entry input = new Entry(Entry.REGEX, "USER_10");
 		
@@ -493,7 +493,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_regexValidationEqual() {
+	void offlineShouldReturnFalse_regexValidationEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE93);
 		Entry input = new Entry(Entry.REGEX, "user-10");
 		
@@ -502,7 +502,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnTrue_regexValidationNotEqual() {
+	void offlineShouldReturnTrue_regexValidationNotEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE94);
 		Entry input = new Entry(Entry.REGEX, "user-10");
 		
@@ -511,7 +511,7 @@ public class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
-	public void offlineShouldReturnFalse_regexValidationNotEqual() {
+	void offlineShouldReturnFalse_regexValidationNotEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE94);
 		Entry input = new Entry(Entry.REGEX, "USER_10");
 		
