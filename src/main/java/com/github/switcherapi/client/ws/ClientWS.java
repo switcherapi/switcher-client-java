@@ -43,6 +43,7 @@ public interface ClientWS {
 	 * Returns the verification configured for a specific switcher (key)
 	 * 
 	 * @param switcher store all necessary input to access the criteria
+	 * @param token Access token
 	 * @return the execution based on the configured switcher
 	 */
 	public Response executeCriteriaService(final Switcher switcher, final String token);
@@ -57,6 +58,7 @@ public interface ClientWS {
 	/**
 	 * Returns the whole domain structure which will be stored into a snapshot file
 	 * 
+	 * @param token Access token
 	 * @return domain structure
 	 */
 	public Response resolveSnapshot(final String token);
@@ -65,12 +67,13 @@ public interface ClientWS {
 	 * Returns { status: true } if snapshot is updated
 	 * 
 	 * @param version current domain version
+	 * @param token Access token
 	 * @return status: true if domain is updated
 	 */
 	public Response checkSnapshotVersion(final long version, final String token);
 	
 	/**
-	 * Check whether API is online or not
+	 * @return Check whether API is online or not
 	 */
 	public boolean isAlive();
 }

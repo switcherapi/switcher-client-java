@@ -1,5 +1,6 @@
 package com.github.switcherapi.client.factory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,7 +26,6 @@ public class SwitcherOnline extends SwitcherExecutor {
 
 	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher) {
-		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("switcher: %s", switcher));
 		}
@@ -46,7 +46,6 @@ public class SwitcherOnline extends SwitcherExecutor {
 	
 	private CriteriaResponse executeSilentCriteria(final Switcher switcher, 
 			final SwitcherAPIConnectionException e) {
-		
 		if (SwitcherContext.getProperties().isSilentMode()) {
 			CriteriaResponse response = this.switcherOffline.executeCriteria(switcher);
 			if (logger.isDebugEnabled()) {
@@ -61,22 +60,22 @@ public class SwitcherOnline extends SwitcherExecutor {
 
 	@Override
 	public boolean checkSnapshotVersion() {
-		
-		if (SwitcherContext.getProperties().getSnapshotLocation() != null) {
+		if (StringUtils.isNotBlank(SwitcherContext.getProperties().getSnapshotLocation())
+				&& this.switcherOffline.getDomain() != null) {
 			return super.checkSnapshotVersion(this.switcherOffline.getDomain());
 		}
+		
+		super.initializeSnapshotFromAPI();
 		return Boolean.TRUE;
 	}
 
 	@Override
 	public void updateSnapshot() {
-		
 		super.initializeSnapshotFromAPI();
 	}
 	
 	@Override
 	public void notifyChange(String snapshotFile) {
-		
 		this.switcherOffline.notifyChange(snapshotFile);
 	}
 

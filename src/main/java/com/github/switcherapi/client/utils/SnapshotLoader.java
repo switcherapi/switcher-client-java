@@ -36,6 +36,10 @@ public class SnapshotLoader {
 
 	/**
 	 * Load a specific snapshot file
+	 * 
+	 * @param snapshotFile Snapshot file exact match location
+	 * @return Serialized Domain object
+	 * @throws SwitcherSnapshotLoadException when JSON file has errors or the file was not found
 	 */
 	public static Domain loadSnapshot(final String snapshotFile) throws SwitcherSnapshotLoadException {
 		
@@ -52,6 +56,12 @@ public class SnapshotLoader {
 	
 	/**
 	 * Load snapshot from the current running environment
+	 * 
+	 * @param snapshotLocation Snapshot folder
+	 * @param environment name that is represented as [environment].json
+	 * @return Serialized Domain object
+	 * @throws SwitcherSnapshotLoadException when JSON file has errors
+	 * @throws FileNotFoundException when file not it can trigger the snapshot lookup
 	 */
 	public static Domain loadSnapshot(final String snapshotLocation, final String environment) 
 			throws SwitcherSnapshotLoadException, FileNotFoundException {
@@ -71,6 +81,11 @@ public class SnapshotLoader {
 	
 	/**
 	 * Writes snapshot loaded from the API
+	 * 
+	 * @param snapshot Serialized snapshot object to be saved in a JSON file
+	 * @param snapshotLocation Where the snapshop must be saved
+	 * @param environment defines the name of the snapshot file
+	 * @throws SwitcherSnapshotWriteException if something wrong happend while creating either the folder or file
 	 */
 	public static void saveSnapshot(final Snapshot snapshot, final String snapshotLocation, 
 			final String environment) throws SwitcherSnapshotWriteException {

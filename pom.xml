@@ -200,9 +200,6 @@
 					<destFile>${sonar.jacoco.reportPath}</destFile>
 					<dataFile>${sonar.jacoco.reportPath}</dataFile>
 					<append>true</append>
-					<excludes>
-				        <exclude>com.github.switcherapi.client.model/**</exclude>
-				    </excludes>
 				</configuration>
 				<executions>
 					<execution>

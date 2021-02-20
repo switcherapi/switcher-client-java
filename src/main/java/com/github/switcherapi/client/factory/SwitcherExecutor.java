@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
-import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.client.facade.ClientServiceFacade;
 import com.github.switcherapi.client.model.Switcher;
@@ -37,23 +36,16 @@ public abstract class SwitcherExecutor {
 	public abstract void notifyChange(final String snapshotFile);
 	
 	public boolean checkSnapshotVersion(final Domain domain) {
-		
 		final String environment = SwitcherContext.getProperties().getEnvironment();
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("verifying snapshot version - environment: %s", environment));
 		}
 		
-		try {
-			return ClientServiceFacade.getInstance().checkSnapshotVersion(domain.getVersion());
-		} catch (SwitcherException e) {
-			logger.error(e);
-			throw e;
-		}
+		return ClientServiceFacade.getInstance().checkSnapshotVersion(domain.getVersion());
 	}
 	
 	public Domain initializeSnapshotFromAPI() {
-		
 		final SwitcherProperties properties = SwitcherContext.getProperties();
 
 		if (logger.isDebugEnabled()) {
