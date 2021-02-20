@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.configuration;
+package com.github.switcherapi.client.model;
 
 public class SwitcherProperties {
 	
