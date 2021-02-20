@@ -230,7 +230,7 @@
 		        </configuration>
 		    </plugin>
 			
-        	<!-- Generate and sign all artifacts -->
+        	<!-- Generate and sign all artifacts 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -271,6 +271,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 		</plugins>
 		
     </build>
