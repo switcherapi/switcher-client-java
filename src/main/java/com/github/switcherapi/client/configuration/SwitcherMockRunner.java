@@ -1,5 +1,6 @@
 package com.github.switcherapi.client.configuration;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -42,8 +43,11 @@ public class SwitcherMockRunner implements AfterTestExecutionCallback,
 
 	@Override
 	public void afterTestExecution(ExtensionContext context) throws Exception {
-        String key = getStore(context.getParent().get()).remove(Switcher.KEY, String.class);
-		SwitcherExecutor.forget(key);
+		Optional<ExtensionContext> parent = context.getParent();
+		if (parent.isPresent()) {
+			String switcherKey = getStore(parent.get()).remove(Switcher.KEY, String.class);
+			SwitcherExecutor.forget(switcherKey);			
+		}
 	}
 	
 	private Store getStore(ExtensionContext context) {

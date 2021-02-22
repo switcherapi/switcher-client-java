@@ -23,7 +23,7 @@ public class ClientWSImpl implements ClientWS {
 	
 	private static final Logger logger = LogManager.getLogger(ClientWSImpl.class);
 	
-	private final String SNAPSHOT_QUERY = 
+	public static final String QUERY = 
 			"{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\", _component: \\\"%s\\\") { " +
 			"name version description activated " +
 			"group { name description activated " +
@@ -76,7 +76,7 @@ public class ClientWSImpl implements ClientWS {
 		
 		return myResource.request(MediaType.APPLICATION_JSON)
 			.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token))
-			.post(Entity.json(String.format(SNAPSHOT_QUERY, 
+			.post(Entity.json(String.format(QUERY, 
 					properties.getDomain(), properties.getEnvironment(), properties.getComponent())));
 	}
 	

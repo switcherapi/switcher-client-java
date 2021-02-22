@@ -9,7 +9,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
 /**
- * Annotate test cases with the Switcher Key and the expeted result
+ * Annotate test cases with the Switcher Key and the expeted result.
+ * 
+ * <p>
+ * <b>Requires JUnit 5 Jupiter @ParameterizedTest</b>
  * 
  * @author Roger Floriano (petruki)
  */
