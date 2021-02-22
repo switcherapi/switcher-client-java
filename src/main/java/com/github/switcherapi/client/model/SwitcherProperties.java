@@ -1,5 +1,11 @@
 package com.github.switcherapi.client.model;
 
+import com.github.switcherapi.client.utils.SwitcherContextParam;
+
+/**
+ * @see {@link SwitcherContextParam}
+ * @author Roger Floriano (petruki)
+ */
 public class SwitcherProperties {
 	
 	private String contextLocation;

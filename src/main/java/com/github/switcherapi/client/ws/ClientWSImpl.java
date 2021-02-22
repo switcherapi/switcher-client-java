@@ -23,6 +23,14 @@ public class ClientWSImpl implements ClientWS {
 	
 	private static final Logger logger = LogManager.getLogger(ClientWSImpl.class);
 	
+	public static final String QUERY = 
+			"{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\", _component: \\\"%s\\\") { " +
+			"name version description activated " +
+			"group { name description activated " +
+			"config { key description activated " +
+			"strategies { strategy activated operation values } " +
+			"components } } } }\"}";
+	
 	private Client client;
 	
 	public ClientWSImpl() {
@@ -64,20 +72,11 @@ public class ClientWSImpl implements ClientWS {
 	@Override
 	public Response resolveSnapshot(final String token) {
 		final SwitcherProperties properties = SwitcherContext.getProperties();
-		final StringBuilder query = new StringBuilder();
-		
-		query.append("{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\", _component: \\\"%s\\\") { ");
-		query.append("name version description activated ");
-		query.append("group { name description activated ");
-		query.append("config { key description activated ");
-		query.append("strategies { strategy activated operation values } ");
-		query.append("components } } } }\"}");
-		
 		final WebTarget myResource = client.target(String.format(SNAPSHOT_URL, properties.getUrl()));
 		
 		return myResource.request(MediaType.APPLICATION_JSON)
 			.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token))
-			.post(Entity.json(String.format(query.toString(), 
+			.post(Entity.json(String.format(QUERY, 
 					properties.getDomain(), properties.getEnvironment(), properties.getComponent())));
 	}
 	
