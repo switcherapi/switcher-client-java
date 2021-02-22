@@ -9,10 +9,13 @@ import static org.junit.Assert.assertTrue;
 import java.nio.file.Paths;
 
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 
 import com.github.switcherapi.client.configuration.SwitcherContext;
+import com.github.switcherapi.client.configuration.SwitcherMock;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.model.Switcher;
 
@@ -27,8 +30,13 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 	}
 	
+	@AfterAll
+	static void resetMock() {
+		SwitcherExecutor.getBypass().clear();
+	}
+	
 	@Test
-	void shouldReturnFalse_afterAssumingItsFalse() throws Exception {
+	void shouldReturnFalse_afterAssumingItsFalse() {
 		//given
 		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherContext.initializeClient();
@@ -42,7 +50,7 @@ class SwitcherBypassTest {
 	}
 	
 	@Test
-	void shouldReturnTrue_afterAssumingItsTrue() throws Exception {
+	void shouldReturnTrue_afterAssumingItsTrue() {
 		//given
 		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/snapshot_fixture2.json");
 		SwitcherContext.initializeClient();
@@ -55,7 +63,7 @@ class SwitcherBypassTest {
 	}
 	
 	@Test
-	void shouldReturnTrue_afterForgettingItWasFalse() throws Exception {
+	void shouldReturnTrue_afterForgettingItWasFalse() {
 		//given
 		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/snapshot_fixture1.json");
 		SwitcherContext.initializeClient();
@@ -72,7 +80,7 @@ class SwitcherBypassTest {
 	}
 	
 	@Test
-	void shouldReturnFalse_afterAssumingItsTrue() throws Exception {
+	void shouldReturnFalse_afterAssumingItsTrue() {
 		//given
 		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/snapshot_fixture2.json");
 		SwitcherContext.initializeClient();
@@ -86,6 +94,30 @@ class SwitcherBypassTest {
 		
 		SwitcherExecutor.forget(USECASE111);
 		assertFalse(switcher.isItOn());
+	}
+	
+	@ParameterizedTest
+	@SwitcherMock(key = USECASE111, result = false)
+	void shouldReturnFalse_usingParametrizedTest() {
+		//given
+		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/snapshot_fixture2.json");
+		SwitcherContext.initializeClient();
+		
+		//test
+		Switcher switcher = getSwitcher(USECASE111);
+		assertFalse(switcher.isItOn());
+	}
+	
+	@ParameterizedTest
+	@SwitcherMock(key = USECASE111, result = true)
+	void shouldReturnTrue_usingParametrizedTest() {
+		//given
+		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/snapshot_fixture2.json");
+		SwitcherContext.initializeClient();
+		
+		//test
+		Switcher switcher = getSwitcher(USECASE111);
+		assertTrue(switcher.isItOn());
 	}
 
 }

@@ -35,10 +35,10 @@ import com.github.switcherapi.client.model.SwitcherProperties;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 
 /**
- * <b>Switcher Context Loader</b>
+ * <b>Switcher Context Toolkit</b>
  * <p>
  * 
- * This class will load Switcher Properties internally making it ready to use.
+ * This class will load Switcher Properties internally, making it ready to use.
  * By inheriting this class, all Switchers can be placed in one single place.
  * 
  * <p>
@@ -59,6 +59,10 @@ public abstract class SwitcherContext {
 		loadProperties();
 	}
 	
+	/**
+	 * Load properties from the resources folder, look up for switcherapi.properties file.
+	 * After loading the properties, it will validate the arguments and load the Switchers in memory.
+	 */
 	public static void loadProperties() {
 		try (InputStream input = SwitcherContext.class
 				.getClassLoader().getResourceAsStream("switcherapi.properties")) {
@@ -92,7 +96,6 @@ public abstract class SwitcherContext {
 		validateContext();
 		loadSwitchers();
 		
-		SwitcherExecutor.getBypass().clear();
 		if (switcherProperties.isOfflineMode()) {
 			instance = new SwitcherOffline();
 		} else {
