@@ -1,7 +1,7 @@
 package com.github.switcherapi.client.utils;
 
 /**
- * Contains required and optional keys to set up the context
+ * Contains required and optional properties to build the context
  * 
  * @author Roger Floriano {petruki)
  * @since 2019-12-24

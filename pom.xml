@@ -122,11 +122,17 @@
 		</dependency>
 		
         <!-- test -->
+   		<dependency>
+		    <groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter-params</artifactId>
+		    <version>${junit.version}</version>
+		    <scope>provided</scope>
+		</dependency>
 		<dependency>
 		    <groupId>org.junit.jupiter</groupId>
 		    <artifactId>junit-jupiter-api</artifactId>
 		    <version>${junit.version}</version>
-		    <scope>test</scope>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>com.squareup.okhttp3</groupId>
