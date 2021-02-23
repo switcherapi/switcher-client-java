@@ -190,14 +190,27 @@ SwitcherExecutor.forget(FEATURE01);
 switcher.isItOn(); // Now, it's going to return the result retrieved from the API or the Snaopshot file
 ```
 
+#### SwitcherMock annotation - Requires JUnit 5 Jupiter
+Predefine Switchers result outside your test methods via Parametrized Test.
+</br>It encapsulates the test and makes sure that the Switcher returns to its original state after concluding the test.
+
+```java
+@ParameterizedTest
+@SwitcherMock(key = MY_SWITCHER, result = true)
+void testMyFeature() {
+   assertTrue(instance.myFeature());
+}
+```
+
 # Version Log
 - 1.2.0-SNAPSHOT:
 	- Changed how SwitcherContext is implemented - added support to properties file
 	- Offline mode can programmatically load snapshots
 	- Added extra security layer for verifying features
+	- Added @SwitcherMock feature
 	- (In progress) Smoke testing
-	- (Tests) Removed PowerMockito: tests are way simpler to read using Okhttp3
-	- (Tests) Updated to JUnit5
+	- Removed PowerMockito: tests are way simpler to read using Okhttp3
+	- Updated dependecy junit to JUnit5-jupiter
 - 1.1.0:
 	- Improved snapshot lookup mechanism
 	- Both online and offline modes can validate/update snapshot version
