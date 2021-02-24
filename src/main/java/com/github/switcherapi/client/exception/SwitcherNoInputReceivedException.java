@@ -10,7 +10,7 @@ public class SwitcherNoInputReceivedException extends SwitcherException {
 
 	public SwitcherNoInputReceivedException(final String strategyName) {
 		
-		super(String.format("Couln't find any input for the strategy %s", strategyName), null);
+		super(String.format("Could not find any input for the strategy %s", strategyName), null);
 	}
 
 }
