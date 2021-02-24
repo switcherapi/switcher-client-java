@@ -74,6 +74,13 @@ class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
+	void offlineShouldReturnTrue_chainedDateValidationGreater() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE31);
+		switcher.checkDate("2019-12-11");
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
 	void offlineShouldReturnFalse_dateValidationGreater() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE31);
 		Entry input = new Entry(Entry.DATE, "2019-12-09");
@@ -135,6 +142,13 @@ class SwitcherOfflineFix1Test {
 		Entry input = new Entry(Entry.VALUE, "Value1");
 		
 		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	void offlineShouldReturnTrue_chainedValueValidationExist() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE41);
+		switcher.checkValue("Value1");
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -207,6 +221,13 @@ class SwitcherOfflineFix1Test {
 		Entry input = new Entry(Entry.NUMERIC, "2");
 		
 		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	void offlineShouldReturnTrue_chainedNumericValidationExist() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE81);
+		switcher.checkNumeric("2");
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -321,6 +342,13 @@ class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
+	void offlineShouldReturnTrue_chainedTimeValidationGreater() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE51);
+		switcher.checkTime("11:00");
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
 	void offlineShouldReturnFalse_timeValidationGreater() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE51);
 		Entry input = new Entry(Entry.TIME, "09:00");
@@ -382,6 +410,13 @@ class SwitcherOfflineFix1Test {
 		Entry input = new Entry(Entry.NETWORK, "10.0.0.4");
 		
 		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	void offlineShouldReturnTrue_chainedNetworkValidationExistCIDR() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE61);
+		switcher.checkNetwork("10.0.0.4");
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -453,6 +488,13 @@ class SwitcherOfflineFix1Test {
 		Entry input = new Entry(Entry.REGEX, "USER_10");
 		
 		switcher.prepareEntry(input);
+		assertTrue(switcher.isItOn());
+	}
+	
+	@Test
+	void offlineShouldReturnTrue_chainedRegexValidationExist() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE91);
+		switcher.checkRegex("USER_10");
 		assertTrue(switcher.isItOn());
 	}
 	

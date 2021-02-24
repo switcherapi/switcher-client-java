@@ -23,7 +23,7 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
  * @see #isItOn(String, Entry, boolean)
  *
  */
-public class Switcher {
+public class Switcher extends SwitcherBuilder {
 	
 	public static final String KEY = "key";
 	
@@ -34,8 +34,6 @@ public class Switcher {
 	private SwitcherExecutor context;
 	
 	private String switcherKey;
-	
-	private List<Entry> entry;
 	
 	private List<CriteriaResponse> historyExecution;
 	
