@@ -63,10 +63,8 @@ public class SnapshotWatcher implements Runnable {
 			    if (!valid)
 			        break;
 		    }
-		} catch (IOException | InterruptedException e) {
-			logger.error(e);
+		} catch (IOException | InterruptedException | ClosedWatchServiceException e) {
 			Thread.currentThread().interrupt();
-		} catch (ClosedWatchServiceException e) {
 			this.executorInstance = null;
 		}
 	}

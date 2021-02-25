@@ -2,13 +2,10 @@ package com.github.switcherapi.client.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,11 +14,8 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
-import com.github.switcherapi.client.model.Entry;
-import com.github.switcherapi.client.model.Switcher;
 
 class SwitcherUtilsTest {
 	
@@ -88,16 +82,6 @@ class SwitcherUtilsTest {
 		assertThrows(Exception.class, () -> {
 			SwitcherUtils.addTimeDuration("1w", date1);
 		});
-	}
-	
-	@Test
-	void shouldReturnInputRequest() {
-		List<Entry> entries = new ArrayList<>();
-		entries.add(new Entry(Entry.DATE, "2019-12-10"));
-		
-		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
-		switcher.prepareEntry(entries);
-		assertTrue(SwitcherUtils.isJson(switcher.getInputRequest().toString()));
 	}
 	
 	@Test
