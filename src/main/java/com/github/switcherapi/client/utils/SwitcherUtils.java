@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
-import com.google.gson.Gson;
 
 /**
  * @author Roger Floriano (petruki)
@@ -88,16 +87,6 @@ public class SwitcherUtils {
 		return date;
 	}
 	
-	public static boolean isJson(final String Json) {
-        final Gson gson = new Gson();
-        try {
-            gson.fromJson(Json, Object.class);
-            return true;
-        } catch (com.google.gson.JsonSyntaxException ex) {
-            return false;
-        }
-    }
-	
 	public static void watchSnapshot(final SwitcherExecutor executorInstance) {
 		if (watcher == null)
 			watcher = new SnapshotWatcher(executorInstance);
@@ -106,8 +95,10 @@ public class SwitcherUtils {
 	}
 	
 	public static void stopWatchingSnapshot() {
-		if (watcher != null)
+		if (watcher != null) {
 			watcher.terminate();
+			watcher = null;
+		}
 	}
 	
 	/**

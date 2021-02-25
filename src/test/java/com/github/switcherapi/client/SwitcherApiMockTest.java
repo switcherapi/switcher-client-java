@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.configuration.SwitcherContext;
+import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForComponentException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
@@ -419,10 +420,62 @@ class SwitcherApiMockTest {
 	}
 	
 	@Test
+	void shouldNotValidateAndLoadSnapshot_serviceUnavailable() {
+		//given
+		Switchers.getProperties().setOfflineMode(true);
+		Switchers.getProperties().setSnapshotAutoLoad(false);
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
+		Switchers.getProperties().setEnvironment("default");
+		Switchers.initializeClient();
+		
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
+		
+		//criteria/snapshot_check
+		mockBackEnd.enqueue(generateStatusResponse("503"));
+		
+		//test
+		assertThrows(SwitcherAPIConnectionException.class, () -> {
+			Switchers.validateSnapshot();
+		});
+	}
+	
+	@Test
 	void shouldNotLookupForSnapshot_invalidLocation() {
 		//given
 		Switchers.getProperties().setSnapshotAutoLoad(true);
 		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessable");
+		
+		//test
+		assertDoesNotThrow(() -> {
+			try (final RandomAccessFile raFile = 
+					new RandomAccessFile(SNAPSHOTS_LOCAL + "/not_accessable", "rw")) {
+				
+				//given an unacessible folder
+				raFile.getChannel().lock();
+				
+				//auth
+				mockBackEnd.enqueue(generateMockAuth(10));
+				
+				//graphql
+				mockBackEnd.enqueue(generateSnapshotResponse());
+				
+				//test
+				assertThrows(SwitcherSnapshotWriteException.class, () -> {
+					Switchers.initializeClient();
+				});
+			} catch (IOException e) {
+				throw e;
+			}
+		});
+
+	}
+	
+	@Test
+	void shouldNotLookupForSnapshot_invalidFolderLocation() {
+		//given
+		Switchers.getProperties().setSnapshotAutoLoad(true);
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessable/folder");
 		
 		//test
 		assertDoesNotThrow(() -> {

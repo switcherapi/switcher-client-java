@@ -92,6 +92,8 @@ class SnapshotWatcherTest {
 		SwitcherContext.watchSnapshot();
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
+		
+		//initial value is true
 		assertTrue(switcher.isItOn());
 		
 		CountDownLatch waiter = new CountDownLatch(1);
@@ -102,7 +104,31 @@ class SnapshotWatcherTest {
 		waiter = new CountDownLatch(1);
 		waiter.await(2, TimeUnit.SECONDS);
 
+		//snapshot file updated - triggered domain reload
 		assertFalse(switcher.isItOn());
+	}
+	
+	@Test
+	void shouldNotReloadDomainAfterChangingSnapshot() throws InterruptedException {
+		generateFixture();
+		SwitcherContext.watchSnapshot();
+		
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
+		
+		//initial value is true
+		assertTrue(switcher.isItOn());
+		
+		CountDownLatch waiter = new CountDownLatch(1);
+		waiter.await(1, TimeUnit.SECONDS);
+		
+		SwitcherContext.stopWatchingSnapshot();
+		this.changeFixture(false);
+		
+		waiter = new CountDownLatch(1);
+		waiter.await(2, TimeUnit.SECONDS);
+
+		//snapshot file updated - does not change as the watcher has been terminated
+		assertTrue(switcher.isItOn());
 	}
 
 }
