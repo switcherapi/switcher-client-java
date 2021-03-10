@@ -3,7 +3,7 @@ package com.github.switcherapi.client.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.switcherapi.client.configuration.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.model.response.CriteriaResponse;

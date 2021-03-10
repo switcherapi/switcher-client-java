@@ -1,5 +1,7 @@
 package com.github.switcherapi.client.ws;
 
+import java.util.Set;
+
 import javax.ws.rs.core.Response;
 
 import com.github.switcherapi.client.model.Switcher;
@@ -40,6 +42,11 @@ public interface ClientWS {
 	String CHECK_URL = "%s/check";
 	
 	/**
+	 * Returns array of switcher keys not found
+	 */
+	String CHECK_SWITCHERS = "%s/criteria/switchers_check";
+	
+	/**
 	 * Returns the verification configured for a specific switcher (key)
 	 * 
 	 * @param switcher store all necessary input to access the criteria
@@ -71,6 +78,14 @@ public interface ClientWS {
 	 * @return status: true if domain is updated
 	 */
 	public Response checkSnapshotVersion(final long version, final String token);
+	
+	/**
+	 * Returns an empty array of not_found if all switchers passed are properly configured.
+	 * 
+	 * @param switchers to be validated
+	 * @return array of Switchers Key not found/configured
+	 */
+	public Response checkSwitchers(final Set<String> switchers, final String token);
 	
 	/**
 	 * @return Check whether API is online or not

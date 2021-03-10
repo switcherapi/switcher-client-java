@@ -1,10 +1,11 @@
 package com.github.switcherapi.client.facade;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.ws.rs.core.Response;
 
-import com.github.switcherapi.client.configuration.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
@@ -12,6 +13,7 @@ import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForCompone
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Snapshot;
+import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.model.response.AuthResponse;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
@@ -79,7 +81,6 @@ public class ClientServiceFacade {
 		} catch (final Exception e) {
 			throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl(), e);
 		}
-		
 	}
 	
 	public boolean checkSnapshotVersion(final long version) {
@@ -98,7 +99,28 @@ public class ClientServiceFacade {
 		} catch (final Exception e) {
 			throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl(), e);
 		}
-		
+	}
+	
+	public SwitchersCheck checkSwitchers(final Set<String> switchers) {
+		try {
+			if (!this.isTokenValid()) {
+				this.auth();
+			}
+					
+			final Response response = this.clientService.checkSwitchers(switchers, this.authResponse.getToken());
+			
+			if (response.getStatus() != 200) {
+				throw new SwitcherException(
+						String.format("API returned an HTTP/1.1 %s", response.getStatus()), null); 
+			}
+				
+			final SwitchersCheck switchersResponse = response.readEntity(SwitchersCheck.class);
+			response.close();
+			
+			return switchersResponse;
+		} catch (final Exception e) {
+			throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl(), e);
+		}
 	}
 	
 	private void auth() {
@@ -147,7 +169,6 @@ public class ClientServiceFacade {
 			response.setExp(SwitcherUtils.addTimeDuration(addValue, new Date()).getTime()/1000);
 			this.authResponse = response;
 		}
-		
 	}
 
 	public void setClientWS(ClientWS clientService) {

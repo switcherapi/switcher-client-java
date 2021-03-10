@@ -190,6 +190,20 @@ SwitcherExecutor.forget(FEATURE01);
 switcher.isItOn(); // Now, it's going to return the result retrieved from the API or the Snaopshot file
 ```
 
+## Smoke test
+Validate Switcher Keys on your testing pipelines before deploying a change.
+Switcher Keys may not be configured correctly and can cause your code to have undesired results.
+
+This feature will validate using the context provided to check if everything is up and running.
+In case something is missing, this operation will throw an exception pointing out which Switcher Keys are not configured.
+
+```java
+@Test
+void testSwitchers() {
+	assertDoesNotThrow(() -> MyAppFeatures.checkSwitchers());
+}
+```
+
 #### SwitcherMock annotation - Requires JUnit 5 Jupiter
 Predefine Switchers result outside your test methods via Parametrized Test.
 </br>It encapsulates the test and makes sure that the Switcher returns to its original state after concluding the test.
@@ -208,7 +222,7 @@ void testMyFeature() {
 	- Offline mode can programmatically load snapshots
 	- Added extra security layer for verifying features
 	- Added @SwitcherMock feature
-	- (In progress) Smoke testing
+	- Smoke testing
 	- Removed PowerMockito: tests are way simpler to read using Okhttp3
 	- Updated dependecy junit to JUnit5-jupiter
 - 1.1.0:
