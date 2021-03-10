@@ -1,5 +1,7 @@
 package com.github.switcherapi.client.ws;
 
+import java.util.Set;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -10,9 +12,10 @@ import javax.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.configuration.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.SwitcherProperties;
+import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.model.response.AuthRequest;
 
 /**
@@ -101,6 +104,16 @@ public class ClientWSImpl implements ClientWS {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+	
+	@Override
+	public Response checkSwitchers(Set<String> switchers, final String token) {
+		final SwitcherProperties properties = SwitcherContext.getProperties();
+		final WebTarget myResource = client.target(String.format(CHECK_SWITCHERS, properties.getUrl()));
+		
+		return myResource.request(MediaType.APPLICATION_JSON)
+				.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token))
+				.post(Entity.json(new SwitchersCheck(switchers)));
 	}
 
 	public void setClient(Client client) {
