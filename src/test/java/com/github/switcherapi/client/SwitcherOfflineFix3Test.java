@@ -1,10 +1,14 @@
 package com.github.switcherapi.client;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Paths;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.internal.guava.Sets;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +16,8 @@ import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherInvalidOperationException;
 import com.github.switcherapi.client.exception.SwitcherInvalidOperationInputException;
 import com.github.switcherapi.client.exception.SwitcherInvalidStrategyException;
+import com.github.switcherapi.client.exception.SwitchersValidationException;
+import com.github.switcherapi.client.factory.SwitcherOffline;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.Switcher;
 
@@ -126,6 +132,40 @@ class SwitcherOfflineFix3Test {
 		assertThrows(SwitcherInvalidOperationException.class, () -> {
 			switcher.isItOn();
 		});
+	}
+	
+	@Test
+	void offlineShouldCheckSwitchers() {
+		//given
+		Set<String> switchers = Sets.newHashSet();
+		switchers.add(Switchers.USECASE20);
+		switchers.add(Switchers.USECASE17);
+		switchers.add(Switchers.USECASE16);
+		
+		SwitcherOffline switcherOffline = new SwitcherOffline();
+		switcherOffline.init();
+		
+		//test
+		assertDoesNotThrow(() -> switcherOffline.checkSwitchers(switchers));
+	}
+	
+	@Test
+	void offlineShouldCheckSwitchers_notFound() {
+		//given
+		Set<String> notFound = Sets.newHashSet();
+		notFound.add("NOT_FOUND_1");
+		
+		SwitcherOffline switcherOffline = new SwitcherOffline();
+		switcherOffline.init();
+		
+		//test
+		Exception ex = assertThrows(SwitchersValidationException.class, () -> {
+			switcherOffline.checkSwitchers(notFound);
+		});
+		
+		assertEquals(String.format(
+				"Something went wrong: Unable to load the following Switcher Key(s): %s", notFound), 
+				ex.getMessage());
 	}
 
 }

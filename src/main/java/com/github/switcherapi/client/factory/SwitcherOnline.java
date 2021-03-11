@@ -86,8 +86,8 @@ public class SwitcherOnline extends SwitcherExecutor {
 		}
 		
 		final SwitchersCheck response = ClientServiceFacade.getInstance().checkSwitchers(switchers);
-		if (response.getNot_found() != null && response.getNot_found().length > 0) {
-			throw new SwitchersValidationException(Arrays.toString(response.getNot_found()));
+		if (response.getNotFound() != null && response.getNotFound().length > 0) {
+			throw new SwitchersValidationException(Arrays.toString(response.getNotFound()));
 		}
 	}
 	

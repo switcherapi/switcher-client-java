@@ -1,7 +1,9 @@
 package com.github.switcherapi.client.model.criteria;
 
+import java.util.Arrays;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.github.switcherapi.client.ws.ClientWS;
 
 /**
@@ -13,7 +15,9 @@ import com.github.switcherapi.client.ws.ClientWS;
 public class SwitchersCheck {
 	
 	private String[] switchers;
-	private String[] not_found;
+	
+	@JsonAlias("not_found")
+	private String[] notFound;
 	
 	public SwitchersCheck() {}
 	
@@ -29,12 +33,18 @@ public class SwitchersCheck {
 		this.switchers = switchers;
 	}
 
-	public String[] getNot_found() {
-		return not_found;
+	public String[] getNotFound() {
+		return notFound;
 	}
 
-	public void setNot_found(String[] not_found) {
-		this.not_found = not_found;
+	public void setNotFound(String[] not_found) {
+		this.notFound = not_found;
+	}
+
+	@Override
+	public String toString() {
+		return "SwitchersCheck [switchers=" + Arrays.toString(switchers) + 
+				", notFound=" + Arrays.toString(notFound) + "]";
 	}
 
 }

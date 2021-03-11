@@ -170,7 +170,7 @@ class SwitcherApiMockTest {
 	 */
 	private MockResponse generateCheckSwitchersResponse(Set<String> switchersNotFound) {
 		SwitchersCheck switchersCheckNotFound = new SwitchersCheck();
-		switchersCheckNotFound.setNot_found(
+		switchersCheckNotFound.setNotFound(
 				switchersNotFound.toArray(new String[switchersNotFound.size()]));
 		
 		Gson gson = new Gson();
