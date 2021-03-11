@@ -70,14 +70,12 @@ public class ClientOfflineServiceFacade {
 		boolean found = false;
 		for (String switcher : switchers) {
 			found = false;
-			group_loop : for (final Group group : domain.getGroup()) {
+			for (final Group group : domain.getGroup()) {
 				if (Arrays.stream(group.getConfig())
-					.filter(config -> config.getKey().equals(switcher))
-					.findFirst()
-					.isPresent()) 
+					.anyMatch(config -> config.getKey().equals(switcher))) 
 				{
 					found = true;
-					break group_loop;
+					break;
 				}
 			}			
 			

@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * 
  * <p>
  * The best way to define a Switcher Key in your Context class is: 
- * </br>
+ * <br>
  * public static final String SWITCHER_KEY = "SWITCHER_KEY"
  * 
  * <p>

@@ -14,8 +14,14 @@ import com.github.switcherapi.client.ws.ClientWS;
  */
 public class SwitchersCheck {
 	
+	/**
+	 * Request field
+	 */
 	private String[] switchers;
 	
+	/**
+	 * Response field
+	 */
 	@JsonAlias("not_found")
 	private String[] notFound;
 	
@@ -37,8 +43,8 @@ public class SwitchersCheck {
 		return notFound;
 	}
 
-	public void setNotFound(String[] not_found) {
-		this.notFound = not_found;
+	public void setNotFound(String[] notFound) {
+		this.notFound = notFound;
 	}
 
 	@Override

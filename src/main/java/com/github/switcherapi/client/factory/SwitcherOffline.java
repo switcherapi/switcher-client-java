@@ -87,7 +87,7 @@ public class SwitcherOffline extends SwitcherExecutor {
 		}
 		
 		final List<String> response = ClientOfflineServiceFacade.getInstance().checkSwitchers(switchers, this.domain);
-		if (response.size() > 0) {
+		if (!response.isEmpty()) {
 			throw new SwitchersValidationException(response.toString());
 		}
 	}

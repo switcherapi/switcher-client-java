@@ -28,6 +28,7 @@ import com.github.switcherapi.client.configuration.SwitcherKey;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
+import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.factory.SwitcherOffline;
 import com.github.switcherapi.client.factory.SwitcherOnline;
