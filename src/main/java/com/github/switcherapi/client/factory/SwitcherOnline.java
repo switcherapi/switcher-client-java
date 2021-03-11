@@ -1,13 +1,18 @@
 package com.github.switcherapi.client.factory;
 
+import java.util.Arrays;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.configuration.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
+import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.facade.ClientServiceFacade;
 import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 
 /**
@@ -72,6 +77,18 @@ public class SwitcherOnline extends SwitcherExecutor {
 	@Override
 	public void updateSnapshot() {
 		super.initializeSnapshotFromAPI();
+	}
+	
+	@Override
+	public void checkSwitchers(final Set<String> switchers) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("switchers: %s", switchers));
+		}
+		
+		final SwitchersCheck response = ClientServiceFacade.getInstance().checkSwitchers(switchers);
+		if (response.getNotFound() != null && response.getNotFound().length > 0) {
+			throw new SwitchersValidationException(Arrays.toString(response.getNotFound()));
+		}
 	}
 	
 	@Override

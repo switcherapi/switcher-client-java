@@ -15,27 +15,30 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.internal.guava.Sets;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.github.switcherapi.Switchers;
-import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForComponentException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
+import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.facade.ClientServiceFacade;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Snapshot;
+import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.github.switcherapi.client.ws.ClientWSImpl;
@@ -156,6 +159,23 @@ class SwitcherApiMockTest {
 		Gson gson = new Gson();
 		return new MockResponse()
 				.setBody(gson.toJson(mockedSnapshot))
+				.addHeader("Content-Type", "application/json");
+	}
+	
+	/**
+	 * @see {@link ClientWSImpl#checkSwitchers(Set, String)}
+	 * 
+	 * @param switchersNotFound Switcher Keys forced to be not found
+	 * @return Generated mock /criteria/check_switchers
+	 */
+	private MockResponse generateCheckSwitchersResponse(Set<String> switchersNotFound) {
+		SwitchersCheck switchersCheckNotFound = new SwitchersCheck();
+		switchersCheckNotFound.setNotFound(
+				switchersNotFound.toArray(new String[switchersNotFound.size()]));
+		
+		Gson gson = new Gson();
+		return new MockResponse()
+				.setBody(gson.toJson(switchersCheckNotFound))
 				.addHeader("Content-Type", "application/json");
 	}
 	
@@ -499,7 +519,57 @@ class SwitcherApiMockTest {
 				throw e;
 			}
 		});
-
+	}
+	
+	@Test
+	void shouldValidateSwitchers() {
+		//given
+		final Set<String> notFound = Sets.newHashSet();
+		
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
+		
+		//criteria/check_switchers
+		mockBackEnd.enqueue(generateCheckSwitchersResponse(notFound));
+		
+		//test
+		assertDoesNotThrow(() -> Switchers.checkSwitchers());
+	}
+	
+	@Test
+	void shouldValidateSwitchers_notConfiguredSwitcherBeingUsed() {
+		//given
+		final Set<String> notFound = Sets.newHashSet();
+		notFound.add("NOT_FOUND_1");
+		
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
+		
+		//criteria/check_switchers
+		mockBackEnd.enqueue(generateCheckSwitchersResponse(notFound));
+		
+		//test
+		Exception ex = assertThrows(SwitchersValidationException.class, () -> {
+			Switchers.checkSwitchers();
+		});
+		
+		assertEquals(String.format(
+				"Something went wrong: Unable to load the following Switcher Key(s): %s", notFound), 
+				ex.getMessage());
+	}
+	
+	@Test
+	void shouldNotValidateSwitchers_serviceUnavailable() {
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
+		
+		//criteria/check_switchers
+		mockBackEnd.enqueue(generateStatusResponse("503"));
+		
+		//test
+		assertThrows(SwitcherAPIConnectionException.class, () -> {
+			Switchers.checkSwitchers();
+		});
 	}
 
 }

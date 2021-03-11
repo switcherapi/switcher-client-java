@@ -2,9 +2,11 @@ package com.github.switcherapi.client.facade;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -60,6 +62,28 @@ public class ClientOfflineServiceFacade {
 			instance = new ClientOfflineServiceFacade();
 		}
 		return instance;
+	}
+	
+	public List<String> checkSwitchers(final Set<String> switchers, final Domain domain) {
+		List<String> notFound = new ArrayList<>();
+		
+		boolean found = false;
+		for (String switcher : switchers) {
+			found = false;
+			for (final Group group : domain.getGroup()) {
+				if (Arrays.stream(group.getConfig())
+					.anyMatch(config -> config.getKey().equals(switcher))) 
+				{
+					found = true;
+					break;
+				}
+			}			
+			
+			if (!found)
+				notFound.add(switcher);
+		}
+		
+		return notFound;
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.configuration;
+package com.github.switcherapi.client;
 
 import static com.github.switcherapi.client.utils.SwitcherContextParam.APIKEY;
 import static com.github.switcherapi.client.utils.SwitcherContextParam.COMPONENT;
@@ -24,9 +24,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.switcherapi.client.configuration.SwitcherKey;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
+import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.factory.SwitcherOffline;
 import com.github.switcherapi.client.factory.SwitcherOnline;
@@ -53,6 +55,10 @@ public abstract class SwitcherContext {
 	private static final SwitcherProperties switcherProperties;
 	private static Set<String> switchers;
 	private static SwitcherExecutor instance;
+	
+	protected SwitcherContext() {
+		throw new IllegalStateException("Configuration class cannot be instantiated");
+	}
 	
 	static {
 		switcherProperties = new SwitcherProperties();
@@ -202,6 +208,15 @@ public abstract class SwitcherContext {
 	 */
 	public static void stopWatchingSnapshot() {
 		SwitcherUtils.stopWatchingSnapshot();
+	}
+	
+	/**
+	 * Executes smoke test against the API to verify if all Switchers are properly configured
+	 * 
+	 * @throws SwitchersValidationException when one or more Switcher Key is not found
+	 */
+	public static void checkSwitchers() {
+		instance.checkSwitchers(switchers);
 	}
 	
 	public static SwitcherProperties getProperties() {

@@ -2,11 +2,12 @@ package com.github.switcherapi.client.factory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.configuration.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.client.facade.ClientServiceFacade;
@@ -32,6 +33,8 @@ public abstract class SwitcherExecutor {
 	public abstract boolean checkSnapshotVersion();
 	
 	public abstract void updateSnapshot();
+	
+	public abstract void checkSwitchers(final Set<String> switchers);
 	
 	public abstract void notifyChange(final String snapshotFile);
 	
@@ -70,7 +73,6 @@ public abstract class SwitcherExecutor {
 	 * @param expepectedResult result that will be returned when performing isItOn
 	 */
 	public static void assume(final String key, boolean expepectedResult) {
-		
 		bypass.put(key, expepectedResult);
 	}
 	
@@ -80,12 +82,10 @@ public abstract class SwitcherExecutor {
 	 * @param key name of the key you want to remove
 	 */
 	public static void forget(final String key) {
-		
 		bypass.remove(key);
 	}
 
 	public static Map<String, Boolean> getBypass() {
-		
 		return bypass;
 	}
 }

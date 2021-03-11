@@ -3,7 +3,7 @@ package com.github.switcherapi.playground;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.configuration.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.configuration.SwitcherKey;
 import com.github.switcherapi.client.model.Switcher;
 

@@ -45,7 +45,7 @@ public interface SwitcherContextParam {
 	
 	/**
 	 * (String) Defines the package and class where a context wrapper is located.
-	 * It is only necessary to use with {@link com.github.switcherapi.client.configuration.SwitcherContext}
+	 * It is only necessary to use with {@link com.github.switcherapi.client.SwitcherContext}
 	 */
 	String CONTEXT_LOCATION = "switcher.context";
 	

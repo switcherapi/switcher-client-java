@@ -1,6 +1,6 @@
 package com.github.switcherapi;
 
-import com.github.switcherapi.client.configuration.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.configuration.SwitcherKey;
 
 public class Switchers extends SwitcherContext {

@@ -1,13 +1,16 @@
 package com.github.switcherapi.client.factory;
 
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.configuration.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
+import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.facade.ClientOfflineServiceFacade;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.SwitcherProperties;
@@ -75,6 +78,18 @@ public class SwitcherOffline extends SwitcherExecutor {
 	@Override
 	public void updateSnapshot() {
 		this.domain = super.initializeSnapshotFromAPI();
+	}
+	
+	@Override
+	public void checkSwitchers(final Set<String> switchers) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("switchers: %s", switchers));
+		}
+		
+		final List<String> response = ClientOfflineServiceFacade.getInstance().checkSwitchers(switchers, this.domain);
+		if (!response.isEmpty()) {
+			throw new SwitchersValidationException(response.toString());
+		}
 	}
 	
 	@Override

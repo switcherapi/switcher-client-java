@@ -2,7 +2,7 @@ package com.github.switcherapi.client;
 
 import static com.github.switcherapi.Switchers.USECASE11;
 import static com.github.switcherapi.Switchers.USECASE111;
-import static com.github.switcherapi.client.configuration.SwitcherContext.getSwitcher;
+import static com.github.switcherapi.client.SwitcherContext.getSwitcher;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 
-import com.github.switcherapi.client.configuration.SwitcherContext;
 import com.github.switcherapi.client.configuration.SwitcherMock;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.model.Switcher;
