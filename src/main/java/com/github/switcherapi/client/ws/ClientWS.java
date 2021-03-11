@@ -83,6 +83,7 @@ public interface ClientWS {
 	 * Returns an empty array of not_found if all switchers passed are properly configured.
 	 * 
 	 * @param switchers to be validated
+	 * @param token Access token
 	 * @return array of Switchers Key not found/configured
 	 */
 	public Response checkSwitchers(final Set<String> switchers, final String token);
