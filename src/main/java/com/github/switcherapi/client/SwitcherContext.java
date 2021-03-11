@@ -55,6 +55,10 @@ public abstract class SwitcherContext {
 	private static Set<String> switchers;
 	private static SwitcherExecutor instance;
 	
+	protected SwitcherContext() {
+		throw new IllegalStateException("Configuration class cannot be instantiated");
+	}
+	
 	static {
 		switcherProperties = new SwitcherProperties();
 		loadProperties();
