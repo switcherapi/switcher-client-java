@@ -118,7 +118,7 @@ public class SwitcherUtils {
 
 	    Pattern pattern = Pattern.compile(ENV_VARIABLE_PATTERN);
 	    Matcher matcher = pattern.matcher(value);
-	    StringBuffer sBuffer = new StringBuffer();
+	    StringBuilder sBuffer = new StringBuilder();
 	    
 	    if (matcher.find()) {
 	        String envVarName = matcher.group(1).isBlank() ? matcher.group(2) : matcher.group(1);
