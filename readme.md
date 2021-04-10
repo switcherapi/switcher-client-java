@@ -140,6 +140,15 @@ Switcher switcher = SwitcherFactory.getSwitcher(FEATURE01)
 	.isItOn();
 ```
 
+SwitcherFactory is deprecated on v1.2.x and this same call can be build as folowwing:
+
+```java
+MyAppFeatures.getSwitcher(FEATURE01)
+	.checkValue("My value")
+	.checkNetwork("10.0.0.1")
+	.isItOn();
+```
+
 4. **Strategy validation - all-in-one execution**
 All-in-one method is fast and include everything you need to execute a complex call to the API. Stack inputs changing the last parameter to *true* in case you need to add more values to the strategy validator.
 
