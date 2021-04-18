@@ -11,11 +11,11 @@
 Client Java for working with Switcher-API.
 https://github.com/switcherapi/switcher-api
 
-- Flexible and robust functions that will keep your code clean and maintainable.
+- Flexible and robust SDK that will keep your code clean and maintainable.
 - Able to work offline using a snapshot file downloaded from your remote Switcher-API Domain.
-- Silent mode is a hybrid configuration that automatically enables a contingent sub-process in case of any connectivity issue.
+- Silent mode is a hybrid configuration that automatically enables contingent sub-processes in case of any connectivity issue.
 - Built-in mock implementation for clear and easy implementation of automated testing.
-- Easy to setup. Switcher Context is responsible to manage all the complexity between your application and API.
+- Easy to setup. Switcher Context is responsible to manage all the configuration complexity between your application and API.
 
 # Usage
 
@@ -26,13 +26,13 @@ https://github.com/switcherapi/switcher-api
 <dependency>
   <groupId>com.github.switcherapi</groupId>
   <artifactId>switcher-client</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 </dependency>
 ```	
 
 ## Context properties
 #### Newest versions - v1.2.0
-SwitcherContext is a toolkit that abstracts all external configurations regarding API access and SDK behaviors.
+SwitcherContext implements all external configurations regarding API access and SDK behaviors.
 This new approach has eliminated unnecessary boilerplates and also has added a new layer for security purposes.
 
 Similarly as frameworks like Spring Boot, Log4j, the SDK also requires creating an external properties file that will contain all the settings.
@@ -42,18 +42,18 @@ Similarly as frameworks like Spring Boot, Log4j, the SDK also requires creating 
 
 ```
 #required
-switcher.context -> Your Feature class that extends SwitcherContext
-switcher.url -> Endpoint of your Swither-API
-switcher.apikey -> Switcher-API key generated for your application
-switcher.component -> Application name
+switcher.context -> Feature class that extends SwitcherContext
+switcher.url -> Swither-API endpoint
+switcher.apikey -> Switcher-API key generated for the application/component
+switcher.component -> Application/component name
 switcher.environment -> Environment name. Production environment is named as 'default'
 switcher.domain -> Domain name
 
 #optional
 switcher.offline -> true/false When offline, it will only use a local snapshot file
-switcher.snapshot.file -> Snapshot file patch
-switcher.snapshot.location -> Folder where snapshots will be saved/read
-switcher.snapshot.auto -> true/false Lookup for snapshot when loading the application
+switcher.snapshot.file -> Snapshot file path
+switcher.snapshot.location -> Folder from where snapshots will be saved/read
+switcher.snapshot.auto -> true/false Automated lookup for snapshot when loading the application
 switcher.silent -> true/false Contingency in case of some problem with connectivity with the API
 switcher.retry -> Time given to the module to re-establish connectivity with the API - e.g. 5s (s: seconds - m: minutes - h: hours)
 ```
@@ -133,7 +133,9 @@ switcher.isItOn(entries);
 3. **Strategy validation - chained call**
 Create chained calls using 'getSwitcher' then 'prepareEntry' then 'isItOn' functions.
 
+
 ```java
+@Deprecated
 Switcher switcher = SwitcherFactory.getSwitcher(FEATURE01)
 	.prepareEntry(new Entry(Entry.VALUE, "My value"))
 	.prepareEntry(new Entry(Entry.NETWORK, "10.0.0.1"))
@@ -154,18 +156,33 @@ All-in-one method is fast and include everything you need to execute a complex c
 
 ```java
 switcher.isItOn(FEATURE01, new Entry(Entry.NETWORK, "10.0.0.3"), false);
+//or
+switcher.checkNetwork("10.0.0.3").isItOn(FEATURE01);
 ```
 
 ## Offline settings
-You can also force the Switcher library to work offline. In this case, the snapshot location must be set up and the context re-built using the offline flag.
+You can also force the Switcher library to work offline. In this case, the snapshot location must be set up, so the context can be re-built using the offline configuration.
 
 ```java
+@Deprecated
 properties.put(SwitcherContextParam.SNAPSHOT_LOCATION, "/src/resources");
 SwitcherFactory.buildContext(properties, true);
 
 Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
 switcher.isItOn();
 ```
+
+When using version 1.2.0 or greater, it also can be done as following:
+
+```java
+MyAppFeatures.getProperties().setOfflineMode(true);
+MyAppFeatures.getProperties().setSnapshotLocation("/src/resources");
+MyAppFeatures.initializeClient();
+
+Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
+switcher.isItOn();
+```
+
 
 ## Real-time snapshot updater
 Let the Switcher Client manage your application local snapshot file.
