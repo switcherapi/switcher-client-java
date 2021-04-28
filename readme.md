@@ -243,7 +243,8 @@ void testMyFeature() {
 ```
 
 # Version Log
-- 1.2.0-SNAPSHOT:
+- 1.2.1-SNAPSHOT: Medium Severity Patch: Jersey has been updated - 2.33 to 2.34
+- 1.2.0:
 	- Changed how SwitcherContext is implemented - added support to properties file
 	- Offline mode can programmatically load snapshots
 	- Added extra security layer for verifying features
