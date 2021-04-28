@@ -26,12 +26,12 @@ https://github.com/switcherapi/switcher-api
 <dependency>
   <groupId>com.github.switcherapi</groupId>
   <artifactId>switcher-client</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
 </dependency>
 ```	
 
 ## Context properties
-#### Newest versions - v1.2.0
+#### Newest versions - v1.2.x
 SwitcherContext implements all external configurations regarding API access and SDK behaviors.
 This new approach has eliminated unnecessary boilerplates and also has added a new layer for security purposes.
 
@@ -243,7 +243,7 @@ void testMyFeature() {
 ```
 
 # Version Log
-- 1.2.1-SNAPSHOT: Medium Severity Patch: Jersey has been updated - 2.33 to 2.34
+- 1.2.1: Medium Severity Security Patch: Jersey has been updated - 2.33 to 2.34
 - 1.2.0:
 	- Changed how SwitcherContext is implemented - added support to properties file
 	- Offline mode can programmatically load snapshots
