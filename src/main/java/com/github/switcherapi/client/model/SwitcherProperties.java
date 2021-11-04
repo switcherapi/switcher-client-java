@@ -1,5 +1,7 @@
 package com.github.switcherapi.client.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.switcherapi.client.utils.SwitcherContextParam;
 
 /**
@@ -12,6 +14,10 @@ import com.github.switcherapi.client.utils.SwitcherContextParam;
  * @author Roger Floriano (petruki)
  */
 public class SwitcherProperties {
+	
+	private final String DEFAULT_URL = "https://switcher-api.herokuapp.com";
+	
+	private final String DEFAULT_ENV = "default";
 	
 	private String contextLocation;
 	
@@ -36,6 +42,11 @@ public class SwitcherProperties {
 	private boolean silentMode;
 	
 	private boolean offlineMode;
+	
+	public SwitcherProperties() {
+		this.url = DEFAULT_URL;
+		this.environment = DEFAULT_ENV;
+	}
 
 	public String getContextLocation() {
 		return contextLocation;
@@ -50,7 +61,10 @@ public class SwitcherProperties {
 	}
 
 	public void setUrl(String url) {
-		this.url = url;
+		if (!StringUtils.isBlank(url))
+			this.url = url;
+		else
+			this.url = DEFAULT_URL;
 	}
 
 	public String getApiKey() {
@@ -82,7 +96,10 @@ public class SwitcherProperties {
 	}
 
 	public void setEnvironment(String environment) {
-		this.environment = environment;
+		if (!StringUtils.isBlank(environment))
+			this.environment = environment;
+		else
+			this.environment = DEFAULT_ENV;
 	}
 
 	public String getSnapshotLocation() {
