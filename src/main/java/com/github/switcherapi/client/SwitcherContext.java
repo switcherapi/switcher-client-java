@@ -120,10 +120,6 @@ public abstract class SwitcherContext {
 		
 		final SwitcherProperties prop = SwitcherContext.getProperties();
 		if (!switcherProperties.isOfflineMode()) {
-			if (StringUtils.isBlank(prop.getUrl())) {
-				throw new SwitcherContextException("SwitcherContextParam.URL not found");
-			}
-			
 			if (StringUtils.isBlank(prop.getApiKey())) {
 				throw new SwitcherContextException("SwitcherContextParam.APIKEY not found");
 			}

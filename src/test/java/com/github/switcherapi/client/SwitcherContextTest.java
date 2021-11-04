@@ -1,5 +1,6 @@
 package com.github.switcherapi.client;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -20,15 +21,9 @@ class SwitcherContextTest {
 	}
 	
 	@Test
-	void shouldThrowError_noUrl() {
+	void shouldNotThrowError_noUrl() {
 		Switchers.getProperties().setUrl(null);
-		
-		Exception ex = assertThrows(SwitcherContextException.class, () -> {
-			Switchers.initializeClient();
-		});
-		
-		assertEquals(String.format(
-				CONTEXT_ERROR, "SwitcherContextParam.URL"), ex.getMessage());
+		assertDoesNotThrow(() -> Switchers.initializeClient());
 	}
 	
 	@Test
