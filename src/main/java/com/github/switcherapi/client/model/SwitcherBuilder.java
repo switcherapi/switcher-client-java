@@ -17,10 +17,8 @@ public abstract class SwitcherBuilder {
 	
 	protected List<Entry> entry;
 	
-	private void init() {
-		if (entry == null) {
-			entry = new ArrayList<>();
-		}
+	protected SwitcherBuilder() {
+		entry = new ArrayList<>();
 	}
 	
 	/**
@@ -31,7 +29,6 @@ public abstract class SwitcherBuilder {
 	 * @return switcher itself
 	 */
 	public SwitcherBuilder check(String validator, String input) {
-		init();
 		entry.add(new Entry(validator, input));
 		return this;
 	}
