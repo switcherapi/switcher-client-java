@@ -369,7 +369,19 @@ class SwitcherApiMockTest {
 		
 		assertDoesNotThrow(() -> {
 			Switchers.initializeClient();
-			Switchers.validateSnapshot();
+			assertTrue(Switchers.validateSnapshot());
+		});
+	}
+	
+	@Test
+	void shouldSkipValidatSnapshot() {
+		//given
+		Switchers.getProperties().setSnapshotSkipValidation(true);
+		
+		//test
+		assertDoesNotThrow(() -> {
+			Switchers.initializeClient();
+			assertFalse(Switchers.validateSnapshot());
 		});
 	}
 	

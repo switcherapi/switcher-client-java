@@ -5,8 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.github.switcherapi.client.utils.SwitcherContextParam;
 
 /**
- * The configuration definition object contains all necessary SDK properties
- * to control the API client behaviors, access and snapshot location.
+ * The configuration definition object contains all necessary SDK properties to
+ * control the API client behaviors, access and snapshot location.
  * 
  * <p>
  * Properties are defined by {@link SwitcherContextParam}
@@ -14,35 +14,37 @@ import com.github.switcherapi.client.utils.SwitcherContextParam;
  * @author Roger Floriano (petruki)
  */
 public class SwitcherProperties {
-	
+
 	public static final String DEFAULTURL = "https://switcher-api.herokuapp.com";
-	
+
 	public static final String DEFAULTENV = "default";
-	
+
 	private String contextLocation;
-	
+
 	private String url;
-	
+
 	private String apiKey;
-	
+
 	private String domain;
-	
+
 	private String component;
-	
+
 	private String environment;
-	
+
 	private String snapshotLocation;
-	
+
 	private String snapshotFile;
-	
+
 	private String retryAfter;
-	
+
 	private boolean snapshotAutoLoad;
-	
+
+	private boolean snapshotSkipValidation;
+
 	private boolean silentMode;
-	
+
 	private boolean offlineMode;
-	
+
 	public SwitcherProperties() {
 		this.url = DEFAULTURL;
 		this.environment = DEFAULTENV;
@@ -132,6 +134,14 @@ public class SwitcherProperties {
 
 	public void setSnapshotAutoLoad(boolean snapshotAutoLoad) {
 		this.snapshotAutoLoad = snapshotAutoLoad;
+	}
+
+	public boolean isSnapshotSkipValidation() {
+		return snapshotSkipValidation;
+	}
+
+	public void setSnapshotSkipValidation(boolean snapshotSkipValidation) {
+		this.snapshotSkipValidation = snapshotSkipValidation;
 	}
 
 	public boolean isSilentMode() {
