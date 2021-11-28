@@ -17,7 +17,7 @@ public abstract class SwitcherBuilder {
 	
 	protected List<Entry> entry;
 	
-	public SwitcherBuilder() {
+	protected SwitcherBuilder() {
 		entry = new ArrayList<>();
 	}
 	
