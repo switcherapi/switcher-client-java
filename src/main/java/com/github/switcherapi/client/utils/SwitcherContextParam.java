@@ -55,6 +55,11 @@ public interface SwitcherContextParam {
 	String SNAPSHOT_AUTO_LOAD = "switcher.snapshot.auto";
 	
 	/**
+	 * (boolean) When true it will skip validateSnapshot() (default is false)
+	 */
+	String SNAPSHOT_SKIP_VALIDATION = "switcher.snapshot.skipvalidation";
+	
+	/**
 	 * (boolean) Activate silent mode when the Switcher API becomes offline.
 	 */
 	String SILENT_MODE = "switcher.silent";
