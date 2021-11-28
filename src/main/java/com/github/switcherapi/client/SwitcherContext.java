@@ -17,7 +17,9 @@ import static com.github.switcherapi.client.utils.SwitcherContextParam.URL;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -54,7 +56,8 @@ public abstract class SwitcherContext {
 	private static final Logger logger = LogManager.getLogger(SwitcherContext.class);
 	
 	private static final SwitcherProperties switcherProperties;
-	private static Set<String> switchers;
+	private static Set<String> switcherKeys;
+	private static Map<String, Switcher> switchers;
 	private static SwitcherExecutor instance;
 	
 	protected SwitcherContext() {
@@ -102,13 +105,15 @@ public abstract class SwitcherContext {
 	 */
 	public static void initializeClient() {
 		validateContext();
-		loadSwitchers();
+		validateSwitcherKeys();
 		
 		if (switcherProperties.isOfflineMode()) {
 			instance = new SwitcherOffline();
 		} else {
 			instance = new SwitcherOnline();
 		}
+		
+		loadSwitchers();
 	}
 	
 	/**
@@ -145,17 +150,17 @@ public abstract class SwitcherContext {
 	}
 	
 	/**
-	 * Prevalidate Switchers.
+	 * Prevalidate Switcher Keys.
 	 * It will ensure that only properly annotated Switchers can be used.
 	 */
-	private static void loadSwitchers() {
+	private static void validateSwitcherKeys() {
 		try {
-			switchers = new HashSet<>();
+			switcherKeys = new HashSet<>();
 			
 			final Class<?> clazz = Class.forName(switcherProperties.getContextLocation());
 			for (Field field : clazz.getFields()) {
 				if (field.isAnnotationPresent(SwitcherKey.class)) {
-					switchers.add(field.getName());
+					switcherKeys.add(field.getName());
 				}
 			}
 		} catch (ClassNotFoundException e) {
@@ -164,22 +169,45 @@ public abstract class SwitcherContext {
 	}
 	
 	/**
+	 * Load Switcher instances into a map cache
+	 */
+	private static void loadSwitchers() {
+		if (switchers == null)
+			switchers = new HashMap<>();
+		
+		switchers.clear();
+		for (String key : switcherKeys)
+			switchers.put(key, new Switcher(key, instance));
+	}
+	
+	/**
 	 * Return a ready-to-use Switcher that will invoke the criteria configured into the Switcher API or Snapshot
 	 * 
 	 * @param key name of the key created
+	 * @param keepEntries when true it will return a cached Switcher with all parameters used before
+	 * 
 	 * @return a ready to use Switcher
 	 * @throws SwitcherKeyNotFoundException in case the key was not properly loaded
 	 */
-	public static Switcher getSwitcher(String key) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("key: %s", key));
-		}
+	public static Switcher getSwitcher(String key, boolean keepEntries) {
+		if (logger.isDebugEnabled())
+			logger.debug(String.format("key: %s - keepEntries: %s", key, keepEntries));
 		
-		if (!switchers.contains(key)) {
+		if (!switchers.containsKey(key))
 			throw new SwitcherKeyNotFoundException(key);
-		}
 		
-		return new Switcher(key, instance);
+		final Switcher switcher = switchers.get(key);
+		if (!keepEntries)
+			switcher.getEntry().clear();
+		
+		return switcher;
+	}
+	
+	/**
+	 * {@link #getSwitcher(String, boolean)}
+	 */
+	public static Switcher getSwitcher(String key) {
+		return getSwitcher(key, false);
 	}
 	
 	/**
@@ -220,7 +248,7 @@ public abstract class SwitcherContext {
 	 * @throws SwitchersValidationException when one or more Switcher Key is not found
 	 */
 	public static void checkSwitchers() {
-		instance.checkSwitchers(switchers);
+		instance.checkSwitchers(switcherKeys);
 	}
 	
 	public static SwitcherProperties getProperties() {
