@@ -11,6 +11,7 @@ import static com.github.switcherapi.client.utils.SwitcherContextParam.SILENT_MO
 import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_AUTO_LOAD;
 import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_FILE;
 import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_LOCATION;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_SKIP_VALIDATION;
 import static com.github.switcherapi.client.utils.SwitcherContextParam.URL;
 
 import java.io.IOException;
@@ -84,6 +85,7 @@ public abstract class SwitcherContext {
     		switcherProperties.setEnvironment(SwitcherUtils.resolveProperties(ENVIRONMENT, prop));
     		switcherProperties.setSnapshotFile(SwitcherUtils.resolveProperties(SNAPSHOT_FILE, prop));
     		switcherProperties.setSnapshotLocation(SwitcherUtils.resolveProperties(SNAPSHOT_LOCATION, prop));
+    		switcherProperties.setSnapshotSkipValidation(Boolean.parseBoolean(SwitcherUtils.resolveProperties(SNAPSHOT_SKIP_VALIDATION, prop)));
     		switcherProperties.setSnapshotAutoLoad(Boolean.parseBoolean(SwitcherUtils.resolveProperties(SNAPSHOT_AUTO_LOAD, prop)));
     		switcherProperties.setSilentMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(SILENT_MODE, prop)));
     		switcherProperties.setOfflineMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(OFFLINE_MODE, prop)));
@@ -183,11 +185,17 @@ public abstract class SwitcherContext {
 	/**
 	 * Validate and update local snapshot file
 	 * It requires offline mode or SwitcherContextParam.SNAPSHOT_LOCATION configured
+	 * 
+	 * @return true if validation was performed
 	 */
-	public static void validateSnapshot() {
-		if (!instance.checkSnapshotVersion()) {
+	public static boolean validateSnapshot() {
+		if (switcherProperties.isSnapshotSkipValidation())
+			return false;
+		
+		if (!instance.checkSnapshotVersion())
 			instance.updateSnapshot();
-		}
+		
+		return true;
 	}
 	
 	/**

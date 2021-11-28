@@ -54,6 +54,7 @@ switcher.offline -> true/false When offline, it will only use a local snapshot f
 switcher.snapshot.file -> Snapshot file path
 switcher.snapshot.location -> Folder from where snapshots will be saved/read
 switcher.snapshot.auto -> true/false Automated lookup for snapshot when loading the application
+switcher.snapshot.skipvalidation -> true/false Skip snapshotValidation() that can be used for UT executions
 switcher.silent -> true/false Contingency in case of some problem with connectivity with the API
 switcher.retry -> Time given to the module to re-establish connectivity with the API - e.g. 5s (s: seconds - m: minutes - h: hours)
 ```
@@ -243,6 +244,12 @@ void testMyFeature() {
 ```
 
 # Version Log
+- 1.3.0-SNAPSHOT:
+    - Optimized Switcher instance creation management
+    - Added Throttling and Async calls
+   	- Updated com.google.code.gson:gson from 2.8.6 to 2.8.9
+   	- Updated Jersey dependencies from 2.34 to 2.35
+    - Fixed Autoload snapshot is creating null as file name
 - 1.2.1: Medium Severity Security Patch: Jersey has been updated - 2.33 to 2.34
 - 1.2.0:
 	- Changed how SwitcherContext is implemented - added support to properties file
