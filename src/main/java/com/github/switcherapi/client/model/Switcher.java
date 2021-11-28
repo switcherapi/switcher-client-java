@@ -61,22 +61,21 @@ public class Switcher extends SwitcherBuilder {
 	
 	@Override
 	public Switcher prepareEntry(final Entry entry, final boolean add) {
-		if (this.entry == null) {
+		if (this.entry == null)
 			this.entry = new ArrayList<>();
-		}
 		
-		if (!add) this.entry.clear();
+		if (!add) 
+			this.entry.clear();
 		
-		if (!this.entry.contains(entry)) {
+		if (!this.entry.contains(entry))
 			this.entry.add(entry);
-		}
 		
 		return this;
 	}
 	
 	@Override
 	public Switcher prepareEntry(final Entry entry) {
-		return this.prepareEntry(entry, true);
+		return this.prepareEntry(entry, false);
 	}
 	
 	@Override

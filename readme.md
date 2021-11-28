@@ -43,13 +43,13 @@ Similarly as frameworks like Spring Boot, Log4j, the SDK also requires creating 
 ```
 #required
 switcher.context -> Feature class that extends SwitcherContext
-switcher.url -> Swither-API endpoint
 switcher.apikey -> Switcher-API key generated for the application/component
 switcher.component -> Application/component name
-switcher.environment -> Environment name. Production environment is named as 'default'
 switcher.domain -> Domain name
 
 #optional
+switcher.url -> Swither-API endpoint if running privately
+switcher.environment -> Environment name
 switcher.offline -> true/false When offline, it will only use a local snapshot file
 switcher.snapshot.file -> Snapshot file path
 switcher.snapshot.location -> Folder from where snapshots will be saved/read
@@ -108,7 +108,7 @@ There are a few different ways to call the API using the java library.
 Here are some examples:
 
 1. **No parameters**
-Invoking the API can be done by obtaining the switcher object and calling *isItOn*. It can also be forced to call another key any time you want.
+Invoking the API can be done by obtaining the switcher object and calling *isItOn*. It can also be forced by using different key any time you want.
 
 ```java
 Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
