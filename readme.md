@@ -108,13 +108,11 @@ There are a few different ways to call the API using the java library.
 Here are some examples:
 
 1. **No parameters**
-Invoking the API can be done by obtaining the switcher object and calling *isItOn*. It can also be forced by using different key any time you want.
+Invoking the API can be done by obtaining the switcher object and calling *isItOn*.
 
 ```java
 Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
 switcher.isItOn();
-//or
-switcher.isItOn(FEATURE01);
 ```
 
 2. **Strategy validation - preparing input**
@@ -157,8 +155,22 @@ All-in-one method is fast and include everything you need to execute a complex c
 
 ```java
 switcher.isItOn(FEATURE01, new Entry(Entry.NETWORK, "10.0.0.3"), false);
-//or
-switcher.checkNetwork("10.0.0.3").isItOn(FEATURE01);
+//or simply
+switcher.checkNetwork("10.0.0.3").isItOn();
+```
+
+5. **Accessing the response history**
+Switchers when created store the last execution result from a given switcher key. This can be useful for troubleshooting or internal logging.
+
+```java
+switcher.getHistoryExecution();
+```
+
+6. **Throttling**
+Improve the overall performance by using throttle feature to skip API calls in a short time. This feature is ideal for critical or repetitive code executions that requires high performance.
+
+```java
+switcher.throttle(1000).isItOn();
 ```
 
 ## Offline settings
@@ -243,13 +255,13 @@ void testMyFeature() {
 }
 ```
 
-# Version Log
+### Change Log
 - 1.3.0-SNAPSHOT:
-    - Optimized Switcher instance creation management
-    - Added Throttling and Async calls
-   	- Updated com.google.code.gson:gson from 2.8.6 to 2.8.9
-   	- Updated Jersey dependencies from 2.34 to 2.35
-    - Fixed Autoload snapshot is creating null as file name
+	- Optimized Switcher instance creation management
+	- Added Throttling and Async calls
+	- Updated com.google.code.gson:gson from 2.8.6 to 2.8.9
+	- Updated Jersey dependencies from 2.34 to 2.35
+	- Fixed Autoload snapshot is creating null as file name
 - 1.2.1: Medium Severity Security Patch: Jersey has been updated - 2.33 to 2.34
 - 1.2.0:
 	- Changed how SwitcherContext is implemented - added support to properties file

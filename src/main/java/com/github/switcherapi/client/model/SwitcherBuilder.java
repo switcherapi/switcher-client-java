@@ -15,10 +15,23 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
  */
 public abstract class SwitcherBuilder {
 	
+	protected long delay = 0;
+	
 	protected List<Entry> entry;
 	
 	protected SwitcherBuilder() {
 		entry = new ArrayList<>();
+	}
+	
+	/**
+	 * Skip API calls given a delay time
+	 * 
+	 * @param delay time in milliseconds for the next call
+	 * @return switcher itself
+	 */
+	public SwitcherBuilder throttle(long delay) {
+		this.delay = delay;
+		return this;
 	}
 	
 	/**
@@ -120,15 +133,14 @@ public abstract class SwitcherBuilder {
 	public abstract Switcher prepareEntry(final Entry entry);
 	
 	/**
-	 * Convenient method to send all the information necessary to run the criteria with input.
+	 * Convenient method to send all the information necessary to run the criteria.
 	 * 
-	 * @param key name of the key created
 	 * @param entry input object
 	 * @param add if false, the list will be cleaned and the entry provided will be the only input for this Switcher.
 	 * @return criteria result
 	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
 	 */
-	public abstract boolean isItOn(final String key, final Entry entry, final boolean add) 
+	public abstract boolean isItOn(final Entry entry, final boolean add) 
 			throws SwitcherException;
 	
 	/**
@@ -139,15 +151,6 @@ public abstract class SwitcherBuilder {
 	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
 	 */
 	public abstract boolean isItOn(final List<Entry> entry) throws SwitcherException;
-	
-	/**
-	 * This method will invoke the Switcher API according to the key provided.
-	 * 
-	 * @param key name of the key created
-	 * @return criteria result
-	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
-	 */
-	public abstract boolean isItOn(final String key) throws SwitcherException;
 	
 	/**
 	 * Execute criteria based on a given switcher key provided via {@link SwitcherContext#getSwitcher(String)}.
