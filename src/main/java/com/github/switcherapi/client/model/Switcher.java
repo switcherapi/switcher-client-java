@@ -53,7 +53,7 @@ public class Switcher extends SwitcherBuilder {
 	}
 	
 	private boolean canUseAsync() {
-		return super.delay > 0 && this.historyExecution.size() > 0;
+		return super.delay > 0 && !this.historyExecution.isEmpty();
 	}
 	
 	private CriteriaResponse getFromHistory() {

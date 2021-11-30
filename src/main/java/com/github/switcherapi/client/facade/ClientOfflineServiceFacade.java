@@ -164,7 +164,7 @@ public class ClientOfflineServiceFacade {
 			if (switcherInput == null)
 				throw new SwitcherNoInputReceivedException(strategy.getStrategy());
 			
-			result = selectCaseOperation(result, strategy, switcherInput);
+			result = selectCaseOperation(strategy, switcherInput);
 			if (!result) {
 				return new CriteriaResponse(
 						false, String.format("Strategy %s does not agree", strategy.getStrategy()), switcher);
@@ -174,8 +174,10 @@ public class ClientOfflineServiceFacade {
 		return new CriteriaResponse(result, "Success", switcher);
 	}
 
-	private boolean selectCaseOperation(boolean result, final Strategy strategy,
+	private boolean selectCaseOperation(final Strategy strategy,
 			final Entry switcherInput) {
+		
+		boolean result = true;
 		switch (strategy.getStrategy()) {
 		case Entry.VALUE:
 			result = this.processValue(strategy, switcherInput);
