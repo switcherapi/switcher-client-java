@@ -12,14 +12,11 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
  * Switchers are responsible for wrapping the input and output coming from the Switcher API.
  * <br>To execute a criteria evaluation, use one of the available methods: {@link #isItOn()}.
  * 
- * <p>To assign an input value for this Switcher, you can use one of the chained methods: prepareEntry
- * 
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  * 
  * @see #isItOn()
  * @see #isItOn(List)
- * @see #isItOn(String)
  * @see #isItOn(String, Entry, boolean)
  *
  */
@@ -30,6 +27,8 @@ public class Switcher extends SwitcherBuilder {
 	public static final String SHOW_REASON = "showReason";
 	
 	public static final String BYPASS_METRIC = "bypassMetric";
+	
+	private AsyncSwitcher asyncSwitcher;
 	
 	private SwitcherExecutor context;
 	
@@ -51,6 +50,19 @@ public class Switcher extends SwitcherBuilder {
 		this.switcherKey = switcherKey;
 		this.context = context;
 		this.historyExecution = new ArrayList<>();
+	}
+	
+	private boolean canUseAsync() {
+		return super.delay > 0 && this.historyExecution.size() > 0;
+	}
+	
+	private CriteriaResponse getFromHistory() {
+		final CriteriaResponse result = this.historyExecution.get(this.historyExecution.size() - 1);
+		
+		if (result.getEntry().equals(getEntry()))
+			return this.historyExecution.get(this.historyExecution.size() - 1);
+		
+		return null;
 	}
 	
 	@Override
@@ -79,10 +91,10 @@ public class Switcher extends SwitcherBuilder {
 	}
 	
 	@Override
-	public boolean isItOn(final String key, final Entry entry, final boolean add) 
+	public boolean isItOn(final Entry entry, final boolean add) 
 			throws SwitcherException {
 		this.prepareEntry(entry, add);
-		return this.isItOn(key);
+		return this.isItOn();
 	}
 	
 	@Override
@@ -92,15 +104,19 @@ public class Switcher extends SwitcherBuilder {
 	}
 	
 	@Override
-	public boolean isItOn(final String key) throws SwitcherException {
-		this.switcherKey = key;
-		return this.isItOn();
-	}
-	
-	@Override
 	public boolean isItOn() throws SwitcherException {
 		if (SwitcherExecutor.getBypass().containsKey(switcherKey)) {
 			return SwitcherExecutor.getBypass().get(switcherKey);
+		}
+		
+		if (canUseAsync()) {
+			if (asyncSwitcher == null)
+				asyncSwitcher = new AsyncSwitcher();
+			
+			asyncSwitcher.execute(this);
+			final CriteriaResponse response = getFromHistory();
+			if (response != null)
+				return response.isItOn();
 		}
 		
 		final CriteriaResponse response = this.context.executeCriteria(this);
@@ -114,7 +130,9 @@ public class Switcher extends SwitcherBuilder {
 	 * @return json input request
 	 */
 	public GsonInputRequest getInputRequest() {
-		return new GsonInputRequest(this.entry != null ? this.entry.toArray(new Entry[this.entry.size()]) : null);
+		return new GsonInputRequest(
+				this.entry != null ? 
+						this.entry.toArray(new Entry[this.entry.size()]) : null);
 	}
 
 	public boolean isBypassMetrics() {
@@ -140,9 +158,17 @@ public class Switcher extends SwitcherBuilder {
 	public List<Entry> getEntry() {
 		return this.entry;
 	}
+	
+	public void resetEntry() {
+		this.entry = new ArrayList<Entry>();
+	}
 
 	public List<CriteriaResponse> getHistoryExecution() {
 		return this.historyExecution;
+	}
+	
+	public SwitcherExecutor getContext() {
+		return context;
 	}
 
 	@Override

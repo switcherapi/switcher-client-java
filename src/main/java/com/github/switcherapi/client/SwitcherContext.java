@@ -198,7 +198,7 @@ public abstract class SwitcherContext {
 		
 		final Switcher switcher = switchers.get(key);
 		if (!keepEntries)
-			switcher.getEntry().clear();
+			switcher.resetEntry();
 		
 		return switcher;
 	}

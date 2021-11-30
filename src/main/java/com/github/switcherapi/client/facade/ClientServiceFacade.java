@@ -62,6 +62,7 @@ public class ClientServiceFacade {
 		
 		final CriteriaResponse criteriaReponse = response.readEntity(CriteriaResponse.class);
 		criteriaReponse.setSwitcherKey(switcher.getSwitcherKey());
+		criteriaReponse.setEntry(switcher.getEntry());
 		response.close();
 		return criteriaReponse;
 	}
