@@ -98,7 +98,7 @@ public class ClientOfflineServiceFacade {
 	public CriteriaResponse executeCriteria(final Switcher switcher, final Domain domain) {
 
 		if (!domain.isActivated()) {
-			return new CriteriaResponse(false, DISABLED_DOMAIN, switcher.getSwitcherKey());
+			return new CriteriaResponse(false, DISABLED_DOMAIN, switcher);
 		}
 
 		Config configFound = null;
@@ -112,15 +112,15 @@ public class ClientOfflineServiceFacade {
 			if (configFound != null) {
 				
 				if (!group.isActivated()) {
-					return new CriteriaResponse(false, DISABLED_GROUP, switcher.getSwitcherKey());
+					return new CriteriaResponse(false, DISABLED_GROUP, switcher);
 				}
 
 				if (!configFound.isActivated()) {
-					return new CriteriaResponse(false, DISABLED_CONFIG, switcher.getSwitcherKey());
+					return new CriteriaResponse(false, DISABLED_CONFIG, switcher);
 				}
 
 				if (ArrayUtils.isNotEmpty(configFound.getStrategies())) {
-					return this.processOperation(configFound.getStrategies(), switcher.getEntry(), switcher.getSwitcherKey());
+					return this.processOperation(configFound.getStrategies(), switcher.getEntry(), switcher);
 				}
 				
 				break;
@@ -131,7 +131,7 @@ public class ClientOfflineServiceFacade {
 			throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
 		}
 
-		return new CriteriaResponse(true, "Success", switcher.getSwitcherKey());
+		return new CriteriaResponse(true, "Success", switcher);
 	}
 
 	/**
@@ -142,8 +142,8 @@ public class ClientOfflineServiceFacade {
 	 * @return CristeriaResponse containing the result of the validation
 	 * @throws SwitcherException If encountered either invalid input or misconfiguration
 	 */
-	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input,
-			final String switcherKey) {
+	private CriteriaResponse processOperation(
+			final Strategy[] configStrategies, final List<Entry> input, final Switcher switcher) {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("configStrategies: %s", Arrays.toString(configStrategies)));
@@ -152,47 +152,53 @@ public class ClientOfflineServiceFacade {
 		
 		boolean result = true;
 		for (final Strategy strategy : configStrategies) {
-			
-			if (!strategy.isActivated()) {
+			if (!strategy.isActivated())
 				continue;
-			}
 
 			final Entry switcherInput = input != null ? 
-					input.stream().filter(i -> i.getStrategy().equals(strategy.getStrategy())).findFirst().orElse(null) : null;
+					input.stream()
+						.filter(i -> i.getStrategy().equals(strategy.getStrategy()))
+						.findFirst()
+						.orElse(null) : null;
 
-			if (switcherInput == null) {
+			if (switcherInput == null)
 				throw new SwitcherNoInputReceivedException(strategy.getStrategy());
-			}
 			
-			switch (strategy.getStrategy()) {
-			case Entry.VALUE:
-				result = this.processValue(strategy, switcherInput);
-				break;
-			case Entry.NUMERIC:
-				result = this.processNumeric(strategy, switcherInput);
-				break;
-			case Entry.NETWORK:
-				result = this.processNetwork(strategy, switcherInput);
-				break;
-			case Entry.DATE:
-				result = this.processDate(strategy, switcherInput);
-				break;
-			case Entry.TIME:
-				result = this.processTime(strategy, switcherInput);
-				break;
-			case Entry.REGEX:
-				result = this.processRegex(strategy, switcherInput);
-				break;
-			default:
-				throw new SwitcherInvalidStrategyException(strategy.getStrategy());
-			}
-
+			result = selectCaseOperation(result, strategy, switcherInput);
 			if (!result) {
-				return new CriteriaResponse(false, String.format("`Strategy %s does not agree", strategy.getStrategy()), switcherKey);
+				return new CriteriaResponse(
+						false, String.format("Strategy %s does not agree", strategy.getStrategy()), switcher);
 			}
 		}
 
-		return new CriteriaResponse(result, "Success", switcherKey);
+		return new CriteriaResponse(result, "Success", switcher);
+	}
+
+	private boolean selectCaseOperation(boolean result, final Strategy strategy,
+			final Entry switcherInput) {
+		switch (strategy.getStrategy()) {
+		case Entry.VALUE:
+			result = this.processValue(strategy, switcherInput);
+			break;
+		case Entry.NUMERIC:
+			result = this.processNumeric(strategy, switcherInput);
+			break;
+		case Entry.NETWORK:
+			result = this.processNetwork(strategy, switcherInput);
+			break;
+		case Entry.DATE:
+			result = this.processDate(strategy, switcherInput);
+			break;
+		case Entry.TIME:
+			result = this.processTime(strategy, switcherInput);
+			break;
+		case Entry.REGEX:
+			result = this.processRegex(strategy, switcherInput);
+			break;
+		default:
+			throw new SwitcherInvalidStrategyException(strategy.getStrategy());
+		}
+		return result;
 	}
 
 	private boolean processNetwork(final Strategy strategy, final Entry switcherInput) 
@@ -311,38 +317,42 @@ public class ClientOfflineServiceFacade {
 		}
 		
 		try {
-			Date stgDate, stgDate2, inputDate;
-
-			switch (strategy.getOperation()) {
-			case Entry.LOWER:
-				stgDate = DateUtils.parseDate(SwitcherUtils.getFullDate(strategy.getValues()[0]), DATE_FORMAT);
-				inputDate = DateUtils.parseDate(SwitcherUtils.getFullDate(switcherInput.getInput()), DATE_FORMAT);
-
-				return inputDate.before(stgDate);
-			case Entry.GREATER:
-				stgDate = DateUtils.parseDate(SwitcherUtils.getFullDate(strategy.getValues()[0]), DATE_FORMAT);
-				inputDate = DateUtils.parseDate(SwitcherUtils.getFullDate(switcherInput.getInput()), DATE_FORMAT);
-
-				return inputDate.after(stgDate);
-			case Entry.BETWEEN:
-				if (strategy.getValues().length == 2) {
-					stgDate = DateUtils.parseDate(SwitcherUtils.getFullDate(strategy.getValues()[0]), DATE_FORMAT);
-					stgDate2 = DateUtils.parseDate(SwitcherUtils.getFullDate(strategy.getValues()[1]), DATE_FORMAT);
-					inputDate = DateUtils.parseDate(SwitcherUtils.getFullDate(switcherInput.getInput()), DATE_FORMAT);
-
-					return inputDate.after(stgDate) && inputDate.before(stgDate2);
-				}
-				
-				throw new SwitcherInvalidOperationInputException(Entry.BETWEEN);
-			default:
-				throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
-			}
-
+			return selectDateOperationCase(strategy, switcherInput);
 		} catch (ParseException e) {
 			logger.error(e);
 			throw new SwitcherInvalidTimeFormat(strategy.getStrategy(), e);
 		}
 
+	}
+
+	private boolean selectDateOperationCase(final Strategy strategy,
+			final Entry switcherInput) throws ParseException {
+		Date stgDate, stgDate2, inputDate;
+		
+		switch (strategy.getOperation()) {
+		case Entry.LOWER:
+			stgDate = DateUtils.parseDate(SwitcherUtils.getFullDate(strategy.getValues()[0]), DATE_FORMAT);
+			inputDate = DateUtils.parseDate(SwitcherUtils.getFullDate(switcherInput.getInput()), DATE_FORMAT);
+
+			return inputDate.before(stgDate);
+		case Entry.GREATER:
+			stgDate = DateUtils.parseDate(SwitcherUtils.getFullDate(strategy.getValues()[0]), DATE_FORMAT);
+			inputDate = DateUtils.parseDate(SwitcherUtils.getFullDate(switcherInput.getInput()), DATE_FORMAT);
+
+			return inputDate.after(stgDate);
+		case Entry.BETWEEN:
+			if (strategy.getValues().length == 2) {
+				stgDate = DateUtils.parseDate(SwitcherUtils.getFullDate(strategy.getValues()[0]), DATE_FORMAT);
+				stgDate2 = DateUtils.parseDate(SwitcherUtils.getFullDate(strategy.getValues()[1]), DATE_FORMAT);
+				inputDate = DateUtils.parseDate(SwitcherUtils.getFullDate(switcherInput.getInput()), DATE_FORMAT);
+
+				return inputDate.after(stgDate) && inputDate.before(stgDate2);
+			}
+			
+			throw new SwitcherInvalidOperationInputException(Entry.BETWEEN);
+		default:
+			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
+		}
 	}
 
 	private boolean processTime(final Strategy strategy, final Entry switcherInput) 
@@ -356,39 +366,42 @@ public class ClientOfflineServiceFacade {
 		try {
 			final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			final String today = format.format(new Date());
-
-			Date stgDate, stgDate2, inputDate;
-
-			switch (strategy.getOperation()) {
-			case Entry.LOWER:
-				stgDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, strategy.getValues()[0]), DATE_FORMAT);
-				inputDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, switcherInput.getInput()), DATE_FORMAT);
-
-				return inputDate.before(stgDate);
-			case Entry.GREATER:
-				stgDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, strategy.getValues()[0]), DATE_FORMAT);
-				inputDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, switcherInput.getInput()), DATE_FORMAT);
-
-				return inputDate.after(stgDate);
-			case Entry.BETWEEN:
-				if (strategy.getValues().length == 2) {
-					stgDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, strategy.getValues()[0]), DATE_FORMAT);
-					stgDate2 = DateUtils.parseDate(SwitcherUtils.getFullTime(today, strategy.getValues()[1]), DATE_FORMAT);
-					inputDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, switcherInput.getInput()), DATE_FORMAT);
-
-					return inputDate.after(stgDate) && inputDate.before(stgDate2);
-				}
-				
-				throw new SwitcherInvalidOperationInputException(Entry.BETWEEN);
-			default:
-				throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
-			}
-
+			return selectTimeOperationCase(strategy, switcherInput, today);
 		} catch (ParseException e) {
 			logger.error(e);
 			throw new SwitcherInvalidTimeFormat(strategy.getStrategy(), e);
 		}
 
+	}
+
+	private boolean selectTimeOperationCase(final Strategy strategy,
+			final Entry switcherInput, final String today) throws ParseException {
+		Date stgDate, stgDate2, inputDate;
+		
+		switch (strategy.getOperation()) {
+		case Entry.LOWER:
+			stgDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, strategy.getValues()[0]), DATE_FORMAT);
+			inputDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, switcherInput.getInput()), DATE_FORMAT);
+
+			return inputDate.before(stgDate);
+		case Entry.GREATER:
+			stgDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, strategy.getValues()[0]), DATE_FORMAT);
+			inputDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, switcherInput.getInput()), DATE_FORMAT);
+
+			return inputDate.after(stgDate);
+		case Entry.BETWEEN:
+			if (strategy.getValues().length == 2) {
+				stgDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, strategy.getValues()[0]), DATE_FORMAT);
+				stgDate2 = DateUtils.parseDate(SwitcherUtils.getFullTime(today, strategy.getValues()[1]), DATE_FORMAT);
+				inputDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, switcherInput.getInput()), DATE_FORMAT);
+
+				return inputDate.after(stgDate) && inputDate.before(stgDate2);
+			}
+			
+			throw new SwitcherInvalidOperationInputException(Entry.BETWEEN);
+		default:
+			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
+		}
 	}
 	
 	private boolean processRegex(final Strategy strategy, final Entry switcherInput) 

@@ -63,24 +63,20 @@ public class Entry {
 	 * @param input follow the required format documented into each strategy type
 	 */
 	public Entry(final String strategy, final String input) {
-		
 		this.strategy = strategy;
 		this.input = input;
 	}
 	
 	public String getStrategy() {
-		
 		return strategy;
 	}
 	
 	public String getInput() {
-		
 		return input;
 	}
 
 	@Override
 	public String toString() {
-		
 		return String.format("Entry [strategy = %s, input = %s]", 
 				strategy, input);
 	}
@@ -96,15 +92,18 @@ public class Entry {
 
 	@Override
 	public boolean equals(Object obj) {
-		
 		if (obj instanceof Entry) {
 			final Entry entry = (Entry) obj;
 			
-			if (this.strategy.equals(entry.getStrategy())) {
-				return true;
+			if (!this.strategy.equals(entry.getStrategy())) {
+				return false;
+			}
+			
+			if (!this.input.equals(entry.getInput())) {
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 }

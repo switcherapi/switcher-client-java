@@ -583,5 +583,33 @@ class SwitcherApiMockTest {
 			Switchers.checkSwitchers();
 		});
 	}
+	
+	@Test
+	void shouldReturnTrue_withThrottle() throws InterruptedException {
+		// First call
+		mockBackEnd.enqueue(generateMockAuth(10)); //auth
+		mockBackEnd.enqueue(generateCriteriaResponse("true", false)); //criteria
+		
+		// Async call
+		mockBackEnd.enqueue(generateMockAuth(10)); //auth
+		mockBackEnd.enqueue(generateCriteriaResponse("true", false)); //criteria
+		
+		
+		//test
+		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		switcher.throttle(1000);
+		
+		for (int i = 0; i < 10; i++) {
+			assertTrue(switcher.isItOn());			
+		}
+		
+		// Async call
+		mockBackEnd.enqueue(generateMockAuth(10)); //auth
+		mockBackEnd.enqueue(generateCriteriaResponse("true", false)); //criteria
+		
+		CountDownLatch waiter = new CountDownLatch(1);
+		waiter.await(1, TimeUnit.SECONDS);
+		assertTrue(switcher.isItOn());
+	}
 
 }
