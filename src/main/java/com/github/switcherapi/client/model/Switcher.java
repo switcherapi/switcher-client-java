@@ -1,7 +1,9 @@
 package com.github.switcherapi.client.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherException;
@@ -34,7 +36,7 @@ public class Switcher extends SwitcherBuilder {
 	
 	private String switcherKey;
 	
-	private List<CriteriaResponse> historyExecution;
+	private Set<CriteriaResponse> historyExecution;
 	
 	private boolean bypassMetrics = Boolean.FALSE;
 	
@@ -49,7 +51,7 @@ public class Switcher extends SwitcherBuilder {
 	public Switcher(final String switcherKey, final SwitcherExecutor context) {
 		this.switcherKey = switcherKey;
 		this.context = context;
-		this.historyExecution = new ArrayList<>();
+		this.historyExecution = new HashSet<>();
 	}
 	
 	private boolean canUseAsync() {
@@ -57,12 +59,10 @@ public class Switcher extends SwitcherBuilder {
 	}
 	
 	private CriteriaResponse getFromHistory() {
-		final CriteriaResponse result = this.historyExecution.get(this.historyExecution.size() - 1);
-		
-		if (result.getEntry().equals(getEntry()))
-			return this.historyExecution.get(this.historyExecution.size() - 1);
-		
-		return null;
+		return this.historyExecution.stream()
+				.filter(c -> c.getEntry().equals(getEntry()))
+				.findFirst()
+				.orElse(null);
 	}
 	
 	@Override
@@ -163,7 +163,7 @@ public class Switcher extends SwitcherBuilder {
 		this.entry = new ArrayList<Entry>();
 	}
 
-	public List<CriteriaResponse> getHistoryExecution() {
+	public Set<CriteriaResponse> getHistoryExecution() {
 		return this.historyExecution;
 	}
 	
