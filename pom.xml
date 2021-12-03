@@ -8,7 +8,7 @@
   	<groupId>com.github.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.3.0-SNAPSHOT</version>
+	<version>1.3.0</version>
 	
  	<name>Switcher Client</name>
 	<description>Switcher Client for working with Switcher API</description>

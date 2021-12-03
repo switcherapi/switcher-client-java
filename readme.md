@@ -26,7 +26,7 @@ https://github.com/switcherapi/switcher-api
 <dependency>
   <groupId>com.github.switcherapi</groupId>
   <artifactId>switcher-client</artifactId>
-  <version>1.2.1</version>
+  <version>1.3.0</version>
 </dependency>
 ```	
 
