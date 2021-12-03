@@ -19,7 +19,7 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
  * 
  * @see #isItOn()
  * @see #isItOn(List)
- * @see #isItOn(String, Entry, boolean)
+ * @see #isItOn(Entry, boolean)
  *
  */
 public class Switcher extends SwitcherBuilder {

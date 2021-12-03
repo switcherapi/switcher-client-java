@@ -205,6 +205,9 @@ public abstract class SwitcherContext {
 	
 	/**
 	 * {@link #getSwitcher(String, boolean)}
+	 * 
+	 * @param key name
+	 * @return a ready to use Switcher
 	 */
 	public static Switcher getSwitcher(String key) {
 		return getSwitcher(key, false);
