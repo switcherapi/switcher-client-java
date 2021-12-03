@@ -155,11 +155,6 @@ public abstract class SwitcherBuilder {
 	/**
 	 * Execute criteria based on a given switcher key provided via {@link SwitcherContext#getSwitcher(String)}.
 	 * <br>The detailed result is available in list of {@link CriteriaResponse}.
-	 * <br>It's possible to change the switcher key even after instantiating a Switcher object.
-	 * <br>
-	 * <br> For example:
-	 * <br> You can create a Switcher by invoking {@link SwitcherContext}#getSwitcher("MY_KEY"), plus, you can also change this key value by another using
-	 * {@link #isItOn(String)}.
 	 * 
 	 * @return criteria result
 	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots

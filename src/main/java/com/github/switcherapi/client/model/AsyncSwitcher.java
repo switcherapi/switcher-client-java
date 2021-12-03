@@ -24,6 +24,8 @@ public class AsyncSwitcher implements Runnable {
 	/**
 	 * Validate if next run is ready to be performed, otherwise it will skip and delegate the
 	 * Switcher result for the Switcher history execution.
+	 * 
+	 * @param switcher Instance of the current switcher being executed
 	 */
 	public synchronized void execute(final Switcher switcher) {
 		this.switcher = switcher;
