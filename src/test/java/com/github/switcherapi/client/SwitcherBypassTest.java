@@ -3,8 +3,8 @@ package com.github.switcherapi.client;
 import static com.github.switcherapi.Switchers.USECASE11;
 import static com.github.switcherapi.Switchers.USECASE111;
 import static com.github.switcherapi.client.SwitcherContext.getSwitcher;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Paths;
 
