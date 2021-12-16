@@ -26,7 +26,7 @@ https://github.com/switcherapi/switcher-api
 <dependency>
   <groupId>com.github.switcherapi</groupId>
   <artifactId>switcher-client</artifactId>
-  <version>1.3.0</version>
+  <version>1.3.2</version>
 </dependency>
 ```	
 
@@ -256,7 +256,10 @@ void testMyFeature() {
 ```
 
 ### Change Log
-- 1.3.0-SNAPSHOT:
+- 1.3.2:
+	- Updated dependency org.apache.logging.log4j from 2.15.0 to 2.16.0
+	- Updated managed dependency junit to 4.13.1
+- 1.3.0:
 	- Optimized Switcher instance creation management
 	- Added Throttling and Async calls
 	- Updated com.google.code.gson:gson from 2.8.6 to 2.8.9
