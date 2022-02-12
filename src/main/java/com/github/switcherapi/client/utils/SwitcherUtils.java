@@ -35,7 +35,7 @@ public class SwitcherUtils {
 	
 	private static final String FULL_DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
 	
-	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+):(.+)\\}";
+	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+):?(.+)?\\}";
 	
 	private static SnapshotWatcher watcher;
 	
@@ -122,12 +122,12 @@ public class SwitcherUtils {
 	    StringBuilder sBuffer = new StringBuilder();
 	    
 	    if (matcher.find()) {
-	        String envVarName = matcher.group(1).isBlank() ? matcher.group(2) : matcher.group(1);
+	        String envVarName = matcher.group(1);
 	        String envVarValue = System.getenv(envVarName);
 	        sBuffer.append(null == envVarValue ? StringUtils.EMPTY : envVarValue);
 	        
-	        if (sBuffer.toString().isEmpty())
-	        	sBuffer.append(matcher.group(2).isBlank() ? null : matcher.group(2));
+	        if (sBuffer.toString().isEmpty() && matcher.group(2) != null)
+	        	sBuffer.append(matcher.group(2));
 	    }
 	    
 	    if (sBuffer.toString().isEmpty())
