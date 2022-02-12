@@ -121,12 +121,12 @@ public class SwitcherUtils {
 	        return null;
 	    }
 
-	    StringBuilder sBuffer = resolveEnvironmentVariable(value);
+	    StringBuilder sBuilder = resolveEnvironmentVariable(value);
 	    
-	    if (sBuffer.toString().isEmpty())
+	    if (sBuilder.toString().isEmpty())
 	    	return value;
 	       
-	    return sBuffer.toString();
+	    return sBuilder.toString();
 	}
 
 	/**
@@ -139,37 +139,37 @@ public class SwitcherUtils {
 	private static StringBuilder resolveEnvironmentVariable(final String value) {
 		Pattern pattern = Pattern.compile(ENV_VARIABLE_PATTERN);
 	    Matcher matcher = pattern.matcher(value);
-	    StringBuilder sBuffer = new StringBuilder();
+	    StringBuilder sBuilder = new StringBuilder();
 	    
 	    if (matcher.find()) {
-	        setWithSystemEnv(matcher, sBuffer);
+	        setWithSystemEnv(matcher, sBuilder);
 	    } else {
         	pattern = Pattern.compile(ENV_DEFAULT_VARIABLE_PATTERN);
         	matcher = pattern.matcher(value);
         	
         	 if (matcher.find()) {
-        		if (setWithSystemEnv(matcher, sBuffer) && matcher.group(2) != null)
-	        		sBuffer.append(matcher.group(2));
+        		if (setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null)
+        			sBuilder.append(matcher.group(2));
         	 }
         }
-		return sBuffer;
+		return sBuilder;
 	}
 
 	/**
-	 * Get value from System.getenv and append to sBuffer.
+	 * Get value from System.getenv and append to sBuilder.
 	 * 
 	 * @param matcher Matches given property name
-	 * @param sBuffer value given to property
+	 * @param sBuilder value given to property
 	 * @return true if System.genevn returns a value
 	 */
-	private static boolean setWithSystemEnv(Matcher matcher, StringBuilder sBuffer) {
+	private static boolean setWithSystemEnv(Matcher matcher, StringBuilder sBuilder) {
 		if (matcher.group(1) != null) {
 			String envVarName = matcher.group(1);
 			String envVarValue = System.getenv(envVarName);
-			sBuffer.append(null == envVarValue ? StringUtils.EMPTY : envVarValue);		
+			sBuilder.append(null == envVarValue ? StringUtils.EMPTY : envVarValue);		
 		}
 		
-		return sBuffer.isEmpty();
+		return StringUtils.isEmpty(sBuilder.toString());
 	}
 	
 
