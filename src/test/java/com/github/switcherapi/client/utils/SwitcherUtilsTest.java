@@ -99,11 +99,22 @@ class SwitcherUtilsTest {
 	void shouldReadEnviromentProperties() {
 		//given
 		Properties prop = new Properties();
-		prop.setProperty(SwitcherContextParam.ENVIRONMENT, String.format("${%s}", "TESTME"));
+		prop.setProperty(SwitcherContextParam.ENVIRONMENT, "${PORT}");
 		
 		//test
 		final String value = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
-		assertEquals("${TESTME}", value);
+		assertEquals("${PORT}", value);
+	}
+	
+	@Test
+	void shouldReadDefaultEnviromentProperties() {
+		//given
+		Properties prop = new Properties();
+		prop.setProperty(SwitcherContextParam.ENVIRONMENT, "${PORT:8080}");
+		
+		//test
+		final String value = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
+		assertEquals("8080", value);
 	}
 
 }

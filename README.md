@@ -31,7 +31,7 @@ https://github.com/switcherapi/switcher-api
 ```	
 
 ## Context properties
-#### Newest versions - v1.2.x
+#### Newest versions - v1.2.x and v1.3.x
 SwitcherContext implements all external configurations regarding API access and SDK behaviors.
 This new approach has eliminated unnecessary boilerplates and also has added a new layer for security purposes.
 
@@ -39,6 +39,8 @@ Similarly as frameworks like Spring Boot, Log4j, the SDK also requires creating 
 
 1. Inside the resources folder, create a file called: switcherapi.properties.
 
+Configure the parameters according to the definition below. 
+You can also use environment variables using the standard notation ${VALUE:DEFAULT_VALUE}
 
 ```
 #required
