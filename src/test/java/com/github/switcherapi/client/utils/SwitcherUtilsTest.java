@@ -7,12 +7,16 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
@@ -84,37 +88,30 @@ class SwitcherUtilsTest {
 		});
 	}
 	
-	@Test
-	void shouldReadProperties() {
-		//given
-		Properties prop = new Properties();
-		prop.setProperty(SwitcherContextParam.ENVIRONMENT, "default");
-		
-		//test
-		final String value = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
-		assertEquals("default", value);
+	/**
+	 * 1. property value or variable
+	 * 2. expected return
+	 * 
+	 * @return Strem of testable arguments
+	 */
+	static Stream<Arguments> envArguments() {
+	    return Stream.of(
+			Arguments.of("default", "default"),
+			Arguments.of("${PORT}", "${PORT}"),
+			Arguments.of("${PORT:8080}", "8080")
+	    );
 	}
 	
-	@Test
-	void shouldReadEnviromentProperties() {
+	@ParameterizedTest()
+	@MethodSource("envArguments")
+	void shouldReadProperties(String property, String expectedValue) {
 		//given
 		Properties prop = new Properties();
-		prop.setProperty(SwitcherContextParam.ENVIRONMENT, "${PORT}");
+		prop.setProperty(SwitcherContextParam.ENVIRONMENT, property);
 		
 		//test
 		final String value = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
-		assertEquals("${PORT}", value);
-	}
-	
-	@Test
-	void shouldReadDefaultEnviromentProperties() {
-		//given
-		Properties prop = new Properties();
-		prop.setProperty(SwitcherContextParam.ENVIRONMENT, "${PORT:8080}");
-		
-		//test
-		final String value = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
-		assertEquals("8080", value);
+		assertEquals(expectedValue, value);
 	}
 
 }
