@@ -37,6 +37,8 @@ public class SwitcherUtils {
 	
 	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+)\\}";
 	
+	private static final String ENV_DEFAULT_VARIABLE_PATTERN = "\\$\\{(\\w+):(.+)\\}";
+	
 	private static SnapshotWatcher watcher;
 	
 	private SwitcherUtils() {}
@@ -103,7 +105,10 @@ public class SwitcherUtils {
 	
 	/**
 	 * Resolve properties from switcherapi.properties file.
-	 * It reads environment values when using the following notation: ${VALUE}
+	 * It reads environment values when using the following notation: ${VALUE} or
+	 * ${VALUE:DEFAULT_VALUE} in case a default value is provided.
+	 * 
+	 * Two different RE were used here to mitigate catastrophic backtracking situations.
 	 * 
 	 * @param input reads values from {@link SwitcherContextParam}
 	 * @param prop from properties file
@@ -116,20 +121,54 @@ public class SwitcherUtils {
 	        return null;
 	    }
 
-	    Pattern pattern = Pattern.compile(ENV_VARIABLE_PATTERN);
-	    Matcher matcher = pattern.matcher(value);
-	    StringBuilder sBuffer = new StringBuilder();
+	    StringBuilder sBuilder = resolveEnvironmentVariable(value);
 	    
-	    if (matcher.find()) {
-	        String envVarName = matcher.group(1).isBlank() ? matcher.group(2) : matcher.group(1);
-	        String envVarValue = System.getenv(envVarName);
-	        sBuffer.append(null == envVarValue ? StringUtils.EMPTY : envVarValue);
-	    }
-	    
-	    if (sBuffer.toString().isEmpty())
+	    if (sBuilder.toString().isEmpty())
 	    	return value;
 	       
-	    return sBuffer.toString();
+	    return sBuilder.toString();
+	}
+
+	/**
+	 * Resolve environment variable 'value'and extract its value from either
+	 * System environment or default argument.
+	 * 
+	 * @param value assigned from the properties file
+	 * @return Resolved value
+	 */
+	private static StringBuilder resolveEnvironmentVariable(final String value) {
+		Pattern pattern = Pattern.compile(ENV_VARIABLE_PATTERN);
+	    Matcher matcher = pattern.matcher(value);
+	    StringBuilder sBuilder = new StringBuilder();
+	    
+	    if (matcher.find()) {
+	        setWithSystemEnv(matcher, sBuilder);
+	    } else {
+        	pattern = Pattern.compile(ENV_DEFAULT_VARIABLE_PATTERN);
+        	matcher = pattern.matcher(value);
+        	
+        	 if (matcher.find() &&
+    			 setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null)
+        			sBuilder.append(matcher.group(2));
+        }
+		return sBuilder;
+	}
+
+	/**
+	 * Get value from System.getenv and append to sBuilder.
+	 * 
+	 * @param matcher Matches given property name
+	 * @param sBuilder value given to property
+	 * @return true if System.genevn returns a value
+	 */
+	private static boolean setWithSystemEnv(Matcher matcher, StringBuilder sBuilder) {
+		if (matcher.group(1) != null) {
+			String envVarName = matcher.group(1);
+			String envVarValue = System.getenv(envVarName);
+			sBuilder.append(null == envVarValue ? StringUtils.EMPTY : envVarValue);		
+		}
+		
+		return StringUtils.isEmpty(sBuilder.toString());
 	}
 	
 
