@@ -147,10 +147,9 @@ public class SwitcherUtils {
         	pattern = Pattern.compile(ENV_DEFAULT_VARIABLE_PATTERN);
         	matcher = pattern.matcher(value);
         	
-        	 if (matcher.find()) {
-        		if (setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null)
+        	 if (matcher.find() &&
+    			 setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null)
         			sBuilder.append(matcher.group(2));
-        	 }
         }
 		return sBuilder;
 	}
