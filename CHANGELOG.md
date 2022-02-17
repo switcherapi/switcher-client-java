@@ -1,6 +1,7 @@
 # Change Log
 
 - 1.3.4:
+	- Added support to default values for the environment properties file
 	- Updated org.junit.jupiter:junit-jupiter-api from 5.8.1 to 5.8.2
 	- Updated org.apache.logging.log4j:log4j-core from 2.17.0 to 2.17.1
 	- Updated managed dependency jackson@2.12.2 to use 2.13.1; fix vulnerability caused by jersey 2.35
