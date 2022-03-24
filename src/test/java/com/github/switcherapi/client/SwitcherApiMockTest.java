@@ -55,7 +55,10 @@ class SwitcherApiMockTest {
 	
 	@BeforeAll
 	static void setup() throws IOException {
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "\\not_accessable"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/not_accessable"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/new_folder/generated_on_new_folder.json"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/new_folder"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default.json"));
 		
         mockBackEnd = new MockWebServer();
         mockBackEnd.start();
@@ -71,9 +74,9 @@ class SwitcherApiMockTest {
         
         //clean generated outputs
     	SwitcherContext.stopWatchingSnapshot();
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "\\new_folder\\generated_on_new_folder.json"));
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "\\new_folder"));
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "\\generated_mock_default.json"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/new_folder/generated_on_new_folder.json"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/new_folder"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default.json"));
 		
     }
 	
@@ -272,9 +275,9 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateStatusResponse("401"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
-		assertThrows(SwitcherKeyNotAvailableForComponentException.class, () -> {
-			switcher.isItOn();
-		});
+		assertThrows(SwitcherKeyNotAvailableForComponentException.class, () ->
+			switcher.isItOn()
+		);
 	}
 	
 	
@@ -399,9 +402,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateSnapshotResponse());
 		
 		//test
-		assertDoesNotThrow(() -> {
-			Switchers.initializeClient();
-		});
+		assertDoesNotThrow(() -> Switchers.initializeClient());
 	}
 	
 	@Test
@@ -467,23 +468,23 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateStatusResponse("503"));
 		
 		//test
-		assertThrows(SwitcherAPIConnectionException.class, () -> {
-			Switchers.validateSnapshot();
-		});
+		assertThrows(SwitcherAPIConnectionException.class, () ->
+			Switchers.validateSnapshot()
+		);
 	}
 	
 	@Test
 	void shouldNotLookupForSnapshot_invalidLocation() {
 		//given
 		Switchers.getProperties().setSnapshotAutoLoad(true);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessable");
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessible");
 		
 		//test
 		assertDoesNotThrow(() -> {
 			try (final RandomAccessFile raFile = 
-					new RandomAccessFile(SNAPSHOTS_LOCAL + "/not_accessable", "rw")) {
+					new RandomAccessFile(SNAPSHOTS_LOCAL + "/not_accessible", "rw")) {
 				
-				//given an unacessible folder
+				//given an inaccessible folder
 				raFile.getChannel().lock();
 				
 				//auth
@@ -493,9 +494,9 @@ class SwitcherApiMockTest {
 				mockBackEnd.enqueue(generateSnapshotResponse());
 				
 				//test
-				assertThrows(SwitcherSnapshotWriteException.class, () -> {
-					Switchers.initializeClient();
-				});
+				assertThrows(SwitcherSnapshotWriteException.class, () ->
+					Switchers.initializeClient()
+				);
 			} catch (IOException e) {
 				throw e;
 			}
@@ -507,14 +508,14 @@ class SwitcherApiMockTest {
 	void shouldNotLookupForSnapshot_invalidFolderLocation() {
 		//given
 		Switchers.getProperties().setSnapshotAutoLoad(true);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessable/folder");
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessible/folder");
 		
 		//test
 		assertDoesNotThrow(() -> {
 			try (final RandomAccessFile raFile = 
-					new RandomAccessFile(SNAPSHOTS_LOCAL + "/not_accessable", "rw")) {
+					new RandomAccessFile(SNAPSHOTS_LOCAL + "/not_accessible", "rw")) {
 				
-				//given an unacessible folder
+				//given an inaccessible folder
 				raFile.getChannel().lock();
 				
 				//auth
@@ -524,9 +525,7 @@ class SwitcherApiMockTest {
 				mockBackEnd.enqueue(generateSnapshotResponse());
 				
 				//test
-				assertThrows(SwitcherSnapshotWriteException.class, () -> {
-					Switchers.initializeClient();
-				});
+				assertThrows(SwitcherSnapshotWriteException.class, () -> Switchers.initializeClient());
 			} catch (IOException e) {
 				throw e;
 			}
@@ -561,9 +560,9 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateCheckSwitchersResponse(notFound));
 		
 		//test
-		Exception ex = assertThrows(SwitchersValidationException.class, () -> {
-			Switchers.checkSwitchers();
-		});
+		Exception ex = assertThrows(SwitchersValidationException.class, () ->
+			Switchers.checkSwitchers()
+		);
 		
 		assertEquals(String.format(
 				"Something went wrong: Unable to load the following Switcher Key(s): %s", notFound), 
