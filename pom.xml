@@ -56,7 +56,7 @@
    		<commons-net.version>3.8.0</commons-net.version>
    		
    		<!-- test -->
-   		<log4j.version>2.17.1</log4j.version>
+   		<log4j.version>2.17.2</log4j.version>
    		<okhttp.version>3.14.9</okhttp.version>
    		<junit.version>5.8.2</junit.version>
    		
