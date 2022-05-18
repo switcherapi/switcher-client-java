@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,6 +36,7 @@ import com.github.switcherapi.client.factory.SwitcherOffline;
 import com.github.switcherapi.client.factory.SwitcherOnline;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.SwitcherProperties;
+import com.github.switcherapi.client.utils.SwitcherContextUtils;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 
 /**
@@ -122,35 +122,13 @@ public abstract class SwitcherContext {
 	 * @throws SwitcherContextException 
 	 *  If an error was found, showing then the missing parameter
 	 */
-	private static void validateContext() 
-			throws SwitcherContextException {
-		
+	private static void validateContext() throws SwitcherContextException {
 		final SwitcherProperties prop = SwitcherContext.getProperties();
-		if (!switcherProperties.isOfflineMode()) {
-			if (StringUtils.isBlank(prop.getApiKey())) {
-				throw new SwitcherContextException("SwitcherContextParam.APIKEY not found");
-			}
-			
-			if (StringUtils.isBlank(prop.getDomain())) {
-				throw new SwitcherContextException("SwitcherContextParam.DOMAIN not found");
-			}
-			
-			if (StringUtils.isBlank(prop.getComponent())) {
-				throw new SwitcherContextException("SwitcherContextParam.COMPONENT not found");
-			}
-		}
-		
-		if (prop.isSnapshotAutoLoad() && StringUtils.isBlank(prop.getSnapshotLocation())) {
-			throw new SwitcherContextException("SwitcherContextParam.SNAPSHOT_LOCATION not found");
-		}
-		
-		if (prop.isSilentMode() && StringUtils.isBlank(prop.getRetryAfter())) {
-			throw new SwitcherContextException("SwitcherContextParam.RETRY_AFTER not found");
-		}
+		SwitcherContextUtils.validate(prop);
 	}
 	
 	/**
-	 * Prevalidate Switcher Keys.
+	 * Validate Switcher Keys.
 	 * It will ensure that only properly annotated Switchers can be used.
 	 */
 	private static void validateSwitcherKeys() {
@@ -230,7 +208,8 @@ public abstract class SwitcherContext {
 	}
 	
 	/**
-	 * Start watching snapshot files for modifications. As it has changed, it will update the domain in memory
+	 * Start watching snapshot files for modifications. 
+	 * When the file is modified the in-memory snapshot will reload
 	 */
 	public static void watchSnapshot() {
 		SwitcherUtils.watchSnapshot(instance);
