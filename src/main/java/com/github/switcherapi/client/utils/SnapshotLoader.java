@@ -83,9 +83,9 @@ public class SnapshotLoader {
 	 * Writes snapshot loaded from the API
 	 * 
 	 * @param snapshot Serialized snapshot object to be saved in a JSON file
-	 * @param snapshotLocation Where the snapshop must be saved
+	 * @param snapshotLocation Where the snapshot must be saved
 	 * @param environment defines the name of the snapshot file
-	 * @throws SwitcherSnapshotWriteException if something wrong happend while creating either the folder or file
+	 * @throws SwitcherSnapshotWriteException if something wrong happened while creating either the folder or file
 	 */
 	public static void saveSnapshot(final Snapshot snapshot, final String snapshotLocation, 
 			final String environment) throws SwitcherSnapshotWriteException {

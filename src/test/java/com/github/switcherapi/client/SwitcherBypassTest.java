@@ -28,7 +28,6 @@ class SwitcherBypassTest {
 	static void setupContext() {
 		SwitcherContext.loadProperties();
 		SwitcherContext.getProperties().setOfflineMode(true);
-		SwitcherContext.initializeClient();
 	}
 	
 	@AfterAll

@@ -1,5 +1,6 @@
 package com.github.switcherapi.client.utils;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -19,6 +20,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.github.switcherapi.client.SwitcherContext;
+import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 
 class SwitcherUtilsTest {
@@ -33,7 +35,42 @@ class SwitcherUtilsTest {
 	@Test
 	void shouldReturnError_snapshotNotFound() {
 		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json");
-		assertThrows(SwitcherSnapshotLoadException.class,() -> {
+		assertThrows(SwitcherSnapshotLoadException.class ,() -> {
+			SwitcherContext.initializeClient();
+		});
+	}
+	
+	@Test
+	void shouldReturnError_offlineSnapshotNotFound() {
+		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json");
+		SwitcherContext.getProperties().setOfflineMode(true);
+		assertThrows(SwitcherContextException.class, () -> {
+			SwitcherContext.initializeClient();
+		});
+	}
+	
+	@Test
+	void shouldReturnOk_offlineLocationFound() {
+		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
+		SwitcherContext.getProperties().setOfflineMode(true);
+		assertDoesNotThrow(() -> SwitcherContext.initializeClient());
+	}
+	
+	@Test
+	void shouldReturnError_offlineLocationNotFound() {
+		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/UNKNOWN_LOCATION");
+		SwitcherContext.getProperties().setOfflineMode(true);
+		assertThrows(SwitcherContextException.class, () -> {
+			SwitcherContext.initializeClient();
+		});
+	}
+	
+	@Test
+	void shouldReturnError_offlineNoLocationAndFileSpecified() {
+		SwitcherContext.getProperties().setSnapshotLocation(null);
+		SwitcherContext.getProperties().setSnapshotFile(null);
+		SwitcherContext.getProperties().setOfflineMode(true);
+		assertThrows(SwitcherContextException.class, () -> {
 			SwitcherContext.initializeClient();
 		});
 	}
@@ -43,41 +80,9 @@ class SwitcherUtilsTest {
 		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
 		SwitcherContext.getProperties().setEnvironment("defect_default");
 		
-		assertThrows(SwitcherSnapshotLoadException.class,() -> {
+		assertThrows(SwitcherSnapshotLoadException.class, () -> {
 			SwitcherContext.initializeClient();
 		});
-	}
-	
-	@Test
-	void shouldAdd1second() throws Exception {
-		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
-		date1 = SwitcherUtils.addTimeDuration("1s", date1);
-		String dateString = DateFormatUtils.format(date1, "yyyy-MM-dd HH:mm:ss");
-		assertEquals("2019-12-10 10:00:01", dateString);
-	}
-	
-	@Test
-	void shouldAdd1minute() throws Exception {
-		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
-		date1 = SwitcherUtils.addTimeDuration("1m", date1);
-		String dateString = DateFormatUtils.format(date1, "yyyy-MM-dd HH:mm:ss");
-		assertEquals("2019-12-10 10:01:00", dateString);
-	}
-	
-	@Test
-	void shouldAdd1hour() throws Exception {
-		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
-		date1 = SwitcherUtils.addTimeDuration("1h", date1);
-		String dateString = DateFormatUtils.format(date1, "yyyy-MM-dd HH:mm:ss");
-		assertEquals("2019-12-10 11:00:00", dateString);
-	}
-	
-	@Test
-	void shouldAdd1day() throws Exception {
-		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
-		date1 = SwitcherUtils.addTimeDuration("1d", date1);
-		String dateString = DateFormatUtils.format(date1, "yyyy-MM-dd HH:mm:ss");
-		assertEquals("2019-12-11 10:00:00", dateString);
 	}
 	
 	@Test
@@ -89,10 +94,34 @@ class SwitcherUtilsTest {
 	}
 	
 	/**
+	 * 1. Value and time unit
+	 * 2. expected return
+	 * 
+	 * @return Stream of testable arguments
+	 */
+	static Stream<Arguments> timeArguments() {
+	    return Stream.of(
+			Arguments.of("1s", "2019-12-10 10:00:01"),
+			Arguments.of("1m", "2019-12-10 10:01:00"),
+			Arguments.of("1h", "2019-12-10 11:00:00"),
+			Arguments.of("1d", "2019-12-11 10:00:00")
+	    );
+	}
+	
+	@ParameterizedTest()
+	@MethodSource("timeArguments")
+	void shouldAddTime(String time, String expectedValue) throws ParseException {
+		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
+		date1 = SwitcherUtils.addTimeDuration(time, date1);
+		String dateString = DateFormatUtils.format(date1, "yyyy-MM-dd HH:mm:ss");
+		assertEquals(expectedValue, dateString);
+	}
+	
+	/**
 	 * 1. property value or variable
 	 * 2. expected return
 	 * 
-	 * @return Strem of testable arguments
+	 * @return Stream of testable arguments
 	 */
 	static Stream<Arguments> envArguments() {
 	    return Stream.of(
