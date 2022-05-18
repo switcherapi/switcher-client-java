@@ -89,6 +89,11 @@ public class SwitcherUtils {
 		return date;
 	}
 	
+	/**
+	 * Initialize instance of SnapshotWatcher to run in the background.
+	 * 
+	 * @param executorInstance of an Online or Offline Switcher
+	 */
 	public static void watchSnapshot(final SwitcherExecutor executorInstance) {
 		if (watcher == null)
 			watcher = new SnapshotWatcher(executorInstance);
@@ -96,6 +101,10 @@ public class SwitcherUtils {
 		new Thread(watcher, SnapshotWatcher.class.toString()).start();
 	}
 	
+	/**
+	 * If an instance of SnapshotWatcher is available, this operation will force it to terminate
+	 * and indicates to GC that the instance should be wiped from the memory.
+	 */
 	public static void stopWatchingSnapshot() {
 		if (watcher != null) {
 			watcher.terminate();

@@ -240,6 +240,9 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<configuration>
+					<excludes>
+			            <exclude>com/github/switcherapi/client/model/**</exclude>
+			        </excludes>
 					<destFile>${sonar.jacoco.reportPath}</destFile>
 					<dataFile>${sonar.jacoco.reportPath}</dataFile>
 					<append>true</append>
