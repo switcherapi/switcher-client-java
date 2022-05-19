@@ -3,24 +3,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	  <modelVersion>4.0.0</modelVersion>
-	
-  	<groupId>com.github.switcherapi</groupId>
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.github.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
 	<version>1.3.5-SNAPSHOT</version>
-	
- 	<name>Switcher Client</name>
+
+	<name>Switcher Client</name>
 	<description>Switcher Client for working with Switcher API</description>
 	<url>https://github.com/switcherapi/switcher-client</url>
-	
+
 	<licenses>
 		<license>
 			<name>MIT License</name>
 			<url>http://www.opensource.org/licenses/mit-license.php</url>
 		</license>
 	</licenses>
-	
+
 	<developers>
 		<developer>
 			<name>Roger Floriano</name>
@@ -28,8 +28,8 @@
 			<organization>switcherapi</organization>
 			<organizationUrl>https://github.com/switcherapi</organizationUrl>
 		</developer>
- 	</developers>
-	 
+	</developers>
+
 	<scm>
 		<connection>scm:git:git://github.com:switcherapi/switcher-client.git</connection>
 		<developerConnection>scm:git:ssh://github.com:switcherapi/switcher-client.git</developerConnection>
@@ -40,26 +40,26 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-	   	<maven.compiler.source>1.8</maven.compiler.source>
-   		<maven.compiler.target>1.8</maven.compiler.target>
-   		
-   		<!-- rest/json libs -->
-   		<javaee-api.version>7.0</javaee-api.version>
-   		<jackson.version>2.13.2</jackson.version>
-   		<jersey-client.version>2.35</jersey-client.version>
-   		<jersey-hk2.version>2.35</jersey-hk2.version>
-   		<jersey-media-json-jackson.version>2.35</jersey-media-json-jackson.version>
-   		<gson.version>2.9.0</gson.version>
-   		
-   		<!-- utils -->
-   		<commons-lang3.version>3.12.0</commons-lang3.version>
-   		<commons-net.version>3.8.0</commons-net.version>
-   		
-   		<!-- test -->
-   		<log4j.version>2.17.2</log4j.version>
-   		<okhttp.version>3.14.9</okhttp.version>
-   		<junit.version>5.8.2</junit.version>
-   		
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<!-- rest/json libs -->
+		<javaee-api.version>7.0</javaee-api.version>
+		<jackson.version>2.13.2</jackson.version>
+		<jersey-client.version>2.35</jersey-client.version>
+		<jersey-hk2.version>2.35</jersey-hk2.version>
+		<jersey-media-json-jackson.version>2.35</jersey-media-json-jackson.version>
+		<gson.version>2.9.0</gson.version>
+
+		<!-- utils -->
+		<commons-lang3.version>3.12.0</commons-lang3.version>
+		<commons-net.version>3.8.0</commons-net.version>
+
+		<!-- test -->
+		<log4j.version>2.17.2</log4j.version>
+		<okhttp.version>3.14.9</okhttp.version>
+		<junit.version>5.8.2</junit.version>
+
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -70,46 +70,46 @@
 	      **/exception/**/*.java
 	    </sonar.coverage.exclusions>
 	</properties>
-	
+
 	<dependencies>
-        <!-- rest/json libs -->
+		<!-- rest/json libs -->
 		<dependency>
-		    <groupId>javax</groupId>
-		    <artifactId>javaee-api</artifactId>
-		    <version>${javaee-api.version}</version>
-		    <scope>provided</scope>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>${javaee-api.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		    <groupId>org.glassfish.jersey.core</groupId>
-		    <artifactId>jersey-client</artifactId>
-		    <version>${jersey-client.version}</version>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey-client.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.glassfish.jersey.inject</groupId>
-		    <artifactId>jersey-hk2</artifactId>
-		    <version>${jersey-hk2.version}</version>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+			<version>${jersey-hk2.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.glassfish.jersey.media</groupId>
-		    <artifactId>jersey-media-json-jackson</artifactId>
-		    <version>${jersey-media-json-jackson.version}</version>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>${jersey-media-json-jackson.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.google.code.gson</groupId>
-		    <artifactId>gson</artifactId>
-		    <version>${gson.version}</version>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
 		</dependency>
-		
-        <!-- utils -->
+
+		<!-- utils -->
 		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-lang3</artifactId>
-		  	<version>${commons-lang3.version}</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>commons-net</groupId>
-		    <artifactId>commons-net</artifactId>
-		    <version>${commons-net.version}</version>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>${commons-net.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -121,71 +121,70 @@
 			<artifactId>log4j-core</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-		
-        <!-- test -->
-   		<dependency>
-		    <groupId>org.junit.jupiter</groupId>
-		    <artifactId>junit-jupiter-params</artifactId>
-		    <version>${junit.version}</version>
-		    <scope>provided</scope>
+
+		<!-- test -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<version>${junit.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		    <groupId>org.junit.jupiter</groupId>
-		    <artifactId>junit-jupiter-api</artifactId>
-		    <version>${junit.version}</version>
-		    <scope>provided</scope>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		    <groupId>com.squareup.okhttp3</groupId>
-		    <artifactId>okhttp</artifactId>
-		    <version>${okhttp.version}</version>
-		    <scope>test</scope>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>${okhttp.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
-		    <groupId>com.squareup.okhttp3</groupId>
-		    <artifactId>mockwebserver</artifactId>
-		    <version>${okhttp.version}</version>
-		    <scope>test</scope>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>mockwebserver</artifactId>
+			<version>${okhttp.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
-    <dependencyManagement>
-    	<dependencies>
-    		<dependency>
-    			<groupId>junit</groupId>
-    			<artifactId>junit</artifactId>
-    			<version>4.13.1</version>
-    		</dependency>
-    		
-    		<!-- 
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.13.1</version>
+			</dependency>
+
+			<!-- 
     			Patch vulnerability caused by jackson@2.12.2
     			Introduced by jersey-media-json-jackson@2.35
     		 -->
-    		<dependency>
-    			<groupId>com.fasterxml.jackson.core</groupId>
-	    		<artifactId>jackson-annotations</artifactId>
-	    		<version>${jackson.version}</version>
-    		</dependency>
-    		<dependency>
-    			<groupId>com.fasterxml.jackson.core</groupId>
-	    		<artifactId>jackson-core</artifactId>
-	    		<version>${jackson.version}</version>
-    		</dependency>
-    		<dependency>
-    			<groupId>com.fasterxml.jackson.core</groupId>
-	    		<artifactId>jackson-databind</artifactId>
-	    		<version>2.13.2.1</version>
-    		</dependency>
-    		<dependency>
-    			<groupId>com.fasterxml.jackson.module</groupId>
-	    		<artifactId>jackson-module-jaxb-annotations</artifactId>
-	    		<version>${jackson.version}</version>
-    		</dependency>
-    		<!-- End patch -->
-    	</dependencies>
-    </dependencyManagement>
-	
-	<!--
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>2.13.2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.module</groupId>
+				<artifactId>jackson-module-jaxb-annotations</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<!-- End patch -->
+		</dependencies>
+	</dependencyManagement>
+
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -196,9 +195,59 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 	</distributionManagement>
-	-->
-	
-    <build>
+
+	<profiles>
+		<profile>
+			<id>sign</id>
+			<build>
+				<plugins>
+					<!-- Generate and sign all artifacts -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.2.0</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.2.0</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -218,31 +267,31 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-    
-        <finalName>switcher-client</finalName>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
+
+		<finalName>switcher-client</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 
 		<plugins>
 			<!-- Set up Maven to run with JUnit5 -->
 			<plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-surefire-plugin</artifactId>
-	            <version>3.0.0-M5</version>
-	        </plugin>	
-	
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M5</version>
+			</plugin>
+
 			<!-- Tells Sonar to pick up testing results -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<configuration>
 					<excludes>
-			            <exclude>com/github/switcherapi/client/model/**</exclude>
-			        </excludes>
+						<exclude>com/github/switcherapi/client/model/**</exclude>
+					</excludes>
 					<destFile>${sonar.jacoco.reportPath}</destFile>
 					<dataFile>${sonar.jacoco.reportPath}</dataFile>
 					<append>true</append>
@@ -263,63 +312,19 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<!-- Exclude log4j2 properties -->
 			<plugin>
-		        <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-jar-plugin</artifactId>
-		        <version>3.2.0</version>
-		        <configuration>
-		            <excludes>
-		                <exclude>**/log4j2.properties</exclude>
-		            </excludes>
-		        </configuration>
-		    </plugin>
-			
-        	<!-- Generate and sign all artifacts 
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
+				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.2.0</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
+				<configuration>
+					<excludes>
+						<exclude>**/log4j2.properties</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			-->
 		</plugins>
-		
-    </build>
+	</build>
 
 </project>
