@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junitpioneer.jupiter.ClearEnvironmentVariable;
+import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherContextException;
@@ -28,6 +30,7 @@ class SwitcherUtilsTest {
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
 	
 	@BeforeEach
+	@ClearEnvironmentVariable(key = "ENVIRONMENT")
 	void reloadProperties() {
 		SwitcherContext.loadProperties();
 	}
@@ -126,13 +129,14 @@ class SwitcherUtilsTest {
 	static Stream<Arguments> envArguments() {
 	    return Stream.of(
 			Arguments.of("default", "default"),
-			Arguments.of("${PORT}", "${PORT}"),
-			Arguments.of("${PORT:8080}", "8080")
+			Arguments.of("${PORT:8080}", "8080"),
+			Arguments.of("${ENVIRONMENT}", "staging")
 	    );
 	}
 	
 	@ParameterizedTest()
 	@MethodSource("envArguments")
+	@SetEnvironmentVariable(key = "ENVIRONMENT", value = "staging")
 	void shouldReadProperties(String property, String expectedValue) {
 		//given
 		Properties prop = new Properties();
@@ -141,6 +145,33 @@ class SwitcherUtilsTest {
 		//test
 		final String value = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
 		assertEquals(expectedValue, value);
+	}
+	
+	@Test
+	@SetEnvironmentVariable(key = "ENVIRONMENT", value = "test")
+	void shouldReadPropertyFromEnvironmentIgnoreDefault() throws Exception {
+		final String expected = "test";
+		
+		Properties prop = new Properties();
+		prop.setProperty(SwitcherContextParam.ENVIRONMENT, "${ENVIRONMENT:default}");
+		
+		//test
+		final String actual = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void shouldNotReadUnsetProperty() throws Exception {
+		//given
+		Properties prop = new Properties();
+		prop.setProperty(SwitcherContextParam.ENVIRONMENT, "${ENVIRONMENT}");
+		
+		//test
+		Exception ex = assertThrows(SwitcherContextException.class, () -> {
+			SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
+		});
+		
+		assertEquals("Something went wrong: Context has errors - Property ${ENVIRONMENT} not defined", ex.getMessage());
 	}
 
 }

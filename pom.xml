@@ -59,6 +59,7 @@
 		<log4j.version>2.17.2</log4j.version>
 		<okhttp.version>3.14.9</okhttp.version>
 		<junit.version>5.8.2</junit.version>
+		<junit-pioneer.version>1.7.0</junit-pioneer.version>
 
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -146,6 +147,12 @@
 			<artifactId>mockwebserver</artifactId>
 			<version>${okhttp.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+		      <groupId>org.junit-pioneer</groupId>
+		      <artifactId>junit-pioneer</artifactId>
+		      <version>${junit-pioneer.version}</version>  
+		      <scope>test</scope>
 		</dependency>
 	</dependencies>
 
