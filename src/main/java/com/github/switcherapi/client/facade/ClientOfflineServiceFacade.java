@@ -45,7 +45,7 @@ public class ClientOfflineServiceFacade {
 	private static final String DEBUG_STRATEGY = "strategy: %s";
 	
 	public static final String DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
-	public static final String CIDR_REGEX = "^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))";
+	public static final String CIDR_REGEX = "^(\\d{1,3}\\.){3}\\d{1,3}(\\/(\\d|[1-2]\\d|3[0-2]))";
 	public static final String DELIMITER_REGEX = "\\b%s\\b";
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	public static final String DISABLED_DOMAIN = "Domain disabled";
