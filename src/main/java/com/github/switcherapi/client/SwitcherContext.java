@@ -46,9 +46,14 @@ import com.github.switcherapi.client.utils.SwitcherUtils;
  * This class will load Switcher Properties internally, making it ready to use.
  * By inheriting this class, all Switchers can be placed in one single place.
  * 
- * <p>
- * Annotate your property with @SwitcherKey
+ * <pre>
+ * public class SwitcherFeatures extends SwitcherContext {
+ * 	&#064;SwitcherKey
+ * 	public static final String MY_FEATURE = "MY_FEATURE";
+ * }
+ * </pre>
  * 
+ * @see SwitcherKey
  * @author Roger Floriano (petruki)
  */
 public abstract class SwitcherContext {
@@ -128,7 +133,7 @@ public abstract class SwitcherContext {
 	}
 	
 	/**
-	 * Validate Switcher Keys.
+	 * Validate Switcher Keys.<br>
 	 * It will ensure that only properly annotated Switchers can be used.
 	 */
 	private static void validateSwitcherKeys() {
@@ -192,7 +197,7 @@ public abstract class SwitcherContext {
 	}
 	
 	/**
-	 * Validate and update local snapshot file
+	 * Validate and update local snapshot file.<br>
 	 * It requires offline mode or SwitcherContextParam.SNAPSHOT_LOCATION configured
 	 * 
 	 * @return true if validation was performed
@@ -208,7 +213,7 @@ public abstract class SwitcherContext {
 	}
 	
 	/**
-	 * Start watching snapshot files for modifications. 
+	 * Start watching snapshot files for modifications.<br>
 	 * When the file is modified the in-memory snapshot will reload
 	 */
 	public static void watchSnapshot() {

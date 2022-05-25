@@ -11,6 +11,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.switcherapi.client.factory.SwitcherExecutor;
 
@@ -143,6 +144,7 @@ public class SwitcherUtils {
 	 * System environment or default argument.
 	 * 
 	 * @param value assigned from the properties file
+	 * @param defaultValue 
 	 * @return Resolved value
 	 */
 	private static StringBuilder resolveEnvironmentVariable(final String value) {
@@ -151,13 +153,14 @@ public class SwitcherUtils {
 	    StringBuilder sBuilder = new StringBuilder();
 	    
 	    if (matcher.find()) {
-	        setWithSystemEnv(matcher, sBuilder);
+	        if (!setWithSystemEnv(matcher, sBuilder))
+	    	    throw new SwitcherContextException(String.format("Property %s not defined", value));
 	    } else {
         	pattern = Pattern.compile(ENV_DEFAULT_VARIABLE_PATTERN);
         	matcher = pattern.matcher(value);
         	
         	 if (matcher.find() &&
-    			 setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null)
+    			 !setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null)
         			sBuilder.append(matcher.group(2));
         }
 		return sBuilder;
@@ -168,7 +171,7 @@ public class SwitcherUtils {
 	 * 
 	 * @param matcher Matches given property name
 	 * @param sBuilder value given to property
-	 * @return true if System.genevn returns a value
+	 * @return true if System.getenv returns a value
 	 */
 	private static boolean setWithSystemEnv(Matcher matcher, StringBuilder sBuilder) {
 		if (matcher.group(1) != null) {
@@ -177,7 +180,7 @@ public class SwitcherUtils {
 			sBuilder.append(null == envVarValue ? StringUtils.EMPTY : envVarValue);		
 		}
 		
-		return StringUtils.isEmpty(sBuilder.toString());
+		return !StringUtils.isEmpty(sBuilder.toString());
 	}
 	
 
