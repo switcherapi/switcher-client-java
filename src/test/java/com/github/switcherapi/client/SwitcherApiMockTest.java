@@ -24,7 +24,10 @@ import org.glassfish.jersey.internal.guava.Sets;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
@@ -47,6 +50,7 @@ import com.google.gson.Gson;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SwitcherApiMockTest {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
@@ -474,6 +478,7 @@ class SwitcherApiMockTest {
 	}
 	
 	@Test
+	@Order(value = 1)
 	void shouldNotLookupForSnapshot_invalidLocation() {
 		//given
 		Switchers.getProperties().setSnapshotAutoLoad(true);
@@ -505,6 +510,7 @@ class SwitcherApiMockTest {
 	}
 	
 	@Test
+	@Order(value = 2)
 	void shouldNotLookupForSnapshot_invalidFolderLocation() {
 		//given
 		Switchers.getProperties().setSnapshotAutoLoad(true);
