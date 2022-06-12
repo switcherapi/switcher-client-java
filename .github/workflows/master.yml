@@ -30,13 +30,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-test-matrix:
-    name: Matrix - Build & Test
+    name: Build & Test - JDK ${{ matrix.Java }} on ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         java: [ '8', '9', '11', '13', '15', '17']
         os: [ ubuntu-latest, windows-latest ]
-    name: Java ${{ matrix.Java }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
 
