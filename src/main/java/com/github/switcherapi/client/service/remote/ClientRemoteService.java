@@ -12,6 +12,7 @@ import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForComponentException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
+import com.github.switcherapi.client.exception.SwitcherSnapshoException;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
@@ -69,41 +70,39 @@ public class ClientRemoteService {
 		return criteriaReponse;
 	}
 	
-	public Snapshot resolveSnapshot() {
-		try {
-			if (!this.isTokenValid()) {
-				this.auth();
-			}
-					
-			final Response response = this.clientService.resolveSnapshot(
-					this.authResponse.orElseGet(AuthResponse::new).getToken());
-			final Snapshot snapshot = response.readEntity(Snapshot.class);
-			response.close();
-			return snapshot;
-		} catch (final SwitcherException e) {
-			throw e;
-		} catch (final Exception e) {
-			throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl(), e);
+	public Snapshot resolveSnapshot() throws SwitcherException {
+		if (!this.isTokenValid()) {
+			this.auth();
 		}
+				
+		final Response response = this.clientService.resolveSnapshot(
+				this.authResponse.orElseGet(AuthResponse::new).getToken());
+		
+		if (response.getStatus() != 200) {
+			throw new SwitcherSnapshoException("resolveSnapshot");
+		}
+		
+		final Snapshot snapshot = response.readEntity(Snapshot.class);
+		response.close();
+		return snapshot;
 	}
 	
 	public boolean checkSnapshotVersion(final long version) {
-		try {
-			if (!this.isTokenValid()) {
-				this.auth();
-			}
-					
-			final Response response = this.clientService.checkSnapshotVersion(version, 
-					this.authResponse.orElseGet(AuthResponse::new).getToken());
-			final SnapshotVersionResponse snapshotVersionResponse = response.readEntity(SnapshotVersionResponse.class);
-			response.close();
-			
-			return snapshotVersionResponse.isUpdated();
-		} catch (final SwitcherException e) {
-			throw e;
-		} catch (final Exception e) {
-			throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl(), e);
+		if (!this.isTokenValid()) {
+			this.auth();
 		}
+				
+		final Response response = this.clientService.checkSnapshotVersion(version, 
+				this.authResponse.orElseGet(AuthResponse::new).getToken());
+		
+		if (response.getStatus() != 200) {
+			throw new SwitcherSnapshoException("resolveSnapshot");
+		}
+		
+		final SnapshotVersionResponse snapshotVersionResponse = response.readEntity(SnapshotVersionResponse.class);
+		response.close();
+		
+		return snapshotVersionResponse.isUpdated();
 	}
 	
 	public SwitchersCheck checkSwitchers(final Set<String> switchers) {

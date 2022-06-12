@@ -34,6 +34,7 @@ import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForComponentException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
+import com.github.switcherapi.client.exception.SwitcherSnapshoException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.Entry;
@@ -263,9 +264,9 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateStatusResponse("404"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
-		assertThrows(SwitcherKeyNotFoundException.class, () -> {
-			switcher.isItOn();
-		});
+		assertThrows(SwitcherKeyNotFoundException.class, () ->
+			switcher.isItOn()
+		);
 	}
 	
 	@Test
@@ -302,7 +303,7 @@ class SwitcherApiMockTest {
 		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
 		Switchers.getProperties().setEnvironment("snapshot_fixture1");
 		Switchers.getProperties().setSilentMode(true);
-		Switchers.getProperties().setRetryAfter("2s");
+		Switchers.getProperties().setRetryAfter("5s");
 		Switchers.initializeClient();
 		
 		//auth
@@ -321,7 +322,10 @@ class SwitcherApiMockTest {
 		//isAlive - service unavailable
 		mockBackEnd.enqueue(generateStatusResponse("503"));
 		
-		//test
+		//test will trigger silent
+		assertTrue(switcher.isItOn());
+		
+		//test will use silent (read from snapshot)
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -408,6 +412,28 @@ class SwitcherApiMockTest {
 	}
 	
 	@Test
+	void shouldNotLookupForSnapshot_serviceUnavailable() {
+		//given
+		Switchers.getProperties().setSnapshotAutoLoad(true);
+		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/new_folder");
+		Switchers.getProperties().setEnvironment("generated_on_new_folder");
+		
+		//auth
+		mockBackEnd.enqueue(generateMockAuth(10));
+		
+		//graphql
+		mockBackEnd.enqueue(generateStatusResponse("503"));
+		
+		//test
+		Exception ex = assertThrows(SwitcherSnapshoException.class, () ->
+			Switchers.initializeClient()
+		);
+		
+		assertEquals("Something went wrong: Unable to execute resolveSnapshot", 
+			ex.getMessage());
+	}
+	
+	@Test
 	void shouldLookupForSnapshot_whenNotAutoLoad() {
 		//given
 		Switchers.getProperties().setSnapshotAutoLoad(false);
@@ -422,9 +448,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateSnapshotResponse());
 		
 		//test
-		assertDoesNotThrow(() -> {
-			Switchers.validateSnapshot();
-		});
+		assertDoesNotThrow(() -> Switchers.validateSnapshot());
 	}
 	
 	@Test
@@ -449,9 +473,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateSnapshotResponse());
 		
 		//test
-		assertDoesNotThrow(() -> {
-			Switchers.validateSnapshot();
-		});
+		assertDoesNotThrow(() -> Switchers.validateSnapshot());
 	}
 	
 	@Test
@@ -470,7 +492,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateStatusResponse("503"));
 		
 		//test
-		assertThrows(SwitcherAPIConnectionException.class, () ->
+		assertThrows(SwitcherSnapshoException.class, () ->
 			Switchers.validateSnapshot()
 		);
 	}
@@ -582,9 +604,9 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateStatusResponse("503"));
 		
 		//test
-		assertThrows(SwitcherAPIConnectionException.class, () -> {
-			Switchers.checkSwitchers();
-		});
+		assertThrows(SwitcherAPIConnectionException.class, () ->
+			Switchers.checkSwitchers()
+		);
 	}
 	
 	@Test
