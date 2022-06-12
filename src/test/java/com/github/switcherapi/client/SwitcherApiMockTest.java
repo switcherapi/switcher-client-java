@@ -229,8 +229,6 @@ class SwitcherApiMockTest {
 		//test
 		assertTrue(switcher.isItOn(entries));
 		assertNotNull(switcher.getHistoryExecution());
-		
-		System.out.println(switcher.getHistoryExecution());
 		assertNull(switcher.getHistoryExecution().stream().findFirst().get().getReason());
 	}
 	

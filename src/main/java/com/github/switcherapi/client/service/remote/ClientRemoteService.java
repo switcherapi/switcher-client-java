@@ -1,6 +1,7 @@
 package com.github.switcherapi.client.service.remote;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.ws.rs.core.Response;
@@ -32,7 +33,7 @@ public class ClientRemoteService {
 	
 	private ClientWS clientService;
 	
-	private AuthResponse authResponse;
+	private Optional<AuthResponse> authResponse = Optional.empty();
 	
 	private ClientRemoteService() {
 		this.clientService = new ClientWSImpl();
@@ -49,9 +50,9 @@ public class ClientRemoteService {
 		if (!this.isTokenValid()) {
 			this.auth();
 		}
-				
+		
 		final Response response = this.clientService.executeCriteriaService(
-				switcher, this.authResponse.getToken());
+				switcher, this.authResponse.get().getToken());
 		
 		if (response.getStatus() == 401) {
 			throw new SwitcherKeyNotAvailableForComponentException(
@@ -64,6 +65,7 @@ public class ClientRemoteService {
 		criteriaReponse.setSwitcherKey(switcher.getSwitcherKey());
 		criteriaReponse.setEntry(switcher.getEntry());
 		response.close();
+		
 		return criteriaReponse;
 	}
 	
@@ -73,7 +75,8 @@ public class ClientRemoteService {
 				this.auth();
 			}
 					
-			final Response response = this.clientService.resolveSnapshot(this.authResponse.getToken());
+			final Response response = this.clientService.resolveSnapshot(
+					this.authResponse.orElseGet(AuthResponse::new).getToken());
 			final Snapshot snapshot = response.readEntity(Snapshot.class);
 			response.close();
 			return snapshot;
@@ -90,7 +93,8 @@ public class ClientRemoteService {
 				this.auth();
 			}
 					
-			final Response response = this.clientService.checkSnapshotVersion(version, this.authResponse.getToken());
+			final Response response = this.clientService.checkSnapshotVersion(version, 
+					this.authResponse.orElseGet(AuthResponse::new).getToken());
 			final SnapshotVersionResponse snapshotVersionResponse = response.readEntity(SnapshotVersionResponse.class);
 			response.close();
 			
@@ -108,7 +112,8 @@ public class ClientRemoteService {
 				this.auth();
 			}
 					
-			final Response response = this.clientService.checkSwitchers(switchers, this.authResponse.getToken());
+			final Response response = this.clientService.checkSwitchers(switchers, 
+					this.authResponse.orElseGet(AuthResponse::new).getToken());
 			
 			if (response.getStatus() != 200) {
 				throw new SwitcherException(
@@ -132,7 +137,7 @@ public class ClientRemoteService {
 				throw new SwitcherException("Unauthorized API access", null); 
 			}
 			
-			this.authResponse = response.readEntity(AuthResponse.class);
+			this.authResponse = Optional.of(response.readEntity(AuthResponse.class));
 			response.close();
 		} catch (final SwitcherException e) {
 			throw e;
@@ -145,8 +150,9 @@ public class ClientRemoteService {
 	private boolean isTokenValid() throws SwitcherAPIConnectionException, 
 		SwitcherInvalidDateTimeArgumentException {
 		
-		if (this.authResponse != null) {
-			if (this.authResponse.getToken().equals(SwitcherContextParam.SILENT_MODE) && !this.authResponse.isExpired()) {
+		if (this.authResponse.isPresent()) {
+			if (this.authResponse.get().getToken().equals(SwitcherContextParam.SILENT_MODE) 
+					&& !this.authResponse.get().isExpired()) {
 				throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl());
 			} else {
 				if (!this.clientService.isAlive()) {
@@ -154,7 +160,7 @@ public class ClientRemoteService {
 					throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl());
 				}
 				
-				return !authResponse.isExpired();
+				return !this.authResponse.orElseGet(AuthResponse::new).isExpired();
 			}
 		}
 		
@@ -168,7 +174,7 @@ public class ClientRemoteService {
 			
 			response.setToken(SwitcherContextParam.SILENT_MODE);
 			response.setExp(SwitcherUtils.addTimeDuration(addValue, new Date()).getTime()/1000);
-			this.authResponse = response;
+			this.authResponse = Optional.of(response);
 		}
 	}
 
@@ -177,7 +183,7 @@ public class ClientRemoteService {
 	}
 
 	public void clearAuthResponse() {
-		this.authResponse = null;
+		this.authResponse = Optional.empty();
 	}
 
 }
