@@ -3,6 +3,7 @@ package com.github.switcherapi.client.model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 
 /**
@@ -45,8 +46,12 @@ public class AsyncSwitcher implements Runnable {
 
 	@Override
 	public void run() {
-		final CriteriaResponse response = switcher.getContext().executeCriteria(this.switcher);
-		switcher.getHistoryExecution().add(response);
+		try {
+			final CriteriaResponse response = switcher.getContext().executeCriteria(this.switcher);
+			switcher.getHistoryExecution().add(response);
+		} catch (SwitcherException e) {
+			logger.error(e);
+		}
 	}
 
 }

@@ -139,7 +139,7 @@ class SwitcherUtilsTest {
 	@ParameterizedTest()
 	@MethodSource("envArguments")
 	@SetEnvironmentVariable(key = "ENVIRONMENT", value = "staging")
-	@EnabledOnJre(value = JRE.JAVA_11)
+	@EnabledOnJre(value = { JRE.JAVA_8, JRE.JAVA_11 })
 	void shouldReadProperties(String property, String expectedValue) {
 		//given
 		Properties prop = new Properties();
@@ -152,7 +152,7 @@ class SwitcherUtilsTest {
 	
 	@Test
 	@SetEnvironmentVariable(key = "ENVIRONMENT", value = "test")
-	@EnabledOnJre(value = JRE.JAVA_11)
+	@EnabledOnJre(value = { JRE.JAVA_8, JRE.JAVA_11 })
 	void shouldReadPropertyFromEnvironmentIgnoreDefault() throws Exception {
 		final String expected = "test";
 		
