@@ -15,6 +15,10 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
+import org.junit.jupiter.api.condition.DisabledOnJre;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -137,6 +141,7 @@ class SwitcherUtilsTest {
 	@ParameterizedTest()
 	@MethodSource("envArguments")
 	@SetEnvironmentVariable(key = "ENVIRONMENT", value = "staging")
+	@EnabledOnJre(value = JRE.JAVA_11)
 	void shouldReadProperties(String property, String expectedValue) {
 		//given
 		Properties prop = new Properties();
@@ -149,6 +154,7 @@ class SwitcherUtilsTest {
 	
 	@Test
 	@SetEnvironmentVariable(key = "ENVIRONMENT", value = "test")
+	@EnabledOnJre(value = JRE.JAVA_11)
 	void shouldReadPropertyFromEnvironmentIgnoreDefault() throws Exception {
 		final String expected = "test";
 		
