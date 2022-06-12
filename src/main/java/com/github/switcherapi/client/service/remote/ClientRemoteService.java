@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.facade;
+package com.github.switcherapi.client.service.remote;
 
 import java.util.Date;
 import java.util.Set;
@@ -26,21 +26,21 @@ import com.github.switcherapi.client.ws.ClientWSImpl;
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class ClientServiceFacade {
+public class ClientRemoteService {
 	
-	private static ClientServiceFacade instance;
+	private static ClientRemoteService instance;
 	
 	private ClientWS clientService;
 	
 	private AuthResponse authResponse;
 	
-	private ClientServiceFacade() {
+	private ClientRemoteService() {
 		this.clientService = new ClientWSImpl();
 	}
 	
-	public static ClientServiceFacade getInstance() {
+	public static ClientRemoteService getInstance() {
 		if (instance == null) {
-			instance = new ClientServiceFacade();
+			instance = new ClientRemoteService();
 		}
 		return instance;
 	}

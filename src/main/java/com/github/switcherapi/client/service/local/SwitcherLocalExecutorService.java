@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.factory;
+package com.github.switcherapi.client.service.local;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -11,29 +11,29 @@ import org.apache.logging.log4j.Logger;
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
-import com.github.switcherapi.client.facade.ClientOfflineServiceFacade;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.SwitcherProperties;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.service.SwitcherExecutor;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 
 /**
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class SwitcherOffline extends SwitcherExecutor {
+public class SwitcherLocalExecutorService extends SwitcherExecutor {
 	
-	private static final Logger logger = LogManager.getLogger(SwitcherOffline.class);
+	private static final Logger logger = LogManager.getLogger(SwitcherLocalExecutorService.class);
 	
 	private Domain domain;
 	
-	public SwitcherOffline() {
+	public SwitcherLocalExecutorService() {
 		this.init();
 	}
 	
 	/**
-	 * Initialize snapshot in memory. It priotizes direct file path over environment based snapshot
+	 * Initialize snapshot in memory. It prioritizes direct file path over environment based snapshot
 	 * 
 	 * @throws SwitcherSnapshotLoadException in case it was not possible to load snapshot automatically
 	 */
@@ -60,7 +60,7 @@ public class SwitcherOffline extends SwitcherExecutor {
 			logger.debug(String.format("switcher: %s", switcher));
 		}
 		
-		final CriteriaResponse response = ClientOfflineServiceFacade.getInstance().executeCriteria(switcher, this.domain);
+		final CriteriaResponse response = ClientLocalService.getInstance().executeCriteria(switcher, this.domain);
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("[Offline] response: %s", response));
@@ -86,7 +86,7 @@ public class SwitcherOffline extends SwitcherExecutor {
 			logger.debug(String.format("switchers: %s", switchers));
 		}
 		
-		final List<String> response = ClientOfflineServiceFacade.getInstance().checkSwitchers(switchers, this.domain);
+		final List<String> response = ClientLocalService.getInstance().checkSwitchers(switchers, this.domain);
 		if (!response.isEmpty()) {
 			throw new SwitchersValidationException(response.toString());
 		}

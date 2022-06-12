@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.github.switcherapi</groupId>
@@ -63,6 +61,9 @@
 
 		<!-- Plugins -->
 		<maven-compiler.version>3.8.1</maven-compiler.version>
+		<maven-source.version>3.2.0</maven-source.version>
+		<maven-surefire.version>3.0.0-M5</maven-surefire.version>
+		<maven-gpg.version>3.0.1</maven-gpg.version>
 		<sonar.version>3.7.0.1746</sonar.version>
 		<jacoco.version>0.8.4</jacoco.version>
 
@@ -153,10 +154,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-		      <groupId>org.junit-pioneer</groupId>
-		      <artifactId>junit-pioneer</artifactId>
-		      <version>${junit-pioneer.version}</version>  
-		      <scope>test</scope>
+			<groupId>org.junit-pioneer</groupId>
+			<artifactId>junit-pioneer</artifactId>
+			<version>${junit-pioneer.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -209,14 +210,14 @@
 
 	<profiles>
 		<profile>
-            <id>coverage</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<executions>
+							<execution>
 								<id>jacoco-initialize</id>
 								<goals>
 									<goal>prepare-agent</goal>
@@ -229,40 +230,40 @@
 									<goal>report</goal>
 								</goals>
 							</execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-	    <profile>
-            <id>sonar</id>
-            <properties>
-                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-                <sonar.organization>switcherapi</sonar.organization>
-                <sonar.projectKey>switcherapi_switcher-client</sonar.projectKey>
-                <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
-            </properties>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonarsource.scanner.maven</groupId>
-                        <artifactId>sonar-maven-plugin</artifactId>
-                        <version>${sonar.version}</version>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sonar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>sonar</id>
+			<properties>
+				<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+				<sonar.organization>switcherapi</sonar.organization>
+				<sonar.projectKey>switcherapi_switcher-client</sonar.projectKey>
+				<sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
+			</properties>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.sonarsource.scanner.maven</groupId>
+						<artifactId>sonar-maven-plugin</artifactId>
+						<version>${sonar.version}</version>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>sonar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>sign</id>
 			<build>
@@ -271,7 +272,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.2.0</version>
+						<version>${maven-source.version}</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -284,7 +285,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.2.0</version>
+						<version>${maven-source.version}</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -297,7 +298,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
+						<version>${maven-gpg.version}</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -347,14 +348,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M5</version>
+				<version>${maven-surefire.version}</version>
 			</plugin>
 
 			<!-- Exclude log4j2 properties -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>${maven-source.version}</version>
 				<configuration>
 					<excludes>
 						<exclude>**/log4j2.properties</exclude>

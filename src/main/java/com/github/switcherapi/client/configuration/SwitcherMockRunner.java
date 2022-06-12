@@ -11,8 +11,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 
-import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.service.SwitcherExecutor;
 
 /**
  * This runner implements a Parameterized Test that can mock the Switcher result and
