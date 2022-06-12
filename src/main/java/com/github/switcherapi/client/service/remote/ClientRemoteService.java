@@ -67,7 +67,7 @@ public class ClientRemoteService {
 		return criteriaReponse;
 	}
 	
-	public Snapshot resolveSnapshot() {
+	public synchronized Snapshot resolveSnapshot() {
 		try {
 			if (!this.isTokenValid()) {
 				this.auth();
@@ -84,7 +84,7 @@ public class ClientRemoteService {
 		}
 	}
 	
-	public boolean checkSnapshotVersion(final long version) {
+	public synchronized boolean checkSnapshotVersion(final long version) {
 		try {
 			if (!this.isTokenValid()) {
 				this.auth();
@@ -102,7 +102,7 @@ public class ClientRemoteService {
 		}
 	}
 	
-	public SwitchersCheck checkSwitchers(final Set<String> switchers) {
+	public synchronized SwitchersCheck checkSwitchers(final Set<String> switchers) {
 		try {
 			if (!this.isTokenValid()) {
 				this.auth();
@@ -124,7 +124,7 @@ public class ClientRemoteService {
 		}
 	}
 	
-	private void auth() {
+	private synchronized void auth() {
 		try {
 			final Response response = this.clientService.auth();
 			
@@ -142,7 +142,7 @@ public class ClientRemoteService {
 		}
 	}
 	
-	private boolean isTokenValid() throws SwitcherAPIConnectionException, 
+	private synchronized boolean isTokenValid() throws SwitcherAPIConnectionException, 
 		SwitcherInvalidDateTimeArgumentException {
 		
 		if (this.authResponse != null) {
