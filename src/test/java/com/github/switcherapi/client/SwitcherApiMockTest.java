@@ -36,12 +36,12 @@ import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForCompone
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
-import com.github.switcherapi.client.facade.ClientServiceFacade;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
+import com.github.switcherapi.client.service.remote.ClientRemoteService;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.github.switcherapi.client.ws.ClientWSImpl;
@@ -86,7 +86,7 @@ class SwitcherApiMockTest {
 	
 	@BeforeEach
 	void resetSwitcherContextState() {
-		ClientServiceFacade.getInstance().clearAuthResponse();
+		ClientRemoteService.getInstance().clearAuthResponse();
 		
 		Switchers.getProperties().setOfflineMode(false);
 		Switchers.getProperties().setSnapshotLocation(null);

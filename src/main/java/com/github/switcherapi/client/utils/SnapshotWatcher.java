@@ -14,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.SwitcherContext;
-import com.github.switcherapi.client.factory.SwitcherExecutor;
+import com.github.switcherapi.client.service.SwitcherExecutor;
 
 /**
  * @author Roger Floriano (petruki)

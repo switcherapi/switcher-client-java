@@ -17,9 +17,9 @@ import com.github.switcherapi.client.exception.SwitcherInvalidOperationException
 import com.github.switcherapi.client.exception.SwitcherInvalidOperationInputException;
 import com.github.switcherapi.client.exception.SwitcherInvalidStrategyException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
-import com.github.switcherapi.client.factory.SwitcherOffline;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.service.local.SwitcherLocalExecutorService;
 
 class SwitcherOfflineFix3Test {
 	
@@ -142,7 +142,7 @@ class SwitcherOfflineFix3Test {
 		switchers.add(Switchers.USECASE17);
 		switchers.add(Switchers.USECASE16);
 		
-		SwitcherOffline switcherOffline = new SwitcherOffline();
+		SwitcherLocalExecutorService switcherOffline = new SwitcherLocalExecutorService();
 		switcherOffline.init();
 		
 		//test
@@ -155,7 +155,7 @@ class SwitcherOfflineFix3Test {
 		Set<String> notFound = Sets.newHashSet();
 		notFound.add("NOT_FOUND_1");
 		
-		SwitcherOffline switcherOffline = new SwitcherOffline();
+		SwitcherLocalExecutorService switcherOffline = new SwitcherLocalExecutorService();
 		switcherOffline.init();
 		
 		//test

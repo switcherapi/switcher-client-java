@@ -7,8 +7,8 @@ import java.util.Set;
 
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherException;
-import com.github.switcherapi.client.factory.SwitcherExecutor;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.service.SwitcherExecutor;
 
 /**
  * Switchers are responsible for wrapping the input and output coming from the Switcher API.

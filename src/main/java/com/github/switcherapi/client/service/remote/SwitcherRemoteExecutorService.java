@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.factory;
+package com.github.switcherapi.client.service.remote;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -10,23 +10,24 @@ import org.apache.logging.log4j.Logger;
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
-import com.github.switcherapi.client.facade.ClientServiceFacade;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.service.SwitcherExecutor;
+import com.github.switcherapi.client.service.local.SwitcherLocalExecutorService;
 
 /**
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class SwitcherOnline extends SwitcherExecutor {
+public class SwitcherRemoteExecutorService extends SwitcherExecutor {
 	
-	private static final Logger logger = LogManager.getLogger(SwitcherOnline.class);
+	private static final Logger logger = LogManager.getLogger(SwitcherRemoteExecutorService.class);
 	
-	private SwitcherOffline switcherOffline;
+	private SwitcherLocalExecutorService switcherOffline;
 	
-	public SwitcherOnline() {
-		this.switcherOffline = new SwitcherOffline();
+	public SwitcherRemoteExecutorService() {
+		this.switcherOffline = new SwitcherLocalExecutorService();
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class SwitcherOnline extends SwitcherExecutor {
 		}
 		
 		try {
-			final CriteriaResponse response = ClientServiceFacade.getInstance().executeCriteria(switcher);
+			final CriteriaResponse response = ClientRemoteService.getInstance().executeCriteria(switcher);
 			
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("[Online] response: %s", response));
@@ -85,7 +86,7 @@ public class SwitcherOnline extends SwitcherExecutor {
 			logger.debug(String.format("switchers: %s", switchers));
 		}
 		
-		final SwitchersCheck response = ClientServiceFacade.getInstance().checkSwitchers(switchers);
+		final SwitchersCheck response = ClientRemoteService.getInstance().checkSwitchers(switchers);
 		if (response.getNotFound() != null && response.getNotFound().length > 0) {
 			throw new SwitchersValidationException(Arrays.toString(response.getNotFound()));
 		}
