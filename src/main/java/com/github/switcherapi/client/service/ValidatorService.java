@@ -29,8 +29,9 @@ public class ValidatorService {
 		if (validatorClass.isAnnotationPresent(ValidatorComponent.class)) {
 			try {
 				validators.put(validatorClass.getAnnotation(
-						ValidatorComponent.class).type(), validatorClass.newInstance());
-			} catch (InstantiationException | IllegalAccessException e) {
+						ValidatorComponent.class).type(), 
+						validatorClass.getConstructor().newInstance());
+			} catch (Exception e) {
 				throw new SwitcherException(e.getMessage(), e);
 			}
 		}
