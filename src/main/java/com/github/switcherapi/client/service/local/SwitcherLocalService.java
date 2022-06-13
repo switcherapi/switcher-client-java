@@ -9,26 +9,26 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.SwitcherContext;
+import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.SwitcherProperties;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
-import com.github.switcherapi.client.service.SwitcherExecutor;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 
 /**
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class SwitcherLocalExecutorService extends SwitcherExecutor {
+public class SwitcherLocalService extends SwitcherExecutor {
 	
-	private static final Logger logger = LogManager.getLogger(SwitcherLocalExecutorService.class);
+	private static final Logger logger = LogManager.getLogger(SwitcherLocalService.class);
 	
 	private Domain domain;
 	
-	public SwitcherLocalExecutorService() {
+	public SwitcherLocalService() {
 		this.init();
 	}
 	

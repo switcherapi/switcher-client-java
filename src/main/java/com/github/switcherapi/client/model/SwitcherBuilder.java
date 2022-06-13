@@ -8,7 +8,7 @@ import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 
 /**
- * Facade builder that simplifies how input are programatically wrapped inside the Switcher.
+ * Facade builder that simplifies how input are programmatically wrapped inside the Switcher.
  * It also allows chained calls that make the code clear.
  * 
  * @author Roger Floriano (petruki)
@@ -37,12 +37,12 @@ public abstract class SwitcherBuilder {
 	/**
 	 * Add a validation to the entry stack
 	 * 
-	 * @param validator name
+	 * @param strategy validator
 	 * @param input to be evaluated
 	 * @return switcher itself
 	 */
-	public SwitcherBuilder check(String validator, String input) {
-		entry.add(new Entry(validator, input));
+	public SwitcherBuilder check(StrategyValidator strategy, String input) {
+		entry.add(Entry.build(strategy, input));
 		return this;
 	}
 	
@@ -53,7 +53,7 @@ public abstract class SwitcherBuilder {
 	 * @return switcher itself
 	 */
 	public SwitcherBuilder checkValue(String input) {
-		return check(Entry.VALUE, input);
+		return check(StrategyValidator.VALUE, input);
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public abstract class SwitcherBuilder {
 	 * @return switcher itself
 	 */
 	public SwitcherBuilder checkNumeric(String input) {
-		return check(Entry.NUMERIC, input);
+		return check(StrategyValidator.NUMERIC, input);
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public abstract class SwitcherBuilder {
 	 * @return switcher itself
 	 */
 	public SwitcherBuilder checkNetwork(String input) {
-		return check(Entry.NETWORK, input);
+		return check(StrategyValidator.NETWORK, input);
 	}
 	
 	/**
@@ -83,7 +83,7 @@ public abstract class SwitcherBuilder {
 	 * @return switcher itself
 	 */
 	public SwitcherBuilder checkRegex(String input) {
-		return check(Entry.REGEX, input);
+		return check(StrategyValidator.REGEX, input);
 	}
 	
 	/**
@@ -93,7 +93,7 @@ public abstract class SwitcherBuilder {
 	 * @return switcher itself
 	 */
 	public SwitcherBuilder checkTime(String input) {
-		return check(Entry.TIME, input);
+		return check(StrategyValidator.TIME, input);
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public abstract class SwitcherBuilder {
 	 * @return switcher itself
 	 */
 	public SwitcherBuilder checkDate(String input) {
-		return check(Entry.DATE, input);
+		return check(StrategyValidator.DATE, input);
 	}
 	
 	/**

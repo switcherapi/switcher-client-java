@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.configuration;
+package com.github.switcherapi.client;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

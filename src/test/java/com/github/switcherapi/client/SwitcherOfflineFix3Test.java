@@ -18,8 +18,9 @@ import com.github.switcherapi.client.exception.SwitcherInvalidOperationInputExce
 import com.github.switcherapi.client.exception.SwitcherInvalidStrategyException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.Entry;
+import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.service.local.SwitcherLocalExecutorService;
+import com.github.switcherapi.client.service.local.SwitcherLocalService;
 
 class SwitcherOfflineFix3Test {
 	
@@ -37,7 +38,7 @@ class SwitcherOfflineFix3Test {
 	@Test
 	void offlineShouldReturnError_InvalidSnapshotStrategy() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
-		switcher.prepareEntry(new Entry("INVALID_NAME_FOR_VALIDATION", "Value"));
+		switcher.prepareEntry(Entry.build("INVALID_NAME_FOR_VALIDATION", "Value"));
 		
 		assertThrows(SwitcherInvalidStrategyException.class, () -> {
 			switcher.isItOn();
@@ -47,7 +48,7 @@ class SwitcherOfflineFix3Test {
 	@Test
 	void offlineShouldReturnError_InvalidSnapshotOperationForNetwork() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE12);
-		switcher.prepareEntry(new Entry(Entry.NETWORK, "10.0.0.1"));
+		switcher.prepareEntry(Entry.build(StrategyValidator.NETWORK, "10.0.0.1"));
 		
 		assertThrows(SwitcherInvalidOperationException.class, () -> {
 			switcher.isItOn();
@@ -57,7 +58,7 @@ class SwitcherOfflineFix3Test {
 	@Test
 	void offlineShouldReturnError_InvalidSnapshotOperationForValue() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE13);
-		switcher.prepareEntry(new Entry(Entry.VALUE, "Value"));
+		switcher.prepareEntry(Entry.build(StrategyValidator.VALUE, "Value"));
 		
 		assertThrows(SwitcherInvalidOperationException.class, () -> {
 			switcher.isItOn();
@@ -67,7 +68,7 @@ class SwitcherOfflineFix3Test {
 	@Test
 	void offlineShouldReturnError_InvalidSnapshotOperationForNumeric() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE18);
-		switcher.prepareEntry(new Entry(Entry.NUMERIC, "1"));
+		switcher.prepareEntry(Entry.build(StrategyValidator.NUMERIC, "1"));
 		
 		assertThrows(SwitcherInvalidOperationException.class, () -> {
 			switcher.isItOn();
@@ -77,7 +78,7 @@ class SwitcherOfflineFix3Test {
 	@Test
 	void offlineShouldReturnError_InvalidValuesForNumericValidation() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE19);
-		switcher.prepareEntry(new Entry(Entry.NUMERIC, "1"));
+		switcher.prepareEntry(Entry.build(StrategyValidator.NUMERIC, "1"));
 		
 		assertThrows(SwitcherInvalidOperationException.class, () -> {
 			switcher.isItOn();
@@ -87,7 +88,7 @@ class SwitcherOfflineFix3Test {
 	@Test
 	void offlineShouldReturnError_InvalidSnapshotOperationForDate() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE14);
-		switcher.prepareEntry(new Entry(Entry.DATE, "2019-12-10"));
+		switcher.prepareEntry(Entry.build(StrategyValidator.DATE, "2019-12-10"));
 		
 		assertThrows(SwitcherInvalidOperationException.class, () -> {
 			switcher.isItOn();
@@ -97,7 +98,7 @@ class SwitcherOfflineFix3Test {
 	@Test
 	void offlineShouldReturnError_InvalidSnapshotOperationForTime() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE15);
-		switcher.prepareEntry(new Entry(Entry.TIME, "12:00"));
+		switcher.prepareEntry(Entry.build(StrategyValidator.TIME, "12:00"));
 		
 		assertThrows(SwitcherInvalidOperationException.class, () -> {
 			switcher.isItOn();
@@ -107,7 +108,7 @@ class SwitcherOfflineFix3Test {
 	@Test
 	void offlineShouldReturnError_InvalidValuesForDate() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE16);
-		switcher.prepareEntry(new Entry(Entry.DATE, "2019-12-10"));
+		switcher.prepareEntry(Entry.build(StrategyValidator.DATE, "2019-12-10"));
 		
 		assertThrows(SwitcherInvalidOperationInputException.class, () -> {
 			switcher.isItOn();
@@ -117,7 +118,7 @@ class SwitcherOfflineFix3Test {
 	@Test
 	void offlineShouldReturnError_InvalidValuesForTime() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE17);
-		switcher.prepareEntry(new Entry(Entry.TIME, "12:00"));
+		switcher.prepareEntry(Entry.build(StrategyValidator.TIME, "12:00"));
 		
 		assertThrows(SwitcherInvalidOperationInputException.class, () -> {
 			switcher.isItOn();
@@ -127,7 +128,7 @@ class SwitcherOfflineFix3Test {
 	@Test
 	void offlineShouldReturnError_InvalidSnapshotOperationForRegex() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE20);
-		switcher.prepareEntry(new Entry(Entry.REGEX, "1"));
+		switcher.prepareEntry(Entry.build(StrategyValidator.REGEX, "1"));
 		
 		assertThrows(SwitcherInvalidOperationException.class, () -> {
 			switcher.isItOn();
@@ -142,7 +143,7 @@ class SwitcherOfflineFix3Test {
 		switchers.add(Switchers.USECASE17);
 		switchers.add(Switchers.USECASE16);
 		
-		SwitcherLocalExecutorService switcherOffline = new SwitcherLocalExecutorService();
+		SwitcherLocalService switcherOffline = new SwitcherLocalService();
 		switcherOffline.init();
 		
 		//test
@@ -155,7 +156,7 @@ class SwitcherOfflineFix3Test {
 		Set<String> notFound = Sets.newHashSet();
 		notFound.add("NOT_FOUND_1");
 		
-		SwitcherLocalExecutorService switcherOffline = new SwitcherLocalExecutorService();
+		SwitcherLocalService switcherOffline = new SwitcherLocalService();
 		switcherOffline.init();
 		
 		//test

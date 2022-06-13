@@ -18,8 +18,8 @@ class ModelTest {
 	
 	@Test
 	void testModelEntry() throws Exception {
-		Entry entry1 = new Entry(Entry.DATE, "2019-12-10");
-		Entry entry2 = new Entry(Entry.VALUE, "Value");
+		Entry entry1 = Entry.build(StrategyValidator.DATE, "2019-12-10");
+		Entry entry2 = Entry.build(StrategyValidator.VALUE, "Value");
 		
 		assertNotEquals(true, entry1.equals(entry2));
 		assertEquals(true, entry1.equals(entry1));

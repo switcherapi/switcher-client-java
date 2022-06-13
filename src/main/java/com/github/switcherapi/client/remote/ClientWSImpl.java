@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.ws;
+package com.github.switcherapi.client.remote;
 
 import java.util.Set;
 

@@ -38,14 +38,15 @@ import com.github.switcherapi.client.exception.SwitcherSnapshoException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.Entry;
+import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
+import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.service.remote.ClientRemoteService;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
-import com.github.switcherapi.client.ws.ClientWSImpl;
 import com.google.gson.Gson;
 
 import okhttp3.mockwebserver.MockResponse;
@@ -223,7 +224,7 @@ class SwitcherApiMockTest {
 		
 		//given
 		List<Entry> entries = new ArrayList<>();
-		entries.add(new Entry(Entry.DATE, "2019-12-10"));
+		entries.add(Entry.build(StrategyValidator.DATE, "2019-12-10"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
 		
@@ -243,7 +244,7 @@ class SwitcherApiMockTest {
 				
 		//given
 		List<Entry> entries = new ArrayList<>();
-		entries.add(new Entry(Entry.DATE, "2019-12-10"));
+		entries.add(Entry.build(StrategyValidator.DATE, "2019-12-10"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
 		switcher.setShowReason(true);

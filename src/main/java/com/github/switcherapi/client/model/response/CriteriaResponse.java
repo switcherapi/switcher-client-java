@@ -10,37 +10,37 @@ import com.github.switcherapi.client.model.Switcher;
  * @since 2019-12-24
  */
 public class CriteriaResponse {
-	
+
 	private boolean result;
-	
+
 	private String reason;
-	
+
 	private String switcherKey;
-	
+
 	protected List<Entry> entry;
-	
-	public CriteriaResponse() {}
-	
-	public CriteriaResponse(final boolean result, final String reason,
-			final Switcher switcher) {
+
+	public CriteriaResponse() {
+	}
+
+	public CriteriaResponse(final boolean result, final String reason, final Switcher switcher) {
 		this.result = result;
 		this.reason = reason;
 		this.switcherKey = switcher.getSwitcherKey();
 		this.entry = switcher.getEntry();
 	}
-	
+
 	public boolean isItOn() {
 		return result;
 	}
-	
+
 	public void setResult(boolean result) {
 		this.result = result;
 	}
-	
+
 	public String getReason() {
 		return reason;
 	}
-	
+
 	public void setReason(String reason) {
 		this.reason = reason;
 	}
@@ -70,8 +70,8 @@ public class CriteriaResponse {
 		if (reason != null)
 			toString.append(", reason=").append(reason);
 		toString.append(" ]");
-		
+
 		return toString.toString();
 	}
-	
+
 }

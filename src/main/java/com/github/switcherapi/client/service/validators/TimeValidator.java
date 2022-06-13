@@ -10,10 +10,12 @@ import com.github.switcherapi.client.exception.SwitcherInvalidOperationException
 import com.github.switcherapi.client.exception.SwitcherInvalidOperationInputException;
 import com.github.switcherapi.client.exception.SwitcherInvalidTimeFormat;
 import com.github.switcherapi.client.model.Entry;
+import com.github.switcherapi.client.model.EntryOperation;
+import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.criteria.Strategy;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 
-@ValidatorComponent(type = Entry.TIME)
+@ValidatorComponent(type = StrategyValidator.TIME)
 public class TimeValidator extends Validator {
 
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -39,18 +41,18 @@ public class TimeValidator extends Validator {
 		Date stgDate2;
 		Date inputDate;
 
-		switch (strategy.getOperation()) {
-		case Entry.LOWER:
+		switch (strategy.getEntryOperation()) {
+		case LOWER:
 			stgDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, strategy.getValues()[0]), DATE_FORMAT);
 			inputDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, switcherInput.getInput()), DATE_FORMAT);
 
 			return inputDate.before(stgDate);
-		case Entry.GREATER:
+		case GREATER:
 			stgDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, strategy.getValues()[0]), DATE_FORMAT);
 			inputDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, switcherInput.getInput()), DATE_FORMAT);
 
 			return inputDate.after(stgDate);
-		case Entry.BETWEEN:
+		case BETWEEN:
 			if (strategy.getValues().length == 2) {
 				stgDate = DateUtils.parseDate(SwitcherUtils.getFullTime(today, strategy.getValues()[0]), DATE_FORMAT);
 				stgDate2 = DateUtils.parseDate(SwitcherUtils.getFullTime(today, strategy.getValues()[1]), DATE_FORMAT);
@@ -60,7 +62,7 @@ public class TimeValidator extends Validator {
 				return inputDate.after(stgDate) && inputDate.before(stgDate2);
 			}
 
-			throw new SwitcherInvalidOperationInputException(Entry.BETWEEN);
+			throw new SwitcherInvalidOperationInputException(EntryOperation.BETWEEN.name());
 		default:
 			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 		}

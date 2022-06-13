@@ -8,28 +8,25 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  */
 @JsonSerialize
 public class AuthResponse {
-	
+
 	private String token;
+
 	private long exp;
-	
+
 	public String getToken() {
-		
 		return this.token;
 	}
 
 	public void setToken(String token) {
-		
 		this.token = token;
 	}
 
 	public void setExp(long exp) {
-		
-		this.exp = exp*1000;
+		this.exp = exp * 1000;
 	}
-	
+
 	public boolean isExpired() {
-		
 		return this.exp < System.currentTimeMillis();
 	}
-	
+
 }
