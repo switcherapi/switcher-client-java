@@ -19,10 +19,10 @@ import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.model.response.AuthResponse;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
+import com.github.switcherapi.client.remote.ClientWS;
+import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.utils.SwitcherContextParam;
 import com.github.switcherapi.client.utils.SwitcherUtils;
-import com.github.switcherapi.client.ws.ClientWS;
-import com.github.switcherapi.client.ws.ClientWSImpl;
 
 /**
  * @author Roger Floriano (petruki)

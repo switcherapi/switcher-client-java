@@ -105,8 +105,8 @@ Loading information into the switcher can be made by using *prepareEntry*, in ca
 
 ```java
 List<Entry> entries = new ArrayList<>();
-entries.add(new Entry(Entry.DATE, "2019-12-10"));
-entries.add(new Entry(Entry.DATE, "2020-12-10"));
+entries.add(Entry.build(StrategyValidator.DATE, "2019-12-10"));
+entries.add(Entry.build(StrategyValidator.DATE, "2020-12-10"));
 
 switcher.prepareEntry(entries);
 switcher.isItOn();
@@ -130,7 +130,7 @@ getSwitcher(FEATURE01)
 All-in-one method is fast and include everything you need to execute a complex call to the API. Stack inputs changing the last parameter to *true* in case you need to add more values to the strategy validator.
 
 ```java
-switcher.isItOn(FEATURE01, new Entry(Entry.NETWORK, "10.0.0.3"), false);
+switcher.isItOn(FEATURE01, Entry.build(StrategyValidator.NETWORK, "10.0.0.3"), false);
 //or simply
 switcher.checkNetwork("10.0.0.3").isItOn();
 ```

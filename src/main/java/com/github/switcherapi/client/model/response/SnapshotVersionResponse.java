@@ -8,17 +8,15 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  */
 @JsonSerialize
 public class SnapshotVersionResponse {
-	
+
 	private boolean status;
 
 	public boolean isUpdated() {
-		
 		return status;
 	}
 
 	public void setStatus(boolean status) {
-		
 		this.status = status;
 	}
-	
+
 }

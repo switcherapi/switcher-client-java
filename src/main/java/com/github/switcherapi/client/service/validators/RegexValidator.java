@@ -4,24 +4,25 @@ import java.util.Arrays;
 
 import com.github.switcherapi.client.exception.SwitcherInvalidOperationException;
 import com.github.switcherapi.client.model.Entry;
+import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.criteria.Strategy;
 
-@ValidatorComponent(type = Entry.REGEX)
+@ValidatorComponent(type = StrategyValidator.REGEX)
 public class RegexValidator extends Validator {
 
 	private static final String DELIMITER_REGEX = "\\b%s\\b";
 
 	@Override
 	public boolean process(Strategy strategy, Entry switcherInput) throws SwitcherInvalidOperationException {
-		switch (strategy.getOperation()) {
-		case Entry.EXIST:
+		switch (strategy.getEntryOperation()) {
+		case EXIST:
 			return Arrays.stream(strategy.getValues()).anyMatch(val -> switcherInput.getInput().matches(val));
-		case Entry.NOT_EXIST:
+		case NOT_EXIST:
 			return Arrays.stream(strategy.getValues()).noneMatch(val -> switcherInput.getInput().matches(val));
-		case Entry.EQUAL:
+		case EQUAL:
 			return strategy.getValues().length == 1
 					&& switcherInput.getInput().matches(String.format(DELIMITER_REGEX, strategy.getValues()[0]));
-		case Entry.NOT_EQUAL:
+		case NOT_EQUAL:
 			return strategy.getValues().length == 1
 					&& !switcherInput.getInput().matches(String.format(DELIMITER_REGEX, strategy.getValues()[0]));
 		default:

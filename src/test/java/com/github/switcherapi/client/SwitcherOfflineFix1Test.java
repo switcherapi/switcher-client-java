@@ -16,6 +16,7 @@ import com.github.switcherapi.client.exception.SwitcherInvalidTimeFormat;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitcherNoInputReceivedException;
 import com.github.switcherapi.client.model.Entry;
+import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
 
 class SwitcherOfflineFix1Test {
@@ -66,7 +67,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_dateValidationGreater() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE31);
-		Entry input = new Entry(Entry.DATE, "2019-12-11");
+		Entry input = Entry.build(StrategyValidator.DATE, "2019-12-11");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -82,7 +83,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_dateValidationGreater() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE31);
-		Entry input = new Entry(Entry.DATE, "2019-12-09");
+		Entry input = Entry.build(StrategyValidator.DATE, "2019-12-09");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -91,7 +92,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_dateValidationLower() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE32);
-		Entry input = new Entry(Entry.DATE, "2019-12-09");
+		Entry input = Entry.build(StrategyValidator.DATE, "2019-12-09");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -100,7 +101,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_dateValidationLower() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE32);
-		Entry input = new Entry(Entry.DATE, "2019-12-12");
+		Entry input = Entry.build(StrategyValidator.DATE, "2019-12-12");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -109,7 +110,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_dateValidationBetween() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
-		Entry input = new Entry(Entry.DATE, "2019-12-11");
+		Entry input = Entry.build(StrategyValidator.DATE, "2019-12-11");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -118,7 +119,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_dateValidationBetween() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
-		Entry input = new Entry(Entry.DATE, "2019-12-13");
+		Entry input = Entry.build(StrategyValidator.DATE, "2019-12-13");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -127,7 +128,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_dateValidationWrongFormat() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
-		Entry input = new Entry(Entry.DATE, "2019/121/13");
+		Entry input = Entry.build(StrategyValidator.DATE, "2019/121/13");
 		
 		switcher.prepareEntry(input);
 		assertThrows(SwitcherInvalidTimeFormat.class, () -> {
@@ -138,7 +139,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_valueValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE41);
-		Entry input = new Entry(Entry.VALUE, "Value1");
+		Entry input = Entry.build(StrategyValidator.VALUE, "Value1");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -154,7 +155,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_valueValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE41);
-		Entry input = new Entry(Entry.VALUE, "Value5");
+		Entry input = Entry.build(StrategyValidator.VALUE, "Value5");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -163,7 +164,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_valueValidationNotExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE42);
-		Entry input = new Entry(Entry.VALUE, "Value5");
+		Entry input = Entry.build(StrategyValidator.VALUE, "Value5");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -172,7 +173,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_valueValidationNotExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE42);
-		Entry input = new Entry(Entry.VALUE, "Value1");
+		Entry input = Entry.build(StrategyValidator.VALUE, "Value1");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -181,7 +182,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_valueValidationEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE43);
-		Entry input = new Entry(Entry.VALUE, "Value1");
+		Entry input = Entry.build(StrategyValidator.VALUE, "Value1");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -190,7 +191,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_valueValidationEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE43);
-		Entry input = new Entry(Entry.VALUE, "Value2");
+		Entry input = Entry.build(StrategyValidator.VALUE, "Value2");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -199,7 +200,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_valueValidationNotEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE44);
-		Entry input = new Entry(Entry.VALUE, "Value2");
+		Entry input = Entry.build(StrategyValidator.VALUE, "Value2");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -208,7 +209,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_valueValidationNotEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE44);
-		Entry input = new Entry(Entry.VALUE, "Value1");
+		Entry input = Entry.build(StrategyValidator.VALUE, "Value1");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -217,7 +218,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_numericValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE81);
-		Entry input = new Entry(Entry.NUMERIC, "2");
+		Entry input = Entry.build(StrategyValidator.NUMERIC, "2");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -233,7 +234,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_numericValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE81);
-		Entry input = new Entry(Entry.NUMERIC, "4");
+		Entry input = Entry.build(StrategyValidator.NUMERIC, "4");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -242,7 +243,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_numericValidationDoesNotExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE82);
-		Entry input = new Entry(Entry.NUMERIC, "4");
+		Entry input = Entry.build(StrategyValidator.NUMERIC, "4");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -251,7 +252,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_numericValidationDoesNotExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE82);
-		Entry input = new Entry(Entry.NUMERIC, "2");
+		Entry input = Entry.build(StrategyValidator.NUMERIC, "2");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -260,7 +261,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_numericValidationEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE83);
-		Entry input = new Entry(Entry.NUMERIC, "1");
+		Entry input = Entry.build(StrategyValidator.NUMERIC, "1");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -269,7 +270,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_numeircValidationEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE83);
-		Entry input = new Entry(Entry.NUMERIC, "2");
+		Entry input = Entry.build(StrategyValidator.NUMERIC, "2");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -278,7 +279,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_numericValidationNotEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE84);
-		Entry input = new Entry(Entry.NUMERIC, "2");
+		Entry input = Entry.build(StrategyValidator.NUMERIC, "2");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -287,7 +288,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_numericValidationNotEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE84);
-		Entry input = new Entry(Entry.NUMERIC, "1");
+		Entry input = Entry.build(StrategyValidator.NUMERIC, "1");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -296,7 +297,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnException_invalidNumericInput() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE81);
-		Entry input = new Entry(Entry.NUMERIC, "INVALID_NUMBER");
+		Entry input = Entry.build(StrategyValidator.NUMERIC, "INVALID_NUMBER");
 		
 		switcher.prepareEntry(input);
 		assertThrows(SwitcherInvalidNumericFormat.class, () -> {
@@ -307,7 +308,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_numericValidationLower() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE85);
-		Entry input = new Entry(Entry.NUMERIC, "0.99");
+		Entry input = Entry.build(StrategyValidator.NUMERIC, "0.99");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -316,7 +317,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_numericValidationGreater() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE86);
-		Entry input = new Entry(Entry.NUMERIC, "1.09");
+		Entry input = Entry.build(StrategyValidator.NUMERIC, "1.09");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -325,7 +326,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_numericValidationBetween() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE87);
-		Entry input = new Entry(Entry.NUMERIC, "2");
+		Entry input = Entry.build(StrategyValidator.NUMERIC, "2");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -334,7 +335,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_timeValidationGreater() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE51);
-		Entry input = new Entry(Entry.TIME, "11:00");
+		Entry input = Entry.build(StrategyValidator.TIME, "11:00");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -350,7 +351,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_timeValidationGreater() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE51);
-		Entry input = new Entry(Entry.TIME, "09:00");
+		Entry input = Entry.build(StrategyValidator.TIME, "09:00");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -359,7 +360,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_timeValidationLower() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE52);
-		Entry input = new Entry(Entry.TIME, "09:00");
+		Entry input = Entry.build(StrategyValidator.TIME, "09:00");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -368,7 +369,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_timeValidationLower() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE52);
-		Entry input = new Entry(Entry.TIME, "11:00");
+		Entry input = Entry.build(StrategyValidator.TIME, "11:00");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -377,7 +378,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_timeValidationBetween() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE53);
-		Entry input = new Entry(Entry.TIME, "13:00");
+		Entry input = Entry.build(StrategyValidator.TIME, "13:00");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -386,7 +387,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_timeValidationBetween() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE53);
-		Entry input = new Entry(Entry.TIME, "18:00");
+		Entry input = Entry.build(StrategyValidator.TIME, "18:00");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -395,7 +396,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_timeValidationWrongFormat() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE53);
-		Entry input = new Entry(Entry.TIME, "2019-12-10");
+		Entry input = Entry.build(StrategyValidator.TIME, "2019-12-10");
 		
 		switcher.prepareEntry(input);
 		assertThrows(SwitcherInvalidTimeFormat.class, () -> {
@@ -406,7 +407,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_networkValidationExistCIDR() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE61);
-		Entry input = new Entry(Entry.NETWORK, "10.0.0.4");
+		Entry input = Entry.build(StrategyValidator.NETWORK, "10.0.0.4");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -422,7 +423,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_networkValidationExistCIDR() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE61);
-		Entry input = new Entry(Entry.NETWORK, "10.0.0.8");
+		Entry input = Entry.build(StrategyValidator.NETWORK, "10.0.0.8");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -431,7 +432,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_networkValidationNotExistCIDR() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE62);
-		Entry input = new Entry(Entry.NETWORK, "10.0.0.8");
+		Entry input = Entry.build(StrategyValidator.NETWORK, "10.0.0.8");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -440,7 +441,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_networkValidationNotExistCIDR() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE62);
-		Entry input = new Entry(Entry.NETWORK, "10.0.0.5");
+		Entry input = Entry.build(StrategyValidator.NETWORK, "10.0.0.5");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -449,7 +450,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_networkValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE63);
-		Entry input = new Entry(Entry.NETWORK, "10.0.0.2");
+		Entry input = Entry.build(StrategyValidator.NETWORK, "10.0.0.2");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -458,7 +459,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_networkValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE63);
-		Entry input = new Entry(Entry.NETWORK, "10.0.0.5");
+		Entry input = Entry.build(StrategyValidator.NETWORK, "10.0.0.5");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -475,7 +476,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnError_InvalidStrategyInput() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
-		switcher.prepareEntry(new Entry("INVALID_STRATEGY_NAME", "Value"));
+		switcher.prepareEntry(Entry.build(StrategyValidator.INVALID, "Value"));
 		assertThrows(SwitcherNoInputReceivedException.class, () -> {
 			switcher.isItOn();
 		});
@@ -484,7 +485,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_regexValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE91);
-		Entry input = new Entry(Entry.REGEX, "USER_10");
+		Entry input = Entry.build(StrategyValidator.REGEX, "USER_10");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -500,7 +501,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_regexValidationExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE91);
-		Entry input = new Entry(Entry.REGEX, "USER_100");
+		Entry input = Entry.build(StrategyValidator.REGEX, "USER_100");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -509,7 +510,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_regexValidationNotExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE92);
-		Entry input = new Entry(Entry.REGEX, "user-100");
+		Entry input = Entry.build(StrategyValidator.REGEX, "user-100");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -518,7 +519,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_regexValidationNotExist() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE92);
-		Entry input = new Entry(Entry.REGEX, "user-10");
+		Entry input = Entry.build(StrategyValidator.REGEX, "user-10");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -527,7 +528,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_regexValidationEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE93);
-		Entry input = new Entry(Entry.REGEX, "USER_10");
+		Entry input = Entry.build(StrategyValidator.REGEX, "USER_10");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -536,7 +537,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_regexValidationEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE93);
-		Entry input = new Entry(Entry.REGEX, "user-10");
+		Entry input = Entry.build(StrategyValidator.REGEX, "user-10");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());
@@ -545,7 +546,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnTrue_regexValidationNotEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE94);
-		Entry input = new Entry(Entry.REGEX, "user-10");
+		Entry input = Entry.build(StrategyValidator.REGEX, "user-10");
 		
 		switcher.prepareEntry(input);
 		assertTrue(switcher.isItOn());
@@ -554,7 +555,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_regexValidationNotEqual() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE94);
-		Entry input = new Entry(Entry.REGEX, "USER_10");
+		Entry input = Entry.build(StrategyValidator.REGEX, "USER_10");
 		
 		switcher.prepareEntry(input);
 		assertFalse(switcher.isItOn());

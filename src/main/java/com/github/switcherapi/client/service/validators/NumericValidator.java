@@ -7,9 +7,10 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.github.switcherapi.client.exception.SwitcherInvalidNumericFormat;
 import com.github.switcherapi.client.exception.SwitcherInvalidOperationException;
 import com.github.switcherapi.client.model.Entry;
+import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.criteria.Strategy;
 
-@ValidatorComponent(type = Entry.NUMERIC)
+@ValidatorComponent(type = StrategyValidator.NUMERIC)
 public class NumericValidator extends Validator {
 	
 	@Override
@@ -17,30 +18,30 @@ public class NumericValidator extends Validator {
 		if (!NumberUtils.isCreatable(switcherInput.getInput()))
 			throw new SwitcherInvalidNumericFormat(switcherInput.getInput());
 		
-		switch (strategy.getOperation()) {
-		case Entry.EXIST:
+		switch (strategy.getEntryOperation()) {
+		case EXIST:
 			return Arrays.stream(strategy.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
-		case Entry.NOT_EXIST:
+		case NOT_EXIST:
 			return Arrays.stream(strategy.getValues()).noneMatch(val -> val.equals(switcherInput.getInput()));
-		case Entry.EQUAL:
+		case EQUAL:
 			return strategy.getValues().length == 1 && strategy.getValues()[0].equals(switcherInput.getInput());
-		case Entry.NOT_EQUAL:
+		case NOT_EQUAL:
 			return strategy.getValues().length == 1 && !strategy.getValues()[0].equals(switcherInput.getInput());
-		case Entry.LOWER:
+		case LOWER:
 			if (strategy.getValues().length == 1) {
 				final double numericInput = NumberUtils.createNumber(switcherInput.getInput()).doubleValue();
 				final double numericValue = NumberUtils.createNumber(strategy.getValues()[0]).doubleValue();
 				return numericInput < numericValue;
 			}
 			break;
-		case Entry.GREATER:
+		case GREATER:
 			if (strategy.getValues().length == 1) {
 				final double numericInput = NumberUtils.createNumber(switcherInput.getInput()).doubleValue();
 				final double numericValue = NumberUtils.createNumber(strategy.getValues()[0]).doubleValue();
 				return numericInput > numericValue;
 			}
 			break;
-		case Entry.BETWEEN:
+		case BETWEEN:
 			if (strategy.getValues().length == 2) {
 				final double numericInput = NumberUtils.createNumber(switcherInput.getInput()).doubleValue();
 				final double numericFirstValue = NumberUtils.createNumber(strategy.getValues()[0]).doubleValue();

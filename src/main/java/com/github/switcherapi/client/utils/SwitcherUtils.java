@@ -11,9 +11,9 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
-import com.github.switcherapi.client.service.SwitcherExecutor;
 
 /**
  * @author Roger Floriano (petruki)

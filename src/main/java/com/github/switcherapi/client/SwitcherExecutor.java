@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.service;
+package com.github.switcherapi.client;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,6 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.client.model.Switcher;

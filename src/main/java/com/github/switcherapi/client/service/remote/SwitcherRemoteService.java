@@ -8,26 +8,26 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.SwitcherContext;
+import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
-import com.github.switcherapi.client.service.SwitcherExecutor;
-import com.github.switcherapi.client.service.local.SwitcherLocalExecutorService;
+import com.github.switcherapi.client.service.local.SwitcherLocalService;
 
 /**
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class SwitcherRemoteExecutorService extends SwitcherExecutor {
+public class SwitcherRemoteService extends SwitcherExecutor {
 	
-	private static final Logger logger = LogManager.getLogger(SwitcherRemoteExecutorService.class);
+	private static final Logger logger = LogManager.getLogger(SwitcherRemoteService.class);
 	
-	private SwitcherLocalExecutorService switcherOffline;
+	private SwitcherLocalService switcherOffline;
 	
-	public SwitcherRemoteExecutorService() {
-		this.switcherOffline = new SwitcherLocalExecutorService();
+	public SwitcherRemoteService() {
+		this.switcherOffline = new SwitcherLocalService();
 	}
 
 	@Override

@@ -14,9 +14,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 
-import com.github.switcherapi.client.configuration.SwitcherMock;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.service.SwitcherExecutor;
 
 class SwitcherBypassTest {
 	

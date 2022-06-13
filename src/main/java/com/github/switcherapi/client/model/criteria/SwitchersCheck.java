@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.github.switcherapi.client.ws.ClientWS;
+import com.github.switcherapi.client.remote.ClientWS;
 
 /**
  * Request/Response model to use with {@link ClientWS#checkSwitchers(Set, String)}

@@ -26,16 +26,14 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.configuration.SwitcherKey;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.SwitcherProperties;
-import com.github.switcherapi.client.service.SwitcherExecutor;
-import com.github.switcherapi.client.service.local.SwitcherLocalExecutorService;
-import com.github.switcherapi.client.service.remote.SwitcherRemoteExecutorService;
+import com.github.switcherapi.client.service.local.SwitcherLocalService;
+import com.github.switcherapi.client.service.remote.SwitcherRemoteService;
 import com.github.switcherapi.client.utils.SwitcherContextUtils;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 
@@ -113,9 +111,9 @@ public abstract class SwitcherContext {
 		validateSwitcherKeys();
 		
 		if (switcherProperties.isOfflineMode()) {
-			instance = new SwitcherLocalExecutorService();
+			instance = new SwitcherLocalService();
 		} else {
-			instance = new SwitcherRemoteExecutorService();
+			instance = new SwitcherRemoteService();
 		}
 		
 		loadSwitchers();

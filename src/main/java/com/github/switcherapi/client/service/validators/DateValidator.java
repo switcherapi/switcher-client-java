@@ -9,10 +9,12 @@ import com.github.switcherapi.client.exception.SwitcherInvalidOperationException
 import com.github.switcherapi.client.exception.SwitcherInvalidOperationInputException;
 import com.github.switcherapi.client.exception.SwitcherInvalidTimeFormat;
 import com.github.switcherapi.client.model.Entry;
+import com.github.switcherapi.client.model.EntryOperation;
+import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.criteria.Strategy;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 
-@ValidatorComponent(type = Entry.DATE)
+@ValidatorComponent(type = StrategyValidator.DATE)
 public class DateValidator extends Validator {
 
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -34,18 +36,18 @@ public class DateValidator extends Validator {
 		Date stgDate2;
 		Date inputDate;
 
-		switch (strategy.getOperation()) {
-		case Entry.LOWER:
+		switch (strategy.getEntryOperation()) {
+		case LOWER:
 			stgDate = DateUtils.parseDate(SwitcherUtils.getFullDate(strategy.getValues()[0]), DATE_FORMAT);
 			inputDate = DateUtils.parseDate(SwitcherUtils.getFullDate(switcherInput.getInput()), DATE_FORMAT);
 
 			return inputDate.before(stgDate);
-		case Entry.GREATER:
+		case GREATER:
 			stgDate = DateUtils.parseDate(SwitcherUtils.getFullDate(strategy.getValues()[0]), DATE_FORMAT);
 			inputDate = DateUtils.parseDate(SwitcherUtils.getFullDate(switcherInput.getInput()), DATE_FORMAT);
 
 			return inputDate.after(stgDate);
-		case Entry.BETWEEN:
+		case BETWEEN:
 			if (strategy.getValues().length == 2) {
 				stgDate = DateUtils.parseDate(SwitcherUtils.getFullDate(strategy.getValues()[0]), DATE_FORMAT);
 				stgDate2 = DateUtils.parseDate(SwitcherUtils.getFullDate(strategy.getValues()[1]), DATE_FORMAT);
@@ -54,7 +56,7 @@ public class DateValidator extends Validator {
 				return inputDate.after(stgDate) && inputDate.before(stgDate2);
 			}
 
-			throw new SwitcherInvalidOperationInputException(Entry.BETWEEN);
+			throw new SwitcherInvalidOperationInputException(EntryOperation.BETWEEN.name());
 		default:
 			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 		}

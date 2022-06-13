@@ -1,11 +1,11 @@
 package com.github.switcherapi.client.service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumMap;
 
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidStrategyException;
 import com.github.switcherapi.client.model.Entry;
+import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.criteria.Strategy;
 import com.github.switcherapi.client.service.validators.Validator;
 import com.github.switcherapi.client.service.validators.ValidatorComponent;
@@ -13,10 +13,10 @@ import com.github.switcherapi.client.utils.SwitcherClassLoader;
 
 public class ValidatorService {
 	
-	private final Map<String, Validator> validators;
+	private final EnumMap<StrategyValidator, Validator> validators;
 	
 	public ValidatorService() {
-		this.validators = new HashMap<>();
+		this.validators = new EnumMap<>(StrategyValidator.class);
 		this.initializeValidators();
 	}
 	
@@ -39,8 +39,8 @@ public class ValidatorService {
 	
 	public boolean execute(final Strategy strategy, final Entry switcherInput) 
 			throws SwitcherInvalidStrategyException {
-		if (validators.containsKey(strategy.getStrategy()))
-			return validators.get(strategy.getStrategy()).execute(strategy, switcherInput);
+		if (validators.containsKey(strategy.getStrategyValidator()))
+			return validators.get(strategy.getStrategyValidator()).execute(strategy, switcherInput);
 
 		throw new SwitcherInvalidStrategyException(strategy.getStrategy());
 	}

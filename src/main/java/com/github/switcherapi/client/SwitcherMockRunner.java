@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.configuration;
+package com.github.switcherapi.client;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -12,7 +12,6 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.service.SwitcherExecutor;
 
 /**
  * This runner implements a Parameterized Test that can mock the Switcher result and
@@ -20,7 +19,7 @@ import com.github.switcherapi.client.service.SwitcherExecutor;
  * 
  * @author Roger Floriano (petruki)
  */
-public class SwitcherMockRunner implements AfterTestExecutionCallback, 
+class SwitcherMockRunner implements AfterTestExecutionCallback, 
 	ArgumentsProvider, AnnotationConsumer<SwitcherMock> {
 	
 	private String key;
