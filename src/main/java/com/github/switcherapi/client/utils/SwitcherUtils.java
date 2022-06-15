@@ -1,7 +1,9 @@
 package com.github.switcherapi.client.utils;
 
 import java.util.Date;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,10 +12,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.glassfish.jersey.internal.guava.Sets;
 
 import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * @author Roger Floriano (petruki)
@@ -39,6 +45,8 @@ public class SwitcherUtils {
 	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+)\\}";
 	
 	private static final String ENV_DEFAULT_VARIABLE_PATTERN = "\\$\\{(\\w+):(.+)\\}";
+	
+	private static final String PAYLOAD_PATTERN = "%s.%s";
 	
 	private static SnapshotWatcher watcher;
 	
@@ -88,6 +96,32 @@ public class SwitcherUtils {
 		}
 
 		return date;
+	}
+	
+	public static Set<String> payloadReader(String jsonStr, String prevKey) {
+		JsonElement parser = JsonParser.parseString(jsonStr);
+		JsonObject jsonObject = parser.getAsJsonObject();
+		
+		Set<String> keys = Sets.newHashSet();
+		for (Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+			String key;
+			if (prevKey == null) {
+				key = entry.getKey();
+			} else {
+				key = String.format(PAYLOAD_PATTERN, prevKey, entry.getKey());
+			}
+			
+			keys.add(key);
+			if (entry.getValue().isJsonObject()) {
+				keys.addAll(payloadReader(entry.getValue().toString(), key));
+			} else if (entry.getValue().isJsonArray() && 
+					entry.getValue().getAsJsonArray().get(0).isJsonObject()) {
+				entry.getValue().getAsJsonArray()
+					.forEach(eValue -> keys.addAll(payloadReader(eValue.toString(), key)));
+			}
+		}
+		
+		return keys;
 	}
 	
 	/**

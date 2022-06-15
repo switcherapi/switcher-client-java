@@ -170,6 +170,20 @@
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "key": "USECASE21",
+                            "description": "It contains an invalid strategy operation",
+                            "activated": true,
+                            "components": ["switcher-client"],
+                            "strategies": [
+                                {
+                                    "strategy": "PAYLOAD_VALIDATION",
+                                    "activated": true,
+                                    "operation": "BETWEEN",
+                                    "values": []
+                                }
+                            ]
                         }
                     ]
                 }

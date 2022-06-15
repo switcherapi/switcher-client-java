@@ -9,6 +9,8 @@ public enum EntryOperation {
 	GREATER,
 	LOWER,
 	BETWEEN,
+	HAS_ONE,
+	HAS_ALL,
 	INVALID
 	
 }

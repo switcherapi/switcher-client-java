@@ -107,6 +107,16 @@ public abstract class SwitcherBuilder {
 	}
 	
 	/**
+	 * Validates JSON keys from a given payload
+	 * 
+	 * @param input JSON payload
+	 * @return switcher itself
+	 */
+	public SwitcherBuilder checkPayload(String input) {
+		return check(StrategyValidator.PAYLOAD, input);
+	}
+	
+	/**
 	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.
 	 * 
 	 * @param entry input object

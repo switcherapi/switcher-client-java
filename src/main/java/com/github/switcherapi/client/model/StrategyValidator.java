@@ -45,6 +45,11 @@ public enum StrategyValidator {
 	 */
 	REGEX("REGEX_VALIDATION"),
 	
+	/**
+	 * Execute payload validation based on JSON keys
+	 */
+	PAYLOAD("PAYLOAD_VALIDATION"),
+	
 	INVALID("INVALID");
 	
 	private String validator;
