@@ -490,6 +490,67 @@
                             "components": ["switcher-client"]
                         }
                     ]
+                },
+                {
+                    "name": "Group 10",
+                    "description": "Payload Validation",
+                    "activated": true,
+                    "config": [
+                        {
+                            "key": "USECASE100",
+                            "description": "Config with Payload Validation [HAS_ONE]",
+                            "activated": true,
+                            "strategies": [
+                                {
+                                    "strategy": "PAYLOAD_VALIDATION",
+                                    "activated": true,
+                                    "operation": "HAS_ONE",
+                                    "values": [
+                                        "order.tracking.status", "order.tracking.date"
+                                    ]
+                                }
+                            ],
+                            "components": ["switcher-client"]
+                        },
+                        {
+                            "key": "USECASE101",
+                            "description": "Config with Payload Validation [HAS_ONE]",
+                            "activated": true,
+                            "strategies": [
+                                {
+                                    "strategy": "PAYLOAD_VALIDATION",
+                                    "activated": true,
+                                    "operation": "HAS_ONE",
+                                    "values": [
+                                       "product"
+                                    ]
+                                }
+                            ],
+                            "components": ["switcher-client"]
+                        },
+                        {
+                            "key": "USECASE102",
+                            "description": "Config with Payload Validation [HAS_ALL]",
+                            "activated": true,
+                            "strategies": [
+                                {
+                                    "strategy": "PAYLOAD_VALIDATION",
+                                    "activated": true,
+                                    "operation": "HAS_ALL",
+                                    "values": [
+                                    	"name",
+                                    	"categories",
+                                    	"order",
+                                    	"order.qty",
+                                    	"order.tracking",
+                                        "order.tracking.status",
+                                        "order.tracking.comments"
+                                    ]
+                                }
+                            ],
+                            "components": ["switcher-client"]
+                        }
+                    ]
                 }
             ]
         }
