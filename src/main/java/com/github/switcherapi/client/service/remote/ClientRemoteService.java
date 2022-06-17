@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.ws.rs.core.Response;
-
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherException;
@@ -23,6 +21,8 @@ import com.github.switcherapi.client.remote.ClientWS;
 import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.utils.SwitcherContextParam;
 import com.github.switcherapi.client.utils.SwitcherUtils;
+
+import jakarta.ws.rs.core.Response;
 
 /**
  * @author Roger Floriano (petruki)

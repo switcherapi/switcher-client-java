@@ -2,9 +2,9 @@ package com.github.switcherapi.client.remote;
 
 import java.util.Set;
 
-import javax.ws.rs.core.Response;
-
 import com.github.switcherapi.client.model.Switcher;
+
+import jakarta.ws.rs.core.Response;
 
 /**
  * @author Roger Floriano {petruki)
