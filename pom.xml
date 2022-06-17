@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.github.switcherapi</groupId>
@@ -9,7 +11,7 @@
 	<version>1.3.5-SNAPSHOT</version>
 
 	<name>Switcher Client</name>
-	<description>Switcher Client for working with Switcher API</description>
+	<description>Switcher Client SDK for working with Switcher API</description>
 	<url>https://github.com/switcherapi/switcher-client</url>
 
 	<licenses>
@@ -38,24 +40,23 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
 
 		<!-- rest/json libs -->
-		<javaee-api.version>7.0</javaee-api.version>
-		<jackson.version>2.13.2</jackson.version>
-		<jersey-client.version>2.35</jersey-client.version>
-		<jersey-hk2.version>2.35</jersey-hk2.version>
-		<jersey-media-json-jackson.version>2.35</jersey-media-json-jackson.version>
+		<jackson-patch.version>2.13.3</jackson-patch.version>
+		<jersey-client.version>3.0.4</jersey-client.version>
+		<jersey-hk2.version>3.0.4</jersey-hk2.version>
+		<jersey-media-json-jackson.version>3.0.4</jersey-media-json-jackson.version>
 		<gson.version>2.9.0</gson.version>
 
 		<!-- utils -->
 		<commons-lang3.version>3.12.0</commons-lang3.version>
 		<commons-net.version>3.8.0</commons-net.version>
+		<log4j.version>2.17.2</log4j.version>
 
 		<!-- test -->
-		<log4j.version>2.17.2</log4j.version>
-		<okhttp.version>3.14.9</okhttp.version>
+		<okhttp.version>4.10.0</okhttp.version>
 		<junit.version>5.8.2</junit.version>
 		<junit-pioneer.version>1.7.0</junit-pioneer.version>
 
@@ -80,12 +81,6 @@
 	<dependencies>
 		<!-- rest/json libs -->
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>${javaee-api.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
 			<version>${jersey-client.version}</version>
@@ -99,7 +94,40 @@
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>${jersey-media-json-jackson.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-annotations</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.module</groupId>
+					<artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+		
+		<!-- Jackson Security Patch-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-patch.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson-patch.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
+			<version>${jackson-patch.version}</version>
+		</dependency>
+		<!-- Jackson Security Patch-->
+			
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -116,11 +144,6 @@
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
 			<version>${commons-net.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>${log4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -168,32 +191,6 @@
 				<artifactId>junit</artifactId>
 				<version>4.13.1</version>
 			</dependency>
-
-			<!-- 
-    			Patch vulnerability caused by jackson@2.12.2
-    			Introduced by jersey-media-json-jackson@2.35
-    		 -->
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-core</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>2.13.2.1</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.module</groupId>
-				<artifactId>jackson-module-jaxb-annotations</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<!-- End patch -->
 		</dependencies>
 	</dependencyManagement>
 
