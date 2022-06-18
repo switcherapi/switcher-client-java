@@ -1,19 +1,5 @@
 package com.github.switcherapi.client;
 
-import static com.github.switcherapi.client.utils.SwitcherContextParam.APIKEY;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.COMPONENT;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.CONTEXT_LOCATION;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.DOMAIN;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.ENVIRONMENT;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.OFFLINE_MODE;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.RETRY_AFTER;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.SILENT_MODE;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_AUTO_LOAD;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_FILE;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_LOCATION;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_SKIP_VALIDATION;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.URL;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -58,7 +44,7 @@ public abstract class SwitcherContext {
 	
 	private static final Logger logger = LogManager.getLogger(SwitcherContext.class);
 	
-	private static final SwitcherProperties switcherProperties;
+	protected static SwitcherProperties switcherProperties;
 	private static Set<String> switcherKeys;
 	private static Map<String, Switcher> switchers;
 	private static SwitcherExecutor instance;
@@ -83,20 +69,7 @@ public abstract class SwitcherContext {
 			Properties prop = new Properties();
             prop.load(input);
             
-            switcherProperties.setContextLocation(SwitcherUtils.resolveProperties(CONTEXT_LOCATION, prop));
-            switcherProperties.setUrl(SwitcherUtils.resolveProperties(URL, prop));
-    		switcherProperties.setApiKey(SwitcherUtils.resolveProperties(APIKEY, prop));
-    		switcherProperties.setDomain(SwitcherUtils.resolveProperties(DOMAIN, prop));
-    		switcherProperties.setComponent(SwitcherUtils.resolveProperties(COMPONENT, prop));
-    		switcherProperties.setEnvironment(SwitcherUtils.resolveProperties(ENVIRONMENT, prop));
-    		switcherProperties.setSnapshotFile(SwitcherUtils.resolveProperties(SNAPSHOT_FILE, prop));
-    		switcherProperties.setSnapshotLocation(SwitcherUtils.resolveProperties(SNAPSHOT_LOCATION, prop));
-    		switcherProperties.setSnapshotSkipValidation(Boolean.parseBoolean(SwitcherUtils.resolveProperties(SNAPSHOT_SKIP_VALIDATION, prop)));
-    		switcherProperties.setSnapshotAutoLoad(Boolean.parseBoolean(SwitcherUtils.resolveProperties(SNAPSHOT_AUTO_LOAD, prop)));
-    		switcherProperties.setSilentMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(SILENT_MODE, prop)));
-    		switcherProperties.setOfflineMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(OFFLINE_MODE, prop)));
-    		switcherProperties.setRetryAfter(SwitcherUtils.resolveProperties(RETRY_AFTER, prop));
-
+            switcherProperties.loadFromProperties(prop);
     		initializeClient();
         } catch (IOException io) {
         	throw new SwitcherContextException(io.getMessage());

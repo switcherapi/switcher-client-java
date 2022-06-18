@@ -15,9 +15,9 @@ public class LibPlayground extends SwitcherContext {
 	public static String MY_SWITCHER = "MY_SWITCHER";
 	
 	public LibPlayground() {
-		getProperties().setContextLocation("com.github.switcherapi.playground.LibPlayground");
-		getProperties().setApiKey("$2b$08$Hm77RoqpXb.1f7izs06uKendX.B1jjWqTZsfJAzYnFoRzJpEFQXEi");
-		getProperties().setUrl("https://switcher-load-balance.herokuapp.com");
+		getProperties().setContextLocation("com.github.switcherapi.playground.Features");
+		getProperties().setApiKey("JDJiJDA4JEFweTZjSTR2bE9pUjNJOUYvRy9raC4vRS80Q2tzUnk1d3o1aXFmS2o5eWJmVW11cjR0ODNT");
+		getProperties().setUrl("https://switcher-api.herokuapp.com");
 		getProperties().setDomain("Playground");
 		getProperties().setComponent("switcher-playground");
 		getProperties().setEnvironment("default");

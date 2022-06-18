@@ -1,8 +1,25 @@
 package com.github.switcherapi.client.model;
 
+import static com.github.switcherapi.client.utils.SwitcherContextParam.APIKEY;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.COMPONENT;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.CONTEXT_LOCATION;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.DOMAIN;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.ENVIRONMENT;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.OFFLINE_MODE;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.RETRY_AFTER;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.SILENT_MODE;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_AUTO_LOAD;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_FILE;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_LOCATION;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_SKIP_VALIDATION;
+import static com.github.switcherapi.client.utils.SwitcherContextParam.URL;
+
+import java.util.Properties;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.switcherapi.client.utils.SwitcherContextParam;
+import com.github.switcherapi.client.utils.SwitcherUtils;
 
 /**
  * The configuration definition object contains all necessary SDK properties to
@@ -44,6 +61,22 @@ public class SwitcherProperties {
 	private boolean silentMode;
 
 	private boolean offlineMode;
+	
+	public void loadFromProperties(Properties prop) {
+        setContextLocation(SwitcherUtils.resolveProperties(CONTEXT_LOCATION, prop));
+        setUrl(SwitcherUtils.resolveProperties(URL, prop));
+		setApiKey(SwitcherUtils.resolveProperties(APIKEY, prop));
+		setDomain(SwitcherUtils.resolveProperties(DOMAIN, prop));
+		setComponent(SwitcherUtils.resolveProperties(COMPONENT, prop));
+		setEnvironment(SwitcherUtils.resolveProperties(ENVIRONMENT, prop));
+		setSnapshotFile(SwitcherUtils.resolveProperties(SNAPSHOT_FILE, prop));
+		setSnapshotLocation(SwitcherUtils.resolveProperties(SNAPSHOT_LOCATION, prop));
+		setSnapshotSkipValidation(Boolean.parseBoolean(SwitcherUtils.resolveProperties(SNAPSHOT_SKIP_VALIDATION, prop)));
+		setSnapshotAutoLoad(Boolean.parseBoolean(SwitcherUtils.resolveProperties(SNAPSHOT_AUTO_LOAD, prop)));
+		setSilentMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(SILENT_MODE, prop)));
+		setOfflineMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(OFFLINE_MODE, prop)));
+		setRetryAfter(SwitcherUtils.resolveProperties(RETRY_AFTER, prop));
+	}
 
 	public SwitcherProperties() {
 		this.url = DEFAULTURL;

@@ -154,12 +154,12 @@ public class SwitcherUtils {
 	 * 
 	 * Two different RE were used here to mitigate catastrophic backtracking situations.
 	 * 
-	 * @param input reads values from {@link SwitcherContextParam}
+	 * @param key reads values from {@link SwitcherContextParam}
 	 * @param prop from properties file
 	 * @return resolved value
 	 */
-	public static String resolveProperties(String input, Properties prop) {
-		final String value = prop.getProperty(input);
+	public static String resolveProperties(String key, Properties prop) {
+		final String value = prop.getProperty(key);
 		
 		if (StringUtils.isBlank(value)) {
 	        return null;

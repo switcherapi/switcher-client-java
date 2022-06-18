@@ -1,10 +1,14 @@
 package com.github.switcherapi.client.remote;
 
+import java.util.Optional;
 import java.util.Set;
 
 import com.github.switcherapi.client.model.Switcher;
-
-import jakarta.ws.rs.core.Response;
+import com.github.switcherapi.client.model.criteria.Snapshot;
+import com.github.switcherapi.client.model.criteria.SwitchersCheck;
+import com.github.switcherapi.client.model.response.AuthResponse;
+import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
 
 /**
  * @author Roger Floriano {petruki)
@@ -53,14 +57,14 @@ public interface ClientWS {
 	 * @param token Access token
 	 * @return the execution based on the configured switcher
 	 */
-	public Response executeCriteriaService(final Switcher switcher, final String token);
+	public CriteriaResponse executeCriteriaService(final Switcher switcher, final String token);
 	
 	/**
 	 * Returns the token to access all available endpoints
 	 * 
 	 * @return token and expiration date
 	 */
-	public Response auth();
+	public Optional<AuthResponse> auth();
 	
 	/**
 	 * Returns the whole domain structure which will be stored into a snapshot file
@@ -68,7 +72,7 @@ public interface ClientWS {
 	 * @param token Access token
 	 * @return domain structure
 	 */
-	public Response resolveSnapshot(final String token);
+	public Snapshot resolveSnapshot(final String token);
 	
 	/**
 	 * Returns { status: true } if snapshot is updated
@@ -77,7 +81,7 @@ public interface ClientWS {
 	 * @param token Access token
 	 * @return status: true if domain is updated
 	 */
-	public Response checkSnapshotVersion(final long version, final String token);
+	public SnapshotVersionResponse checkSnapshotVersion(final long version, final String token);
 	
 	/**
 	 * Returns an empty array of not_found if all switchers passed are properly configured.
@@ -86,7 +90,7 @@ public interface ClientWS {
 	 * @param token Access token
 	 * @return array of Switchers Key not found/configured
 	 */
-	public Response checkSwitchers(final Set<String> switchers, final String token);
+	public SwitchersCheck checkSwitchers(final Set<String> switchers, final String token);
 	
 	/**
 	 * @return Check whether API is online or not
