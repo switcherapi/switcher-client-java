@@ -8,9 +8,6 @@ import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
-import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForComponentException;
-import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
-import com.github.switcherapi.client.exception.SwitcherSnapshoException;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
@@ -22,8 +19,6 @@ import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.utils.SwitcherContextParam;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 
-import jakarta.ws.rs.core.Response;
-
 /**
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
@@ -32,12 +27,12 @@ public class ClientRemoteService {
 	
 	private static ClientRemoteService instance;
 	
-	private ClientWS clientService;
+	private ClientWS clientWs;
 	
 	private Optional<AuthResponse> authResponse = Optional.empty();
 	
 	private ClientRemoteService() {
-		this.clientService = new ClientWSImpl();
+		this.clientWs = new ClientWSImpl();
 	}
 	
 	public static ClientRemoteService getInstance() {
@@ -52,39 +47,17 @@ public class ClientRemoteService {
 			this.auth();
 		}
 		
-		final Response response = this.clientService.executeCriteriaService(
+		return this.clientWs.executeCriteriaService(
 				switcher, this.authResponse.get().getToken());
-		
-		if (response.getStatus() == 401) {
-			throw new SwitcherKeyNotAvailableForComponentException(
-					SwitcherContext.getProperties().getComponent(), switcher.getSwitcherKey());
-		} else if (response.getStatus() != 200) {
-			throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
-		}
-		
-		final CriteriaResponse criteriaReponse = response.readEntity(CriteriaResponse.class);
-		criteriaReponse.setSwitcherKey(switcher.getSwitcherKey());
-		criteriaReponse.setEntry(switcher.getEntry());
-		response.close();
-		
-		return criteriaReponse;
 	}
 	
 	public Snapshot resolveSnapshot() throws SwitcherException {
 		if (!this.isTokenValid()) {
 			this.auth();
 		}
-				
-		final Response response = this.clientService.resolveSnapshot(
+		
+		return this.clientWs.resolveSnapshot(
 				this.authResponse.orElseGet(AuthResponse::new).getToken());
-		
-		if (response.getStatus() != 200) {
-			throw new SwitcherSnapshoException("resolveSnapshot");
-		}
-		
-		final Snapshot snapshot = response.readEntity(Snapshot.class);
-		response.close();
-		return snapshot;
 	}
 	
 	public boolean checkSnapshotVersion(final long version) {
@@ -92,16 +65,9 @@ public class ClientRemoteService {
 			this.auth();
 		}
 				
-		final Response response = this.clientService.checkSnapshotVersion(version, 
+		final SnapshotVersionResponse snapshotVersionResponse = this.clientWs.checkSnapshotVersion(version, 
 				this.authResponse.orElseGet(AuthResponse::new).getToken());
-		
-		if (response.getStatus() != 200) {
-			throw new SwitcherSnapshoException("resolveSnapshot");
-		}
-		
-		final SnapshotVersionResponse snapshotVersionResponse = response.readEntity(SnapshotVersionResponse.class);
-		response.close();
-		
+
 		return snapshotVersionResponse.isUpdated();
 	}
 	
@@ -111,18 +77,8 @@ public class ClientRemoteService {
 				this.auth();
 			}
 					
-			final Response response = this.clientService.checkSwitchers(switchers, 
+			return this.clientWs.checkSwitchers(switchers, 
 					this.authResponse.orElseGet(AuthResponse::new).getToken());
-			
-			if (response.getStatus() != 200) {
-				throw new SwitcherException(
-						String.format("API returned an HTTP/1.1 %s", response.getStatus()), null); 
-			}
-				
-			final SwitchersCheck switchersResponse = response.readEntity(SwitchersCheck.class);
-			response.close();
-			
-			return switchersResponse;
 		} catch (final Exception e) {
 			throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl(), e);
 		}
@@ -130,14 +86,7 @@ public class ClientRemoteService {
 	
 	private void auth() {
 		try {
-			final Response response = this.clientService.auth();
-			
-			if (response.getStatus() == 401) {
-				throw new SwitcherException("Unauthorized API access", null); 
-			}
-			
-			this.authResponse = Optional.of(response.readEntity(AuthResponse.class));
-			response.close();
+			this.authResponse = this.clientWs.auth();
 		} catch (final SwitcherException e) {
 			throw e;
 		} catch (final Exception e) {
@@ -154,7 +103,7 @@ public class ClientRemoteService {
 					&& !this.authResponse.get().isExpired()) {
 				throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl());
 			} else {
-				if (!this.clientService.isAlive()) {
+				if (!this.clientWs.isAlive()) {
 					this.setSilentModeExpiration();
 					throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl());
 				}
@@ -175,10 +124,6 @@ public class ClientRemoteService {
 			response.setExp(SwitcherUtils.addTimeDuration(addValue, new Date()).getTime()/1000);
 			this.authResponse = Optional.of(response);
 		}
-	}
-
-	public void setClientWS(ClientWS clientService) {
-		this.clientService = clientService;
 	}
 
 	public void clearAuthResponse() {
