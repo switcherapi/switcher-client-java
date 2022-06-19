@@ -4,6 +4,7 @@
 *.class
 *.jar
 logs/
+src/test/resources/generated_watcher_default.json
 
 ##############################
 ## Maven

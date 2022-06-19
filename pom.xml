@@ -44,10 +44,9 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 
 		<!-- rest/json libs -->
-		<jackson-patch.version>2.13.3</jackson-patch.version>
-		<jersey-client.version>3.0.4</jersey-client.version>
-		<jersey-hk2.version>3.0.4</jersey-hk2.version>
-		<jersey-media-json-jackson.version>3.0.4</jersey-media-json-jackson.version>
+		<jersey-client.version>2.36</jersey-client.version>
+		<jersey-hk2.version>2.36</jersey-hk2.version>
+		<jersey-media-json-jackson.version>2.36</jersey-media-json-jackson.version>
 		<gson.version>2.9.0</gson.version>
 
 		<!-- utils -->
@@ -94,40 +93,8 @@
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>${jersey-media-json-jackson.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-databind</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.module</groupId>
-					<artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
-		<!-- Jackson Security Patch-->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>${jackson-patch.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>${jackson-patch.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.module</groupId>
-			<artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
-			<version>${jackson-patch.version}</version>
-		</dependency>
-		<!-- Jackson Security Patch-->
-			
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
