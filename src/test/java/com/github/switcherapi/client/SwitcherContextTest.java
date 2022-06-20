@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
+import com.github.switcherapi.client.model.ContextKey;
 
 class SwitcherContextTest {
 	
@@ -23,6 +24,8 @@ class SwitcherContextTest {
 	@Test
 	void shouldNotThrowError_noUrl() {
 		Switchers.configure(ContextBuilder.builder().url(null));
+		
+		assertEquals(SwitcherProperties.DEFAULTURL, Switchers.contextStr(ContextKey.URL));
 		assertDoesNotThrow(() -> Switchers.initializeClient());
 	}
 	

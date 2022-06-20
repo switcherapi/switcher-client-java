@@ -20,6 +20,7 @@ import com.github.switcherapi.client.exception.SwitcherInvalidNumericFormat;
 import com.github.switcherapi.client.exception.SwitcherInvalidTimeFormat;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitcherNoInputReceivedException;
+import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
@@ -44,8 +45,15 @@ class SwitcherOfflineFix1Test {
 	}
 	
 	@Test
+	void offlineShouldValidateContext() {
+		assertEquals(SNAPSHOTS_LOCAL, SwitcherContext.contextStr(ContextKey.SNAPSHOT_LOCATION));
+		assertEquals("snapshot_fixture1", SwitcherContext.contextStr(ContextKey.ENVIRONMENT));
+		assertTrue(SwitcherContext.contextBol(ContextKey.OFFLINE_MODE));
+	}
+	
+	@Test
 	void offlineShouldReturnTrue() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11, true);
 		assertTrue(switcher.isItOn());
 	}
 	
