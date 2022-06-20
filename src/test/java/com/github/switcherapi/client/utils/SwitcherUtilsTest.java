@@ -44,9 +44,9 @@ class SwitcherUtilsTest {
 		SwitcherContext.configure(ContextBuilder.builder()
 				.snapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json"));
 		
-		assertThrows(SwitcherSnapshotLoadException.class ,() -> {
-			SwitcherContext.initializeClient();
-		});
+		assertThrows(SwitcherSnapshotLoadException.class ,() ->
+			SwitcherContext.initializeClient()
+		);
 	}
 	
 	@Test
@@ -55,9 +55,9 @@ class SwitcherUtilsTest {
 				.snapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json")
 				.offlineMode(true));
 		
-		assertThrows(SwitcherContextException.class, () -> {
-			SwitcherContext.initializeClient();
-		});
+		assertThrows(SwitcherContextException.class, () ->
+			SwitcherContext.initializeClient()
+		);
 	}
 	
 	@Test
@@ -75,9 +75,9 @@ class SwitcherUtilsTest {
 				.snapshotFile(SNAPSHOTS_LOCAL + "/UNKNOWN_LOCATION")
 				.offlineMode(true));
 		
-		assertThrows(SwitcherContextException.class, () -> {
-			SwitcherContext.initializeClient();
-		});
+		assertThrows(SwitcherContextException.class, () ->
+			SwitcherContext.initializeClient()
+		);
 	}
 	
 	@Test
@@ -87,9 +87,9 @@ class SwitcherUtilsTest {
 				.snapshotFile(null)
 				.offlineMode(true));
 		
-		assertThrows(SwitcherContextException.class, () -> {
-			SwitcherContext.initializeClient();
-		});
+		assertThrows(SwitcherContextException.class, () ->
+			SwitcherContext.initializeClient()
+		);
 	}
 	
 	@Test
@@ -98,9 +98,9 @@ class SwitcherUtilsTest {
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("defect_default"));
 		
-		assertThrows(SwitcherSnapshotLoadException.class, () -> {
-			SwitcherContext.initializeClient();
-		});
+		assertThrows(SwitcherSnapshotLoadException.class, () ->
+			SwitcherContext.initializeClient()
+		);
 	}
 	
 	@Test
@@ -184,9 +184,10 @@ class SwitcherUtilsTest {
 		prop.setProperty(ContextKey.ENVIRONMENT.getParam(), "${ENVIRONMENT}");
 		
 		//test
-		Exception ex = assertThrows(SwitcherContextException.class, () -> {
-			SwitcherUtils.resolveProperties(ContextKey.ENVIRONMENT.getParam(), prop);
-		});
+		final String envParam = ContextKey.ENVIRONMENT.getParam();
+		Exception ex = assertThrows(SwitcherContextException.class, () ->
+			SwitcherUtils.resolveProperties(envParam, prop)
+		);
 		
 		assertEquals("Something went wrong: Context has errors - Property ${ENVIRONMENT} not defined", ex.getMessage());
 	}
