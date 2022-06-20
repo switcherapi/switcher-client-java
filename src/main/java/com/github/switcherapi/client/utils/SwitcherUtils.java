@@ -17,7 +17,7 @@ import org.glassfish.jersey.internal.guava.Sets;
 import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
-import com.github.switcherapi.client.model.SwitcherContextParam;
+import com.github.switcherapi.client.model.ContextKey;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -155,7 +155,7 @@ public class SwitcherUtils {
 	 * 
 	 * Two different RE were used here to mitigate catastrophic backtracking situations.
 	 * 
-	 * @param key reads values from {@link SwitcherContextParam}
+	 * @param key reads values from {@link ContextKey#getParam()}
 	 * @param prop from properties file
 	 * @return resolved value
 	 */

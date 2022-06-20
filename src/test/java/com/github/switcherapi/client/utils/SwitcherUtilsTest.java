@@ -27,7 +27,7 @@ import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
-import com.github.switcherapi.client.model.SwitcherContextParam;
+import com.github.switcherapi.client.model.ContextKey;
 
 class SwitcherUtilsTest {
 	
@@ -156,10 +156,10 @@ class SwitcherUtilsTest {
 	void shouldReadProperties(String property, String expectedValue) {
 		//given
 		Properties prop = new Properties();
-		prop.setProperty(SwitcherContextParam.ENVIRONMENT, property);
+		prop.setProperty(ContextKey.ENVIRONMENT.getParam(), property);
 		
 		//test
-		final String value = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
+		final String value = SwitcherUtils.resolveProperties(ContextKey.ENVIRONMENT.getParam(), prop);
 		assertEquals(expectedValue, value);
 	}
 	
@@ -170,10 +170,10 @@ class SwitcherUtilsTest {
 		final String expected = "test";
 		
 		Properties prop = new Properties();
-		prop.setProperty(SwitcherContextParam.ENVIRONMENT, "${ENVIRONMENT:default}");
+		prop.setProperty(ContextKey.ENVIRONMENT.getParam(), "${ENVIRONMENT:default}");
 		
 		//test
-		final String actual = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
+		final String actual = SwitcherUtils.resolveProperties(ContextKey.ENVIRONMENT.getParam(), prop);
 		assertEquals(expected, actual);
 	}
 	
@@ -181,11 +181,11 @@ class SwitcherUtilsTest {
 	void shouldNotReadUnsetProperty() throws Exception {
 		//given
 		Properties prop = new Properties();
-		prop.setProperty(SwitcherContextParam.ENVIRONMENT, "${ENVIRONMENT}");
+		prop.setProperty(ContextKey.ENVIRONMENT.getParam(), "${ENVIRONMENT}");
 		
 		//test
 		Exception ex = assertThrows(SwitcherContextException.class, () -> {
-			SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
+			SwitcherUtils.resolveProperties(ContextKey.ENVIRONMENT.getParam(), prop);
 		});
 		
 		assertEquals("Something went wrong: Context has errors - Property ${ENVIRONMENT} not defined", ex.getMessage());

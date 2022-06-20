@@ -1,19 +1,5 @@
 package com.github.switcherapi.client;
 
-import static com.github.switcherapi.client.model.SwitcherContextParam.APIKEY;
-import static com.github.switcherapi.client.model.SwitcherContextParam.COMPONENT;
-import static com.github.switcherapi.client.model.SwitcherContextParam.CONTEXT_LOCATION;
-import static com.github.switcherapi.client.model.SwitcherContextParam.DOMAIN;
-import static com.github.switcherapi.client.model.SwitcherContextParam.ENVIRONMENT;
-import static com.github.switcherapi.client.model.SwitcherContextParam.OFFLINE_MODE;
-import static com.github.switcherapi.client.model.SwitcherContextParam.RETRY_AFTER;
-import static com.github.switcherapi.client.model.SwitcherContextParam.SILENT_MODE;
-import static com.github.switcherapi.client.model.SwitcherContextParam.SNAPSHOT_AUTO_LOAD;
-import static com.github.switcherapi.client.model.SwitcherContextParam.SNAPSHOT_FILE;
-import static com.github.switcherapi.client.model.SwitcherContextParam.SNAPSHOT_LOCATION;
-import static com.github.switcherapi.client.model.SwitcherContextParam.SNAPSHOT_SKIP_VALIDATION;
-import static com.github.switcherapi.client.model.SwitcherContextParam.URL;
-
 import java.lang.reflect.Field;
 import java.util.Properties;
 
@@ -21,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.SwitcherContextParam;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 
 /**
@@ -71,19 +56,19 @@ class SwitcherProperties {
 	}
 	
 	public void loadFromProperties(Properties prop) {
-        setContextLocation(SwitcherUtils.resolveProperties(CONTEXT_LOCATION, prop));
-        setUrl(SwitcherUtils.resolveProperties(URL, prop));
-		setApiKey(SwitcherUtils.resolveProperties(APIKEY, prop));
-		setDomain(SwitcherUtils.resolveProperties(DOMAIN, prop));
-		setComponent(SwitcherUtils.resolveProperties(COMPONENT, prop));
-		setEnvironment(SwitcherUtils.resolveProperties(ENVIRONMENT, prop));
-		setSnapshotFile(SwitcherUtils.resolveProperties(SNAPSHOT_FILE, prop));
-		setSnapshotLocation(SwitcherUtils.resolveProperties(SNAPSHOT_LOCATION, prop));
-		setSnapshotSkipValidation(Boolean.parseBoolean(SwitcherUtils.resolveProperties(SNAPSHOT_SKIP_VALIDATION, prop)));
-		setSnapshotAutoLoad(Boolean.parseBoolean(SwitcherUtils.resolveProperties(SNAPSHOT_AUTO_LOAD, prop)));
-		setSilentMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(SILENT_MODE, prop)));
-		setOfflineMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(OFFLINE_MODE, prop)));
-		setRetryAfter(SwitcherUtils.resolveProperties(RETRY_AFTER, prop));
+        setContextLocation(SwitcherUtils.resolveProperties(ContextKey.CONTEXT_LOCATION.getParam(), prop));
+        setUrl(SwitcherUtils.resolveProperties(ContextKey.URL.getParam(), prop));
+		setApiKey(SwitcherUtils.resolveProperties(ContextKey.APIKEY.getParam(), prop));
+		setDomain(SwitcherUtils.resolveProperties(ContextKey.DOMAIN.getParam(), prop));
+		setComponent(SwitcherUtils.resolveProperties(ContextKey.COMPONENT.getParam(), prop));
+		setEnvironment(SwitcherUtils.resolveProperties(ContextKey.ENVIRONMENT.getParam(), prop));
+		setSnapshotFile(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_FILE.getParam(), prop));
+		setSnapshotLocation(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_LOCATION.getParam(), prop));
+		setSnapshotSkipValidation(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_SKIP_VALIDATION.getParam(), prop)));
+		setSnapshotAutoLoad(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_LOAD.getParam(), prop)));
+		setSilentMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SILENT_MODE.getParam(), prop)));
+		setOfflineMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.OFFLINE_MODE.getParam(), prop)));
+		setRetryAfter(SwitcherUtils.resolveProperties(ContextKey.RETRY_AFTER.getParam(), prop));
 	}
 	
 	public <T> T getValue(ContextKey contextKey, Class<T> type) {

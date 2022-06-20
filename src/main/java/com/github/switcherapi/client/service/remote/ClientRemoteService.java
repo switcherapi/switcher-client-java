@@ -10,7 +10,6 @@ import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.SwitcherContextParam;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.model.response.AuthResponse;
@@ -100,7 +99,7 @@ public class ClientRemoteService {
 		SwitcherInvalidDateTimeArgumentException {
 		
 		if (this.authResponse.isPresent()) {
-			if (this.authResponse.get().getToken().equals(SwitcherContextParam.SILENT_MODE) 
+			if (this.authResponse.get().getToken().equals(ContextKey.SILENT_MODE.getParam()) 
 					&& !this.authResponse.get().isExpired()) {
 				throw new SwitcherAPIConnectionException(SwitcherContextBase.contextStr(ContextKey.URL));
 			} else {
@@ -121,7 +120,7 @@ public class ClientRemoteService {
 			final String addValue = SwitcherContextBase.contextStr(ContextKey.RETRY_AFTER);
 			final AuthResponse response = new AuthResponse();
 			
-			response.setToken(SwitcherContextParam.SILENT_MODE);
+			response.setToken(ContextKey.SILENT_MODE.getParam());
 			response.setExp(SwitcherUtils.addTimeDuration(addValue, new Date()).getTime()/1000);
 			this.authResponse = Optional.of(response);
 		}
