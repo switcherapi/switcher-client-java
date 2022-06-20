@@ -44,13 +44,13 @@ https://github.com/switcherapi/switcher-api
 </dependency>
 ```	
 
-## Client Context Properties
+## Client Context Properties - SwitcherContext
 
-Define a feature class that extends SwitcherContext. This implementation will centralize all features in a single place of your application and will have all the operations and features available to access the API remotely as well local snapshots.
+Define a feature class that extends SwitcherContext. This implementation will centralize all features in a single place of your application and will have all the operations and features available to access the API either remotely or locally from the snapshot files.
 
-The Client SDK configuration must be defined in a properties file that contains all settings for your application to start communicating with the API.
+The Client SDK configuration must be defined in a properties file that contains all parameters for your application to start communicating with the API.
 
-1. Inside a resources folder, create a file called: switcherapi.properties.
+### Inside of the resources folder, create a file named: switcherapi.properties.
 
 Configure the parameters according to the definition below. 
 You can also use environment variables using the standard notation ${VALUE:DEFAULT_VALUE}
@@ -74,7 +74,30 @@ switcher.silent -> true/false Contingency in case of some problem with connectiv
 switcher.retry -> Time given to the module to re-establish connectivity with the API - e.g. 5s (s: seconds - m: minutes - h: hours)
 ```
 
-2. Defining your features
+## Client Context Properties - SwitcherContextBase
+
+The Base Context provides with a more flexible way to configure the Client SDK.<br>
+Instead of using SwitcherContext, which is used to automatically load from the switcherapi.properties, you can also use SwitcherContextBase and supply the ContextBuilder to include the settings.
+
+```java
+MyAppFeatures.configure(ContextBuilder.builder()
+		.contextLocation("com.github.switcherapi.playground.Features")
+		.apiKey("API_KEY")
+		.url("https://switcher-api.herokuapp.com")
+		.domain("Playground")
+		.component("switcher-playground"));
+
+MyAppFeatures.initializeClient();
+```
+
+Or simply define a custom file properties to load everything from it.
+
+```
+// Load from resources/switcherapi-test.properties 
+MyAppFeatures.loadProperties("switcherapi-test");
+```
+
+### Defining your features
 
 ```java
 public class MyAppFeatures extends SwitcherContext {
@@ -154,8 +177,10 @@ You can also force the Switcher library to work offline. In this case, the snaps
 Or you can just configure the Client SDK using the properties file.
 
 ```java
-MyAppFeatures.getProperties().setOfflineMode(true);
-MyAppFeatures.getProperties().setSnapshotLocation("/src/resources");
+MyAppFeatures.configure(ContextBuilder.builder()
+	.offline(true)
+	.snapshotLocation("/src/resources"));
+
 MyAppFeatures.initializeClient();
 
 Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);

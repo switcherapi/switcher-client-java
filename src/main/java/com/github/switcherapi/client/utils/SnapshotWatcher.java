@@ -13,8 +13,9 @@ import java.nio.file.WatchService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.SwitcherExecutor;
+import com.github.switcherapi.client.model.ContextKey;
 
 /**
  * @author Roger Floriano (petruki)
@@ -40,7 +41,7 @@ public class SnapshotWatcher implements Runnable {
 		
 		try {
 			watcher = FileSystems.getDefault().newWatchService();
-			final Path dir = Paths.get(SwitcherContext.getProperties().getSnapshotLocation());
+			final Path dir = Paths.get(SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION));
 			dir.register(watcher,
 		    		StandardWatchEventKinds.ENTRY_DELETE,
 		    		StandardWatchEventKinds.ENTRY_MODIFY);

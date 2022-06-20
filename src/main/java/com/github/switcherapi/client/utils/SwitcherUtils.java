@@ -17,6 +17,7 @@ import org.glassfish.jersey.internal.guava.Sets;
 import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
+import com.github.switcherapi.client.model.SwitcherContextParam;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

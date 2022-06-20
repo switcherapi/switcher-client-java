@@ -22,13 +22,13 @@ class SwitcherContextTest {
 	
 	@Test
 	void shouldNotThrowError_noUrl() {
-		Switchers.getProperties().setUrl(null);
+		Switchers.configure(ContextBuilder.builder().url(null));
 		assertDoesNotThrow(() -> Switchers.initializeClient());
 	}
 	
 	@Test
 	void shouldThrowError_noApi() {
-		Switchers.getProperties().setApiKey(null);
+		Switchers.configure(ContextBuilder.builder().apiKey(null));
 		
 		Exception ex = assertThrows(SwitcherContextException.class, () -> {
 			Switchers.initializeClient();
@@ -40,7 +40,7 @@ class SwitcherContextTest {
 	
 	@Test
 	void shouldThrowError_noDomain() {
-		Switchers.getProperties().setDomain(null);
+		Switchers.configure(ContextBuilder.builder().domain(null));
 		
 		Exception ex = assertThrows(SwitcherContextException.class, () -> {
 			Switchers.initializeClient();
@@ -52,7 +52,7 @@ class SwitcherContextTest {
 	
 	@Test
 	void shouldThrowError_noComponent() throws Exception {
-		Switchers.getProperties().setComponent(null);
+		Switchers.configure(ContextBuilder.builder().component(null));
 		
 		Exception ex = assertThrows(SwitcherContextException.class, () -> {
 			Switchers.initializeClient();
@@ -64,8 +64,9 @@ class SwitcherContextTest {
 	
 	@Test
 	void shouldThrowErrorWhenAutoLoad_noLocation() {
-		Switchers.getProperties().setSnapshotLocation(null);
-		Switchers.getProperties().setSnapshotAutoLoad(true);
+		Switchers.configure(ContextBuilder.builder()
+				.snapshotLocation(null)
+				.snapshotAutoLoad(true));
 		
 		Exception ex = assertThrows(SwitcherContextException.class, () -> {
 			Switchers.initializeClient();
@@ -77,8 +78,9 @@ class SwitcherContextTest {
 	
 	@Test
 	void shouldThrowErrorWhenSilentMode_noRetryTimer() {
-		Switchers.getProperties().setSilentMode(true);
-		Switchers.getProperties().setRetryAfter(null);;
+		Switchers.configure(ContextBuilder.builder()
+				.silentMode(true)
+				.retryAfter(null));
 		
 		Exception ex = assertThrows(SwitcherContextException.class, () -> {
 			Switchers.initializeClient();
@@ -103,7 +105,7 @@ class SwitcherContextTest {
 			new Switchers();
 		});
 		
-		assertEquals("Configuration class cannot be instantiated", ex.getMessage());
+		assertEquals("Context class cannot be instantiated", ex.getMessage());
 	}
 
 }

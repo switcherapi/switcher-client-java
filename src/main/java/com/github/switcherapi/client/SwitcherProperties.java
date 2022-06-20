@@ -1,24 +1,27 @@
-package com.github.switcherapi.client.model;
+package com.github.switcherapi.client;
 
-import static com.github.switcherapi.client.utils.SwitcherContextParam.APIKEY;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.COMPONENT;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.CONTEXT_LOCATION;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.DOMAIN;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.ENVIRONMENT;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.OFFLINE_MODE;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.RETRY_AFTER;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.SILENT_MODE;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_AUTO_LOAD;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_FILE;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_LOCATION;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.SNAPSHOT_SKIP_VALIDATION;
-import static com.github.switcherapi.client.utils.SwitcherContextParam.URL;
+import static com.github.switcherapi.client.model.SwitcherContextParam.APIKEY;
+import static com.github.switcherapi.client.model.SwitcherContextParam.COMPONENT;
+import static com.github.switcherapi.client.model.SwitcherContextParam.CONTEXT_LOCATION;
+import static com.github.switcherapi.client.model.SwitcherContextParam.DOMAIN;
+import static com.github.switcherapi.client.model.SwitcherContextParam.ENVIRONMENT;
+import static com.github.switcherapi.client.model.SwitcherContextParam.OFFLINE_MODE;
+import static com.github.switcherapi.client.model.SwitcherContextParam.RETRY_AFTER;
+import static com.github.switcherapi.client.model.SwitcherContextParam.SILENT_MODE;
+import static com.github.switcherapi.client.model.SwitcherContextParam.SNAPSHOT_AUTO_LOAD;
+import static com.github.switcherapi.client.model.SwitcherContextParam.SNAPSHOT_FILE;
+import static com.github.switcherapi.client.model.SwitcherContextParam.SNAPSHOT_LOCATION;
+import static com.github.switcherapi.client.model.SwitcherContextParam.SNAPSHOT_SKIP_VALIDATION;
+import static com.github.switcherapi.client.model.SwitcherContextParam.URL;
 
+import java.lang.reflect.Field;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.switcherapi.client.utils.SwitcherContextParam;
+import com.github.switcherapi.client.exception.SwitcherContextException;
+import com.github.switcherapi.client.model.ContextKey;
+import com.github.switcherapi.client.model.SwitcherContextParam;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 
 /**
@@ -30,7 +33,7 @@ import com.github.switcherapi.client.utils.SwitcherUtils;
  * 
  * @author Roger Floriano (petruki)
  */
-public class SwitcherProperties {
+class SwitcherProperties {
 
 	public static final String DEFAULTURL = "https://switcher-api.herokuapp.com";
 
@@ -61,6 +64,11 @@ public class SwitcherProperties {
 	private boolean silentMode;
 
 	private boolean offlineMode;
+
+	public SwitcherProperties() {
+		this.url = DEFAULTURL;
+		this.environment = DEFAULTENV;
+	}
 	
 	public void loadFromProperties(Properties prop) {
         setContextLocation(SwitcherUtils.resolveProperties(CONTEXT_LOCATION, prop));
@@ -77,10 +85,14 @@ public class SwitcherProperties {
 		setOfflineMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(OFFLINE_MODE, prop)));
 		setRetryAfter(SwitcherUtils.resolveProperties(RETRY_AFTER, prop));
 	}
-
-	public SwitcherProperties() {
-		this.url = DEFAULTURL;
-		this.environment = DEFAULTENV;
+	
+	public <T> T getValue(ContextKey contextKey, Class<T> type) {
+		try {
+			final Field field = SwitcherProperties.class.getDeclaredField(contextKey.getPropField());
+			return type.cast(field.get(this));
+		} catch (Exception e) {
+			throw new SwitcherContextException(e.getMessage());
+		}
 	}
 
 	public String getContextLocation() {

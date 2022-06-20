@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.github.switcherapi.Switchers;
+import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Criteria;
@@ -38,11 +39,13 @@ class SnapshotWatcherTest {
 		removeGeneratedFiles();
 		generateFixture();
 		
-		SwitcherContext.getProperties().setUrl("http://localhost:3000");
-		SwitcherContext.getProperties().setEnvironment("generated_watcher_default");
-		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
-		SwitcherContext.getProperties().setSnapshotAutoLoad(true);
-		SwitcherContext.getProperties().setOfflineMode(true);
+		SwitcherContext.configure(ContextBuilder.builder()
+			.url("http://localhost:3000")
+			.environment("generated_watcher_default")
+			.snapshotLocation(SNAPSHOTS_LOCAL)
+			.snapshotAutoLoad(true)
+			.offlineMode(true));
+		
 		SwitcherContext.initializeClient();
 	}
 	

@@ -8,12 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
+import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.SwitcherProperties;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.utils.SnapshotLoader;
@@ -38,16 +38,18 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	 * @throws SwitcherSnapshotLoadException in case it was not possible to load snapshot automatically
 	 */
 	public void init() {
-		final SwitcherProperties props = SwitcherContext.getProperties();
+		final String snapshotFile = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_FILE);
+		final String snapshotLocation = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION);
+		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
+		final boolean snapshotAutoload = SwitcherContextBase.contextBol(ContextKey.SNAPSHOT_AUTO_LOAD);
 		
-		if (StringUtils.isNotBlank(props.getSnapshotFile())) {
-			this.domain = SnapshotLoader.loadSnapshot(props.getSnapshotFile());
-		} else if (StringUtils.isNotBlank(props.getSnapshotLocation())) {
+		if (StringUtils.isNotBlank(snapshotFile)) {
+			this.domain = SnapshotLoader.loadSnapshot(snapshotFile);
+		} else if (StringUtils.isNotBlank(snapshotLocation)) {
 			try {
-				this.domain = SnapshotLoader.loadSnapshot(
-						props.getSnapshotLocation(), props.getEnvironment());
+				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
 			} catch (FileNotFoundException e) {
-				if (props.isSnapshotAutoLoad()) {
+				if (snapshotAutoload) {
 					this.domain = this.initializeSnapshotFromAPI();
 				}
 			}
@@ -94,13 +96,13 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	
 	@Override
 	public void notifyChange(final String snapshotFile) {
-		final SwitcherProperties properties = SwitcherContext.getProperties();
+		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
+		final String snapshotLocation = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION);
 		
 		try {
-			if (snapshotFile.equals(String.format("%s.json", properties.getEnvironment()))) {
+			if (snapshotFile.equals(String.format("%s.json", environment))) {
 				logger.debug("Updating domain");
-				this.domain = SnapshotLoader.loadSnapshot(
-						properties.getSnapshotLocation(), properties.getEnvironment());
+				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
 			}
 		} catch (SwitcherSnapshotLoadException | FileNotFoundException e) {
 			logger.error(e);

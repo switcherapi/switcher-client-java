@@ -69,8 +69,7 @@ class SwitcherApiMockTest {
         mockBackEnd = new MockWebServer();
         mockBackEnd.start();
         
-        Switchers.loadProperties();
-        Switchers.getProperties().setUrl(String.format("http://localhost:%s", mockBackEnd.getPort()));
+        Switchers.configure(ContextBuilder.builder().url(String.format("http://localhost:%s", mockBackEnd.getPort())));
         Switchers.initializeClient();
     }
 	
@@ -90,12 +89,14 @@ class SwitcherApiMockTest {
 	void resetSwitcherContextState() {
 		ClientRemoteService.getInstance().clearAuthResponse();
 		
-		Switchers.getProperties().setOfflineMode(false);
-		Switchers.getProperties().setSnapshotLocation(null);
-		Switchers.getProperties().setEnvironment("default");
-		Switchers.getProperties().setSilentMode(false);
-		Switchers.getProperties().setSnapshotAutoLoad(false);
-		Switchers.getProperties().setRetryAfter(null);
+		Switchers.configure(ContextBuilder.builder()
+				.offlineMode(false)
+				.snapshotLocation(null)
+				.environment("default")
+				.silentMode(false)
+				.snapshotAutoLoad(false)
+				.retryAfter(null));
+		
 		Switchers.initializeClient();
 	}
 	
@@ -301,10 +302,12 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldReturnTrue_silentMode() throws InterruptedException {
 		//given
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
-		Switchers.getProperties().setEnvironment("snapshot_fixture1");
-		Switchers.getProperties().setSilentMode(true);
-		Switchers.getProperties().setRetryAfter("5s");
+		Switchers.configure(ContextBuilder.builder()
+				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.environment("snapshot_fixture1")
+				.silentMode(true)
+				.retryAfter("5s"));
+		
 		Switchers.initializeClient();
 		
 		//auth
@@ -375,7 +378,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateSnapshotResponse());
 		
 		//test
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
+		Switchers.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL));
 		
 		assertDoesNotThrow(() -> {
 			Switchers.initializeClient();
@@ -386,7 +389,7 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldSkipValidatSnapshot() {
 		//given
-		Switchers.getProperties().setSnapshotSkipValidation(true);
+		Switchers.configure(ContextBuilder.builder().snapshotSkipValidation(true));
 		
 		//test
 		assertDoesNotThrow(() -> {
@@ -398,9 +401,10 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldLookupForSnapshot() {
 		//given
-		Switchers.getProperties().setSnapshotAutoLoad(true);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/new_folder");
-		Switchers.getProperties().setEnvironment("generated_on_new_folder");
+		Switchers.configure(ContextBuilder.builder()
+				.snapshotAutoLoad(true)
+				.snapshotLocation(SNAPSHOTS_LOCAL + "/new_folder")
+				.environment("generated_on_new_folder"));
 		
 		//auth
 		mockBackEnd.enqueue(generateMockAuth(10));
@@ -415,9 +419,10 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldNotLookupForSnapshot_serviceUnavailable() {
 		//given
-		Switchers.getProperties().setSnapshotAutoLoad(true);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/new_folder");
-		Switchers.getProperties().setEnvironment("generated_on_new_folder");
+		Switchers.configure(ContextBuilder.builder()
+				.snapshotAutoLoad(true)
+				.snapshotLocation(SNAPSHOTS_LOCAL + "/new_folder")
+				.environment("generated_on_new_folder"));
 		
 		//auth
 		mockBackEnd.enqueue(generateMockAuth(10));
@@ -437,9 +442,11 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldLookupForSnapshot_whenNotAutoLoad() {
 		//given
-		Switchers.getProperties().setSnapshotAutoLoad(false);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
-		Switchers.getProperties().setEnvironment("generated_mock_default");
+		Switchers.configure(ContextBuilder.builder()
+				.snapshotAutoLoad(false)
+				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.environment("generated_mock_default"));
+		
 		Switchers.initializeClient();
 		
 		//auth
@@ -455,10 +462,12 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldValidateAndLoadSnapshot_whenOffline() {
 		//given
-		Switchers.getProperties().setOfflineMode(true);
-		Switchers.getProperties().setSnapshotAutoLoad(false);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
-		Switchers.getProperties().setEnvironment("default");
+		Switchers.configure(ContextBuilder.builder()
+				.offlineMode(true)
+				.snapshotAutoLoad(false)
+				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.environment("default"));
+		
 		Switchers.initializeClient();
 		
 		//auth
@@ -480,10 +489,12 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldNotValidateAndLoadSnapshot_serviceUnavailable() {
 		//given
-		Switchers.getProperties().setOfflineMode(true);
-		Switchers.getProperties().setSnapshotAutoLoad(false);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
-		Switchers.getProperties().setEnvironment("default");
+		Switchers.configure(ContextBuilder.builder()
+				.offlineMode(true)
+				.snapshotAutoLoad(false)
+				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.environment("default"));
+		
 		Switchers.initializeClient();
 		
 		//auth
@@ -502,8 +513,9 @@ class SwitcherApiMockTest {
 	@Order(value = 1)
 	void shouldNotLookupForSnapshot_invalidLocation() {
 		//given
-		Switchers.getProperties().setSnapshotAutoLoad(true);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessible");
+		Switchers.configure(ContextBuilder.builder()
+				.snapshotAutoLoad(true)
+				.snapshotLocation(SNAPSHOTS_LOCAL + "/not_accessible"));
 		
 		//test
 		assertDoesNotThrow(() -> {
@@ -534,8 +546,9 @@ class SwitcherApiMockTest {
 	@Order(value = 2)
 	void shouldNotLookupForSnapshot_invalidFolderLocation() {
 		//given
-		Switchers.getProperties().setSnapshotAutoLoad(true);
-		Switchers.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/not_accessible/folder");
+		Switchers.configure(ContextBuilder.builder()
+				.snapshotAutoLoad(true)
+				.snapshotLocation(SNAPSHOTS_LOCAL + "/not_accessible/folder"));
 		
 		//test
 		assertDoesNotThrow(() -> {

@@ -18,9 +18,11 @@ class SwitcherOfflineFix2Test {
 	@BeforeAll
 	static void setupContext() {
 		SwitcherContext.loadProperties();
-		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
-		SwitcherContext.getProperties().setEnvironment("snapshot_fixture2");
-		SwitcherContext.getProperties().setOfflineMode(true);
+		SwitcherContext.configure(ContextBuilder.builder()
+				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.environment("snapshot_fixture2")
+				.offlineMode(true));
+		
 		SwitcherContext.initializeClient();
 	}
 	

@@ -19,7 +19,7 @@ class SwitcherOnlineUnavailableTest {
 	@Test
 	void shouldReturnError_noConnection() {
 		//given
-		SwitcherContext.getProperties().setUrl("http://localhost:30");
+		SwitcherContext.configure(ContextBuilder.builder().url("http://localhost:30"));
 		SwitcherContext.initializeClient();
 		
 		//test

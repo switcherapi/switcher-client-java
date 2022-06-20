@@ -7,10 +7,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
+import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
@@ -52,7 +53,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	
 	private CriteriaResponse executeSilentCriteria(final Switcher switcher, 
 			final SwitcherAPIConnectionException e) {
-		if (SwitcherContext.getProperties().isSilentMode()) {
+		if (SwitcherContextBase.contextBol(ContextKey.SILENT_MODE)) {
 			CriteriaResponse response = this.switcherOffline.executeCriteria(switcher);
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("[Silent] response: %s", response));
@@ -66,7 +67,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 
 	@Override
 	public boolean checkSnapshotVersion() {
-		if (StringUtils.isNotBlank(SwitcherContext.getProperties().getSnapshotLocation())
+		if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION))
 				&& this.switcherOffline.getDomain() != null) {
 			return super.checkSnapshotVersion(this.switcherOffline.getDomain());
 		}
