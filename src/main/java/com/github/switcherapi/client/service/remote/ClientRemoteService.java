@@ -4,10 +4,11 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
-import com.github.switcherapi.client.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
+import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
@@ -16,7 +17,6 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
 import com.github.switcherapi.client.remote.ClientWS;
 import com.github.switcherapi.client.remote.ClientWSImpl;
-import com.github.switcherapi.client.utils.SwitcherContextParam;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 
 /**
@@ -80,7 +80,7 @@ public class ClientRemoteService {
 			return this.clientWs.checkSwitchers(switchers, 
 					this.authResponse.orElseGet(AuthResponse::new).getToken());
 		} catch (final Exception e) {
-			throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl(), e);
+			throw new SwitcherAPIConnectionException(SwitcherContextBase.contextStr(ContextKey.URL), e);
 		}
 	}
 	
@@ -91,7 +91,7 @@ public class ClientRemoteService {
 			throw e;
 		} catch (final Exception e) {
 			this.setSilentModeExpiration();
-			throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl(), e);
+			throw new SwitcherAPIConnectionException(SwitcherContextBase.contextStr(ContextKey.URL), e);
 		}
 	}
 	
@@ -99,13 +99,13 @@ public class ClientRemoteService {
 		SwitcherInvalidDateTimeArgumentException {
 		
 		if (this.authResponse.isPresent()) {
-			if (this.authResponse.get().getToken().equals(SwitcherContextParam.SILENT_MODE) 
+			if (this.authResponse.get().getToken().equals(ContextKey.SILENT_MODE.getParam()) 
 					&& !this.authResponse.get().isExpired()) {
-				throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl());
+				throw new SwitcherAPIConnectionException(SwitcherContextBase.contextStr(ContextKey.URL));
 			} else {
 				if (!this.clientWs.isAlive()) {
 					this.setSilentModeExpiration();
-					throw new SwitcherAPIConnectionException(SwitcherContext.getProperties().getUrl());
+					throw new SwitcherAPIConnectionException(SwitcherContextBase.contextStr(ContextKey.URL));
 				}
 				
 				return !this.authResponse.orElseGet(AuthResponse::new).isExpired();
@@ -116,11 +116,11 @@ public class ClientRemoteService {
 	}
 	
 	private void setSilentModeExpiration() throws SwitcherInvalidDateTimeArgumentException {
-		if (SwitcherContext.getProperties().isSilentMode()) {
-			final String addValue = SwitcherContext.getProperties().getRetryAfter();
+		if (SwitcherContextBase.contextBol(ContextKey.SILENT_MODE)) {
+			final String addValue = SwitcherContextBase.contextStr(ContextKey.RETRY_AFTER);
 			final AuthResponse response = new AuthResponse();
 			
-			response.setToken(SwitcherContextParam.SILENT_MODE);
+			response.setToken(ContextKey.SILENT_MODE.getParam());
 			response.setExp(SwitcherUtils.addTimeDuration(addValue, new Date()).getTime()/1000);
 			this.authResponse = Optional.of(response);
 		}

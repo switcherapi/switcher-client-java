@@ -25,7 +25,7 @@ class SwitcherBypassTest {
 	@BeforeAll
 	static void setupContext() {
 		SwitcherContext.loadProperties();
-		SwitcherContext.getProperties().setOfflineMode(true);
+		SwitcherContext.configure(ContextBuilder.builder().offlineMode(true));
 	}
 	
 	@AfterAll
@@ -36,7 +36,7 @@ class SwitcherBypassTest {
 	@Test
 	void shouldReturnFalse_afterAssumingItsFalse() {
 		//given
-		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + FIXTURE1);
+		SwitcherContext.configure(ContextBuilder.builder().snapshotFile(SNAPSHOTS_LOCAL + FIXTURE1));
 		SwitcherContext.initializeClient();
 		
 		//test
@@ -50,7 +50,7 @@ class SwitcherBypassTest {
 	@Test
 	void shouldReturnTrue_afterAssumingItsTrue() {
 		//given
-		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + FIXTURE2);
+		SwitcherContext.configure(ContextBuilder.builder().snapshotFile(SNAPSHOTS_LOCAL + FIXTURE2));
 		SwitcherContext.initializeClient();
 		
 		Switcher switcher = getSwitcher(USECASE111);
@@ -63,7 +63,7 @@ class SwitcherBypassTest {
 	@Test
 	void shouldReturnTrue_afterForgettingItWasFalse() {
 		//given
-		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + FIXTURE1);
+		SwitcherContext.configure(ContextBuilder.builder().snapshotFile(SNAPSHOTS_LOCAL + FIXTURE1));
 		SwitcherContext.initializeClient();
 		
 		//test
@@ -80,7 +80,7 @@ class SwitcherBypassTest {
 	@Test
 	void shouldReturnFalse_afterAssumingItsTrue() {
 		//given
-		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + FIXTURE2);
+		SwitcherContext.configure(ContextBuilder.builder().snapshotFile(SNAPSHOTS_LOCAL + FIXTURE2));
 		SwitcherContext.initializeClient();
 		
 		//test
@@ -98,7 +98,7 @@ class SwitcherBypassTest {
 	@SwitcherMock(key = USECASE111, result = false)
 	void shouldReturnFalse_usingParametrizedTest() {
 		//given
-		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + FIXTURE2);
+		SwitcherContext.configure(ContextBuilder.builder().snapshotFile(SNAPSHOTS_LOCAL + FIXTURE2));
 		SwitcherContext.initializeClient();
 		
 		//test
@@ -110,7 +110,7 @@ class SwitcherBypassTest {
 	@SwitcherMock(key = USECASE111, result = true)
 	void shouldReturnTrue_usingParametrizedTest() {
 		//given
-		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + FIXTURE2);
+		SwitcherContext.configure(ContextBuilder.builder().snapshotFile(SNAPSHOTS_LOCAL + FIXTURE2));
 		SwitcherContext.initializeClient();
 		
 		//test

@@ -9,8 +9,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
+import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.SwitcherProperties;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
@@ -65,7 +65,7 @@ public abstract class SwitcherExecutor {
 	public abstract void notifyChange(final String snapshotFile);
 	
 	protected boolean checkSnapshotVersion(final Domain domain) {
-		final String environment = SwitcherContext.getProperties().getEnvironment();
+		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("verifying snapshot version - environment: %s", environment));
@@ -75,15 +75,17 @@ public abstract class SwitcherExecutor {
 	}
 	
 	protected Domain initializeSnapshotFromAPI() {
-		final SwitcherProperties properties = SwitcherContext.getProperties();
-
+		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
+		
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("initializing snapshot from API - environment: %s", properties.getEnvironment()));
+			logger.debug(String.format("initializing snapshot from API - environment: %s", environment));
 		}
 		
 		try {
 			final Snapshot snapshot = ClientRemoteService.getInstance().resolveSnapshot();
-			SnapshotLoader.saveSnapshot(snapshot, properties.getSnapshotLocation(), properties.getEnvironment());
+			SnapshotLoader.saveSnapshot(snapshot, 
+					SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION), 
+					environment);
 			
 			return snapshot.getDomain();
 		} catch (SwitcherAPIConnectionException | SwitcherSnapshotWriteException e) {

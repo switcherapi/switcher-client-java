@@ -1,22 +1,20 @@
-package com.github.switcherapi.client.utils;
+package com.github.switcherapi.client;
 
 import java.io.File;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.switcherapi.client.exception.SwitcherContextException;
-import com.github.switcherapi.client.model.SwitcherProperties;
 
 /**
- * Utilitary class to validate SwitcherProperties during initialization
+ * Helper class to validate SwitcherProperties parameters
  * 
  * @author Roger Floriano (petruki)
  * @since 2022-06-17
- *
  */
-public class SwitcherContextUtils {
+class SwitcherContextValidator {
 	
-	private SwitcherContextUtils() {}
+	private SwitcherContextValidator() {}
 
 	/**
 	 * Validate context properties before executing any Switcher operation

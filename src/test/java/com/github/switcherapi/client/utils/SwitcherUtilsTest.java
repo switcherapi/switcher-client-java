@@ -23,9 +23,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junitpioneer.jupiter.ClearEnvironmentVariable;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
+import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
+import com.github.switcherapi.client.model.ContextKey;
 
 class SwitcherUtilsTest {
 	
@@ -39,55 +41,66 @@ class SwitcherUtilsTest {
 	
 	@Test
 	void shouldReturnError_snapshotNotFound() {
-		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json");
-		assertThrows(SwitcherSnapshotLoadException.class ,() -> {
-			SwitcherContext.initializeClient();
-		});
+		SwitcherContext.configure(ContextBuilder.builder()
+				.snapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json"));
+		
+		assertThrows(SwitcherSnapshotLoadException.class ,() ->
+			SwitcherContext.initializeClient()
+		);
 	}
 	
 	@Test
 	void shouldReturnError_offlineSnapshotNotFound() {
-		SwitcherContext.getProperties().setSnapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json");
-		SwitcherContext.getProperties().setOfflineMode(true);
-		assertThrows(SwitcherContextException.class, () -> {
-			SwitcherContext.initializeClient();
-		});
+		SwitcherContext.configure(ContextBuilder.builder()
+				.snapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json")
+				.offlineMode(true));
+		
+		assertThrows(SwitcherContextException.class, () ->
+			SwitcherContext.initializeClient()
+		);
 	}
 	
 	@Test
 	void shouldReturnOk_offlineLocationFound() {
-		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
-		SwitcherContext.getProperties().setOfflineMode(true);
+		SwitcherContext.configure(ContextBuilder.builder()
+				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.offlineMode(true));
+		
 		assertDoesNotThrow(() -> SwitcherContext.initializeClient());
 	}
 	
 	@Test
 	void shouldReturnError_offlineLocationNotFound() {
-		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL + "/UNKNOWN_LOCATION");
-		SwitcherContext.getProperties().setOfflineMode(true);
-		assertThrows(SwitcherContextException.class, () -> {
-			SwitcherContext.initializeClient();
-		});
+		SwitcherContext.configure(ContextBuilder.builder()
+				.snapshotFile(SNAPSHOTS_LOCAL + "/UNKNOWN_LOCATION")
+				.offlineMode(true));
+		
+		assertThrows(SwitcherContextException.class, () ->
+			SwitcherContext.initializeClient()
+		);
 	}
 	
 	@Test
 	void shouldReturnError_offlineNoLocationAndFileSpecified() {
-		SwitcherContext.getProperties().setSnapshotLocation(null);
-		SwitcherContext.getProperties().setSnapshotFile(null);
-		SwitcherContext.getProperties().setOfflineMode(true);
-		assertThrows(SwitcherContextException.class, () -> {
-			SwitcherContext.initializeClient();
-		});
+		SwitcherContext.configure(ContextBuilder.builder()
+				.snapshotLocation(null)
+				.snapshotFile(null)
+				.offlineMode(true));
+		
+		assertThrows(SwitcherContextException.class, () ->
+			SwitcherContext.initializeClient()
+		);
 	}
 	
 	@Test
 	void shouldReturnError_snapshotHasErrors() {
-		SwitcherContext.getProperties().setSnapshotLocation(SNAPSHOTS_LOCAL);
-		SwitcherContext.getProperties().setEnvironment("defect_default");
+		SwitcherContext.configure(ContextBuilder.builder()
+				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.environment("defect_default"));
 		
-		assertThrows(SwitcherSnapshotLoadException.class, () -> {
-			SwitcherContext.initializeClient();
-		});
+		assertThrows(SwitcherSnapshotLoadException.class, () ->
+			SwitcherContext.initializeClient()
+		);
 	}
 	
 	@Test
@@ -143,10 +156,10 @@ class SwitcherUtilsTest {
 	void shouldReadProperties(String property, String expectedValue) {
 		//given
 		Properties prop = new Properties();
-		prop.setProperty(SwitcherContextParam.ENVIRONMENT, property);
+		prop.setProperty(ContextKey.ENVIRONMENT.getParam(), property);
 		
 		//test
-		final String value = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
+		final String value = SwitcherUtils.resolveProperties(ContextKey.ENVIRONMENT.getParam(), prop);
 		assertEquals(expectedValue, value);
 	}
 	
@@ -157,10 +170,10 @@ class SwitcherUtilsTest {
 		final String expected = "test";
 		
 		Properties prop = new Properties();
-		prop.setProperty(SwitcherContextParam.ENVIRONMENT, "${ENVIRONMENT:default}");
+		prop.setProperty(ContextKey.ENVIRONMENT.getParam(), "${ENVIRONMENT:default}");
 		
 		//test
-		final String actual = SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
+		final String actual = SwitcherUtils.resolveProperties(ContextKey.ENVIRONMENT.getParam(), prop);
 		assertEquals(expected, actual);
 	}
 	
@@ -168,12 +181,13 @@ class SwitcherUtilsTest {
 	void shouldNotReadUnsetProperty() throws Exception {
 		//given
 		Properties prop = new Properties();
-		prop.setProperty(SwitcherContextParam.ENVIRONMENT, "${ENVIRONMENT}");
+		prop.setProperty(ContextKey.ENVIRONMENT.getParam(), "${ENVIRONMENT}");
 		
 		//test
-		Exception ex = assertThrows(SwitcherContextException.class, () -> {
-			SwitcherUtils.resolveProperties(SwitcherContextParam.ENVIRONMENT, prop);
-		});
+		final String envParam = ContextKey.ENVIRONMENT.getParam();
+		Exception ex = assertThrows(SwitcherContextException.class, () ->
+			SwitcherUtils.resolveProperties(envParam, prop)
+		);
 		
 		assertEquals("Something went wrong: Context has errors - Property ${ENVIRONMENT} not defined", ex.getMessage());
 	}
