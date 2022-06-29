@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.nio.file.Paths;
+
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +17,7 @@ import com.github.switcherapi.client.model.ContextKey;
 
 class SwitcherContextTest {
 	
-	final String CONTEXT_ERROR = "Something went wrong: Context has errors - %s not found";
+	final String CONTEXT_ERROR = "Something went wrong: Context has errors - %s";
 	
 	@BeforeEach
 	void resetProperties() {
@@ -38,7 +41,19 @@ class SwitcherContextTest {
 		});
 		
 		assertEquals(String.format(
-				CONTEXT_ERROR, "SwitcherContextParam.APIKEY"), ex.getMessage());
+				CONTEXT_ERROR, "API Key not defined [add: switcher.apikey]"), ex.getMessage());
+	}
+	
+	@Test
+	void shouldThrowError_noContext() {
+		Switchers.configure(ContextBuilder.builder().contextLocation(null));
+		
+		Exception ex = assertThrows(SwitcherContextException.class, () -> {
+			Switchers.initializeClient();
+		});
+		
+		assertEquals(String.format(
+				CONTEXT_ERROR, "Context class location not defined [add: switcher.context]"), ex.getMessage());
 	}
 	
 	@Test
@@ -50,7 +65,7 @@ class SwitcherContextTest {
 		});
 		
 		assertEquals(String.format(
-				CONTEXT_ERROR, "SwitcherContextParam.DOMAIN"), ex.getMessage());
+				CONTEXT_ERROR, "Domain not defined [add: switcher.domain]"), ex.getMessage());
 	}
 	
 	@Test
@@ -62,7 +77,22 @@ class SwitcherContextTest {
 		});
 		
 		assertEquals(String.format(
-				CONTEXT_ERROR, "SwitcherContextParam.COMPONENT"), ex.getMessage());
+				CONTEXT_ERROR, "Component not defined [add: switcher.component]"), ex.getMessage());
+	}
+	
+	@Test
+	void shouldThrowErrorWhenAutoLoad_noValidLocation() {
+		Switchers.configure(ContextBuilder.builder()
+				.snapshotLocation(Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources/invalid")
+				.offlineMode(true)
+				.snapshotAutoLoad(false));
+		
+		Exception ex = assertThrows(SwitcherContextException.class, () -> {
+			Switchers.initializeClient();
+		});
+		
+		assertEquals(String.format(
+				CONTEXT_ERROR, "Snapshot location not defined [add: switcher.snapshot.location]"), ex.getMessage());
 	}
 	
 	@Test
@@ -76,7 +106,7 @@ class SwitcherContextTest {
 		});
 		
 		assertEquals(String.format(
-				CONTEXT_ERROR, "SwitcherContextParam.SNAPSHOT_LOCATION"), ex.getMessage());
+				CONTEXT_ERROR, "Snapshot location not defined [add: switcher.snapshot.location]"), ex.getMessage());
 	}
 	
 	@Test
@@ -90,7 +120,7 @@ class SwitcherContextTest {
 		});
 		
 		assertEquals(String.format(
-				CONTEXT_ERROR, "SwitcherContextParam.RETRY_AFTER"), ex.getMessage());
+				CONTEXT_ERROR, "Retry not defined [add: switcher.retry]"), ex.getMessage());
 	}
 	
 	@Test

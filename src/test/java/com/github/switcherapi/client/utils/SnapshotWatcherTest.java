@@ -19,9 +19,8 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.github.switcherapi.Switchers;
+import com.github.switcherapi.SwitchersBase;
 import com.github.switcherapi.client.ContextBuilder;
-import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Snapshot;
@@ -39,18 +38,17 @@ class SnapshotWatcherTest {
 		removeGeneratedFiles();
 		generateFixture();
 		
-		SwitcherContext.configure(ContextBuilder.builder()
-			.url("http://localhost:3000")
+		SwitchersBase.configure(ContextBuilder.builder()
+			.contextLocation("com.github.switcherapi.SwitchersBase")
 			.environment("generated_watcher_default")
 			.snapshotLocation(SNAPSHOTS_LOCAL)
-			.snapshotAutoLoad(true)
 			.offlineMode(true));
 		
-		SwitcherContext.initializeClient();
+		SwitchersBase.initializeClient();
 	}
 	
 	static void removeGeneratedFiles() throws IOException {
-		SwitcherContext.stopWatchingSnapshot();
+		SwitchersBase.stopWatchingSnapshot();
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "\\generated_watcher_default.json"));
 	}
 	
@@ -92,9 +90,9 @@ class SnapshotWatcherTest {
 	@Test
 	void shouldReloadDomainAfterChangingSnapshot() throws InterruptedException {
 		generateFixture();
-		SwitcherContext.watchSnapshot();
+		SwitchersBase.watchSnapshot();
 		
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
+		Switcher switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		
 		//initial value is true
 		assertTrue(switcher.isItOn());
@@ -114,9 +112,9 @@ class SnapshotWatcherTest {
 	@Test
 	void shouldNotReloadDomainAfterChangingSnapshot() throws InterruptedException {
 		generateFixture();
-		SwitcherContext.watchSnapshot();
+		SwitchersBase.watchSnapshot();
 		
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
+		Switcher switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		
 		//initial value is true
 		assertTrue(switcher.isItOn());
@@ -124,7 +122,7 @@ class SnapshotWatcherTest {
 		CountDownLatch waiter = new CountDownLatch(1);
 		waiter.await(1, TimeUnit.SECONDS);
 		
-		SwitcherContext.stopWatchingSnapshot();
+		SwitchersBase.stopWatchingSnapshot();
 		this.changeFixture(false);
 		
 		waiter = new CountDownLatch(1);
