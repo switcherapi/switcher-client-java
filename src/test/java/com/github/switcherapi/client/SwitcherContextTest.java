@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.nio.file.Paths;
+
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -75,6 +78,21 @@ class SwitcherContextTest {
 		
 		assertEquals(String.format(
 				CONTEXT_ERROR, "Component not defined [add: switcher.component]"), ex.getMessage());
+	}
+	
+	@Test
+	void shouldThrowErrorWhenAutoLoad_noValidLocation() {
+		Switchers.configure(ContextBuilder.builder()
+				.snapshotLocation(Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources/invalid")
+				.offlineMode(true)
+				.snapshotAutoLoad(false));
+		
+		Exception ex = assertThrows(SwitcherContextException.class, () -> {
+			Switchers.initializeClient();
+		});
+		
+		assertEquals(String.format(
+				CONTEXT_ERROR, "Snapshot location not defined [add: switcher.snapshot.location]"), ex.getMessage());
 	}
 	
 	@Test
