@@ -23,6 +23,10 @@ class SwitcherContextValidator {
 	 * @throws SwitcherContextException if validation fails
 	 */
 	public static void validate(final SwitcherProperties prop) {
+		if (StringUtils.isBlank(prop.getContextLocation())) {
+			throw new SwitcherContextException("Context class location not defined [add: switcher.context]");
+		}
+		
 		if (!prop.isOfflineMode()) {
 			validateOnline(prop);
 		} else {
@@ -40,11 +44,11 @@ class SwitcherContextValidator {
 	public static void validateOffline(final SwitcherProperties prop) {
 		final StringBuilder error = new StringBuilder();
 		if (StringUtils.isBlank(prop.getSnapshotFile())) {
-			error.append("SwitcherContextParam.SNAPSHOT_FILE or SNAPSHOT_LOCATION not found");
+			error.append("Snapshot locations not defined [add: switcher.snapshot.location or switcher.snapshot.file]");
 		} else {
 			final File file = new File(prop.getSnapshotFile());
 			if (!file.exists()) {
-				throw new SwitcherContextException("SwitcherContextParam.SNAPSHOT_FILE has invalid file");
+				throw new SwitcherContextException("Snapshot file not defined [add: switcher.snapshot.file]");
 			} else {
 				return;
 			}
@@ -57,7 +61,7 @@ class SwitcherContextValidator {
 		} else if (!prop.isSnapshotAutoLoad()) {
 			final File file = new File(prop.getSnapshotLocation());
 			if (!file.exists()) {
-				throw new SwitcherContextException("SwitcherContextParam.SNAPSHOT_LOCATION has invalid location");
+				throw new SwitcherContextException("Snapshot location not defined [add: switcher.snapshot.location]");
 			}
 		}
 	}
@@ -69,11 +73,11 @@ class SwitcherContextValidator {
 	 */
 	public static void validateOptionals(final SwitcherProperties prop) {
 		if (prop.isSnapshotAutoLoad() && StringUtils.isBlank(prop.getSnapshotLocation())) {
-			throw new SwitcherContextException("SwitcherContextParam.SNAPSHOT_LOCATION not found");
+			throw new SwitcherContextException("Snapshot location not defined [add: switcher.snapshot.location]");
 		}
 		
 		if (prop.isSilentMode() && StringUtils.isBlank(prop.getRetryAfter())) {
-			throw new SwitcherContextException("SwitcherContextParam.RETRY_AFTER not found");
+			throw new SwitcherContextException("Retry not defined [add: switcher.retry]");
 		}
 	}
 
@@ -84,15 +88,15 @@ class SwitcherContextValidator {
 	 */
 	public static void validateOnline(final SwitcherProperties prop) {
 		if (StringUtils.isBlank(prop.getApiKey())) {
-			throw new SwitcherContextException("SwitcherContextParam.APIKEY not found");
+			throw new SwitcherContextException("API Key not defined [add: switcher.apikey]");
 		}
 		
 		if (StringUtils.isBlank(prop.getDomain())) {
-			throw new SwitcherContextException("SwitcherContextParam.DOMAIN not found");
+			throw new SwitcherContextException("Domain not defined [add: switcher.domain]");
 		}
 		
 		if (StringUtils.isBlank(prop.getComponent())) {
-			throw new SwitcherContextException("SwitcherContextParam.COMPONENT not found");
+			throw new SwitcherContextException("Component not defined [add: switcher.component]");
 		}
 	}
 }
