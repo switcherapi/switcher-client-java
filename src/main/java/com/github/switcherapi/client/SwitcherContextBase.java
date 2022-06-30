@@ -20,6 +20,7 @@ import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import com.github.switcherapi.client.service.remote.SwitcherRemoteService;
+import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 
 /**
@@ -214,7 +215,17 @@ public abstract class SwitcherContextBase {
 	 * When the file is modified the in-memory snapshot will reload
 	 */
 	public static void watchSnapshot() {
-		SwitcherUtils.watchSnapshot(instance);
+		watchSnapshot(new SnapshotEventHandler());
+	}
+	
+	/**
+	 * Start watching snapshot files for modifications.<br>
+	 * When the file is modified the in-memory snapshot will reload
+	 * 
+	 * @param handler to notify snapshot change events
+	 */
+	public static void watchSnapshot(SnapshotEventHandler handler) {
+		SwitcherUtils.watchSnapshot(instance, handler);
 	}
 	
 	/**

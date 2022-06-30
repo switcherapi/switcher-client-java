@@ -10,12 +10,14 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.SwitcherExecutor;
+import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 
 /**
@@ -95,7 +97,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	}
 	
 	@Override
-	public void notifyChange(final String snapshotFile) {
+	public boolean notifyChange(final String snapshotFile, SnapshotEventHandler handler) {
 		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
 		final String snapshotLocation = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION);
 		
@@ -103,10 +105,15 @@ public class SwitcherLocalService extends SwitcherExecutor {
 			if (snapshotFile.equals(String.format("%s.json", environment))) {
 				logger.debug("Updating domain");
 				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
+				handler.onSuccess();
 			}
 		} catch (SwitcherSnapshotLoadException | FileNotFoundException e) {
+			handler.onError(new SwitcherException(e.getMessage(), e));
 			logger.error(e);
+			return false;
 		}
+		
+		return true;
 	}
 	
 	public Domain getDomain() {

@@ -129,10 +129,11 @@ public class SwitcherUtils {
 	 * Initialize instance of SnapshotWatcher to run in the background.
 	 * 
 	 * @param executorInstance of an Online or Offline Switcher
+	 * @param handler to notify snapshot change events
 	 */
-	public static void watchSnapshot(final SwitcherExecutor executorInstance) {
+	public static void watchSnapshot(final SwitcherExecutor executorInstance, SnapshotEventHandler handler) {
 		if (watcher == null)
-			watcher = new SnapshotWatcher(executorInstance);
+			watcher = new SnapshotWatcher(executorInstance, handler);
 		
 		new Thread(watcher, SnapshotWatcher.class.toString()).start();
 	}

@@ -16,6 +16,7 @@ import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
+import com.github.switcherapi.client.utils.SnapshotEventHandler;
 
 /**
  * @author Roger Floriano (petruki)
@@ -94,8 +95,8 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	}
 	
 	@Override
-	public void notifyChange(String snapshotFile) {
-		this.switcherOffline.notifyChange(snapshotFile);
+	public boolean notifyChange(String snapshotFile, SnapshotEventHandler handler) {
+		return this.switcherOffline.notifyChange(snapshotFile, handler);
 	}
 
 }
