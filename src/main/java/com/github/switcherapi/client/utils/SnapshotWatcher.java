@@ -25,13 +25,15 @@ public class SnapshotWatcher implements Runnable {
 	
 	private static final Logger logger = LogManager.getLogger(SnapshotWatcher.class);
 	
+	private SnapshotEventHandler handler;
+	
 	private WatchService watcher;
 	
 	private SwitcherExecutor executorInstance;
 	
-	public SnapshotWatcher(final SwitcherExecutor executorInstance) {
-		
+	public SnapshotWatcher(final SwitcherExecutor executorInstance, SnapshotEventHandler handler) {
 		this.executorInstance = executorInstance;
+		this.handler = handler;
 	}
 
 	@Override
@@ -55,8 +57,8 @@ public class SnapshotWatcher implements Runnable {
 		    		WatchEvent<Path> ev = (WatchEvent<Path>) event;
 		    		Path filename = ev.context();
 		    		
-	    			logger.debug("Snapshot has been changed");
-		    		executorInstance.notifyChange(filename.toString());
+		    		if (executorInstance != null)
+		    			executorInstance.notifyChange(filename.toString(), handler);
 		    	}
 			    
 			    boolean valid = key.reset();

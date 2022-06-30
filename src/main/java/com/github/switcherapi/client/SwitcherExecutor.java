@@ -15,6 +15,7 @@ import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.service.remote.ClientRemoteService;
+import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 
 /**
@@ -61,8 +62,11 @@ public abstract class SwitcherExecutor {
 	 * Update in-memory snapshot.
 	 * 
 	 * @param snapshotFile Path location
+	 * @param handler to notify snapshot change events
+	 * 
+	 * @return true if valid change
 	 */
-	public abstract void notifyChange(final String snapshotFile);
+	public abstract boolean notifyChange(final String snapshotFile, SnapshotEventHandler handler);
 	
 	protected boolean checkSnapshotVersion(final Domain domain) {
 		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
