@@ -248,4 +248,4 @@ void testMyFeature() {
 
 ## Change Log
 
-List of published versions: [Change Log](https://github.com/petruki/switcher-client/blob/master/CHANGELOG.md)
+List of published versions: [Change Log](https://github.com/switcherapi/switcher-client/blob/master/CHANGELOG.md)
