@@ -1,5 +1,13 @@
 # Change Log
 
+- 1.3.5:
+	- Added support to Strategy Payload Validation
+	- Added event handler for SnapshotWatch
+	- Added support to external context initiatilization SwitcherContextBase
+	- Fixed issues with loading snapshot from location/file
+	- Updated com.google.code.gson:gson from 2.8.6 to 2.9.0
+	- Updated Jersey dependencies from 2.35 to 2.36
+	- Improved codebase - refactored Constants and API/Local implementation
 - 1.3.4:
 	- Added support to default values for the environment properties file
 	- Updated org.junit.jupiter:junit-jupiter-api from 5.8.1 to 5.8.2
