@@ -19,7 +19,6 @@ import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherInvalidNumericFormat;
 import com.github.switcherapi.client.exception.SwitcherInvalidTimeFormat;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
-import com.github.switcherapi.client.exception.SwitcherNoInputReceivedException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.StrategyValidator;
@@ -283,14 +282,14 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldReturnFalse_strategyRequiresInput() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE63);
-		assertThrows(SwitcherNoInputReceivedException.class, () -> switcher.isItOn());
+		assertFalse(switcher.isItOn());
 	}
 	
 	@Test
-	void offlineShouldReturnError_invalidStrategyInput() {
+	void offlineShouldReturnFalse_invalidStrategyInput() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
 		switcher.prepareEntry(Entry.build(StrategyValidator.INVALID, "Value"));
-		assertThrows(SwitcherNoInputReceivedException.class, () -> switcher.isItOn());
+		assertFalse(switcher.isItOn());
 	}
 	
 	static Stream<Arguments> regexTestArguments() {

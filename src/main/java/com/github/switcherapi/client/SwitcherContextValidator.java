@@ -14,6 +14,15 @@ import com.github.switcherapi.client.exception.SwitcherContextException;
  */
 class SwitcherContextValidator {
 	
+	private static final String SNAPSHOT_PATH_PATTERN = "%s/%s.json";
+	private static final String ERR_LOCATION_SNAPSHOT_FILE = "Snapshot locations not defined [add: switcher.snapshot.location or switcher.snapshot.file]";
+	private static final String ERR_SNAPSHOT_FILE = "Snapshot file not defined [add: switcher.snapshot.file]";
+	private static final String ERR_LOCATION = "Snapshot location not defined [add: switcher.snapshot.location]";
+	private static final String ERR_RETRY = "Retry not defined [add: switcher.retry]";
+	private static final String ERR_API = "API Key not defined [add: switcher.apikey]";
+	private static final String ERR_DOMAIN = "Domain not defined [add: switcher.domain]";
+	private static final String ERR_COMPONENT = "Component not defined [add: switcher.component]";
+	
 	private SwitcherContextValidator() {}
 
 	/**
@@ -44,11 +53,11 @@ class SwitcherContextValidator {
 	public static void validateOffline(final SwitcherProperties prop) {
 		final StringBuilder error = new StringBuilder();
 		if (StringUtils.isBlank(prop.getSnapshotFile())) {
-			error.append("Snapshot locations not defined [add: switcher.snapshot.location or switcher.snapshot.file]");
+			error.append(ERR_LOCATION_SNAPSHOT_FILE);
 		} else {
 			final File file = new File(prop.getSnapshotFile());
 			if (!file.exists()) {
-				throw new SwitcherContextException("Snapshot file not defined [add: switcher.snapshot.file]");
+				throw new SwitcherContextException(ERR_SNAPSHOT_FILE);
 			} else {
 				return;
 			}
@@ -59,9 +68,16 @@ class SwitcherContextValidator {
 				throw new SwitcherContextException(error.toString());
 			}
 		} else if (!prop.isSnapshotAutoLoad()) {
-			final File file = new File(prop.getSnapshotLocation());
-			if (!file.exists()) {
-				throw new SwitcherContextException("Snapshot location not defined [add: switcher.snapshot.location]");
+			final File folderPath = new File(prop.getSnapshotLocation());
+			if (!folderPath.exists()) {
+				throw new SwitcherContextException(ERR_LOCATION);
+			} else {
+				final File snapshotFile = new File(
+						String.format(SNAPSHOT_PATH_PATTERN, prop.getSnapshotLocation(), prop.getEnvironment()));
+				
+				if (!snapshotFile.exists()) {
+					throw new SwitcherContextException(ERR_LOCATION);
+				}
 			}
 		}
 	}
@@ -73,11 +89,11 @@ class SwitcherContextValidator {
 	 */
 	public static void validateOptionals(final SwitcherProperties prop) {
 		if (prop.isSnapshotAutoLoad() && StringUtils.isBlank(prop.getSnapshotLocation())) {
-			throw new SwitcherContextException("Snapshot location not defined [add: switcher.snapshot.location]");
+			throw new SwitcherContextException(ERR_LOCATION);
 		}
 		
 		if (prop.isSilentMode() && StringUtils.isBlank(prop.getRetryAfter())) {
-			throw new SwitcherContextException("Retry not defined [add: switcher.retry]");
+			throw new SwitcherContextException(ERR_RETRY);
 		}
 	}
 
@@ -88,15 +104,15 @@ class SwitcherContextValidator {
 	 */
 	public static void validateOnline(final SwitcherProperties prop) {
 		if (StringUtils.isBlank(prop.getApiKey())) {
-			throw new SwitcherContextException("API Key not defined [add: switcher.apikey]");
+			throw new SwitcherContextException(ERR_API);
 		}
 		
 		if (StringUtils.isBlank(prop.getDomain())) {
-			throw new SwitcherContextException("Domain not defined [add: switcher.domain]");
+			throw new SwitcherContextException(ERR_DOMAIN);
 		}
 		
 		if (StringUtils.isBlank(prop.getComponent())) {
-			throw new SwitcherContextException("Component not defined [add: switcher.component]");
+			throw new SwitcherContextException(ERR_COMPONENT);
 		}
 	}
 }

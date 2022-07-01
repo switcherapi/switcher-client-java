@@ -1,0 +1,24 @@
+{
+    "data": {
+        "domain": {
+            "name": "switcher-domain",
+            "description": "Test Snapshot",
+            "activated": true,
+            "group": [
+                {
+                    "name": "Group 1",
+                    "description": "Simple test",
+                    "activated": true,
+                    "config": [
+                        {
+                            "key": "USECASE11",
+                            "description": "Simple test - Domain disabled",
+                            "activated": true,
+                            "components": ["switcher-client"]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
