@@ -3,6 +3,8 @@ package com.github.switcherapi.client.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
@@ -42,7 +44,9 @@ public abstract class SwitcherBuilder {
 	 * @return switcher itself
 	 */
 	public SwitcherBuilder check(StrategyValidator strategy, String input) {
-		entry.add(Entry.build(strategy, input));
+		if (StringUtils.isNotBlank(input))
+			entry.add(Entry.build(strategy, input));
+		
 		return this;
 	}
 	

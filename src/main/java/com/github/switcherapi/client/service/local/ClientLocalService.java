@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
-import com.github.switcherapi.client.exception.SwitcherNoInputReceivedException;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Config;
@@ -37,6 +36,7 @@ public class ClientLocalService {
 	public static final String DISABLED_CONFIG = "Config disabled";
 	
 	private static final String STRATEGY_FAIL_PATTERN = "Strategy %s does not agree";
+	private static final String STRATEGY_FAIL_NO_INPUT_PATTERN = "Strategy %s did not receive any input";
 	private static final String CRITERIA_SUCCESS = "Success";
 
 	private static ClientLocalService instance;
@@ -81,8 +81,7 @@ public class ClientLocalService {
 	 * @param switcher Configuration switcher to be validate
 	 * @param domain   Top level of the configuration three
 	 * @return The criteria result
-	 * @throws SwitcherException If encountered either invalid input or
-	 *                           misconfiguration
+	 * @throws SwitcherException If encountered either invalid input or misconfiguration
 	 */
 	public CriteriaResponse executeCriteria(final Switcher switcher, final Domain domain) {
 
@@ -124,13 +123,12 @@ public class ClientLocalService {
 	}
 
 	/**
-	 * Validate a found strategy based on both input and its configuration
+	 * Process Strategy operations based on the each strategy settings
 	 * 
-	 * @param configStrategies Strategies registered inside a Switcher component
-	 * @param input            Input sent by the client
-	 * @return CristeriaResponse containing the result of the validation
-	 * @throws SwitcherException If encountered either invalid input or
-	 *                           misconfiguration
+	 * @param configStrategies to be processed
+	 * @param input            sent by the client
+	 * @return CriteriaResponse containing the result of the execution
+	 * @throws SwitcherException If encountered either invalid input or misconfiguration
 	 */
 	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input,
 			final Switcher switcher) {
@@ -146,20 +144,33 @@ public class ClientLocalService {
 			if (!strategy.isActivated())
 				continue;
 
-			final Entry switcherInput = input != null ? input.stream()
-					.filter(i -> i.getStrategy().equals(strategy.getStrategy())).findFirst().orElse(null) : null;
-
+			final Entry switcherInput = tryGetSwitcherInput(input, strategy);
+			
 			if (switcherInput == null)
-				throw new SwitcherNoInputReceivedException(strategy.getStrategy());
+				return strategyFailed(switcher, strategy, STRATEGY_FAIL_NO_INPUT_PATTERN);
 
 			result = validatorService.execute(strategy, switcherInput);
 			if (!result) {
-				return new CriteriaResponse(false, String.format(STRATEGY_FAIL_PATTERN, strategy.getStrategy()),
-						switcher);
+				return strategyFailed(switcher, strategy, STRATEGY_FAIL_PATTERN);
 			}
 		}
 
 		return new CriteriaResponse(result, CRITERIA_SUCCESS, switcher);
+	}
+	
+	private CriteriaResponse strategyFailed(Switcher switcher, Strategy strategy, String pattern) {
+		return new CriteriaResponse(false, String.format(pattern, strategy.getStrategy()),
+				switcher);
+	}
+	
+	private Entry tryGetSwitcherInput(final List<Entry> input, Strategy strategy) {
+		if (input == null)
+			return null;
+		
+		return input.stream()
+				.filter(i -> i.getStrategy().equals(strategy.getStrategy()))
+				.findFirst()
+				.orElse(null);
 	}
 
 }

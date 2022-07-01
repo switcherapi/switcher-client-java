@@ -70,9 +70,23 @@ class SwitcherUtilsTest {
 	}
 	
 	@Test
-	void shouldReturnError_offlineLocationNotFound() {
+	void shouldReturnError_offlineFolderLocationNotFound() {
 		SwitcherContext.configure(ContextBuilder.builder()
-				.snapshotFile(SNAPSHOTS_LOCAL + "/UNKNOWN_LOCATION")
+				.snapshotFile(null)
+				.snapshotLocation(SNAPSHOTS_LOCAL + "/UNKNOWN_LOCATION")
+				.offlineMode(true));
+		
+		assertThrows(SwitcherContextException.class, () ->
+			SwitcherContext.initializeClient()
+		);
+	}
+	
+	@Test
+	void shouldReturnError_offlineFileLocationNotFound() {
+		SwitcherContext.configure(ContextBuilder.builder()
+				.snapshotFile(null)
+				.environment("UNKNOWN_ENVIRONMENT")
+				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.offlineMode(true));
 		
 		assertThrows(SwitcherContextException.class, () ->
