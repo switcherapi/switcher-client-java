@@ -8,8 +8,8 @@ import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 
 /**
- * Facade builder that simplifies how input are programmatically wrapped inside the Switcher.
- * It also allows chained calls that make the code clear.
+ * Builder class that simplifies how input are programmatically wrapped inside the Switcher.
+ * It also allows chained calls that makes the code clear.
  * 
  * @author Roger Floriano (petruki)
  */
@@ -115,6 +115,13 @@ public abstract class SwitcherBuilder {
 	public SwitcherBuilder checkPayload(String input) {
 		return check(StrategyValidator.PAYLOAD, input);
 	}
+	
+	/**
+	 * Creates a Switcher given the configuration assigned via {@link SwitcherBuilder}
+	 * 
+	 * @return {@link Switcher}
+	 */
+	public abstract Switcher build();
 	
 	/**
 	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.

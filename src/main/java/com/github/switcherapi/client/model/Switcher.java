@@ -20,7 +20,6 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
  * @see #isItOn()
  * @see #isItOn(List)
  * @see #isItOn(Entry, boolean)
- *
  */
 public class Switcher extends SwitcherBuilder {
 	
@@ -66,9 +65,14 @@ public class Switcher extends SwitcherBuilder {
 	}
 	
 	@Override
+	public Switcher build() {
+		return this;
+	}
+	
+	@Override
 	public Switcher prepareEntry(final List<Entry> entry) {
 		this.entry = entry;
-		return this;
+		return build();
 	}
 	
 	@Override
@@ -82,7 +86,7 @@ public class Switcher extends SwitcherBuilder {
 		if (!this.entry.contains(entry))
 			this.entry.add(entry);
 		
-		return this;
+		return build();
 	}
 	
 	@Override
