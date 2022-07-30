@@ -17,8 +17,9 @@ Steps to reproduce the behavior.
 A clear and concise description of what you expected to happen.
 
 **Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Node.js version: [e.g. v12.16.3]
+ - OS: [e.g. Ubuntu]
+ - Java version: [e.g. OpenJDK8]
+ - Maven version: [e.g. 3.8.5]
 
 **Additional context**
 Add any other context about the problem here.

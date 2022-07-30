@@ -1,6 +1,7 @@
 package com.github.switcherapi.client.model.response;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.Switcher;
@@ -59,6 +60,26 @@ public class CriteriaResponse {
 
 	public void setEntry(List<Entry> entry) {
 		this.entry = entry;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(entry, result, switcherKey);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		
+		final CriteriaResponse other = (CriteriaResponse) obj;
+		return Objects.equals(entry, other.entry) && 
+				result == other.result && 
+				Objects.equals(switcherKey, other.switcherKey);
 	}
 
 	@Override

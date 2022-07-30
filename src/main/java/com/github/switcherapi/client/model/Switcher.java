@@ -58,10 +58,11 @@ public class Switcher extends SwitcherBuilder {
 	}
 	
 	private CriteriaResponse getFromHistory() {
-		return this.historyExecution.stream()
-				.filter(c -> c.getEntry().equals(getEntry()))
-				.findFirst()
-				.orElse(null);
+		for (CriteriaResponse criteriaResponse : historyExecution) {
+			if (criteriaResponse.getEntry().equals(getEntry()))
+				return criteriaResponse;
+		}
+		return null;
 	}
 	
 	@Override
@@ -167,7 +168,7 @@ public class Switcher extends SwitcherBuilder {
 		this.entry = new ArrayList<Entry>();
 	}
 
-	public Set<CriteriaResponse> getHistoryExecution() {
+	public synchronized Set<CriteriaResponse> getHistoryExecution() {
 		return this.historyExecution;
 	}
 	
