@@ -1,5 +1,6 @@
 # Change Log
-
+- 1.3.6-SNAPSHOT:
+	- Fixed throttle concurrency issue
 - 1.3.5:
 	- Added support to Strategy Payload Validation
 	- Added event handler for SnapshotWatch
