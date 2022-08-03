@@ -33,15 +33,14 @@ class SwitcherMockRunner implements AfterTestExecutionCallback,
 	}
 
 	@Override
-	public Stream<? extends Arguments> provideArguments(ExtensionContext context) 
-			throws Exception {
+	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 		SwitcherExecutor.assume(key, result);
 		getStore(context).put(Switcher.KEY, key);
 		return Stream.of(Arguments.of(key, null));
 	}
 
 	@Override
-	public void afterTestExecution(ExtensionContext context) throws Exception {
+	public void afterTestExecution(ExtensionContext context) {
 		Optional<ExtensionContext> parent = context.getParent();
 		if (parent.isPresent()) {
 			String switcherKey = getStore(parent.get()).remove(Switcher.KEY, String.class);

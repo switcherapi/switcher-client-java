@@ -74,10 +74,10 @@ public enum ContextKey {
 	 */
 	OFFLINE_MODE("switcher.offline", "offlineMode");
 	
-	private String param;
-	private String propField;
+	private final String param;
+	private final String propField;
 	
-	private ContextKey(String param, String propField) {
+	ContextKey(String param, String propField) {
 		this.param = param;
 		this.propField = propField;
 	}

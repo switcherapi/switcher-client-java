@@ -31,7 +31,7 @@ import com.github.switcherapi.client.model.ContextKey;
 
 class SwitcherUtilsTest {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
 	
 	@BeforeEach
 	@ClearEnvironmentVariable(key = "ENVIRONMENT")
@@ -44,9 +44,8 @@ class SwitcherUtilsTest {
 		SwitcherContext.configure(ContextBuilder.builder()
 				.snapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json"));
 		
-		assertThrows(SwitcherSnapshotLoadException.class ,() ->
-			SwitcherContext.initializeClient()
-		);
+		assertThrows(SwitcherSnapshotLoadException.class ,
+				SwitcherContext::initializeClient);
 	}
 	
 	@Test
@@ -55,9 +54,8 @@ class SwitcherUtilsTest {
 				.snapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json")
 				.offlineMode(true));
 		
-		assertThrows(SwitcherContextException.class, () ->
-			SwitcherContext.initializeClient()
-		);
+		assertThrows(SwitcherContextException.class,
+				SwitcherContext::initializeClient);
 	}
 	
 	@Test
@@ -66,7 +64,7 @@ class SwitcherUtilsTest {
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.offlineMode(true));
 		
-		assertDoesNotThrow(() -> SwitcherContext.initializeClient());
+		assertDoesNotThrow(SwitcherContext::initializeClient);
 	}
 	
 	@Test
@@ -76,9 +74,8 @@ class SwitcherUtilsTest {
 				.snapshotLocation(SNAPSHOTS_LOCAL + "/UNKNOWN_LOCATION")
 				.offlineMode(true));
 		
-		assertThrows(SwitcherContextException.class, () ->
-			SwitcherContext.initializeClient()
-		);
+		assertThrows(SwitcherContextException.class,
+				SwitcherContext::initializeClient);
 	}
 	
 	@Test
@@ -89,9 +86,8 @@ class SwitcherUtilsTest {
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.offlineMode(true));
 		
-		assertThrows(SwitcherContextException.class, () ->
-			SwitcherContext.initializeClient()
-		);
+		assertThrows(SwitcherContextException.class,
+				SwitcherContext::initializeClient);
 	}
 	
 	@Test
@@ -101,9 +97,8 @@ class SwitcherUtilsTest {
 				.snapshotFile(null)
 				.offlineMode(true));
 		
-		assertThrows(SwitcherContextException.class, () ->
-			SwitcherContext.initializeClient()
-		);
+		assertThrows(SwitcherContextException.class,
+				SwitcherContext::initializeClient);
 	}
 	
 	@Test
@@ -112,17 +107,14 @@ class SwitcherUtilsTest {
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("defect_default"));
 		
-		assertThrows(SwitcherSnapshotLoadException.class, () ->
-			SwitcherContext.initializeClient()
-		);
+		assertThrows(SwitcherSnapshotLoadException.class,
+				SwitcherContext::initializeClient);
 	}
 	
 	@Test
 	void shouldReturnInvalidFormat() throws ParseException {
 		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
-		assertThrows(Exception.class, () -> {
-			SwitcherUtils.addTimeDuration("1w", date1);
-		});
+		assertThrows(Exception.class, () -> SwitcherUtils.addTimeDuration("1w", date1));
 	}
 	
 	/**
@@ -180,7 +172,7 @@ class SwitcherUtilsTest {
 	@Test
 	@SetEnvironmentVariable(key = "ENVIRONMENT", value = "test")
 	@EnabledOnJre(value = { JRE.JAVA_8, JRE.JAVA_11 })
-	void shouldReadPropertyFromEnvironmentIgnoreDefault() throws Exception {
+	void shouldReadPropertyFromEnvironmentIgnoreDefault() {
 		final String expected = "test";
 		
 		Properties prop = new Properties();
@@ -192,7 +184,7 @@ class SwitcherUtilsTest {
 	}
 	
 	@Test
-	void shouldNotReadUnsetProperty() throws Exception {
+	void shouldNotReadUnsetProperty() {
 		//given
 		Properties prop = new Properties();
 		prop.setProperty(ContextKey.ENVIRONMENT.getParam(), "${ENVIRONMENT}");

@@ -29,16 +29,14 @@ class SwitcherContextTest {
 		Switchers.configure(ContextBuilder.builder().url(null));
 		
 		assertEquals(SwitcherProperties.DEFAULTURL, Switchers.contextStr(ContextKey.URL));
-		assertDoesNotThrow(() -> Switchers.initializeClient());
+		assertDoesNotThrow(Switchers::initializeClient);
 	}
 	
 	@Test
 	void shouldThrowError_noApi() {
 		Switchers.configure(ContextBuilder.builder().apiKey(null));
 		
-		Exception ex = assertThrows(SwitcherContextException.class, () -> {
-			Switchers.initializeClient();
-		});
+		Exception ex = assertThrows(SwitcherContextException.class, Switchers::initializeClient);
 		
 		assertEquals(String.format(
 				CONTEXT_ERROR, "API Key not defined [add: switcher.apikey]"), ex.getMessage());
@@ -48,9 +46,8 @@ class SwitcherContextTest {
 	void shouldThrowError_noContext() {
 		Switchers.configure(ContextBuilder.builder().contextLocation(null));
 		
-		Exception ex = assertThrows(SwitcherContextException.class, () -> {
-			Switchers.initializeClient();
-		});
+		Exception ex = assertThrows(SwitcherContextException.class,
+				Switchers::initializeClient);
 		
 		assertEquals(String.format(
 				CONTEXT_ERROR, "Context class location not defined [add: switcher.context]"), ex.getMessage());
@@ -60,21 +57,19 @@ class SwitcherContextTest {
 	void shouldThrowError_noDomain() {
 		Switchers.configure(ContextBuilder.builder().domain(null));
 		
-		Exception ex = assertThrows(SwitcherContextException.class, () -> {
-			Switchers.initializeClient();
-		});
+		Exception ex = assertThrows(SwitcherContextException.class,
+				Switchers::initializeClient);
 		
 		assertEquals(String.format(
 				CONTEXT_ERROR, "Domain not defined [add: switcher.domain]"), ex.getMessage());
 	}
 	
 	@Test
-	void shouldThrowError_noComponent() throws Exception {
+	void shouldThrowError_noComponent() {
 		Switchers.configure(ContextBuilder.builder().component(null));
 		
-		Exception ex = assertThrows(SwitcherContextException.class, () -> {
-			Switchers.initializeClient();
-		});
+		Exception ex = assertThrows(SwitcherContextException.class,
+				Switchers::initializeClient);
 		
 		assertEquals(String.format(
 				CONTEXT_ERROR, "Component not defined [add: switcher.component]"), ex.getMessage());
@@ -83,13 +78,12 @@ class SwitcherContextTest {
 	@Test
 	void shouldThrowErrorWhenAutoLoad_noValidLocation() {
 		Switchers.configure(ContextBuilder.builder()
-				.snapshotLocation(Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources/invalid")
+				.snapshotLocation(Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/invalid")
 				.offlineMode(true)
 				.snapshotAutoLoad(false));
 		
-		Exception ex = assertThrows(SwitcherContextException.class, () -> {
-			Switchers.initializeClient();
-		});
+		Exception ex = assertThrows(SwitcherContextException.class,
+				Switchers::initializeClient);
 		
 		assertEquals(String.format(
 				CONTEXT_ERROR, "Snapshot location not defined [add: switcher.snapshot.location]"), ex.getMessage());
@@ -101,9 +95,8 @@ class SwitcherContextTest {
 				.snapshotLocation(null)
 				.snapshotAutoLoad(true));
 		
-		Exception ex = assertThrows(SwitcherContextException.class, () -> {
-			Switchers.initializeClient();
-		});
+		Exception ex = assertThrows(SwitcherContextException.class,
+				Switchers::initializeClient);
 		
 		assertEquals(String.format(
 				CONTEXT_ERROR, "Snapshot location not defined [add: switcher.snapshot.location]"), ex.getMessage());
@@ -115,9 +108,8 @@ class SwitcherContextTest {
 				.silentMode(true)
 				.retryAfter(null));
 		
-		Exception ex = assertThrows(SwitcherContextException.class, () -> {
-			Switchers.initializeClient();
-		});
+		Exception ex = assertThrows(SwitcherContextException.class,
+				Switchers::initializeClient);
 		
 		assertEquals(String.format(
 				CONTEXT_ERROR, "Retry not defined [add: switcher.retry]"), ex.getMessage());
@@ -125,18 +117,16 @@ class SwitcherContextTest {
 	
 	@Test
 	void shouldThrowError_invalidSwitcher() {
-		Exception ex = assertThrows(SwitcherKeyNotFoundException.class, () -> {
-			Switchers.getSwitcher("INVALID_SWITCHER");
-		});
+		Exception ex = assertThrows(SwitcherKeyNotFoundException.class, () ->
+				Switchers.getSwitcher("INVALID_SWITCHER"));
 		
 		assertEquals("Something went wrong: Unable to load a key INVALID_SWITCHER", ex.getMessage());
 	}
 	
 	@Test
 	void shouldThrowError_cannotInstantiateContext() {
-		Exception ex = assertThrows(IllegalStateException.class, () -> {
-			new Switchers();
-		});
+		Exception ex = assertThrows(IllegalStateException.class,
+				Switchers::new);
 		
 		assertEquals("Context class cannot be instantiated", ex.getMessage());
 	}

@@ -29,7 +29,7 @@ import com.github.switcherapi.client.service.local.SwitcherLocalService;
 
 class SwitcherOfflineFix3Test {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
 	
 	@BeforeAll
 	static void setupContext() {
@@ -65,7 +65,7 @@ class SwitcherOfflineFix3Test {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		switcher.prepareEntry(Entry.build(strategyValidator, input));
 		
-		assertThrows(error, () -> switcher.isItOn());
+		assertThrows(error, switcher::isItOn);
 	}
 	
 	@Test
@@ -93,9 +93,8 @@ class SwitcherOfflineFix3Test {
 		switcherOffline.init();
 		
 		//test
-		Exception ex = assertThrows(SwitchersValidationException.class, () -> {
-			switcherOffline.checkSwitchers(notFound);
-		});
+		Exception ex = assertThrows(SwitchersValidationException.class, () ->
+				switcherOffline.checkSwitchers(notFound));
 		
 		assertEquals(String.format(
 				"Something went wrong: Unable to load the following Switcher Key(s): %s", notFound), 

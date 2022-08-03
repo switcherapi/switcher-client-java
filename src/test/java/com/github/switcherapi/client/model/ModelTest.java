@@ -1,10 +1,5 @@
 package com.github.switcherapi.client.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-
 import org.junit.jupiter.api.Test;
 
 import com.github.switcherapi.client.model.criteria.Config;
@@ -14,15 +9,16 @@ import com.github.switcherapi.client.model.criteria.Group;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.criteria.Strategy;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class ModelTest {
 	
 	@Test
-	void testModelEntry() throws Exception {
+	void testModelEntry() {
 		Entry entry1 = Entry.build(StrategyValidator.DATE, "2019-12-10");
 		Entry entry2 = Entry.build(StrategyValidator.VALUE, "Value");
 		
 		assertNotEquals(true, entry1.equals(entry2));
-		assertEquals(true, entry1.equals(entry1));
 		assertNotNull(entry1.toString());
 		assertNotEquals(entry1.hashCode(), entry2.hashCode());
 	}
@@ -71,22 +67,22 @@ class ModelTest {
 		domain.setActivated(true);
 		domain.setDescription("Description");
 		domain.setName("Name");
-		domain.setVersion(10000000000l);
+		domain.setVersion(10000000000L);
 		Group[] groups = new Group[] { group };
 		domain.setGroup(groups);
 		
 		assertSame("Description", domain.getDescription());
 		assertSame("Name", domain.getName());
-		assertEquals(10000000000l, domain.getVersion());
+		assertEquals(10000000000L, domain.getVersion());
 		assertSame(groups, domain.getGroup());
 		
 		final Criteria criteria = new Criteria();
 		criteria.setDomain(domain);
 		
-		final Snapshot snapsot = new Snapshot();
-		snapsot.setData(criteria);
+		final Snapshot snapshot = new Snapshot();
+		snapshot.setData(criteria);
 		
-		assertSame(criteria, snapsot.getData());
+		assertSame(criteria, snapshot.getData());
 	}
 
 }

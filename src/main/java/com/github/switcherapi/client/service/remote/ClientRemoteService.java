@@ -27,7 +27,7 @@ public class ClientRemoteService {
 	
 	private static ClientRemoteService instance;
 	
-	private ClientWS clientWs;
+	private final ClientWS clientWs;
 	
 	private Optional<AuthResponse> authResponse = Optional.empty();
 	

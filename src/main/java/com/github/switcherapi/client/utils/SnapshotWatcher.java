@@ -25,7 +25,7 @@ public class SnapshotWatcher implements Runnable {
 	
 	private static final Logger logger = LogManager.getLogger(SnapshotWatcher.class);
 	
-	private SnapshotEventHandler handler;
+	private final SnapshotEventHandler handler;
 	
 	private WatchService watcher;
 	

@@ -52,9 +52,9 @@ public enum StrategyValidator {
 	
 	INVALID("INVALID");
 	
-	private String validator;
+	private final String validator;
 	
-	private StrategyValidator(String validator) {
+	StrategyValidator(String validator) {
 		this.validator = validator;
 	}
 	

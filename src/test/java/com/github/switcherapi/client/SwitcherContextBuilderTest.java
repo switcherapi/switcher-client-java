@@ -2,8 +2,8 @@ package com.github.switcherapi.client;
 
 import static com.github.switcherapi.SwitchersBase.USECASE11;
 import static com.github.switcherapi.client.SwitcherContextBase.getSwitcher;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Paths;
 
@@ -17,7 +17,7 @@ import com.github.switcherapi.client.model.Switcher;
 
 class SwitcherContextBuilderTest {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
 	
 	@Test
 	void shouldReturnSuccess() {

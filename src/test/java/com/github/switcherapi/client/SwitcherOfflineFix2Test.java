@@ -13,7 +13,7 @@ import com.github.switcherapi.client.model.Switcher;
 
 class SwitcherOfflineFix2Test {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
 	
 	@BeforeAll
 	static void setupContext() {

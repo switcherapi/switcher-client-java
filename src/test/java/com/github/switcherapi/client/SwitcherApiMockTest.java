@@ -55,7 +55,7 @@ import okhttp3.mockwebserver.MockWebServer;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SwitcherApiMockTest {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
 	
 	private static MockWebServer mockBackEnd;
 	
@@ -102,7 +102,7 @@ class SwitcherApiMockTest {
 	}
 	
 	/**
-	 * @see {@link ClientWSImpl#auth()}
+	 * @see ClientWSImpl#auth()
 	 * 
 	 * @param secondsAhead time to expire the token
 	 * @return Generated mock /auth response
@@ -115,7 +115,7 @@ class SwitcherApiMockTest {
 	}
 	
 	/**
-	 * @see {@link ClientWSImpl#executeCriteriaService(Switcher, String)}
+	 * @see ClientWSImpl#executeCriteriaService(Switcher, String)
 	 * 
 	 * @param result returned by the criteria execution
 	 * @param reason if want to display along with the result
@@ -134,7 +134,7 @@ class SwitcherApiMockTest {
 	}
 	
 	/**
-	 * @see {@link ClientWSImpl#isAlive()}
+	 * @see ClientWSImpl#isAlive()
 	 * 
 	 * @param code HTTP status
 	 * @return Generated mock /check response
@@ -145,7 +145,7 @@ class SwitcherApiMockTest {
 	}
 	
 	/**
-	 * @see {@link ClientWSImpl#checkSnapshotVersion(long, String)}
+	 * @see ClientWSImpl#checkSnapshotVersion(long, String)
 	 * 
 	 * @param status is true when snapshot version is updated
 	 * @return Generated mock /criteria/snapshot_check response
@@ -157,7 +157,7 @@ class SwitcherApiMockTest {
 	}
 	
 	/**
-	 * @see {@link ClientWSImpl#resolveSnapshot(String)}
+	 * @see ClientWSImpl#resolveSnapshot(String)
 	 * 
 	 * @return Generated mock /graphql respose based on src/test/resources/default.json
 	 */
@@ -174,7 +174,7 @@ class SwitcherApiMockTest {
 	}
 	
 	/**
-	 * @see {@link ClientWSImpl#checkSwitchers(Set, String)}
+	 * @see ClientWSImpl#checkSwitchers(Set, String)
 	 * 
 	 * @param switchersNotFound Switcher Keys forced to be not found
 	 * @return Generated mock /criteria/check_switchers
@@ -182,7 +182,7 @@ class SwitcherApiMockTest {
 	private MockResponse generateCheckSwitchersResponse(Set<String> switchersNotFound) {
 		SwitchersCheck switchersCheckNotFound = new SwitchersCheck();
 		switchersCheckNotFound.setNotFound(
-				switchersNotFound.toArray(new String[switchersNotFound.size()]));
+				switchersNotFound.toArray(new String[0]));
 		
 		Gson gson = new Gson();
 		return new MockResponse()
@@ -267,9 +267,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateStatusResponse("404"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
-		assertThrows(SwitcherKeyNotFoundException.class, () ->
-			switcher.isItOn()
-		);
+		assertThrows(SwitcherKeyNotFoundException.class, switcher::isItOn);
 	}
 	
 	@Test
@@ -281,9 +279,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateStatusResponse("401"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
-		assertThrows(SwitcherKeyNotAvailableForComponentException.class, () ->
-			switcher.isItOn()
-		);
+		assertThrows(SwitcherKeyNotAvailableForComponentException.class, switcher::isItOn);
 	}
 	
 	
@@ -293,9 +289,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateStatusResponse("401"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
-		Exception ex = assertThrows(SwitcherException.class, () -> {
-			switcher.isItOn();
-		});
+		Exception ex = assertThrows(SwitcherException.class, switcher::isItOn);
 		
 		assertEquals("Something went wrong: Unauthorized API access", ex.getMessage());
 	}
@@ -333,7 +327,6 @@ class SwitcherApiMockTest {
 		//test will use silent (read from snapshot)
 		assertTrue(switcher.isItOn());
 	}
-	
 	
 	@Test
 	void shouldReturnTrue_tokenExpired() throws InterruptedException {
@@ -414,7 +407,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateSnapshotResponse());
 		
 		//test
-		assertDoesNotThrow(() -> Switchers.initializeClient());
+		assertDoesNotThrow(Switchers::initializeClient);
 	}
 	
 	@Test
@@ -432,9 +425,8 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateStatusResponse("503"));
 		
 		//test
-		Exception ex = assertThrows(SwitcherSnapshoException.class, () ->
-			Switchers.initializeClient()
-		);
+		Exception ex = assertThrows(SwitcherSnapshoException.class,
+				Switchers::initializeClient);
 		
 		assertEquals("Something went wrong: Unable to execute resolveSnapshot", 
 			ex.getMessage());
@@ -457,7 +449,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateSnapshotResponse());
 		
 		//test
-		assertDoesNotThrow(() -> Switchers.validateSnapshot());
+		assertDoesNotThrow(Switchers::validateSnapshot);
 	}
 	
 	@Test
@@ -484,7 +476,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateSnapshotResponse());
 		
 		//test
-		assertDoesNotThrow(() -> Switchers.validateSnapshot());
+		assertDoesNotThrow(Switchers::validateSnapshot);
 	}
 	
 	@Test
@@ -505,9 +497,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateStatusResponse("503"));
 		
 		//test
-		assertThrows(SwitcherSnapshoException.class, () ->
-			Switchers.validateSnapshot()
-		);
+		assertThrows(SwitcherSnapshoException.class, Switchers::validateSnapshot);
 	}
 	
 	@Test
@@ -533,14 +523,9 @@ class SwitcherApiMockTest {
 				mockBackEnd.enqueue(generateSnapshotResponse());
 				
 				//test
-				assertThrows(SwitcherSnapshotWriteException.class, () ->
-					Switchers.initializeClient()
-				);
-			} catch (IOException e) {
-				throw e;
+				assertThrows(SwitcherSnapshotWriteException.class, Switchers::initializeClient);
 			}
 		});
-
 	}
 	
 	@Test
@@ -566,9 +551,7 @@ class SwitcherApiMockTest {
 				mockBackEnd.enqueue(generateSnapshotResponse());
 				
 				//test
-				assertThrows(SwitcherSnapshotWriteException.class, () -> Switchers.initializeClient());
-			} catch (IOException e) {
-				throw e;
+				assertThrows(SwitcherSnapshotWriteException.class, Switchers::initializeClient);
 			}
 		});
 	}
@@ -585,7 +568,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateCheckSwitchersResponse(notFound));
 		
 		//test
-		assertDoesNotThrow(() -> Switchers.checkSwitchers());
+		assertDoesNotThrow(Switchers::checkSwitchers);
 	}
 	
 	@Test
@@ -601,9 +584,8 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateCheckSwitchersResponse(notFound));
 		
 		//test
-		Exception ex = assertThrows(SwitchersValidationException.class, () ->
-			Switchers.checkSwitchers()
-		);
+		Exception ex = assertThrows(SwitchersValidationException.class,
+				Switchers::checkSwitchers);
 		
 		assertEquals(String.format(
 				"Something went wrong: Unable to load the following Switcher Key(s): %s", notFound), 
@@ -619,9 +601,7 @@ class SwitcherApiMockTest {
 		mockBackEnd.enqueue(generateStatusResponse("503"));
 		
 		//test
-		assertThrows(SwitcherAPIConnectionException.class, () ->
-			Switchers.checkSwitchers()
-		);
+		assertThrows(SwitcherAPIConnectionException.class, Switchers::checkSwitchers);
 	}
 	
 	@Test

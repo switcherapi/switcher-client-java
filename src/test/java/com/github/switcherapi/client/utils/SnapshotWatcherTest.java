@@ -1,10 +1,20 @@
 package com.github.switcherapi.client.utils;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.github.switcherapi.SwitchersBase;
+import com.github.switcherapi.client.ContextBuilder;
+import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.criteria.Criteria;
+import com.github.switcherapi.client.model.criteria.Snapshot;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,26 +23,14 @@ import java.nio.file.Paths;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import com.github.switcherapi.SwitchersBase;
-import com.github.switcherapi.client.ContextBuilder;
-import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.criteria.Criteria;
-import com.github.switcherapi.client.model.criteria.Snapshot;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SnapshotWatcherTest {
 	
 	private static final Logger logger = LogManager.getLogger(SnapshotWatcherTest.class);
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
 	
 	@BeforeAll
 	static void setupContext() throws IOException {
@@ -40,7 +38,7 @@ class SnapshotWatcherTest {
 		generateFixture();
 		
 		SwitchersBase.configure(ContextBuilder.builder()
-			.contextLocation("com.github.switcherapi.SwitchersBase")
+			.contextLocation(SwitchersBase.class.getCanonicalName())
 			.environment("generated_watcher_default")
 			.snapshotLocation(SNAPSHOTS_LOCAL)
 			.offlineMode(true));
@@ -49,7 +47,7 @@ class SnapshotWatcherTest {
 	}
 	
 	@BeforeEach
-	void prepareTest() throws InterruptedException {
+	void prepareTest() {
 		generateFixture();
 		SwitchersBase.watchSnapshot();
 	}
@@ -83,11 +81,10 @@ class SnapshotWatcherTest {
 	void writeFixture(String content) {
 		try (
 				final FileWriter fileWriter = new FileWriter(
-						new File(String.format("%s/%s.json", SNAPSHOTS_LOCAL, "generated_watcher_default")));
+						String.format("%s/%s.json", SNAPSHOTS_LOCAL, "generated_watcher_default"));
 
 				final BufferedWriter bw = new BufferedWriter(fileWriter);
-				final PrintWriter wr = new PrintWriter(bw);
-				) {
+				final PrintWriter wr = new PrintWriter(bw)) {
 			wr.write(content);
 		} catch (Exception e) {
 			logger.error(e);

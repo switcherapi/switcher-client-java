@@ -43,9 +43,9 @@ public class SwitcherUtils {
 	
 	private static final String FULL_DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
 	
-	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+)\\}";
+	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+)}";
 	
-	private static final String ENV_DEFAULT_VARIABLE_PATTERN = "\\$\\{(\\w+):(.+)\\}";
+	private static final String ENV_DEFAULT_VARIABLE_PATTERN = "\\$\\{(\\w+):(.+)}";
 	
 	private static final String PAYLOAD_PATTERN = "%s.%s";
 	
@@ -180,7 +180,6 @@ public class SwitcherUtils {
 	 * System environment or default argument.
 	 * 
 	 * @param value assigned from the properties file
-	 * @param defaultValue 
 	 * @return Resolved value
 	 */
 	private static StringBuilder resolveEnvironmentVariable(final String value) {
@@ -218,6 +217,5 @@ public class SwitcherUtils {
 		
 		return !StringUtils.isEmpty(sBuilder.toString());
 	}
-	
 
 }

@@ -21,7 +21,7 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
  * @see #isItOn(List)
  * @see #isItOn(Entry, boolean)
  */
-public class Switcher extends SwitcherBuilder {
+public final class Switcher extends SwitcherBuilder {
 	
 	public static final String KEY = "key";
 	
@@ -29,13 +29,13 @@ public class Switcher extends SwitcherBuilder {
 	
 	public static final String BYPASS_METRIC = "bypassMetric";
 	
+	private final SwitcherExecutor context;
+	
+	private final String switcherKey;
+	
+	private final Set<CriteriaResponse> historyExecution;
+
 	private AsyncSwitcher asyncSwitcher;
-	
-	private SwitcherExecutor context;
-	
-	private String switcherKey;
-	
-	private Set<CriteriaResponse> historyExecution;
 	
 	private boolean bypassMetrics = Boolean.FALSE;
 	
@@ -136,8 +136,8 @@ public class Switcher extends SwitcherBuilder {
 	 */
 	public GsonInputRequest getInputRequest() {
 		return new GsonInputRequest(
-				this.entry != null ? 
-						this.entry.toArray(new Entry[this.entry.size()]) : null);
+				this.entry != null ?
+						this.entry.toArray(new Entry[0]) : null);
 	}
 
 	public boolean isBypassMetrics() {
@@ -165,7 +165,7 @@ public class Switcher extends SwitcherBuilder {
 	}
 	
 	public void resetEntry() {
-		this.entry = new ArrayList<Entry>();
+		this.entry = new ArrayList<>();
 	}
 
 	public synchronized Set<CriteriaResponse> getHistoryExecution() {
@@ -182,9 +182,9 @@ public class Switcher extends SwitcherBuilder {
 				switcherKey, entry, bypassMetrics, showReason);
 	}
 	
-	public class GsonInputRequest {
+	public static class GsonInputRequest {
 		
-		private Entry[] entry;
+		private final Entry[] entry;
 		
 		public GsonInputRequest(final Entry[] entry) {
 			this.entry = entry;

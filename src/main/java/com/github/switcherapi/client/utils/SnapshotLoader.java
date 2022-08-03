@@ -1,18 +1,5 @@
 package com.github.switcherapi.client.utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.client.model.criteria.Domain;
@@ -21,6 +8,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author Roger Floriano (petruki)
@@ -74,8 +68,6 @@ public class SnapshotLoader {
 		} catch (JsonSyntaxException | JsonIOException e) {
 			logger.error(e);
 			throw new SwitcherSnapshotLoadException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
-		} catch (FileNotFoundException e) {
-			throw e;
 		}
 	}
 	
@@ -102,17 +94,14 @@ public class SnapshotLoader {
 		}
 		
 		try (
-				final FileWriter fileWriter = new FileWriter(
-						new File(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment)));
+				final FileWriter fileWriter = new FileWriter(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment));
 				final BufferedWriter bw = new BufferedWriter(fileWriter);
-				final PrintWriter wr = new PrintWriter(bw);
-				) {
+				final PrintWriter wr = new PrintWriter(bw)) {
 			wr.write(gson.toJson(snapshot));
 		} catch (Exception e) {
 			logger.error(e);
 			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
 		}
-
 	}
 
 }

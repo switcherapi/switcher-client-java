@@ -57,14 +57,14 @@ public interface ClientWS {
 	 * @param token Access token
 	 * @return the execution based on the configured switcher
 	 */
-	public CriteriaResponse executeCriteriaService(final Switcher switcher, final String token);
+	CriteriaResponse executeCriteriaService(final Switcher switcher, final String token);
 	
 	/**
 	 * Returns the token to access all available endpoints
 	 * 
 	 * @return token and expiration date
 	 */
-	public Optional<AuthResponse> auth();
+	Optional<AuthResponse> auth();
 	
 	/**
 	 * Returns the whole domain structure which will be stored into a snapshot file
@@ -72,7 +72,7 @@ public interface ClientWS {
 	 * @param token Access token
 	 * @return domain structure
 	 */
-	public Snapshot resolveSnapshot(final String token);
+	Snapshot resolveSnapshot(final String token);
 	
 	/**
 	 * Returns { status: true } if snapshot is updated
@@ -81,7 +81,7 @@ public interface ClientWS {
 	 * @param token Access token
 	 * @return status: true if domain is updated
 	 */
-	public SnapshotVersionResponse checkSnapshotVersion(final long version, final String token);
+	SnapshotVersionResponse checkSnapshotVersion(final long version, final String token);
 	
 	/**
 	 * Returns an empty array of not_found if all switchers passed are properly configured.
@@ -90,10 +90,10 @@ public interface ClientWS {
 	 * @param token Access token
 	 * @return array of Switchers Key not found/configured
 	 */
-	public SwitchersCheck checkSwitchers(final Set<String> switchers, final String token);
+	SwitchersCheck checkSwitchers(final Set<String> switchers, final String token);
 	
 	/**
 	 * @return Check whether API is online or not
 	 */
-	public boolean isAlive();
+	boolean isAlive();
 }

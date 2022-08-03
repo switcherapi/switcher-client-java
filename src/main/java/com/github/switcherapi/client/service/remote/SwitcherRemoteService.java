@@ -26,7 +26,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	
 	private static final Logger logger = LogManager.getLogger(SwitcherRemoteService.class);
 	
-	private SwitcherLocalService switcherOffline;
+	private final SwitcherLocalService switcherOffline;
 	
 	public SwitcherRemoteService() {
 		this.switcherOffline = new SwitcherLocalService();
