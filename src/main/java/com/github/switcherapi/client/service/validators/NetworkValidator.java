@@ -11,7 +11,7 @@ import com.github.switcherapi.client.model.criteria.Strategy;
 @ValidatorComponent(type = StrategyValidator.NETWORK)
 public class NetworkValidator extends Validator {
 	
-	public static final String CIDR_REGEX = "^(\\d{1,3}\\.){3}\\d{1,3}(\\/(\\d|[1-2]\\d|3[0-2]))";
+	public static final String CIDR_REGEX = "^(\\d{1,3}\\.){3}\\d{1,3}(/(\\d|[1-2]\\d|3[0-2]))";
 	
 	@Override
 	public boolean process(final Strategy strategy, final Entry switcherInput) {

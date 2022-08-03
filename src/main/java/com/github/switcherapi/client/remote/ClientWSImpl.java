@@ -43,7 +43,7 @@ public class ClientWSImpl implements ClientWS {
 			"strategies { strategy activated operation values } " +
 			"components } } } }\"}";
 	
-	private Client client;
+	private final Client client;
 	
 	public ClientWSImpl() {
 		this.client = ClientBuilder.newClient();
@@ -64,7 +64,7 @@ public class ClientWSImpl implements ClientWS {
 		final Response response = myResource.request(MediaType.APPLICATION_JSON)
 				.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token))
 				.post(Entity.json(switcher.getInputRequest()));
-		
+
 		if (response.getStatus() == 401) {
 			throw new SwitcherKeyNotAvailableForComponentException(
 					SwitcherContextBase.contextStr(ContextKey.COMPONENT), switcher.getSwitcherKey());
@@ -72,12 +72,12 @@ public class ClientWSImpl implements ClientWS {
 			throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
 		}
 		
-		final CriteriaResponse criteriaReponse = response.readEntity(CriteriaResponse.class);
-		criteriaReponse.setSwitcherKey(switcher.getSwitcherKey());
-		criteriaReponse.setEntry(switcher.getEntry());
+		final CriteriaResponse criteriaResponse = response.readEntity(CriteriaResponse.class);
+		criteriaResponse.setSwitcherKey(switcher.getSwitcherKey());
+		criteriaResponse.setEntry(switcher.getEntry());
 		response.close();
 		
-		return criteriaReponse;
+		return criteriaResponse;
 	}
 	
 	@Override

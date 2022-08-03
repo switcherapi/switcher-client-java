@@ -17,7 +17,7 @@ import com.github.switcherapi.client.utils.SnapshotEventHandler;
 
 class SwitcherLocalServiceTest {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
 	
 	private static SwitcherLocalService service;
 	
@@ -48,7 +48,7 @@ class SwitcherLocalServiceTest {
 	}
 	
 	@Test
-	void shouldNotifyWithSuccess_customHandler() throws InterruptedException {
+	void shouldNotifyWithSuccess_customHandler() {
 		SwitchersBase.configure(ContextBuilder.builder()
 				.environment("snapshot_watcher"));
 		
@@ -64,7 +64,7 @@ class SwitcherLocalServiceTest {
 	}
 	
 	@Test
-	void shouldNotifyWithError_customHandler() throws InterruptedException {
+	void shouldNotifyWithError_customHandler() {
 		SwitchersBase.configure(ContextBuilder.builder()
 				.environment("defect_default"));
 		

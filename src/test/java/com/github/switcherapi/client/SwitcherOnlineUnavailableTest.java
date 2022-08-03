@@ -24,9 +24,7 @@ class SwitcherOnlineUnavailableTest {
 		
 		//test
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
-		assertThrows(SwitcherAPIConnectionException.class, () -> {
-			switcher.isItOn();
-		});
+		assertThrows(SwitcherAPIConnectionException.class, switcher::isItOn);
 	}
 
 }

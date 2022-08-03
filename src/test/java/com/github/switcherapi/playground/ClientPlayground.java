@@ -12,11 +12,10 @@ public class ClientPlayground {
 	
 	final static Logger logger = LogManager.getLogger(ClientPlayground.class);
 	
-	public ClientPlayground() {
+	public static void test() {
 		configure(ContextBuilder.builder()
 				.contextLocation("com.github.switcherapi.playground.Features")
 				.apiKey("JDJiJDA4JEFweTZjSTR2bE9pUjNJOUYvRy9raC4vRS80Q2tzUnk1d3o1aXFmS2o5eWJmVW11cjR0ODNT")
-				.url("https://switcher-api.herokuapp.com")
 				.domain("Playground")
 				.component("switcher-playground"));
 		
@@ -28,6 +27,6 @@ public class ClientPlayground {
 	}
 	
 	public static void main(String[] args) {
-		new ClientPlayground();
+		ClientPlayground.test();
 	}
 }

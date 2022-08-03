@@ -28,7 +28,7 @@ public class SwitchersCheck {
 	public SwitchersCheck() {}
 	
 	public SwitchersCheck(final Set<String> switchers) {
-		this.switchers = switchers.toArray(new String[switchers.size()]);
+		this.switchers = switchers.toArray(new String[0]);
 	}
 
 	public String[] getSwitchers() {

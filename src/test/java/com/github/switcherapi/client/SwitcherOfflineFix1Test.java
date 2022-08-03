@@ -28,7 +28,7 @@ import com.google.gson.Gson;
 
 class SwitcherOfflineFix1Test {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
 	
 	private final static String PAYLOAD_FIXTURE = new Gson().toJson(Product.getFixture());
 	
@@ -77,7 +77,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldNotReturn_keyNotFound() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.NOT_FOUND_KEY);
-		assertThrows(SwitcherKeyNotFoundException.class, () -> switcher.isItOn());
+		assertThrows(SwitcherKeyNotFoundException.class, switcher::isItOn);
 	}
 	
 	static Stream<Arguments> dateTestArguments() {
@@ -118,7 +118,7 @@ class SwitcherOfflineFix1Test {
 		Entry input = Entry.build(StrategyValidator.DATE, "2019/121/13");
 		
 		switcher.prepareEntry(input);
-		assertThrows(SwitcherInvalidTimeFormat.class, () -> switcher.isItOn());
+		assertThrows(SwitcherInvalidTimeFormat.class, switcher::isItOn);
 	}
 	
 	static Stream<Arguments> valueTestArguments() {
@@ -203,7 +203,7 @@ class SwitcherOfflineFix1Test {
 		Entry input = Entry.build(StrategyValidator.NUMERIC, "INVALID_NUMBER");
 		
 		switcher.prepareEntry(input);
-		assertThrows(SwitcherInvalidNumericFormat.class, () -> switcher.isItOn());
+		assertThrows(SwitcherInvalidNumericFormat.class, switcher::isItOn);
 	}
 	
 	static Stream<Arguments> timeTestArguments() {
@@ -244,7 +244,7 @@ class SwitcherOfflineFix1Test {
 		Entry input = Entry.build(StrategyValidator.TIME, "2019-12-10");
 		
 		switcher.prepareEntry(input);
-		assertThrows(SwitcherInvalidTimeFormat.class, () -> switcher.isItOn());
+		assertThrows(SwitcherInvalidTimeFormat.class, switcher::isItOn);
 	}
 	
 	static Stream<Arguments> networkTestArguments() {

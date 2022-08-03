@@ -8,9 +8,9 @@ package com.github.switcherapi.client.model;
  */
 public class Entry {
 	
-	private String strategy;
+	private final String strategy;
 	
-	private String input;
+	private final String input;
 	
 	private Entry(final String strategy, final String input) {
 		this.strategy = strategy;
@@ -66,10 +66,8 @@ public class Entry {
 			if (!this.strategy.equals(entry.getStrategy())) {
 				return false;
 			}
-			
-			if (!this.input.equals(entry.getInput())) {
-				return false;
-			}
+
+			return this.input.equals(entry.getInput());
 		}
 		return true;
 	}

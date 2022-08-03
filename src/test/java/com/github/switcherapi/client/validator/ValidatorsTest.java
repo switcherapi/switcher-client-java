@@ -1,13 +1,11 @@
 package com.github.switcherapi.client.validator;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
 
 import com.github.switcherapi.client.model.criteria.Strategy;
 import com.github.switcherapi.client.service.ValidatorService;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ValidatorsTest {
 	

@@ -56,7 +56,7 @@ public class ClientLocalService {
 	public List<String> checkSwitchers(final Set<String> switchers, final Domain domain) {
 		List<String> notFound = new ArrayList<>();
 
-		boolean found = false;
+		boolean found;
 		for (String switcher : switchers) {
 			found = false;
 			for (final Group group : domain.getGroup()) {
@@ -139,7 +139,7 @@ public class ClientLocalService {
 					Arrays.toString(input != null ? input.toArray() : ArrayUtils.EMPTY_STRING_ARRAY)));
 		}
 
-		boolean result = true;
+		boolean result;
 		for (final Strategy strategy : configStrategies) {
 			if (!strategy.isActivated())
 				continue;
@@ -155,7 +155,7 @@ public class ClientLocalService {
 			}
 		}
 
-		return new CriteriaResponse(result, CRITERIA_SUCCESS, switcher);
+		return new CriteriaResponse(true, CRITERIA_SUCCESS, switcher);
 	}
 	
 	private CriteriaResponse strategyFailed(Switcher switcher, Strategy strategy, String pattern) {

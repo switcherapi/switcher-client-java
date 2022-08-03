@@ -18,7 +18,7 @@ import com.github.switcherapi.client.model.Switcher;
 
 class SwitcherBypassTest {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath().toString() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
 	private static final String FIXTURE1 = "/snapshot_fixture1.json";
 	private static final String FIXTURE2 = "/snapshot_fixture2.json";
 	

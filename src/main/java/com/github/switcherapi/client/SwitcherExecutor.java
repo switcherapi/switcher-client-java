@@ -29,7 +29,7 @@ public abstract class SwitcherExecutor {
 	
 	private static final Logger logger = LogManager.getLogger(SwitcherExecutor.class);
 	
-	private static Map<String, Boolean> bypass = new HashMap<>();
+	private static final Map<String, Boolean> bypass = new HashMap<>();
 	
 	/**
 	 * Execute criteria based on the Switcher configuration

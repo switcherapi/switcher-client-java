@@ -13,9 +13,6 @@ import com.github.switcherapi.client.utils.SwitcherUtils;
  * The configuration definition object contains all necessary SDK properties to
  * control the API client behaviors, access and snapshot location.
  * 
- * <p>
- * Properties are defined by {@link SwitcherContextParam}
- * 
  * @author Roger Floriano (petruki)
  */
 class SwitcherProperties {
