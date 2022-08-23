@@ -1,5 +1,5 @@
 # Change Log
-- 1.3.6-SNAPSHOT:
+- 1.3.6:
 	- Fixed throttle concurrency issue
 - 1.3.5:
 	- Added support to Strategy Payload Validation

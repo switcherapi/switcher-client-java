@@ -6,10 +6,7 @@ package com.github.switcherapi.client.exception;
  */
 public class SwitcherContextException extends SwitcherException {
 	
-	private static final long serialVersionUID = -6340224967205872873L;
-	
 	public SwitcherContextException(String error) {
-		
 		super(String.format("Context has errors - %s", error), null);
 	} 
 

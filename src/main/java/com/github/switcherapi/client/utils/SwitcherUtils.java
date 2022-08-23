@@ -100,10 +100,10 @@ public class SwitcherUtils {
 	}
 	
 	public static Set<String> payloadReader(String jsonStr, String prevKey) {
-		JsonElement parser = JsonParser.parseString(jsonStr);
-		JsonObject jsonObject = parser.getAsJsonObject();
+		final JsonElement parser = JsonParser.parseString(jsonStr);
+		final JsonObject jsonObject = parser.getAsJsonObject();
 		
-		Set<String> keys = Sets.newHashSet();
+		final Set<String> keys = Sets.newHashSet();
 		for (Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 			String key;
 			if (prevKey == null) {
@@ -162,13 +162,11 @@ public class SwitcherUtils {
 	 */
 	public static String resolveProperties(String key, Properties prop) {
 		final String value = prop.getProperty(key);
-		
 		if (StringUtils.isBlank(value)) {
 	        return null;
 	    }
 
-	    StringBuilder sBuilder = resolveEnvironmentVariable(value);
-	    
+	    final StringBuilder sBuilder = resolveEnvironmentVariable(value);
 	    if (sBuilder.toString().isEmpty())
 	    	return value;
 	       

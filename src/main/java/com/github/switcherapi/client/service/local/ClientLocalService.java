@@ -57,7 +57,7 @@ public class ClientLocalService {
 		List<String> notFound = new ArrayList<>();
 
 		boolean found;
-		for (String switcher : switchers) {
+		for (final String switcher : switchers) {
 			found = false;
 			for (final Group group : domain.getGroup()) {
 				if (Arrays.stream(group.getConfig()).anyMatch(config -> config.getKey().equals(switcher))) {
@@ -84,7 +84,6 @@ public class ClientLocalService {
 	 * @throws SwitcherException If encountered either invalid input or misconfiguration
 	 */
 	public CriteriaResponse executeCriteria(final Switcher switcher, final Domain domain) {
-
 		if (!domain.isActivated()) {
 			return new CriteriaResponse(false, DISABLED_DOMAIN, switcher);
 		}

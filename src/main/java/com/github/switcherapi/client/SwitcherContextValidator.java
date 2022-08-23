@@ -52,6 +52,8 @@ class SwitcherContextValidator {
 	 */
 	public static void validateOffline(final SwitcherProperties prop) {
 		final StringBuilder error = new StringBuilder();
+
+		// No Snapshot File may require a Snapshot Location
 		if (StringUtils.isBlank(prop.getSnapshotFile())) {
 			error.append(ERR_LOCATION_SNAPSHOT_FILE);
 		} else {
@@ -62,11 +64,14 @@ class SwitcherContextValidator {
 				return;
 			}
 		}
-		
+
+		// No Snapshot Location may require Snapshot File
 		if (StringUtils.isBlank(prop.getSnapshotLocation())) {
 			if (!StringUtils.isBlank(error.toString())) {
 				throw new SwitcherContextException(error.toString());
 			}
+
+		// Snapshot Autoload requires a valid Snapshot Location
 		} else if (!prop.isSnapshotAutoLoad()) {
 			final File folderPath = new File(prop.getSnapshotLocation());
 			if (!folderPath.exists()) {

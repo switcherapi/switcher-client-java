@@ -6,10 +6,7 @@ package com.github.switcherapi.client.exception;
  */
 public class SwitchersValidationException extends SwitcherException {
 
-	private static final long serialVersionUID = -347269332861136662L;
-
 	public SwitchersValidationException(final String notFound) {
-		
 		super(String.format("Unable to load the following Switcher Key(s): %s", notFound), null);
 	}
 }

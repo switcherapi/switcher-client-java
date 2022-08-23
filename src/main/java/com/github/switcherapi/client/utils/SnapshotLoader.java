@@ -25,6 +25,8 @@ public class SnapshotLoader {
 	private static final Logger logger = LogManager.getLogger(SnapshotLoader.class);
 	
 	private static final String SNAPSHOT_FILE_FORMAT = "%s/%s.json";
+
+	private static final Gson gson = new Gson();
 	
 	private SnapshotLoader() {}
 
@@ -36,9 +38,6 @@ public class SnapshotLoader {
 	 * @throws SwitcherSnapshotLoadException when JSON file has errors or the file was not found
 	 */
 	public static Domain loadSnapshot(final String snapshotFile) throws SwitcherSnapshotLoadException {
-		
-		final Gson gson = new Gson();
-
 		try {
 			final Snapshot data = gson.fromJson(new FileReader(snapshotFile), Snapshot.class);
 			return data.getDomain();
@@ -59,9 +58,6 @@ public class SnapshotLoader {
 	 */
 	public static Domain loadSnapshot(final String snapshotLocation, final String environment) 
 			throws SwitcherSnapshotLoadException, FileNotFoundException {
-		
-		final Gson gson = new Gson();
-
 		try {
 			final Snapshot data = gson.fromJson(new FileReader(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment)), Snapshot.class);
 			return data.getDomain();
