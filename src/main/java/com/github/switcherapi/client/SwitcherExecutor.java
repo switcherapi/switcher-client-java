@@ -102,10 +102,10 @@ public abstract class SwitcherExecutor {
 	 * It manipulates the result of a given Switcher key.
 	 * 
 	 * @param key name of the key that you want to change the result
-	 * @param expepectedResult result that will be returned when performing isItOn
+	 * @param expectedResult that will be returned when performing isItOn
 	 */
-	public static void assume(final String key, boolean expepectedResult) {
-		bypass.put(key, expepectedResult);
+	public static void assume(final String key, boolean expectedResult) {
+		bypass.put(key, expectedResult);
 	}
 	
 	/**

@@ -46,7 +46,6 @@ import com.github.switcherapi.client.utils.SwitcherUtils;
  *  	Features.configure(ContextBuilder.builder()
  *   		.contextLocation("com.business.config.Features")
  *   		.apiKey("API_KEY")
- *   		.url("https://switcher-api.herokuapp.com")
  *   		.domain("Playground")
  *   		.component("switcher-playground")
  *   		.environment("default"));
