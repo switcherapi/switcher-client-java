@@ -17,8 +17,6 @@ import com.github.switcherapi.client.utils.SwitcherUtils;
  */
 class SwitcherProperties {
 
-	public static final String DEFAULTURL = "https://switcher-api.herokuapp.com";
-
 	public static final String DEFAULTENV = "default";
 
 	private String contextLocation;
@@ -48,7 +46,6 @@ class SwitcherProperties {
 	private boolean offlineMode;
 
 	public SwitcherProperties() {
-		this.url = DEFAULTURL;
 		this.environment = DEFAULTENV;
 	}
 	
@@ -90,10 +87,7 @@ class SwitcherProperties {
 	}
 
 	public void setUrl(String url) {
-		if (!StringUtils.isBlank(url))
-			this.url = url;
-		else
-			this.url = DEFAULTURL;
+		this.url = url;
 	}
 
 	public String getApiKey() {

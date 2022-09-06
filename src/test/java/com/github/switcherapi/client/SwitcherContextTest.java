@@ -1,19 +1,16 @@
 package com.github.switcherapi.client;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.nio.file.Paths;
-
+import com.github.switcherapi.Switchers;
+import com.github.switcherapi.client.exception.SwitcherContextException;
+import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.github.switcherapi.Switchers;
-import com.github.switcherapi.client.exception.SwitcherContextException;
-import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
-import com.github.switcherapi.client.model.ContextKey;
+import java.nio.file.Paths;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SwitcherContextTest {
 	
@@ -25,11 +22,13 @@ class SwitcherContextTest {
 	}
 	
 	@Test
-	void shouldNotThrowError_noUrl() {
+	void shouldThrowError_noUrl() {
 		Switchers.configure(ContextBuilder.builder().url(null));
-		
-		assertEquals(SwitcherProperties.DEFAULTURL, Switchers.contextStr(ContextKey.URL));
-		assertDoesNotThrow(Switchers::initializeClient);
+
+		Exception ex = assertThrows(SwitcherContextException.class, Switchers::initializeClient);
+
+		assertEquals(String.format(
+				CONTEXT_ERROR, "URL not defined [add: switcher.url]"), ex.getMessage());
 	}
 	
 	@Test

@@ -83,7 +83,7 @@ Instead of using SwitcherContext, which is used to automatically load from the s
 MyAppFeatures.configure(ContextBuilder.builder()
 		.contextLocation("com.github.switcherapi.playground.Features")
 		.apiKey("API_KEY")
-		.url("https://switcher-api.herokuapp.com")
+		.url("https://switcher-api.com")
 		.domain("Playground")
 		.component("switcher-playground"));
 
