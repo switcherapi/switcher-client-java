@@ -19,6 +19,7 @@ class SwitcherContextValidator {
 	private static final String ERR_SNAPSHOT_FILE = "Snapshot file not defined [add: switcher.snapshot.file]";
 	private static final String ERR_LOCATION = "Snapshot location not defined [add: switcher.snapshot.location]";
 	private static final String ERR_RETRY = "Retry not defined [add: switcher.retry]";
+	private static final String ERR_URL = "URL not defined [add: switcher.url]";
 	private static final String ERR_API = "API Key not defined [add: switcher.apikey]";
 	private static final String ERR_DOMAIN = "Domain not defined [add: switcher.domain]";
 	private static final String ERR_COMPONENT = "Component not defined [add: switcher.component]";
@@ -108,6 +109,10 @@ class SwitcherContextValidator {
 	 * @param prop Configured properties
 	 */
 	public static void validateOnline(final SwitcherProperties prop) {
+		if (StringUtils.isBlank(prop.getUrl())) {
+			throw new SwitcherContextException(ERR_URL);
+		}
+
 		if (StringUtils.isBlank(prop.getApiKey())) {
 			throw new SwitcherContextException(ERR_API);
 		}
