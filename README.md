@@ -58,12 +58,12 @@ You can also use environment variables using the standard notation ${VALUE:DEFAU
 ```
 #required
 switcher.context -> Feature class that extends SwitcherContext
+switcher.url -> Switcher-API URL
 switcher.apikey -> Switcher-API key generated for the application/component
 switcher.component -> Application/component name
 switcher.domain -> Domain name
 
 #optional
-switcher.url -> Switcher-API endpoint if running privately
 switcher.environment -> Environment name
 switcher.offline -> true/false When offline, it will only use a local snapshot file
 switcher.snapshot.file -> Snapshot file path
