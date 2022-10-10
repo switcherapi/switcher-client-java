@@ -23,12 +23,13 @@ class SwitcherLocalServiceTest {
 	
 	@BeforeAll
 	static void init() {
-		service = new SwitcherLocalService();
-		
 		SwitchersBase.configure(ContextBuilder.builder()
 				.contextLocation("com.github.switcherapi.SwitchersBase")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.environment("default")
 				.offlineMode(true));
+
+		service = new SwitcherLocalService();
 	}
 
 	@Test
