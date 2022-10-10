@@ -26,6 +26,7 @@ class SwitcherLocalServiceTest {
 		SwitchersBase.configure(ContextBuilder.builder()
 				.contextLocation("com.github.switcherapi.SwitchersBase")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.environment("default")
 				.offlineMode(true));
 
 		service = new SwitcherLocalService();
