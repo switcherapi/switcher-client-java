@@ -184,6 +184,8 @@ class SwitcherUtilsTest {
 	}
 	
 	@Test
+	@SetEnvironmentVariable(key = "ENVIRONMENT", value = "")
+	@EnabledOnJre(value = { JRE.JAVA_8, JRE.JAVA_11 })
 	void shouldNotReadUnsetProperty() {
 		//given
 		Properties prop = new Properties();
