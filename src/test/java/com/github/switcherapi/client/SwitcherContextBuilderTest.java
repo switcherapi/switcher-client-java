@@ -22,7 +22,7 @@ class SwitcherContextBuilderTest {
 	@Test
 	void shouldReturnSuccess() {
 		//given
-		SwitchersBase.configure(ContextBuilder.builder()
+		SwitchersBase.configure(ContextBuilder.builder(true)
 				.contextLocation("com.github.switcherapi.SwitchersBase")
 				.url("http://localhost:3000")
 				.apiKey("API_KEY")
