@@ -11,16 +11,19 @@ public class ContextBuilder {
 	}
 	
 	public static void preConfigure(SwitcherProperties switcherProperties) {
-		if (context == null)
-			context = new ContextBuilder();
-		
+		context = builder();
 		context.preBuild(switcherProperties);
 	}
 	
 	public static ContextBuilder builder() {
-		if (context == null)
+		context = builder(false);
+		return context;
+	}
+
+	public static ContextBuilder builder(boolean init) {
+		if (context == null || init)
 			context = new ContextBuilder();
-		
+
 		return context;
 	}
 	
