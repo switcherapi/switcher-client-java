@@ -57,7 +57,7 @@
 		<!-- test -->
 		<okhttp.version>4.10.0</okhttp.version>
 		<junit.version>5.9.0</junit.version>
-		<junit-pioneer.version>1.8.0</junit-pioneer.version>
+		<junit-pioneer.version>1.9.1</junit-pioneer.version>
 
 		<!-- Plugins -->
 		<maven-compiler.version>3.8.1</maven-compiler.version>
