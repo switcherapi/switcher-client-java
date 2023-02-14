@@ -1,9 +1,9 @@
 package com.github.switcherapi.client.validator;
 
-import org.junit.jupiter.api.Test;
-
+import com.github.switcherapi.client.exception.SwitcherInvalidValidatorException;
 import com.github.switcherapi.client.model.criteria.Strategy;
 import com.github.switcherapi.client.service.ValidatorService;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +22,14 @@ class ValidatorsTest {
 	
 	@Test
 	void shouldNotRegisterCustomValidator() {
-		assertThrows(Exception.class, () -> service.registerValidator(InvalidCustomValidator.class));
+		assertThrows(Exception.class,
+				() -> service.registerValidator(InvalidCustomValidator.class));
+	}
+
+	@Test
+	void shouldNotRegisterNotAnnotatedCustomValidator() {
+		assertThrows(SwitcherInvalidValidatorException.class,
+				() -> service.registerValidator(InvalidCustom2Validator.class));
 	}
 
 }
