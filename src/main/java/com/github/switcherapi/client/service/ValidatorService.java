@@ -2,6 +2,7 @@ package com.github.switcherapi.client.service;
 
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidStrategyException;
+import com.github.switcherapi.client.exception.SwitcherInvalidValidatorException;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.criteria.Strategy;
@@ -30,7 +31,7 @@ public class ValidatorService {
 
 	private StrategyValidator getStrategyValidator(Class<? extends Validator> validatorClass) {
 		if (!validatorClass.isAnnotationPresent(ValidatorComponent.class)) {
-			throw new SwitcherInvalidStrategyException(validatorClass.getName());
+			throw new SwitcherInvalidValidatorException(validatorClass.getName());
 		}
 
 		return validatorClass.getAnnotation(ValidatorComponent.class).type();
@@ -39,6 +40,8 @@ public class ValidatorService {
 	public void registerValidator(Class<? extends Validator> validatorClass) {
 		try {
 			validators.put(getStrategyValidator(validatorClass), validatorClass.getConstructor().newInstance());
+		} catch (SwitcherInvalidValidatorException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new SwitcherException(e.getMessage(), e);
 		}
