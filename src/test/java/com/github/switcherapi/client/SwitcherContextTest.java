@@ -130,4 +130,17 @@ class SwitcherContextTest {
 		assertEquals("Context class cannot be instantiated", ex.getMessage());
 	}
 
+	@Test
+	void shouldThrowError_invalidRegexTimeoutFormat() {
+		Switchers.configure(ContextBuilder.builder()
+				.regexTimeout("a"));
+
+		Exception ex = assertThrows(SwitcherContextException.class,
+				Switchers::initializeClient);
+
+		assertEquals(String.format(
+				CONTEXT_ERROR, "Invalid parameter format for [switcher.regextimeout]. Expected class java.lang.Integer."),
+				ex.getMessage());
+	}
+
 }

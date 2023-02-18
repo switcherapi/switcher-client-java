@@ -24,9 +24,13 @@ public class ValidatorService {
 		registerValidator(NetworkValidator.class);
 		registerValidator(NumericValidator.class);
 		registerValidator(PayloadValidator.class);
-		registerValidator(RegexValidator.class);
 		registerValidator(TimeValidator.class);
 		registerValidator(ValueValidator.class);
+
+		if (System.getProperty("java.version").startsWith("1.8"))
+			registerValidator(RegexValidatorV8.class);
+		else
+			registerValidator(RegexValidator.class);
 	}
 
 	private StrategyValidator getStrategyValidator(Class<? extends Validator> validatorClass) {

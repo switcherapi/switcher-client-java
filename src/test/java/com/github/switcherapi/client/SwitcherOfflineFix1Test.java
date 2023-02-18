@@ -1,20 +1,5 @@
 package com.github.switcherapi.client;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.nio.file.Paths;
-import java.util.stream.Stream;
-
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherInvalidNumericFormat;
 import com.github.switcherapi.client.exception.SwitcherInvalidTimeFormat;
@@ -25,6 +10,20 @@ import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.fixture.Product;
 import com.google.gson.Gson;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.nio.file.Paths;
+import java.time.Duration;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherOfflineFix1Test {
 	
@@ -305,7 +304,9 @@ class SwitcherOfflineFix1Test {
 			Arguments.of(Switchers.USECASE93, "user-10", Boolean.FALSE),
 			//NOT_EQUAL
 			Arguments.of(Switchers.USECASE94, "user-10", Boolean.TRUE),
-			Arguments.of(Switchers.USECASE94, "USER_10", Boolean.FALSE)
+			Arguments.of(Switchers.USECASE94, "USER_10", Boolean.FALSE),
+			//EXIST (ReDoS)
+			Arguments.of(Switchers.USECASE95, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", Boolean.FALSE)
 	    );
 	}
 	
@@ -317,6 +318,19 @@ class SwitcherOfflineFix1Test {
 		
 		switcher.prepareEntry(entry);
 		assertEquals(expected, switcher.isItOn());
+	}
+
+	@Test
+	@EnabledOnJre(value = { JRE.JAVA_8 })
+	void offlineShouldTest_evilRegexTimeout() {
+		Switchers.configure(ContextBuilder.builder().regexTimeout("500"));
+
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE95);
+		Entry entry = Entry.build(StrategyValidator.REGEX, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+		switcher.prepareEntry(entry);
+		boolean result = assertTimeoutPreemptively(Duration.ofMillis(600), () -> switcher.isItOn());
+		assertFalse(result);
 	}
 	
 	@ParameterizedTest()

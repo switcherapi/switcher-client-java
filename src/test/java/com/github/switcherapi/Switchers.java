@@ -120,6 +120,9 @@ public class Switchers extends SwitcherContext {
 	public static final String USECASE94 = "USECASE94";
 
 	@SwitcherKey
+	public static final String USECASE95 = "USECASE95";
+
+	@SwitcherKey
 	public static final String USECASE100 = "USECASE100";
 
 	@SwitcherKey

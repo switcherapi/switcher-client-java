@@ -2,6 +2,7 @@ package com.github.switcherapi.client;
 
 import java.io.File;
 
+import com.github.switcherapi.client.model.ContextKey;
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.switcherapi.client.exception.SwitcherContextException;
@@ -15,6 +16,7 @@ import com.github.switcherapi.client.exception.SwitcherContextException;
 class SwitcherContextValidator {
 	
 	private static final String SNAPSHOT_PATH_PATTERN = "%s/%s.json";
+	private static final String ERR_FORMAT = "Invalid parameter format for [%s]. Expected %s.";
 	private static final String ERR_LOCATION_SNAPSHOT_FILE = "Snapshot locations not defined [add: switcher.snapshot.location or switcher.snapshot.file]";
 	private static final String ERR_SNAPSHOT_FILE = "Snapshot file not defined [add: switcher.snapshot.file]";
 	private static final String ERR_LOCATION = "Snapshot location not defined [add: switcher.snapshot.location]";
@@ -97,9 +99,18 @@ class SwitcherContextValidator {
 		if (prop.isSnapshotAutoLoad() && StringUtils.isBlank(prop.getSnapshotLocation())) {
 			throw new SwitcherContextException(ERR_LOCATION);
 		}
-		
+
 		if (prop.isSilentMode() && StringUtils.isBlank(prop.getRetryAfter())) {
 			throw new SwitcherContextException(ERR_RETRY);
+		}
+
+		if (!StringUtils.isBlank(prop.getRegexTimeout())) {
+			try {
+				Integer.parseInt(prop.getRegexTimeout());
+			} catch (NumberFormatException e) {
+				throw new SwitcherContextException(
+						String.format(ERR_FORMAT, ContextKey.REGEX_TIMEOUT.getParam(), Integer.class));
+			}
 		}
 	}
 

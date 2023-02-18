@@ -75,6 +75,11 @@ public class ContextBuilder {
 		return this;
 	}
 
+	public ContextBuilder regexTimeout(String regexTimeout) {
+		properties.setRegexTimeout(regexTimeout);
+		return this;
+	}
+
 	public ContextBuilder retryAfter(String retryAfter) {
 		properties.setRetryAfter(retryAfter);
 		return this;

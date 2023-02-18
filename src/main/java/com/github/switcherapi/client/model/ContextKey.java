@@ -72,7 +72,12 @@ public enum ContextKey {
 	/**
 	 * (boolean) Defines if client will work offline.
 	 */
-	OFFLINE_MODE("switcher.offline", "offlineMode");
+	OFFLINE_MODE("switcher.offline", "offlineMode"),
+
+	/**
+	 * (Number) Defines the Timed Match regex time out.
+	 */
+	REGEX_TIMEOUT("switcher.regextimeout", "regexTimeout");
 	
 	private final String param;
 	private final String propField;
