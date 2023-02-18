@@ -104,13 +104,11 @@ class SwitcherContextValidator {
 			throw new SwitcherContextException(ERR_RETRY);
 		}
 
-		if (!StringUtils.isBlank(prop.getRegexTimeout())) {
-			try {
-				Integer.parseInt(prop.getRegexTimeout());
-			} catch (NumberFormatException e) {
-				throw new SwitcherContextException(
-						String.format(ERR_FORMAT, ContextKey.REGEX_TIMEOUT.getParam(), Integer.class));
-			}
+		try {
+			Integer.parseInt(prop.getRegexTimeout());
+		} catch (NumberFormatException e) {
+			throw new SwitcherContextException(
+					String.format(ERR_FORMAT, ContextKey.REGEX_TIMEOUT.getParam(), Integer.class));
 		}
 	}
 

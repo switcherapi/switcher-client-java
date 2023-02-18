@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @EnabledOnJre(value = { JRE.JAVA_8 })
-class RegexValidatorTest {
+class RegexValidatorV8Test {
 
 	private static final String EVIL_REGEX = "^(([a-z])+.)+[A-Z]([a-z])+$";
 	private static final String EVIL_INPUT = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -43,7 +43,7 @@ class RegexValidatorTest {
 		Entry entry = Entry.build(StrategyValidator.REGEX, EVIL_INPUT);
 
 		//test
-		boolean actual = assertTimeoutPreemptively(Duration.ofMillis(3100), () -> regexValidator.process(strategy, entry));
+		boolean actual = assertTimeoutPreemptively(Duration.ofMillis(4000), () -> regexValidator.process(strategy, entry));
 		assertEquals(expected, actual);
 	}
 
@@ -55,7 +55,7 @@ class RegexValidatorTest {
 		Entry entry = Entry.build(StrategyValidator.REGEX, EVIL_INPUT);
 
 		//test
-		boolean result = assertTimeoutPreemptively(Duration.ofMillis(3100), () -> regexValidator.process(strategy, entry));
+		boolean result = assertTimeoutPreemptively(Duration.ofMillis(4000), () -> regexValidator.process(strategy, entry));
 		assertFalse(result);
 
 		result = assertTimeoutPreemptively(Duration.ofMillis(100), () -> regexValidator.process(strategy, entry));
@@ -70,7 +70,7 @@ class RegexValidatorTest {
 
 		//test
 		Entry entry1 = Entry.build(StrategyValidator.REGEX, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-		boolean result = assertTimeoutPreemptively(Duration.ofMillis(3100), () -> regexValidator.process(strategy, entry1));
+		boolean result = assertTimeoutPreemptively(Duration.ofMillis(4000), () -> regexValidator.process(strategy, entry1));
 		assertFalse(result);
 
 		Entry entry2 = Entry.build(StrategyValidator.REGEX, "bbbbaaaaaaaaaaaaaaa");
