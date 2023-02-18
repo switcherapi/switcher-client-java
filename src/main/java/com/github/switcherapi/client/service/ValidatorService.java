@@ -26,11 +26,7 @@ public class ValidatorService {
 		registerValidator(PayloadValidator.class);
 		registerValidator(TimeValidator.class);
 		registerValidator(ValueValidator.class);
-
-		if (System.getProperty("java.version").startsWith("1.8"))
-			registerValidator(RegexValidatorV8.class);
-		else
-			registerValidator(RegexValidator.class);
+		registerValidator(RegexValidatorV8.getPlatformValidator());
 	}
 
 	private StrategyValidator getStrategyValidator(Class<? extends Validator> validatorClass) {

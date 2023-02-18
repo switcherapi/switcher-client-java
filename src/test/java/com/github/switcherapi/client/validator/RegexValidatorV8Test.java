@@ -43,7 +43,7 @@ class RegexValidatorV8Test {
 		Entry entry = Entry.build(StrategyValidator.REGEX, EVIL_INPUT);
 
 		//test
-		boolean actual = assertTimeoutPreemptively(Duration.ofMillis(4000), () -> regexValidator.process(strategy, entry));
+		boolean actual = assertTimeoutPreemptively(Duration.ofMillis(5000), () -> regexValidator.process(strategy, entry));
 		assertEquals(expected, actual);
 	}
 

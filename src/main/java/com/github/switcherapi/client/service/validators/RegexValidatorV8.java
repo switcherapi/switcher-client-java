@@ -39,6 +39,12 @@ public class RegexValidatorV8 extends Validator {
 		blackList = new HashSet<>();
 	}
 
+	public static Class<? extends Validator> getPlatformValidator() {
+		if (System.getProperty("java.version").startsWith("1.8"))
+			return RegexValidatorV8.class;
+		return RegexValidator.class;
+	}
+
 	@Override
 	public boolean process(Strategy strategy, Entry switcherInput) throws SwitcherInvalidOperationException {
 		try {

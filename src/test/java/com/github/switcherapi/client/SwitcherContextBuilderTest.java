@@ -2,8 +2,7 @@ package com.github.switcherapi.client;
 
 import static com.github.switcherapi.SwitchersBase.USECASE11;
 import static com.github.switcherapi.client.SwitcherContextBase.getSwitcher;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.file.Paths;
 
