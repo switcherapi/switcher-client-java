@@ -488,6 +488,22 @@
                                 }
                             ],
                             "components": ["switcher-client"]
+                        },
+                        {
+                            "key": "USECASE95",
+                            "description": "Config with Regex Validation [EXIST] - ReDoS attempt",
+                            "activated": true,
+                            "strategies": [
+                                {
+                                    "strategy": "REGEX_VALIDATION",
+                                    "activated": true,
+                                    "operation": "EXIST",
+                                    "values": [
+                                        "^(([a-z])+.)+[A-Z]([a-z])+$"
+                                    ]
+                                }
+                            ],
+                            "components": ["switcher-client"]
                         }
                     ]
                 },

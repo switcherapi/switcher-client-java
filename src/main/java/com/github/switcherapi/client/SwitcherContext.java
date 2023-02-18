@@ -29,7 +29,7 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	}
 	
 	/**
-	 * Load properties from the resources folder, look up for resources/switcherapi.properties file.
+	 * Load properties from the resource's folder, look up for resources/switcherapi.properties file.
 	 * After loading the properties, it will validate the arguments and load the Switchers in memory.
 	 */
 	public static void loadProperties() {

@@ -72,6 +72,9 @@ switcher.snapshot.auto -> true/false Automated lookup for snapshot when loading 
 switcher.snapshot.skipvalidation -> true/false Skip snapshotValidation() that can be used for UT executions
 switcher.silent -> true/false Contingency in case of some problem with connectivity with the API
 switcher.retry -> Time given to the module to re-establish connectivity with the API - e.g. 5s (s: seconds - m: minutes - h: hours)
+
+(For applications using Java 1.8 only)
+switcher.regextimeout -> Time in ms given to Timed Match used for offline Regex Operation (ReDoS safety mechanism) - 3000 default value
 ```
 
 ## Client Context Properties - SwitcherContextBase

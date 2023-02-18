@@ -17,7 +17,9 @@ import com.github.switcherapi.client.utils.SwitcherUtils;
  */
 class SwitcherProperties {
 
-	public static final String DEFAULTENV = "default";
+	public static final String DEFAULT_ENV = "default";
+
+	public static final String DEFAULT_REGEX_TIMEOUT = "3000";
 
 	private String contextLocation;
 
@@ -37,6 +39,8 @@ class SwitcherProperties {
 
 	private String retryAfter;
 
+	private String regexTimeout;
+
 	private boolean snapshotAutoLoad;
 
 	private boolean snapshotSkipValidation;
@@ -46,7 +50,8 @@ class SwitcherProperties {
 	private boolean offlineMode;
 
 	public SwitcherProperties() {
-		this.environment = DEFAULTENV;
+		this.environment = DEFAULT_ENV;
+		this.regexTimeout = DEFAULT_REGEX_TIMEOUT;
 	}
 	
 	public void loadFromProperties(Properties prop) {
@@ -63,6 +68,7 @@ class SwitcherProperties {
 		setSilentMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SILENT_MODE.getParam(), prop)));
 		setOfflineMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.OFFLINE_MODE.getParam(), prop)));
 		setRetryAfter(SwitcherUtils.resolveProperties(ContextKey.RETRY_AFTER.getParam(), prop));
+		setRegexTimeout(SwitcherUtils.resolveProperties(ContextKey.REGEX_TIMEOUT.getParam(), prop));
 	}
 	
 	public <T> T getValue(ContextKey contextKey, Class<T> type) {
@@ -122,7 +128,7 @@ class SwitcherProperties {
 		if (!StringUtils.isBlank(environment))
 			this.environment = environment;
 		else
-			this.environment = DEFAULTENV;
+			this.environment = DEFAULT_ENV;
 	}
 
 	public String getSnapshotLocation() {
@@ -147,6 +153,17 @@ class SwitcherProperties {
 
 	public void setRetryAfter(String retryAfter) {
 		this.retryAfter = retryAfter;
+	}
+
+	public String getRegexTimeout() {
+		return regexTimeout;
+	}
+
+	public void setRegexTimeout(String regexTimeout) {
+		if (!StringUtils.isBlank(regexTimeout)) {
+			this.regexTimeout = regexTimeout;
+		} else
+			this.regexTimeout = DEFAULT_REGEX_TIMEOUT;
 	}
 
 	public boolean isSnapshotAutoLoad() {
