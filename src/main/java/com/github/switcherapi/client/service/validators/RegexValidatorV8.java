@@ -33,7 +33,13 @@ public class RegexValidatorV8 extends Validator {
 
 	private static final Logger logger = LogManager.getLogger(RegexValidatorV8.class);
 
-	private static final String THREAD_NAME = "switcherapi-regex-validator";
+	/**
+	 * Global flag to interrupt workers.
+	 * Should perform better than Thread.currentThread().isInterrupted()
+	 */
+	private boolean workerInterrupted;
+
+	public static final String THREAD_NAME = "switcherapi-regex-validator";
 	private static final String DELIMITER_REGEX = "\\b%s\\b";
 
 	private final Set<Pair<String, String>> blackList;
@@ -105,6 +111,7 @@ public class RegexValidatorV8 extends Validator {
 			return future.get(Integer.parseInt(SwitcherContextBase.contextStr(ContextKey.REGEX_TIMEOUT)),
 					TimeUnit.MILLISECONDS);
 		} catch (TimeoutException e) {
+			workerInterrupted = true;
 			future.cancel(true);
 			addBlackList(input, regex);
 			throw new TimeoutException();
@@ -125,11 +132,12 @@ public class RegexValidatorV8 extends Validator {
 		blackList.add(Pair.of(input, regex));
 	}
 
-	static final class TimedMatch implements Callable<Boolean> {
+	class TimedMatch implements Callable<Boolean> {
 		private String input;
 		private String regex;
 
 		public void init(String input, String regex) {
+			workerInterrupted = false;
 			this.input = input;
 			this.regex = regex;
 		}
@@ -146,7 +154,7 @@ public class RegexValidatorV8 extends Validator {
 	 * Credits to Lincoln
 	 * <a href="https://www.ocpsoft.org/regex/how-to-interrupt-a-long-running-infinite-java-regular-expression/"></a>
 	 */
-	static class InterruptibleCharSequence implements CharSequence {
+	class InterruptibleCharSequence implements CharSequence {
 
 		private final CharSequence inner;
 
@@ -157,7 +165,7 @@ public class RegexValidatorV8 extends Validator {
 
 		@Override
 		public char charAt(int index) {
-			if (Thread.currentThread().isInterrupted()) {
+			if (workerInterrupted) {
 				throw new SwitcherException("A Switcher SDK thread has been interrupted", null);
 			}
 

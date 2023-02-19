@@ -90,6 +90,19 @@ class RegexValidatorV8Test {
 		assertFalse(result);
 	}
 
+	@Test
+	void shouldCompleteWorkerThreadsAfterTimeout() {
+		//given
+		RegexValidatorV8 regexValidator = new RegexValidatorV8();
+		Strategy strategy = givenStrategy(EntryOperation.EXIST, Collections.singletonList(EVIL_REGEX));
+		Entry entry = Entry.build(StrategyValidator.REGEX, EVIL_INPUT);
+
+		//test
+		boolean result = regexValidator.process(strategy, entry);
+		assertFalse(result);
+		assertWorkerNotExists();
+	}
+
 	private Strategy givenStrategy(EntryOperation operation, List<String> values) {
 		Strategy strategy = new Strategy();
 		strategy.setStrategy(StrategyValidator.REGEX.toString());
@@ -97,6 +110,11 @@ class RegexValidatorV8Test {
 		strategy.setValues(values.toArray(new String[0]));
 
 		return strategy;
+	}
+
+	private void assertWorkerNotExists() {
+		assertFalse(Thread.getAllStackTraces().keySet().stream()
+						.anyMatch(t -> t.getName().equals(RegexValidatorV8.THREAD_NAME)));
 	}
 
 }
