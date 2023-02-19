@@ -1,6 +1,7 @@
 package com.github.switcherapi.client.service.validators;
 
 import com.github.switcherapi.client.SwitcherContextBase;
+import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidOperationException;
 import com.github.switcherapi.client.exception.SwitcherValidatorException;
 import com.github.switcherapi.client.model.ContextKey;
@@ -15,6 +16,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Regex Validator for applications running using Java 1.8
@@ -30,7 +33,9 @@ public class RegexValidatorV8 extends Validator {
 
 	private static final Logger logger = LogManager.getLogger(RegexValidatorV8.class);
 
+	private static final String THREAD_NAME = "switcherapi-regex-validator";
 	private static final String DELIMITER_REGEX = "\\b%s\\b";
+
 	private final Set<Pair<String, String>> blackList;
 	private final TimedMatch timedMatch;
 
@@ -87,15 +92,21 @@ public class RegexValidatorV8 extends Validator {
 			throw new SwitcherValidatorException(input, regex);
 
 		timedMatch.init(input, regex);
-		final ExecutorService executor = Executors.newSingleThreadExecutor();
+		final ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
+			Thread thread = new Thread(r);
+			thread.setName(THREAD_NAME);
+			thread.setDaemon(true);
+			return thread;
+		});
+
 		final Future<Boolean> future = executor.submit(timedMatch);
 
 		try {
 			return future.get(Integer.parseInt(SwitcherContextBase.contextStr(ContextKey.REGEX_TIMEOUT)),
 					TimeUnit.MILLISECONDS);
 		} catch (TimeoutException e) {
-			addBlackList(input, regex);
 			future.cancel(true);
+			addBlackList(input, regex);
 			throw new TimeoutException();
 		} catch (Exception e) {
 			Thread.currentThread().interrupt();
@@ -125,7 +136,47 @@ public class RegexValidatorV8 extends Validator {
 
 		@Override
 		public Boolean call() {
-			return input.matches(regex);
+			final Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(new InterruptibleCharSequence(input));
+			return matcher.find();
+		}
+	}
+
+	/**
+	 * Credits to Lincoln
+	 * <a href="https://www.ocpsoft.org/regex/how-to-interrupt-a-long-running-infinite-java-regular-expression/"></a>
+	 */
+	static class InterruptibleCharSequence implements CharSequence {
+
+		private final CharSequence inner;
+
+		public InterruptibleCharSequence(CharSequence inner) {
+			super();
+			this.inner = inner;
+		}
+
+		@Override
+		public char charAt(int index) {
+			if (Thread.currentThread().isInterrupted()) {
+				throw new SwitcherException("A Switcher SDK thread has been interrupted", null);
+			}
+
+			return inner.charAt(index);
+		}
+
+		@Override
+		public int length() {
+			return inner.length();
+		}
+
+		@Override
+		public CharSequence subSequence(int start, int end) {
+			return new InterruptibleCharSequence(inner.subSequence(start, end));
+		}
+
+		@Override
+		public String toString() {
+			return inner.toString();
 		}
 	}
 
