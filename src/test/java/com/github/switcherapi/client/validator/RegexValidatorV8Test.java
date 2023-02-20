@@ -4,6 +4,7 @@ import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.EntryOperation;
 import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.criteria.Strategy;
+import com.github.switcherapi.client.service.WorkerName;
 import com.github.switcherapi.client.service.validators.RegexValidatorV8;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnJre;
@@ -114,7 +115,7 @@ class RegexValidatorV8Test {
 
 	private void assertWorkerNotExists() {
 		assertFalse(Thread.getAllStackTraces().keySet().stream()
-						.anyMatch(t -> t.getName().equals(RegexValidatorV8.THREAD_NAME)));
+						.anyMatch(t -> t.getName().equals(WorkerName.REGEX_VALIDATOR_WORKER.toString())));
 	}
 
 }

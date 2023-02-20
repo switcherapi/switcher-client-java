@@ -8,6 +8,7 @@ import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.criteria.Strategy;
+import com.github.switcherapi.client.service.WorkerName;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +40,6 @@ public class RegexValidatorV8 extends Validator {
 	 */
 	private boolean workerInterrupted;
 
-	public static final String THREAD_NAME = "switcherapi-regex-validator";
 	private static final String DELIMITER_REGEX = "\\b%s\\b";
 
 	private final Set<Pair<String, String>> blackList;
@@ -100,7 +100,7 @@ public class RegexValidatorV8 extends Validator {
 		timedMatch.init(input, regex);
 		final ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
 			Thread thread = new Thread(r);
-			thread.setName(THREAD_NAME);
+			thread.setName(WorkerName.REGEX_VALIDATOR_WORKER.toString());
 			thread.setDaemon(true);
 			return thread;
 		});

@@ -1,12 +1,13 @@
 package com.github.switcherapi.client.utils;
 
-import java.util.Date;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.github.switcherapi.client.SwitcherExecutor;
+import com.github.switcherapi.client.exception.SwitcherContextException;
+import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
+import com.github.switcherapi.client.model.ContextKey;
+import com.github.switcherapi.client.service.WorkerName;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -14,13 +15,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.internal.guava.Sets;
 
-import com.github.switcherapi.client.SwitcherExecutor;
-import com.github.switcherapi.client.exception.SwitcherContextException;
-import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
-import com.github.switcherapi.client.model.ContextKey;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import java.util.Date;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Roger Floriano (petruki)
@@ -50,6 +52,8 @@ public class SwitcherUtils {
 	private static final String PAYLOAD_PATTERN = "%s.%s";
 	
 	private static SnapshotWatcher watcher;
+
+	private static ExecutorService executorService;
 	
 	private SwitcherUtils() {}
 	
@@ -134,8 +138,9 @@ public class SwitcherUtils {
 	public static void watchSnapshot(final SwitcherExecutor executorInstance, SnapshotEventHandler handler) {
 		if (watcher == null)
 			watcher = new SnapshotWatcher(executorInstance, handler);
-		
-		new Thread(watcher, SnapshotWatcher.class.toString()).start();
+
+		initExecutorService();
+		executorService.submit(watcher);
 	}
 	
 	/**
@@ -143,6 +148,10 @@ public class SwitcherUtils {
 	 * and indicates to GC that the instance should be wiped from the memory.
 	 */
 	public static void stopWatchingSnapshot() {
+		if (executorService != null) {
+			executorService.shutdownNow();
+		}
+
 		if (watcher != null) {
 			watcher.terminate();
 			watcher = null;
@@ -153,7 +162,7 @@ public class SwitcherUtils {
 	 * Resolve properties from switcherapi.properties file.
 	 * It reads environment values when using the following notation: ${VALUE} or
 	 * ${VALUE:DEFAULT_VALUE} in case a default value is provided.
-	 * 
+	 * <p>
 	 * Two different RE were used here to mitigate catastrophic backtracking situations.
 	 * 
 	 * @param key reads values from {@link ContextKey#getParam()}
@@ -214,6 +223,18 @@ public class SwitcherUtils {
 		}
 		
 		return !StringUtils.isEmpty(sBuilder.toString());
+	}
+
+	/**
+	 * Configure Executor Service for Snapshot Watch Worker
+	 */
+	private static void initExecutorService() {
+		executorService = Executors.newSingleThreadExecutor(r -> {
+			Thread thread = new Thread(r);
+			thread.setName(WorkerName.SNAPSHOT_WATCH_WORKER.toString());
+			thread.setDaemon(true);
+			return thread;
+		});
 	}
 
 }

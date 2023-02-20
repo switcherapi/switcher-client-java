@@ -74,7 +74,8 @@ public class SnapshotWatcher implements Runnable {
 	
 	public void terminate() {
 		try {
-			watcher.close();
+			if (watcher != null)
+				watcher.close();
 		} catch (IOException e) {
 			logger.error(e);
 		}
