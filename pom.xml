@@ -8,7 +8,7 @@
 	<groupId>com.github.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.3.9</version>
+	<version>1.4.0-SNAPSHOT</version>
 
 	<name>Switcher Client</name>
 	<description>Switcher Client SDK for working with Switcher API</description>
@@ -23,12 +23,19 @@
 
 	<developers>
 		<developer>
-			<name>Roger Floriano</name>
+			<name>Roger Floriano (petruki)</name>
 			<email>switcher.project@gmail.com</email>
-			<organization>switcherapi</organization>
-			<organizationUrl>https://github.com/switcherapi</organizationUrl>
+			<roles>
+				<role>Founder</role>
+				<role>Developer</role>
+			</roles>
 		</developer>
 	</developers>
+
+	<organization>
+		<name>switcherapi</name>
+		<url>https://github.com/switcherapi</url>
+	</organization>
 
 	<scm>
 		<connection>scm:git:git://github.com:switcherapi/switcher-client.git</connection>
