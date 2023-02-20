@@ -73,8 +73,8 @@ switcher.snapshot.skipvalidation -> true/false Skip snapshotValidation() that ca
 switcher.silent -> true/false Contingency in case of some problem with connectivity with the API
 switcher.retry -> Time given to the module to re-establish connectivity with the API - e.g. 5s (s: seconds - m: minutes - h: hours)
 
-(For applications using Java 1.8 only)
-switcher.regextimeout -> Time in ms given to Timed Match used for offline Regex Operation (ReDoS safety mechanism) - 3000 default value
+(Java 8 applications only)
+switcher.regextimeout -> Time in ms given to Timed Match Worker used for offline Regex (ReDoS safety mechanism) - 3000 default value
 ```
 
 ## Client Context Properties - SwitcherContextBase
@@ -248,7 +248,3 @@ void testMyFeature() {
    assertTrue(instance.myFeature());
 }
 ```
-
-## Change Log
-
-List of published versions: [Change Log](https://github.com/switcherapi/switcher-client/blob/master/CHANGELOG.md)
