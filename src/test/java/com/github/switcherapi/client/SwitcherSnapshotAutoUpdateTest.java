@@ -32,6 +32,8 @@ class SwitcherSnapshotAutoUpdateTest {
 	@BeforeAll
 	static void setup() throws IOException {
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_2.json"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_3.json"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_4.json"));
 
         mockBackEnd = new MockWebServer();
         mockBackEnd.start();
@@ -46,6 +48,8 @@ class SwitcherSnapshotAutoUpdateTest {
 
         //clean generated outputs
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_2.json"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_3.json"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_4.json"));
 
 		//time to release resources
 		CountDownLatch waiter = new CountDownLatch(1);
@@ -54,17 +58,16 @@ class SwitcherSnapshotAutoUpdateTest {
 
 	@BeforeEach
 	void resetSwitcherContextState() {
-		generateFixture();
 		SwitcherContextBase.terminateSnapshotAutoUpdateWorker();
 	}
 
-	static void generateFixture() {
+	static void generateFixture(String environment) {
 		final Snapshot mockedSnapshot = new Snapshot();
 		final Criteria criteria = new Criteria();
 		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_auto_update.json"));
 		mockedSnapshot.setData(criteria);
 
-		SnapshotLoader.saveSnapshot(mockedSnapshot, SNAPSHOTS_LOCAL, "generated_mock_default_2");
+		SnapshotLoader.saveSnapshot(mockedSnapshot, SNAPSHOTS_LOCAL, environment);
 	}
 
 	/**
@@ -127,6 +130,7 @@ class SwitcherSnapshotAutoUpdateTest {
 	@Order(1)
 	void shouldUpdateSnapshot_offline() throws InterruptedException {
 		//given
+		generateFixture("generated_mock_default_2");
 		givenSnapshotUpdateResponse(false);
 
 		//that
@@ -151,13 +155,14 @@ class SwitcherSnapshotAutoUpdateTest {
 	@Order(2)
 	void shouldUpdateSnapshot_online() throws InterruptedException {
 		//given
+		generateFixture("generated_mock_default_3");
 		givenSnapshotUpdateResponse(false);
 
 		//that
 		Switchers.configure(ContextBuilder.builder()
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(SNAPSHOTS_LOCAL)
-				.environment("generated_mock_default_2")
+				.environment("generated_mock_default_3")
 				.offlineMode(false)
 				.snapshotAutoLoad(false)
 				.snapshotAutoUpdateInterval("2s"));
@@ -175,13 +180,14 @@ class SwitcherSnapshotAutoUpdateTest {
 	@Order(3)
 	void shouldNotUpdateSnapshot_whenNoUpdateAvailable() throws InterruptedException {
 		//given
+		generateFixture("generated_mock_default_4");
 		givenSnapshotUpdateResponse(true);
 
 		//that
 		Switchers.configure(ContextBuilder.builder()
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(SNAPSHOTS_LOCAL)
-				.environment("generated_mock_default_2")
+				.environment("generated_mock_default_4")
 				.offlineMode(true)
 				.snapshotAutoLoad(true)
 				.snapshotAutoUpdateInterval("2s"));
