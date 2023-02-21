@@ -1,17 +1,5 @@
 package com.github.switcherapi.client;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
@@ -22,6 +10,14 @@ import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import com.github.switcherapi.client.service.remote.SwitcherRemoteService;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SwitcherUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * <b>Switcher Context Base Toolkit</b>
@@ -66,6 +62,7 @@ public abstract class SwitcherContextBase {
 	protected static Set<String> switcherKeys;
 	protected static Map<String, Switcher> switchers;
 	protected static SwitcherExecutor instance;
+	private static Timer timer;
 	
 	protected SwitcherContextBase() {
 		throw new IllegalStateException("Context class cannot be instantiated");
@@ -76,7 +73,7 @@ public abstract class SwitcherContextBase {
 	}
 	
 	/**
-	 * Load properties from the resources folder, look up for a given context file name (without extension).<br>
+	 * Load properties from the resources' folder, look up for a given context file name (without extension).<br>
 	 * After loading the properties, it will validate the arguments and load the Switchers in memory.
 	 * <p>
 	 * Use this method optionally if you want to load the settings from a customized file name.
@@ -115,6 +112,7 @@ public abstract class SwitcherContextBase {
 		}
 		
 		loadSwitchers();
+		scheduleSnapshotAutoUpdate();
 		ContextBuilder.preConfigure(switcherProperties);
 	}
 	
@@ -158,6 +156,26 @@ public abstract class SwitcherContextBase {
 		switchers.clear();
 		for (String key : switcherKeys)
 			switchers.put(key, new Switcher(key, instance));
+	}
+
+	/**
+	 * Configure worker for Scheduled Snapshot Auto Update based on the interval provided at
+	 * the configuration "switcher.snapshot.updateinterval"
+	 */
+	private static void scheduleSnapshotAutoUpdate() {
+		if (StringUtils.isBlank(switcherProperties.getSnapshotAutoUpdateInterval()))
+			return;
+
+		final long interval = SwitcherUtils.getMillis(switcherProperties.getSnapshotAutoUpdateInterval());
+		final TimerTask timerTask = new TimerTask() {
+			@Override
+			public void run() {
+				validateSnapshot();
+			}
+		};
+
+		timer = new Timer();
+		timer.schedule(timerTask, interval, interval);
 	}
 	
 	/**
@@ -272,6 +290,15 @@ public abstract class SwitcherContextBase {
 	 */
 	public static void configure(ContextBuilder builder) {
 		switcherProperties = builder.build();
+	}
+
+	/**
+	 * Cancel existing scheduled task for updating local Snapshot
+	 */
+	public static void terminateSnapshotAutoUpdateTimer() {
+		if (timer != null) {
+			timer.cancel();
+		}
 	}
 	
 }

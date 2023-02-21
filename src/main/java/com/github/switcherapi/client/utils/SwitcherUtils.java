@@ -76,6 +76,20 @@ public class SwitcherUtils {
 		
 		throw new SwitcherInvalidDateTimeArgumentException(addValue);
 	}
+
+	public static long getMillis(final String time) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format(LOG_TME, time));
+		}
+
+		if (time.endsWith(DURATION[0])) {
+			return (long) (Double.parseDouble(time.replace(DURATION[0], StringUtils.EMPTY)) * 1000L);
+		} else if (time.endsWith(DURATION[1])) {
+			return (long) (Double.parseDouble(time.replace(DURATION[1], StringUtils.EMPTY)) * 60000L);
+		}
+
+		throw new SwitcherInvalidDateTimeArgumentException(time);
+	}
 	
 	public static String getFullDate(final String date) {
 		if (logger.isDebugEnabled()) {

@@ -78,7 +78,7 @@ public class ClientLocalService {
 	 * validating from the top of the node (Domain) ascending to the lower level
 	 * (Strategy)
 	 * 
-	 * @param switcher Configuration switcher to be validate
+	 * @param switcher Configuration switcher to be validated
 	 * @param domain   Top level of the configuration three
 	 * @return The criteria result
 	 * @throws SwitcherException If encountered either invalid input or misconfiguration
@@ -122,7 +122,7 @@ public class ClientLocalService {
 	}
 
 	/**
-	 * Process Strategy operations based on the each strategy settings
+	 * Process Strategy operations based on the strategy settings
 	 * 
 	 * @param configStrategies to be processed
 	 * @param input            sent by the client

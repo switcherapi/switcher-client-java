@@ -38,10 +38,10 @@ public class SnapshotLoader {
 	 * @throws SwitcherSnapshotLoadException when JSON file has errors or the file was not found
 	 */
 	public static Domain loadSnapshot(final String snapshotFile) throws SwitcherSnapshotLoadException {
-		try {
-			final Snapshot data = gson.fromJson(new FileReader(snapshotFile), Snapshot.class);
+		try (FileReader fileReader = new FileReader(snapshotFile)) {
+			final Snapshot data = gson.fromJson(fileReader, Snapshot.class);
 			return data.getDomain();
-		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+		} catch (JsonSyntaxException | JsonIOException | IOException e) {
 			logger.error(e);
 			throw new SwitcherSnapshotLoadException(snapshotFile, e);
 		}
@@ -54,16 +54,19 @@ public class SnapshotLoader {
 	 * @param environment name that is represented as [environment].json
 	 * @return Serialized Domain object
 	 * @throws SwitcherSnapshotLoadException when JSON file has errors
-	 * @throws FileNotFoundException when file not it can trigger the snapshot lookup
+	 * @throws IOException when failing to read JSON file
 	 */
-	public static Domain loadSnapshot(final String snapshotLocation, final String environment) 
-			throws SwitcherSnapshotLoadException, FileNotFoundException {
-		try {
-			final Snapshot data = gson.fromJson(new FileReader(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment)), Snapshot.class);
+	public static Domain loadSnapshot(final String snapshotLocation, final String environment)
+			throws SwitcherSnapshotLoadException, IOException {
+		try (FileReader fileReader = new FileReader(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment))) {
+			final Snapshot data = gson.fromJson(fileReader, Snapshot.class);
 			return data.getDomain();
 		} catch (JsonSyntaxException | JsonIOException e) {
 			logger.error(e);
 			throw new SwitcherSnapshotLoadException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
+		} catch (IOException e) {
+			logger.error(e);
+			throw e;
 		}
 	}
 	

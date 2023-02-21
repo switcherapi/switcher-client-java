@@ -37,6 +37,8 @@ class SwitcherProperties {
 
 	private String snapshotFile;
 
+	private String snapshotAutoUpdateInterval;
+
 	private String retryAfter;
 
 	private String regexTimeout;
@@ -65,6 +67,7 @@ class SwitcherProperties {
 		setSnapshotLocation(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_LOCATION.getParam(), prop));
 		setSnapshotSkipValidation(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_SKIP_VALIDATION.getParam(), prop)));
 		setSnapshotAutoLoad(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_LOAD.getParam(), prop)));
+		setSnapshotAutoUpdateInterval(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL.getParam(), prop));
 		setSilentMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SILENT_MODE.getParam(), prop)));
 		setOfflineMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.OFFLINE_MODE.getParam(), prop)));
 		setRetryAfter(SwitcherUtils.resolveProperties(ContextKey.RETRY_AFTER.getParam(), prop));
@@ -145,6 +148,14 @@ class SwitcherProperties {
 
 	public void setSnapshotFile(String snapshotFile) {
 		this.snapshotFile = snapshotFile;
+	}
+
+	public String getSnapshotAutoUpdateInterval() {
+		return snapshotAutoUpdateInterval;
+	}
+
+	public void setSnapshotAutoUpdateInterval(String snapshotAutoUpdateInterval) {
+		this.snapshotAutoUpdateInterval = snapshotAutoUpdateInterval;
 	}
 
 	public String getRetryAfter() {

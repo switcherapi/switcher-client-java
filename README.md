@@ -70,6 +70,7 @@ switcher.snapshot.file -> Snapshot file path
 switcher.snapshot.location -> Folder from where snapshots will be saved/read
 switcher.snapshot.auto -> true/false Automated lookup for snapshot when loading the application
 switcher.snapshot.skipvalidation -> true/false Skip snapshotValidation() that can be used for UT executions
+switcher.snapshot.updateinterval -> Enable the Snapshot Auto Update given an interval of time - e.g. 1s (s: seconds, m: minutes)
 switcher.silent -> true/false Contingency in case of some problem with connectivity with the API
 switcher.retry -> Time given to the module to re-establish connectivity with the API - e.g. 5s (s: seconds - m: minutes - h: hours)
 
@@ -207,6 +208,16 @@ MyAppFeatures.stopWatchingSnapshot();
 
 ```java
 MyAppFeatures.validateSnapshot();
+```
+
+3. Enable the Client SDK to execute Snapshot Auto Updates in the background using configuration. It basically encapsulates the validateSnapshot feature into a scheduled task managed by the SDK.
+It requires to set either snapshotFile or snapshotLocation. 
+
+```java
+// It will check and update the local/in-memory snapshot to the latest version
+MyAppFeatures.configure(ContextBuilder.builder()
+	.snapshotAutoUpdateInterval("1s")
+	.snapshotLocation("/src/resources"));
 ```
 
 ## Built-in mock feature

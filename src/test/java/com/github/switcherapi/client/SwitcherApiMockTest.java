@@ -61,7 +61,7 @@ class SwitcherApiMockTest {
 	
 	@BeforeAll
 	static void setup() throws IOException {
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/not_accessable"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/not_accessible"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/new_folder/generated_on_new_folder.json"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/new_folder"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default.json"));
@@ -83,7 +83,6 @@ class SwitcherApiMockTest {
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/new_folder/generated_on_new_folder.json"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/new_folder"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default.json"));
-		
     }
 	
 	@BeforeEach
@@ -93,9 +92,11 @@ class SwitcherApiMockTest {
 		Switchers.configure(ContextBuilder.builder()
 				.offlineMode(false)
 				.snapshotLocation(null)
+				.snapshotSkipValidation(false)
 				.environment("default")
 				.silentMode(false)
 				.snapshotAutoLoad(false)
+				.snapshotAutoUpdateInterval(null)
 				.retryAfter(null));
 		
 		Switchers.initializeClient();
@@ -159,7 +160,7 @@ class SwitcherApiMockTest {
 	/**
 	 * @see ClientWSImpl#resolveSnapshot(String)
 	 * 
-	 * @return Generated mock /graphql respose based on src/test/resources/default.json
+	 * @return Generated mock /graphql response based on src/test/resources/default.json
 	 */
 	private MockResponse generateSnapshotResponse() {
 		final Snapshot mockedSnapshot = new Snapshot();
@@ -271,7 +272,7 @@ class SwitcherApiMockTest {
 	}
 	
 	@Test
-	void shouldReturnError_componentNotregistered() {
+	void shouldReturnError_componentNotRegistered() {
 		//auth
 		mockBackEnd.enqueue(generateMockAuth(10));
 		
@@ -284,7 +285,7 @@ class SwitcherApiMockTest {
 	
 	
 	@Test
-	void shouldReturnError_unauthorizedAPIaccess() {
+	void shouldReturnError_unauthorizedAPIAccess() {
 		//auth
 		mockBackEnd.enqueue(generateStatusResponse("401"));
 		
@@ -379,12 +380,12 @@ class SwitcherApiMockTest {
 			assertTrue(Switchers.validateSnapshot());
 		});
 	}
-	
+
 	@Test
-	void shouldSkipValidatSnapshot() {
+	void shouldSkipValidateSnapshot() {
 		//given
 		Switchers.configure(ContextBuilder.builder().snapshotSkipValidation(true));
-		
+
 		//test
 		assertDoesNotThrow(() -> {
 			Switchers.initializeClient();
