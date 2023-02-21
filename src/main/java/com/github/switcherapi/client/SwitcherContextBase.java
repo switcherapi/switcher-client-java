@@ -18,6 +18,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <b>Switcher Context Base Toolkit</b>
@@ -62,7 +66,7 @@ public abstract class SwitcherContextBase {
 	protected static Set<String> switcherKeys;
 	protected static Map<String, Switcher> switchers;
 	protected static SwitcherExecutor instance;
-	private static Timer timer;
+	private static ScheduledExecutorService scheduledExecutorService;
 	
 	protected SwitcherContextBase() {
 		throw new IllegalStateException("Context class cannot be instantiated");
@@ -167,15 +171,10 @@ public abstract class SwitcherContextBase {
 			return;
 
 		final long interval = SwitcherUtils.getMillis(switcherProperties.getSnapshotAutoUpdateInterval());
-		final TimerTask timerTask = new TimerTask() {
-			@Override
-			public void run() {
-				validateSnapshot();
-			}
-		};
+		final Callable<Boolean> timerTask = SwitcherContextBase::validateSnapshot;
 
-		timer = new Timer();
-		timer.schedule(timerTask, interval, interval);
+		scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+		scheduledExecutorService.schedule(timerTask, interval, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -295,10 +294,9 @@ public abstract class SwitcherContextBase {
 	/**
 	 * Cancel existing scheduled task for updating local Snapshot
 	 */
-	public static void terminateSnapshotAutoUpdateTimer() {
-		if (timer != null) {
-			timer.cancel();
-		}
+	public static void terminateSnapshotAutoUpdateWorker() {
+		if (scheduledExecutorService != null)
+			scheduledExecutorService.shutdownNow();
 	}
 	
 }

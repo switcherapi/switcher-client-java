@@ -10,7 +10,10 @@ import com.google.gson.Gson;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SwitcherSnapshotAutoUpdateTest {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
@@ -40,21 +42,17 @@ class SwitcherSnapshotAutoUpdateTest {
     }
 
 	@AfterAll
-	static void tearDown() throws IOException, InterruptedException {
+	static void tearDown() throws IOException {
         mockBackEnd.shutdown();
 
         //clean generated outputs
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default.json"));
-
-		//wait - cleaning timer and background workers
-		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(5, TimeUnit.SECONDS);
     }
 
 	@BeforeEach
 	void resetSwitcherContextState() {
 		generateFixture();
-		SwitcherContextBase.terminateSnapshotAutoUpdateTimer();
+		SwitcherContextBase.terminateSnapshotAutoUpdateWorker();
 	}
 
 	static void generateFixture() {
@@ -123,8 +121,7 @@ class SwitcherSnapshotAutoUpdateTest {
 	}
 
 	@Test
-	@Order(1)
-	void shouldUpdateSnapshot() throws InterruptedException {
+	void shouldUpdateSnapshot_Offline() throws InterruptedException {
 		//given
 		givenSnapshotUpdateResponse(false);
 
@@ -140,14 +137,36 @@ class SwitcherSnapshotAutoUpdateTest {
 		assertDoesNotThrow(Switchers::initializeClient);
 		assertEquals(1, Switchers.getSnapshotVersion());
 
-		//test - still the same version
+		//test
 		CountDownLatch waiter = new CountDownLatch(1);
 		waiter.await(2, TimeUnit.SECONDS);
 		assertEquals(1588557288037L, Switchers.getSnapshotVersion());
 	}
 
 	@Test
-	@Order(2)
+	void shouldUpdateSnapshot_Online() throws InterruptedException {
+		//given
+		givenSnapshotUpdateResponse(false);
+
+		//that
+		Switchers.configure(ContextBuilder.builder()
+				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
+				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.environment("generated_mock_default")
+				.offlineMode(false)
+				.snapshotAutoLoad(false)
+				.snapshotAutoUpdateInterval("1s"));
+
+		assertDoesNotThrow(Switchers::initializeClient);
+		assertEquals(1, Switchers.getSnapshotVersion());
+
+		//test
+		CountDownLatch waiter = new CountDownLatch(1);
+		waiter.await(2, TimeUnit.SECONDS);
+		assertEquals(1588557288037L, Switchers.getSnapshotVersion());
+	}
+
+	@Test
 	void shouldNotUpdateSnapshot_whenNoUpdateAvailable() throws InterruptedException {
 		//given
 		givenSnapshotUpdateResponse(true);
