@@ -73,7 +73,7 @@ class SwitcherSnapshotAutoUpdateTest {
 	private MockResponse generateMockAuth() {
 		return new MockResponse()
 				.setBody(String.format("{ \"token\": \"%s\", \"exp\": \"%s\" }",
-						"mocked_token", SwitcherUtils.addTimeDuration(10 + "s", new Date()).getTime()/1000))
+						"mocked_token", SwitcherUtils.addTimeDuration(60 + "s", new Date()).getTime()/1000))
 				.addHeader("Content-Type", "application/json");
 	}
 
