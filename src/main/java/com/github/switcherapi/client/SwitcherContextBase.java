@@ -6,6 +6,7 @@ import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.service.WorkerName;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import com.github.switcherapi.client.service.remote.SwitcherRemoteService;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
@@ -172,8 +173,20 @@ public abstract class SwitcherContextBase {
 		final long interval = SwitcherUtils.getMillis(switcherProperties.getSnapshotAutoUpdateInterval());
 		final Runnable runnableSnapshotValidate = SwitcherContextBase::validateSnapshot;
 
-		scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+		initExecutorService();
 		scheduledExecutorService.scheduleAtFixedRate(runnableSnapshotValidate, 0, interval, TimeUnit.MILLISECONDS);
+	}
+
+	/**
+	 * Configure Executor Service for Snapshot Update Worker
+	 */
+	private static void initExecutorService() {
+		scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(r -> {
+			Thread thread = new Thread(r);
+			thread.setName(WorkerName.SNAPSHOT_UPDATE_WORKER.toString());
+			thread.setDaemon(true);
+			return thread;
+		});
 	}
 	
 	/**
@@ -216,11 +229,13 @@ public abstract class SwitcherContextBase {
 	 * @return true if validation was performed
 	 */
 	public static boolean validateSnapshot() {
-		if (switcherProperties.isSnapshotSkipValidation())
+		if (switcherProperties.isSnapshotSkipValidation()) {
 			return false;
+		}
 		
-		if (!instance.checkSnapshotVersion())
+		if (!instance.checkSnapshotVersion()) {
 			instance.updateSnapshot();
+		}
 		
 		return true;
 	}
