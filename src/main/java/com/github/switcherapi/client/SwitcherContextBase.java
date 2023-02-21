@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -171,10 +170,10 @@ public abstract class SwitcherContextBase {
 			return;
 
 		final long interval = SwitcherUtils.getMillis(switcherProperties.getSnapshotAutoUpdateInterval());
-		final Callable<Boolean> timerTask = SwitcherContextBase::validateSnapshot;
+		final Runnable runnableSnapshotValidate = SwitcherContextBase::validateSnapshot;
 
 		scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-		scheduledExecutorService.schedule(timerTask, interval, TimeUnit.MILLISECONDS);
+		scheduledExecutorService.scheduleAtFixedRate(runnableSnapshotValidate, interval, interval, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
