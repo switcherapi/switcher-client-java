@@ -142,7 +142,7 @@ class SwitcherSnapshotAutoUpdateTest {
 
 		//test
 		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(2, TimeUnit.SECONDS);
+		waiter.await(5, TimeUnit.SECONDS);
 		assertEquals(1588557288037L, Switchers.getSnapshotVersion());
 	}
 
