@@ -174,7 +174,7 @@ public abstract class SwitcherContextBase {
 		final Runnable runnableSnapshotValidate = SwitcherContextBase::validateSnapshot;
 
 		initExecutorService();
-		scheduledExecutorService.scheduleAtFixedRate(runnableSnapshotValidate, 0, interval, TimeUnit.MILLISECONDS);
+		scheduledExecutorService.schedule(runnableSnapshotValidate, 0, TimeUnit.MILLISECONDS);
 	}
 
 	/**
