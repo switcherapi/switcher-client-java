@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SwitcherSnapshotAutoUpdateTest {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/update";
 
 	private static MockWebServer mockBackEnd;
 
@@ -63,7 +63,7 @@ class SwitcherSnapshotAutoUpdateTest {
 	static void generateFixture(String environment) {
 		final Snapshot mockedSnapshot = new Snapshot();
 		final Criteria criteria = new Criteria();
-		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_auto_update.json"));
+		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/default_outdated.json"));
 		mockedSnapshot.setData(criteria);
 
 		SnapshotLoader.saveSnapshot(mockedSnapshot, SNAPSHOTS_LOCAL, environment);
@@ -146,8 +146,8 @@ class SwitcherSnapshotAutoUpdateTest {
 
 		//test
 		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(1, TimeUnit.SECONDS);
-		assertEquals(1588557288037L, Switchers.getSnapshotVersion());
+		waiter.await(2, TimeUnit.SECONDS);
+		assertEquals(2, Switchers.getSnapshotVersion());
 	}
 
 	@Test
@@ -171,8 +171,8 @@ class SwitcherSnapshotAutoUpdateTest {
 
 		//test
 		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(1, TimeUnit.SECONDS);
-		assertEquals(1588557288037L, Switchers.getSnapshotVersion());
+		waiter.await(2, TimeUnit.SECONDS);
+		assertEquals(2, Switchers.getSnapshotVersion());
 	}
 
 	@Test

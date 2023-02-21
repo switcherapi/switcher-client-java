@@ -2,20 +2,20 @@
   "data": {
     "domain": {
       "name": "switcher-domain",
-      "version": 1,
+      "version": 2,
       "description": "Snapshot Auto Update",
       "activated": true,
       "group": [
         {
           "name": "Group 1",
-          "description": "Simple test",
+          "description": "",
           "activated": true,
           "config": [
             {
               "key": "USECASE_AUTO",
-              "description": "Simple test",
+              "description": "",
               "activated": true,
-              "components": ["switcher-client"]
+              "components": []
             }
           ]
         }
