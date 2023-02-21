@@ -31,7 +31,7 @@ class SwitcherSnapshotAutoUpdateTest {
 
 	@BeforeAll
 	static void setup() throws IOException {
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default.json"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_2.json"));
 
         mockBackEnd = new MockWebServer();
         mockBackEnd.start();
@@ -44,11 +44,11 @@ class SwitcherSnapshotAutoUpdateTest {
         mockBackEnd.shutdown();
 
         //clean generated outputs
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default.json"));
+		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_2.json"));
 
 		//time to release resources
 		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(5, TimeUnit.SECONDS);
+		waiter.await(10, TimeUnit.SECONDS);
     }
 
 	@BeforeEach
@@ -63,7 +63,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_auto_update.json"));
 		mockedSnapshot.setData(criteria);
 
-		SnapshotLoader.saveSnapshot(mockedSnapshot, SNAPSHOTS_LOCAL, "generated_mock_default");
+		SnapshotLoader.saveSnapshot(mockedSnapshot, SNAPSHOTS_LOCAL, "generated_mock_default_2");
 	}
 
 	/**
@@ -132,7 +132,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		Switchers.configure(ContextBuilder.builder()
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(SNAPSHOTS_LOCAL)
-				.environment("generated_mock_default")
+				.environment("generated_mock_default_2")
 				.offlineMode(true)
 				.snapshotAutoLoad(false)
 				.snapshotAutoUpdateInterval("1s"));
@@ -142,7 +142,7 @@ class SwitcherSnapshotAutoUpdateTest {
 
 		//test
 		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(5, TimeUnit.SECONDS);
+		waiter.await(2, TimeUnit.SECONDS);
 		assertEquals(1588557288037L, Switchers.getSnapshotVersion());
 	}
 
@@ -156,7 +156,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		Switchers.configure(ContextBuilder.builder()
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(SNAPSHOTS_LOCAL)
-				.environment("generated_mock_default")
+				.environment("generated_mock_default_2")
 				.offlineMode(true)
 				.snapshotAutoLoad(true)
 				.snapshotAutoUpdateInterval("1s"));
