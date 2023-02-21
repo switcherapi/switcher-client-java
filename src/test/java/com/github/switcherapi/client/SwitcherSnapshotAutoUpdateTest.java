@@ -44,7 +44,6 @@ class SwitcherSnapshotAutoUpdateTest {
 	@AfterAll
 	static void tearDown() throws IOException, InterruptedException {
         mockBackEnd.shutdown();
-		mockBackEnd.close();
 
         //clean generated outputs
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_2.json"));
