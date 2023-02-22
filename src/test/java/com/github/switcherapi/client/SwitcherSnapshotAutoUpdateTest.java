@@ -2,6 +2,7 @@ package com.github.switcherapi.client;
 
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.model.criteria.Criteria;
+import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.utils.SnapshotLoader;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class SwitcherSnapshotAutoUpdateTest {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/update";
+	private static final Domain DOMAIN_OUTDATED = SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/default_outdated.json");
 
 	private static MockWebServer mockBackEnd;
 
@@ -35,6 +37,10 @@ class SwitcherSnapshotAutoUpdateTest {
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_2.json"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_3.json"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_4.json"));
+
+		generateFixture("generated_mock_default_2");
+		generateFixture("generated_mock_default_3");
+		generateFixture("generated_mock_default_4");
 
         mockBackEnd = new MockWebServer();
         mockBackEnd.start();
@@ -62,7 +68,7 @@ class SwitcherSnapshotAutoUpdateTest {
 	static void generateFixture(String environment) {
 		final Snapshot mockedSnapshot = new Snapshot();
 		final Criteria criteria = new Criteria();
-		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/default_outdated.json"));
+		criteria.setDomain(DOMAIN_OUTDATED);
 		mockedSnapshot.setData(criteria);
 
 		SnapshotLoader.saveSnapshot(mockedSnapshot, SNAPSHOTS_LOCAL, environment);
@@ -132,7 +138,6 @@ class SwitcherSnapshotAutoUpdateTest {
 	@Order(1)
 	void shouldUpdateSnapshot_offline() throws InterruptedException {
 		//given
-		generateFixture("generated_mock_default_2");
 		givenSnapshotUpdateResponse(false);
 
 		//that
@@ -149,7 +154,7 @@ class SwitcherSnapshotAutoUpdateTest {
 
 		//test
 		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(10, TimeUnit.SECONDS);
+		waiter.await(2, TimeUnit.SECONDS);
 		assertEquals(2, Switchers.getSnapshotVersion());
 	}
 
@@ -157,7 +162,6 @@ class SwitcherSnapshotAutoUpdateTest {
 	@Order(2)
 	void shouldUpdateSnapshot_online() throws InterruptedException {
 		//given
-		generateFixture("generated_mock_default_3");
 		givenSnapshotUpdateResponse(false);
 
 		//that
@@ -174,7 +178,7 @@ class SwitcherSnapshotAutoUpdateTest {
 
 		//test
 		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(10, TimeUnit.SECONDS);
+		waiter.await(2, TimeUnit.SECONDS);
 		assertEquals(2, Switchers.getSnapshotVersion());
 	}
 
@@ -182,7 +186,6 @@ class SwitcherSnapshotAutoUpdateTest {
 	@Order(3)
 	void shouldNotUpdateSnapshot_whenNoUpdateAvailable() throws InterruptedException {
 		//given
-		generateFixture("generated_mock_default_4");
 		givenSnapshotUpdateResponse(true);
 
 		//that
