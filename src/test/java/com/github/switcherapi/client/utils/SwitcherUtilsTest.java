@@ -140,6 +140,31 @@ class SwitcherUtilsTest {
 		String dateString = DateFormatUtils.format(date1, "yyyy-MM-dd HH:mm:ss");
 		assertEquals(expectedValue, dateString);
 	}
+
+	@Test
+	void shouldReturnInvalidMilliFormat() {
+		assertThrows(Exception.class, () -> SwitcherUtils.getMillis("1h"));
+	}
+
+	/**
+	 * 1. Time value
+	 * 2. expected return
+	 *
+	 * @return Stream of testable arguments
+	 */
+	static Stream<Arguments> milliArguments() {
+		return Stream.of(
+				Arguments.of(".5s", 500L),
+				Arguments.of("1s", 1000L),
+				Arguments.of("1m", 60000L)
+		);
+	}
+
+	@ParameterizedTest()
+	@MethodSource("milliArguments")
+	void shouldReturnMillis(String time, long expectedValue) {
+		assertEquals(expectedValue, SwitcherUtils.getMillis(time));
+	}
 	
 	/**
 	 * 1. property value or variable

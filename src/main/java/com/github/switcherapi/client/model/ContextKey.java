@@ -58,6 +58,11 @@ public enum ContextKey {
 	 * (boolean) When true it will skip validateSnapshot() (default is false)
 	 */
 	SNAPSHOT_SKIP_VALIDATION("switcher.snapshot.skipvalidation", "snapshotSkipValidation"),
+
+	/**
+	 * (String) Interval given to the library to update the snapshot
+	 */
+	SNAPSHOT_AUTO_UPDATE_INTERVAL("switcher.snapshot.updateinterval", "snapshotAutoUpdateInterval"),
 	
 	/**
 	 * (boolean) Activate silent mode when the Switcher API becomes offline.

@@ -62,7 +62,7 @@
 		<log4j.version>2.19.0</log4j.version>
 
 		<!-- test -->
-		<okhttp.version>4.10.0</okhttp.version>
+		<okhttp.version>5.0.0-alpha.11</okhttp.version>
 		<junit.version>5.9.2</junit.version>
 		<junit-pioneer.version>1.9.1</junit-pioneer.version>
 

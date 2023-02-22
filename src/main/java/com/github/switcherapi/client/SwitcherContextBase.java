@@ -1,27 +1,27 @@
 package com.github.switcherapi.client;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.service.WorkerName;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import com.github.switcherapi.client.service.remote.SwitcherRemoteService;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SwitcherUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <b>Switcher Context Base Toolkit</b>
@@ -66,6 +66,7 @@ public abstract class SwitcherContextBase {
 	protected static Set<String> switcherKeys;
 	protected static Map<String, Switcher> switchers;
 	protected static SwitcherExecutor instance;
+	private static ScheduledExecutorService scheduledExecutorService;
 	
 	protected SwitcherContextBase() {
 		throw new IllegalStateException("Context class cannot be instantiated");
@@ -76,7 +77,7 @@ public abstract class SwitcherContextBase {
 	}
 	
 	/**
-	 * Load properties from the resources folder, look up for a given context file name (without extension).<br>
+	 * Load properties from the resources' folder, look up for a given context file name (without extension).<br>
 	 * After loading the properties, it will validate the arguments and load the Switchers in memory.
 	 * <p>
 	 * Use this method optionally if you want to load the settings from a customized file name.
@@ -115,6 +116,7 @@ public abstract class SwitcherContextBase {
 		}
 		
 		loadSwitchers();
+		scheduleSnapshotAutoUpdate();
 		ContextBuilder.preConfigure(switcherProperties);
 	}
 	
@@ -159,6 +161,33 @@ public abstract class SwitcherContextBase {
 		for (String key : switcherKeys)
 			switchers.put(key, new Switcher(key, instance));
 	}
+
+	/**
+	 * Configure worker for Scheduled Snapshot Auto Update based on the interval provided at
+	 * the configuration "switcher.snapshot.updateinterval"
+	 */
+	private static void scheduleSnapshotAutoUpdate() {
+		if (StringUtils.isBlank(switcherProperties.getSnapshotAutoUpdateInterval()))
+			return;
+
+		final long interval = SwitcherUtils.getMillis(switcherProperties.getSnapshotAutoUpdateInterval());
+		final Runnable runnableSnapshotValidate = SwitcherContextBase::validateSnapshot;
+
+		initExecutorService();
+		scheduledExecutorService.scheduleAtFixedRate(runnableSnapshotValidate, 0, interval, TimeUnit.MILLISECONDS);
+	}
+
+	/**
+	 * Configure Executor Service for Snapshot Update Worker
+	 */
+	private static void initExecutorService() {
+		scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(r -> {
+			Thread thread = new Thread(r);
+			thread.setName(WorkerName.SNAPSHOT_UPDATE_WORKER.toString());
+			thread.setDaemon(true);
+			return thread;
+		});
+	}
 	
 	/**
 	 * Return a ready-to-use Switcher that will invoke the criteria configured into the Switcher API or Snapshot
@@ -200,11 +229,13 @@ public abstract class SwitcherContextBase {
 	 * @return true if validation was performed
 	 */
 	public static boolean validateSnapshot() {
-		if (switcherProperties.isSnapshotSkipValidation())
+		if (switcherProperties.isSnapshotSkipValidation()) {
 			return false;
+		}
 		
-		if (!instance.checkSnapshotVersion())
+		if (!instance.checkSnapshotVersion()) {
 			instance.updateSnapshot();
+		}
 		
 		return true;
 	}
@@ -272,6 +303,14 @@ public abstract class SwitcherContextBase {
 	 */
 	public static void configure(ContextBuilder builder) {
 		switcherProperties = builder.build();
+	}
+
+	/**
+	 * Cancel existing scheduled task for updating local Snapshot
+	 */
+	public static void terminateSnapshotAutoUpdateWorker() {
+		if (scheduledExecutorService != null)
+			scheduledExecutorService.shutdownNow();
 	}
 	
 }

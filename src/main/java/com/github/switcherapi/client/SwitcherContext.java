@@ -84,6 +84,15 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	public static void checkSwitchers() {
 		SwitcherContextBase.checkSwitchers();
 	}
+
+	/**
+	 * Retrieve local snapshot version
+	 *
+	 * @return snapshot version
+	 */
+	public static long getSnapshotVersion() {
+		return SwitcherContextBase.instance.getSnapshotVersion();
+	}
 	
 	/**
 	 * Retrieve string context parameter based on contextKey

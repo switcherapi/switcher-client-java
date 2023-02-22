@@ -79,7 +79,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 
 	@Override
 	public void updateSnapshot() {
-		super.initializeSnapshotFromAPI();
+		this.switcherOffline.setDomain(super.initializeSnapshotFromAPI());
 	}
 	
 	@Override
@@ -97,6 +97,11 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	@Override
 	public boolean notifyChange(String snapshotFile, SnapshotEventHandler handler) {
 		return this.switcherOffline.notifyChange(snapshotFile, handler);
+	}
+
+	@Override
+	public long getSnapshotVersion() {
+		return switcherOffline.getSnapshotVersion();
 	}
 
 }

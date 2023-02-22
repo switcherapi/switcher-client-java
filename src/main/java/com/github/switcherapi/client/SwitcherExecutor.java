@@ -67,6 +67,13 @@ public abstract class SwitcherExecutor {
 	 * @return true if valid change
 	 */
 	public abstract boolean notifyChange(final String snapshotFile, SnapshotEventHandler handler);
+
+	/**
+	 * Retrieve local snapshot version
+	 *
+	 * @return snapshot version
+	 */
+	public abstract long getSnapshotVersion();
 	
 	protected boolean checkSnapshotVersion(final Domain domain) {
 		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);

@@ -75,6 +75,11 @@ public class ContextBuilder {
 		return this;
 	}
 
+	public ContextBuilder snapshotAutoUpdateInterval(String snapshotAutoUpdateInterval) {
+		properties.setSnapshotAutoUpdateInterval(snapshotAutoUpdateInterval);
+		return this;
+	}
+
 	public ContextBuilder regexTimeout(String regexTimeout) {
 		properties.setRegexTimeout(regexTimeout);
 		return this;

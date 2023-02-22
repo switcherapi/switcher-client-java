@@ -1,13 +1,5 @@
 package com.github.switcherapi.client.service.local;
 
-import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherException;
@@ -19,6 +11,13 @@ import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Roger Floriano (petruki)
@@ -50,7 +49,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 		} else if (StringUtils.isNotBlank(snapshotLocation)) {
 			try {
 				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
-			} catch (FileNotFoundException e) {
+			} catch (IOException e) {
 				if (snapshotAutoload) {
 					this.domain = this.initializeSnapshotFromAPI();
 				}
@@ -107,7 +106,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
 				handler.onSuccess();
 			}
-		} catch (SwitcherSnapshotLoadException | FileNotFoundException e) {
+		} catch (SwitcherSnapshotLoadException | IOException e) {
 			handler.onError(new SwitcherException(e.getMessage(), e));
 			logger.error(e);
 			return false;
@@ -115,9 +114,17 @@ public class SwitcherLocalService extends SwitcherExecutor {
 		
 		return true;
 	}
-	
+
+	@Override
+	public long getSnapshotVersion() {
+		return domain.getVersion();
+	}
+
 	public Domain getDomain() {
 		return domain;
 	}
 
+	public void setDomain(Domain domain) {
+		this.domain = domain;
+	}
 }
