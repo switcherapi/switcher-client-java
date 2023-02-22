@@ -139,7 +139,7 @@ class SwitcherSnapshotAutoUpdateTest {
 				.environment("generated_mock_default_2")
 				.offlineMode(true)
 				.snapshotAutoLoad(false)
-				.snapshotAutoUpdateInterval("2s"));
+				.snapshotAutoUpdateInterval("10s"));
 
 		assertDoesNotThrow(Switchers::initializeClient);
 		assertEquals(1, Switchers.getSnapshotVersion());
@@ -164,7 +164,7 @@ class SwitcherSnapshotAutoUpdateTest {
 				.environment("generated_mock_default_3")
 				.offlineMode(false)
 				.snapshotAutoLoad(false)
-				.snapshotAutoUpdateInterval("2s"));
+				.snapshotAutoUpdateInterval("10s"));
 
 		assertDoesNotThrow(Switchers::initializeClient);
 		assertEquals(1, Switchers.getSnapshotVersion());

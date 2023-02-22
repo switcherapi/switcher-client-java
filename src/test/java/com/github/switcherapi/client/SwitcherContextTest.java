@@ -28,7 +28,7 @@ class SwitcherContextTest {
 		Exception ex = assertThrows(SwitcherContextException.class, Switchers::initializeClient);
 
 		assertEquals(String.format(
-				CONTEXT_ERROR, "URL not defined [add: switcher.url]"), ex.getMessage());
+				CONTEXT_ERROR, SwitcherContextValidator.ERR_URL), ex.getMessage());
 	}
 	
 	@Test
@@ -38,7 +38,7 @@ class SwitcherContextTest {
 		Exception ex = assertThrows(SwitcherContextException.class, Switchers::initializeClient);
 		
 		assertEquals(String.format(
-				CONTEXT_ERROR, "API Key not defined [add: switcher.apikey]"), ex.getMessage());
+				CONTEXT_ERROR, SwitcherContextValidator.ERR_API), ex.getMessage());
 	}
 	
 	@Test
@@ -49,7 +49,7 @@ class SwitcherContextTest {
 				Switchers::initializeClient);
 		
 		assertEquals(String.format(
-				CONTEXT_ERROR, "Context class location not defined [add: switcher.context]"), ex.getMessage());
+				CONTEXT_ERROR, SwitcherContextValidator.ERR_CONTEXT), ex.getMessage());
 	}
 	
 	@Test
@@ -60,7 +60,7 @@ class SwitcherContextTest {
 				Switchers::initializeClient);
 		
 		assertEquals(String.format(
-				CONTEXT_ERROR, "Domain not defined [add: switcher.domain]"), ex.getMessage());
+				CONTEXT_ERROR, SwitcherContextValidator.ERR_DOMAIN), ex.getMessage());
 	}
 	
 	@Test
@@ -71,7 +71,7 @@ class SwitcherContextTest {
 				Switchers::initializeClient);
 		
 		assertEquals(String.format(
-				CONTEXT_ERROR, "Component not defined [add: switcher.component]"), ex.getMessage());
+				CONTEXT_ERROR, SwitcherContextValidator.ERR_COMPONENT), ex.getMessage());
 	}
 	
 	@Test
@@ -85,7 +85,7 @@ class SwitcherContextTest {
 				Switchers::initializeClient);
 		
 		assertEquals(String.format(
-				CONTEXT_ERROR, "Snapshot location not defined [add: switcher.snapshot.location]"), ex.getMessage());
+				CONTEXT_ERROR, SwitcherContextValidator.ERR_SNAPSHOT_LOCATION), ex.getMessage());
 	}
 	
 	@Test
@@ -98,7 +98,7 @@ class SwitcherContextTest {
 				Switchers::initializeClient);
 		
 		assertEquals(String.format(
-				CONTEXT_ERROR, "Snapshot location not defined [add: switcher.snapshot.location]"), ex.getMessage());
+				CONTEXT_ERROR, SwitcherContextValidator.ERR_SNAPSHOT_LOCATION), ex.getMessage());
 	}
 	
 	@Test
@@ -111,7 +111,7 @@ class SwitcherContextTest {
 				Switchers::initializeClient);
 		
 		assertEquals(String.format(
-				CONTEXT_ERROR, "Retry not defined [add: switcher.retry]"), ex.getMessage());
+				CONTEXT_ERROR, SwitcherContextValidator.ERR_RETRY), ex.getMessage());
 	}
 	
 	@Test
@@ -139,7 +139,23 @@ class SwitcherContextTest {
 				Switchers::initializeClient);
 
 		assertEquals(String.format(
-				CONTEXT_ERROR, "Invalid parameter format for [switcher.regextimeout]. Expected class java.lang.Integer."),
+				CONTEXT_ERROR, String.format(SwitcherContextValidator.ERR_FORMAT, "switcher.regextimeout", "class java.lang.Integer")),
+				ex.getMessage());
+	}
+
+	@Test
+	void shouldThrowError_invalidSnapshotUpdateInterval() {
+		Switchers.configure(ContextBuilder.builder()
+				.snapshotAutoUpdateInterval("2s")
+				.url("http://localhost")
+				.snapshotLocation(null)
+				.snapshotFile(null));
+
+		Exception ex = assertThrows(SwitcherContextException.class,
+				Switchers::initializeClient);
+
+		assertEquals(String.format(
+						CONTEXT_ERROR, SwitcherContextValidator.ERR_SNAPSHOT_AUTO_UPDATE),
 				ex.getMessage());
 	}
 
