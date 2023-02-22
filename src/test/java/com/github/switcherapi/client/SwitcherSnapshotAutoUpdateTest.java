@@ -51,13 +51,16 @@ class SwitcherSnapshotAutoUpdateTest {
     }
 
 	@AfterAll
-	static void tearDown() throws IOException {
+	static void tearDown() throws IOException, InterruptedException {
         mockBackEnd.shutdown();
 
         //clean generated outputs
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_2.json"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_3.json"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_4.json"));
+
+		CountDownLatch waiter = new CountDownLatch(1);
+		waiter.await(5, TimeUnit.SECONDS);
     }
 
 	@BeforeEach
