@@ -5,6 +5,7 @@ import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.remote.ClientWSImpl;
+import com.github.switcherapi.client.service.remote.ClientRemoteService;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.google.gson.Gson;
@@ -62,6 +63,7 @@ class SwitcherSnapshotAutoUpdateTest {
 	@BeforeEach
 	void resetSwitcherContextState() {
 		((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
+		ClientRemoteService.getInstance().clearAuthResponse();
 		SwitcherContextBase.terminateSnapshotAutoUpdateWorker();
 	}
 
