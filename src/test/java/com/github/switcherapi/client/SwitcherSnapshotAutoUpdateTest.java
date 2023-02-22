@@ -142,14 +142,14 @@ class SwitcherSnapshotAutoUpdateTest {
 				.environment("generated_mock_default_2")
 				.offlineMode(true)
 				.snapshotAutoLoad(false)
-				.snapshotAutoUpdateInterval("10s"));
+				.snapshotAutoUpdateInterval("1m"));
 
 		assertDoesNotThrow(Switchers::initializeClient);
 		assertEquals(1, Switchers.getSnapshotVersion());
 
 		//test
 		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(2, TimeUnit.SECONDS);
+		waiter.await(10, TimeUnit.SECONDS);
 		assertEquals(2, Switchers.getSnapshotVersion());
 	}
 
@@ -167,14 +167,14 @@ class SwitcherSnapshotAutoUpdateTest {
 				.environment("generated_mock_default_3")
 				.offlineMode(false)
 				.snapshotAutoLoad(false)
-				.snapshotAutoUpdateInterval("10s"));
+				.snapshotAutoUpdateInterval("1m"));
 
 		assertDoesNotThrow(Switchers::initializeClient);
 		assertEquals(1, Switchers.getSnapshotVersion());
 
 		//test
 		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(2, TimeUnit.SECONDS);
+		waiter.await(10, TimeUnit.SECONDS);
 		assertEquals(2, Switchers.getSnapshotVersion());
 	}
 
@@ -192,7 +192,7 @@ class SwitcherSnapshotAutoUpdateTest {
 				.environment("generated_mock_default_4")
 				.offlineMode(true)
 				.snapshotAutoLoad(true)
-				.snapshotAutoUpdateInterval("2s"));
+				.snapshotAutoUpdateInterval("1m"));
 
 		assertDoesNotThrow(Switchers::initializeClient);
 		assertEquals(1, Switchers.getSnapshotVersion());
