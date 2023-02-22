@@ -141,6 +141,11 @@ class SwitcherUtilsTest {
 		assertEquals(expectedValue, dateString);
 	}
 
+	@Test
+	void shouldReturnInvalidMilliFormat() {
+		assertThrows(Exception.class, () -> SwitcherUtils.getMillis("1h"));
+	}
+
 	/**
 	 * 1. Time value
 	 * 2. expected return

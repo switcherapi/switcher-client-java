@@ -60,7 +60,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_4.json"));
 
 		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(5, TimeUnit.SECONDS);
+		waiter.await(10, TimeUnit.SECONDS);
     }
 
 	@BeforeEach

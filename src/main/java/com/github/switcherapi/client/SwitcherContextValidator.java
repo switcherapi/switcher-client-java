@@ -106,9 +106,9 @@ class SwitcherContextValidator {
 			throw new SwitcherContextException(ERR_RETRY);
 		}
 
-		if (!StringUtils.isBlank(prop.getSnapshotAutoUpdateInterval()) && (StringUtils.isBlank(prop.getUrl()) ||
-			StringUtils.isBlank(StringUtils.defaultIfEmpty(prop.getSnapshotLocation(), StringUtils.EMPTY) +
-					StringUtils.defaultIfEmpty(prop.getSnapshotFile(), StringUtils.EMPTY)))) {
+		if (!StringUtils.isBlank(prop.getSnapshotAutoUpdateInterval()) &&
+			(StringUtils.isBlank(StringUtils.defaultIfEmpty(prop.getSnapshotLocation(), StringUtils.EMPTY) +
+				StringUtils.defaultIfEmpty(prop.getSnapshotFile(), StringUtils.EMPTY)))) {
 			throw new SwitcherContextException(ERR_SNAPSHOT_AUTO_UPDATE);
 		}
 
