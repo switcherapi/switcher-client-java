@@ -19,6 +19,9 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import mockwebserver3.MockResponse;
+import mockwebserver3.MockWebServer;
+import mockwebserver3.QueueDispatcher;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.internal.guava.Sets;
 import org.junit.jupiter.api.AfterAll;
@@ -49,9 +52,6 @@ import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.google.gson.Gson;
 
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SwitcherApiMockTest {
 	
@@ -68,6 +68,7 @@ class SwitcherApiMockTest {
 		
         mockBackEnd = new MockWebServer();
         mockBackEnd.start();
+		((QueueDispatcher) mockBackEnd.getDispatcher()).setFailFast(true);
         
         Switchers.loadProperties();
         Switchers.configure(ContextBuilder.builder().url(String.format("http://localhost:%s", mockBackEnd.getPort())));
@@ -87,6 +88,7 @@ class SwitcherApiMockTest {
 	
 	@BeforeEach
 	void resetSwitcherContextState() {
+		((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 		ClientRemoteService.getInstance().clearAuthResponse();
 		
 		Switchers.configure(ContextBuilder.builder()
@@ -190,14 +192,18 @@ class SwitcherApiMockTest {
 				.setBody(gson.toJson(switchersCheckNotFound))
 				.addHeader("Content-Type", "application/json");
 	}
+
+	private void givenResponse(MockResponse response) {
+		((QueueDispatcher) mockBackEnd.getDispatcher()).enqueueResponse(response);
+	}
 	
 	@Test
 	void shouldReturnTrue() {
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria
-		mockBackEnd.enqueue(generateCriteriaResponse("true", false));
+		givenResponse(generateCriteriaResponse("true", false));
 		
 		//test
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
@@ -207,10 +213,10 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldReturnFalse() {
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria
-		mockBackEnd.enqueue(generateCriteriaResponse("false", false));
+		givenResponse(generateCriteriaResponse("false", false));
 		
 		//test
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
@@ -220,10 +226,10 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldHideExecutionReason() {
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria
-		mockBackEnd.enqueue(generateCriteriaResponse("true", false));
+		givenResponse(generateCriteriaResponse("true", false));
 		
 		//given
 		List<Entry> entries = new ArrayList<>();
@@ -240,10 +246,10 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldShowExecutionReason() {
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria
-		mockBackEnd.enqueue(generateCriteriaResponse("true", true));
+		givenResponse(generateCriteriaResponse("true", true));
 				
 		//given
 		List<Entry> entries = new ArrayList<>();
@@ -262,10 +268,10 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldReturnError_keyNotFound() {
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria
-		mockBackEnd.enqueue(generateStatusResponse("404"));
+		givenResponse(generateStatusResponse("404"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
 		assertThrows(SwitcherKeyNotFoundException.class, switcher::isItOn);
@@ -274,10 +280,10 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldReturnError_componentNotRegistered() {
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria
-		mockBackEnd.enqueue(generateStatusResponse("401"));
+		givenResponse(generateStatusResponse("401"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
 		assertThrows(SwitcherKeyNotAvailableForComponentException.class, switcher::isItOn);
@@ -287,7 +293,7 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldReturnError_unauthorizedAPIAccess() {
 		//auth
-		mockBackEnd.enqueue(generateStatusResponse("401"));
+		givenResponse(generateStatusResponse("401"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
 		Exception ex = assertThrows(SwitcherException.class, switcher::isItOn);
@@ -307,10 +313,10 @@ class SwitcherApiMockTest {
 		Switchers.initializeClient();
 		
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria
-		mockBackEnd.enqueue(generateCriteriaResponse("true", false));		
+		givenResponse(generateCriteriaResponse("true", false));
 		
 		//test
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
@@ -320,7 +326,7 @@ class SwitcherApiMockTest {
 		waiter.await(2, TimeUnit.SECONDS);
 		
 		//isAlive - service unavailable
-		mockBackEnd.enqueue(generateStatusResponse("503"));
+		givenResponse(generateStatusResponse("503"));
 		
 		//test will trigger silent
 		assertTrue(switcher.isItOn());
@@ -332,10 +338,10 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldReturnTrue_tokenExpired() throws InterruptedException {
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(2));
+		givenResponse(generateMockAuth(2));
 		
 		//criteria
-		mockBackEnd.enqueue(generateCriteriaResponse("true", false));	
+		givenResponse(generateCriteriaResponse("true", false));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
 		
@@ -346,13 +352,13 @@ class SwitcherApiMockTest {
 		waiter.await(2, TimeUnit.SECONDS);
 		
 		//isAlive
-		mockBackEnd.enqueue(generateStatusResponse("200"));
+		givenResponse(generateStatusResponse("200"));
 		
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(2));
+		givenResponse(generateMockAuth(2));
 		
 		//criteria
-		mockBackEnd.enqueue(generateCriteriaResponse("true", false));	
+		givenResponse(generateCriteriaResponse("true", false));
 				
 		//test
 		assertTrue(switcher.isItOn());
@@ -361,16 +367,16 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldValidateAndUpdateSnapshot() {
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria/snapshot_check
-		mockBackEnd.enqueue(generateCheckSnapshotVersionResponse("false"));
+		givenResponse(generateCheckSnapshotVersionResponse("false"));
 		
 		//auth isAlive
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//graphql
-		mockBackEnd.enqueue(generateSnapshotResponse());
+		givenResponse(generateSnapshotResponse());
 		
 		//test
 		Switchers.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL));
@@ -402,10 +408,10 @@ class SwitcherApiMockTest {
 				.environment("generated_on_new_folder"));
 		
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//graphql
-		mockBackEnd.enqueue(generateSnapshotResponse());
+		givenResponse(generateSnapshotResponse());
 		
 		//test
 		assertDoesNotThrow(Switchers::initializeClient);
@@ -420,10 +426,10 @@ class SwitcherApiMockTest {
 				.environment("generated_on_new_folder"));
 		
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//graphql
-		mockBackEnd.enqueue(generateStatusResponse("503"));
+		givenResponse(generateStatusResponse("503"));
 		
 		//test
 		Exception ex = assertThrows(SwitcherSnapshoException.class,
@@ -444,10 +450,10 @@ class SwitcherApiMockTest {
 		Switchers.initializeClient();
 		
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//graphql
-		mockBackEnd.enqueue(generateSnapshotResponse());
+		givenResponse(generateSnapshotResponse());
 		
 		//test
 		assertDoesNotThrow(Switchers::validateSnapshot);
@@ -465,16 +471,16 @@ class SwitcherApiMockTest {
 		Switchers.initializeClient();
 		
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria/snapshot_check
-		mockBackEnd.enqueue(generateCheckSnapshotVersionResponse("false"));
+		givenResponse(generateCheckSnapshotVersionResponse("false"));
 		
 		//auth isAlive
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//graphql
-		mockBackEnd.enqueue(generateSnapshotResponse());
+		givenResponse(generateSnapshotResponse());
 		
 		//test
 		assertDoesNotThrow(Switchers::validateSnapshot);
@@ -492,10 +498,10 @@ class SwitcherApiMockTest {
 		Switchers.initializeClient();
 		
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria/snapshot_check
-		mockBackEnd.enqueue(generateStatusResponse("503"));
+		givenResponse(generateStatusResponse("503"));
 		
 		//test
 		assertThrows(SwitcherSnapshoException.class, Switchers::validateSnapshot);
@@ -518,10 +524,10 @@ class SwitcherApiMockTest {
 				raFile.getChannel().lock();
 				
 				//auth
-				mockBackEnd.enqueue(generateMockAuth(10));
+				givenResponse(generateMockAuth(10));
 				
 				//graphql
-				mockBackEnd.enqueue(generateSnapshotResponse());
+				givenResponse(generateSnapshotResponse());
 				
 				//test
 				assertThrows(SwitcherSnapshotWriteException.class, Switchers::initializeClient);
@@ -546,10 +552,10 @@ class SwitcherApiMockTest {
 				raFile.getChannel().lock();
 				
 				//auth
-				mockBackEnd.enqueue(generateMockAuth(10));
+				givenResponse(generateMockAuth(10));
 				
 				//graphql
-				mockBackEnd.enqueue(generateSnapshotResponse());
+				givenResponse(generateSnapshotResponse());
 				
 				//test
 				assertThrows(SwitcherSnapshotWriteException.class, Switchers::initializeClient);
@@ -563,10 +569,10 @@ class SwitcherApiMockTest {
 		final Set<String> notFound = Sets.newHashSet();
 		
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria/check_switchers
-		mockBackEnd.enqueue(generateCheckSwitchersResponse(notFound));
+		givenResponse(generateCheckSwitchersResponse(notFound));
 		
 		//test
 		assertDoesNotThrow(Switchers::checkSwitchers);
@@ -579,10 +585,10 @@ class SwitcherApiMockTest {
 		notFound.add("NOT_FOUND_1");
 		
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria/check_switchers
-		mockBackEnd.enqueue(generateCheckSwitchersResponse(notFound));
+		givenResponse(generateCheckSwitchersResponse(notFound));
 		
 		//test
 		Exception ex = assertThrows(SwitchersValidationException.class,
@@ -596,10 +602,10 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldNotValidateSwitchers_serviceUnavailable() {
 		//auth
-		mockBackEnd.enqueue(generateMockAuth(10));
+		givenResponse(generateMockAuth(10));
 		
 		//criteria/check_switchers
-		mockBackEnd.enqueue(generateStatusResponse("503"));
+		givenResponse(generateStatusResponse("503"));
 		
 		//test
 		assertThrows(SwitcherAPIConnectionException.class, Switchers::checkSwitchers);
@@ -608,12 +614,12 @@ class SwitcherApiMockTest {
 	@Test
 	void shouldReturnTrue_withThrottle() throws InterruptedException {
 		// First call
-		mockBackEnd.enqueue(generateMockAuth(10)); //auth
-		mockBackEnd.enqueue(generateCriteriaResponse("true", false)); //criteria
+		givenResponse(generateMockAuth(10)); //auth
+		givenResponse(generateCriteriaResponse("true", false)); //criteria
 		
 		// Async call
-		mockBackEnd.enqueue(generateMockAuth(10)); //auth
-		mockBackEnd.enqueue(generateCriteriaResponse("true", false)); //criteria
+		givenResponse(generateMockAuth(10)); //auth
+		givenResponse(generateCriteriaResponse("true", false)); //criteria
 		
 		
 		//test
@@ -625,8 +631,8 @@ class SwitcherApiMockTest {
 		}
 		
 		// Async call
-		mockBackEnd.enqueue(generateMockAuth(10)); //auth
-		mockBackEnd.enqueue(generateCriteriaResponse("true", false)); //criteria
+		givenResponse(generateMockAuth(10)); //auth
+		givenResponse(generateCriteriaResponse("true", false)); //criteria
 		
 		CountDownLatch waiter = new CountDownLatch(1);
 		waiter.await(1, TimeUnit.SECONDS);

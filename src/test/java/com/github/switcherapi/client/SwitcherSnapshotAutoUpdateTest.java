@@ -7,8 +7,9 @@ import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.google.gson.Gson;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
+import mockwebserver3.MockResponse;
+import mockwebserver3.MockWebServer;
+import mockwebserver3.QueueDispatcher;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 
@@ -37,26 +38,24 @@ class SwitcherSnapshotAutoUpdateTest {
 
         mockBackEnd = new MockWebServer();
         mockBackEnd.start();
+		((QueueDispatcher) mockBackEnd.getDispatcher()).setFailFast(true);
 
         Switchers.loadProperties();
     }
 
 	@AfterAll
-	static void tearDown() throws IOException, InterruptedException {
+	static void tearDown() throws IOException {
         mockBackEnd.shutdown();
 
         //clean generated outputs
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_2.json"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_3.json"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_4.json"));
-
-		//time to release resources
-		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(5, TimeUnit.SECONDS);
     }
 
 	@BeforeEach
 	void resetSwitcherContextState() {
+		((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 		SwitcherContextBase.terminateSnapshotAutoUpdateWorker();
 	}
 
@@ -111,18 +110,22 @@ class SwitcherSnapshotAutoUpdateTest {
 
 	private void givenSnapshotUpdateResponse(boolean isUpdated) {
 		//auth
-		mockBackEnd.enqueue(generateMockAuth());
+		givenResponse(generateMockAuth());
 
 		//criteria/snapshot_check
-		mockBackEnd.enqueue(generateCheckSnapshotVersionResponse(Boolean.toString(isUpdated)));
+		givenResponse(generateCheckSnapshotVersionResponse(Boolean.toString(isUpdated)));
 
 		if (!isUpdated) {
 			//auth isAlive
-			mockBackEnd.enqueue(generateMockAuth());
+			givenResponse(generateMockAuth());
 
 			//graphql
-			mockBackEnd.enqueue(generateSnapshotResponse());
+			givenResponse(generateSnapshotResponse());
 		}
+	}
+
+	private void givenResponse(MockResponse response) {
+		((QueueDispatcher) mockBackEnd.getDispatcher()).enqueueResponse(response);
 	}
 
 	@Test
