@@ -149,7 +149,7 @@ class SwitcherSnapshotAutoUpdateTest {
 				.snapshotAutoLoad(false)
 				.snapshotAutoUpdateInterval("1m"));
 
-		assertDoesNotThrow(Switchers::initializeClient);
+		Switchers.initializeClient();
 		assertEquals(1, Switchers.getSnapshotVersion());
 
 		//test
@@ -173,7 +173,7 @@ class SwitcherSnapshotAutoUpdateTest {
 				.snapshotAutoLoad(false)
 				.snapshotAutoUpdateInterval("1m"));
 
-		assertDoesNotThrow(Switchers::initializeClient);
+		Switchers.initializeClient();
 		assertEquals(1, Switchers.getSnapshotVersion());
 
 		//test
