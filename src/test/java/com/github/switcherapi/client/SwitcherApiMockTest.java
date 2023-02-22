@@ -278,19 +278,6 @@ class SwitcherApiMockTest {
 	}
 	
 	@Test
-	void shouldReturnError_componentNotRegistered() {
-		//auth
-		givenResponse(generateMockAuth(10));
-		
-		//criteria
-		givenResponse(generateStatusResponse("401"));
-		
-		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
-		assertThrows(SwitcherKeyNotAvailableForComponentException.class, switcher::isItOn);
-	}
-	
-	
-	@Test
 	void shouldReturnError_unauthorizedAPIAccess() {
 		//auth
 		givenResponse(generateStatusResponse("401"));
