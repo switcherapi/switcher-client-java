@@ -60,9 +60,7 @@ public class Entry {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof Entry) {
-			final Entry entry = (Entry) obj;
-			
+		if (obj instanceof Entry entry) {
 			if (!this.strategy.equals(entry.getStrategy())) {
 				return false;
 			}
