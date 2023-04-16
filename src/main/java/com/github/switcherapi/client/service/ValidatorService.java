@@ -26,7 +26,7 @@ public class ValidatorService {
 		registerValidator(PayloadValidator.class);
 		registerValidator(TimeValidator.class);
 		registerValidator(ValueValidator.class);
-		registerValidator(RegexValidatorV8.getPlatformValidator());
+		registerValidator(RegexValidator.class);
 	}
 
 	private StrategyValidator getStrategyValidator(Class<? extends Validator> validatorClass) {
