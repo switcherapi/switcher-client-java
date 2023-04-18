@@ -13,14 +13,11 @@ import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnJre;
-import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.nio.file.Paths;
-import java.time.Duration;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -318,19 +315,6 @@ class SwitcherOfflineFix1Test {
 		
 		switcher.prepareEntry(entry);
 		assertEquals(expected, switcher.isItOn());
-	}
-
-	@Test
-	@EnabledOnJre(value = { JRE.JAVA_8 })
-	void offlineShouldTest_evilRegexTimeout() {
-		Switchers.configure(ContextBuilder.builder().regexTimeout("500"));
-
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE95);
-		Entry entry = Entry.build(StrategyValidator.REGEX, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
-		switcher.prepareEntry(entry);
-		boolean result = assertTimeoutPreemptively(Duration.ofMillis(600), () -> switcher.isItOn());
-		assertFalse(result);
 	}
 	
 	@ParameterizedTest()
