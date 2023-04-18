@@ -12,7 +12,7 @@ A Java SDK for Switcher API
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=switcherapi_switcher-client&metric=alert_status)](https://sonarcloud.io/dashboard?id=switcherapi_switcher-client)
 [![Known Vulnerabilities](https://snyk.io/test/github/switcherapi/switcher-client/badge.svg?targetFile=pom.xml)](https://snyk.io/test/github/switcherapi/switcher-client?targetFile=pom.xml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.switcherapi/switcher-client.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.switcherapi%22%20AND%20a:%22switcher-client%22)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.switcherapi/switcher-client.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.github.switcherapi/switcher-client)
 [![Slack: Switcher-HQ](https://img.shields.io/badge/slack-@switcher/hq-blue.svg?logo=slack)](https://switcher-hq.slack.com/)
 
 </div>
@@ -33,7 +33,7 @@ https://github.com/switcherapi/switcher-api
 
 # Usage
 
-## Install  
+## Install
 - Using the source code `mvn clean install`
 - Adding as a dependency - Maven
 ```xml
@@ -42,7 +42,11 @@ https://github.com/switcherapi/switcher-api
   <artifactId>switcher-client</artifactId>
   <version>${switcher-client.version}</version>
 </dependency>
-```	
+```
+
+### Compatibility with Jakarta EE 9
+Use SDK v1.x for applications not using Jakarta EE 9.<br>
+Use SDK v2.x for Jakarta EE 9 based applications.
 
 ## Client Context Properties - SwitcherContext
 
