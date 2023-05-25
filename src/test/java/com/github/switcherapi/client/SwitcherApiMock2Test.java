@@ -1,7 +1,7 @@
 package com.github.switcherapi.client;
 
 import com.github.switcherapi.Switchers;
-import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForComponentException;
+import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.service.remote.ClientRemoteService;
@@ -94,7 +94,7 @@ class SwitcherApiMock2Test {
 		givenResponse(generateStatusResponse("401"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
-		assertThrows(SwitcherKeyNotAvailableForComponentException.class, switcher::isItOn);
+		assertThrows(SwitcherRemoteException.class, switcher::isItOn);
 	}
 
 }
