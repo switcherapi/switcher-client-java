@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.github.switcherapi.client.SwitcherContextBase;
-import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
+import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.switcherapi.client.model.ContextKey;
@@ -80,7 +80,7 @@ public class ClientRemoteService {
 			return this.clientWs.checkSwitchers(switchers, 
 					this.authResponse.orElseGet(AuthResponse::new).getToken());
 		} catch (final Exception e) {
-			throw new SwitcherAPIConnectionException(SwitcherContextBase.contextStr(ContextKey.URL), e);
+			throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL), e);
 		}
 	}
 	
@@ -91,21 +91,21 @@ public class ClientRemoteService {
 			throw e;
 		} catch (final Exception e) {
 			this.setSilentModeExpiration();
-			throw new SwitcherAPIConnectionException(SwitcherContextBase.contextStr(ContextKey.URL), e);
+			throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL), e);
 		}
 	}
 	
-	private boolean isTokenValid() throws SwitcherAPIConnectionException, 
+	private boolean isTokenValid() throws SwitcherRemoteException,
 		SwitcherInvalidDateTimeArgumentException {
 		
 		if (this.authResponse.isPresent()) {
 			if (this.authResponse.get().getToken().equals(ContextKey.SILENT_MODE.getParam()) 
 					&& !this.authResponse.get().isExpired()) {
-				throw new SwitcherAPIConnectionException(SwitcherContextBase.contextStr(ContextKey.URL));
+				throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL));
 			} else {
 				if (!this.clientWs.isAlive()) {
 					this.setSilentModeExpiration();
-					throw new SwitcherAPIConnectionException(SwitcherContextBase.contextStr(ContextKey.URL));
+					throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL));
 				}
 				
 				return !this.authResponse.orElseGet(AuthResponse::new).isExpired();

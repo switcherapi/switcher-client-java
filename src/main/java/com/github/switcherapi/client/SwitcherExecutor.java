@@ -7,7 +7,7 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
+import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
@@ -99,7 +99,7 @@ public abstract class SwitcherExecutor {
 					environment);
 			
 			return snapshot.getDomain();
-		} catch (SwitcherAPIConnectionException | SwitcherSnapshotWriteException e) {
+		} catch (SwitcherRemoteException | SwitcherSnapshotWriteException e) {
 			logger.error(e);
 			throw e;
 		}
