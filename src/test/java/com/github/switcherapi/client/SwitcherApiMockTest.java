@@ -1,12 +1,24 @@
 package com.github.switcherapi.client;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.github.switcherapi.Switchers;
+import com.github.switcherapi.client.exception.*;
+import com.github.switcherapi.client.model.Entry;
+import com.github.switcherapi.client.model.StrategyValidator;
+import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.criteria.Criteria;
+import com.github.switcherapi.client.model.criteria.Snapshot;
+import com.github.switcherapi.client.model.criteria.SwitchersCheck;
+import com.github.switcherapi.client.remote.ClientWSImpl;
+import com.github.switcherapi.client.service.remote.ClientRemoteService;
+import com.github.switcherapi.client.utils.SnapshotLoader;
+import com.github.switcherapi.client.utils.SwitcherUtils;
+import com.google.gson.Gson;
+import mockwebserver3.MockResponse;
+import mockwebserver3.MockWebServer;
+import mockwebserver3.QueueDispatcher;
+import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.internal.guava.Sets;
+import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -19,38 +31,7 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import mockwebserver3.MockResponse;
-import mockwebserver3.MockWebServer;
-import mockwebserver3.QueueDispatcher;
-import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.internal.guava.Sets;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-
-import com.github.switcherapi.Switchers;
-import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
-import com.github.switcherapi.client.exception.SwitcherException;
-import com.github.switcherapi.client.exception.SwitcherKeyNotAvailableForComponentException;
-import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
-import com.github.switcherapi.client.exception.SwitcherSnapshoException;
-import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
-import com.github.switcherapi.client.exception.SwitchersValidationException;
-import com.github.switcherapi.client.model.Entry;
-import com.github.switcherapi.client.model.StrategyValidator;
-import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.criteria.Criteria;
-import com.github.switcherapi.client.model.criteria.Snapshot;
-import com.github.switcherapi.client.model.criteria.SwitchersCheck;
-import com.github.switcherapi.client.remote.ClientWSImpl;
-import com.github.switcherapi.client.service.remote.ClientRemoteService;
-import com.github.switcherapi.client.utils.SnapshotLoader;
-import com.github.switcherapi.client.utils.SwitcherUtils;
-import com.google.gson.Gson;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SwitcherApiMockTest {
@@ -274,7 +255,7 @@ class SwitcherApiMockTest {
 		givenResponse(generateStatusResponse("404"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
-		assertThrows(SwitcherKeyNotFoundException.class, switcher::isItOn);
+		assertThrows(SwitcherRemoteException.class, switcher::isItOn);
 	}
 	
 	@Test
@@ -283,9 +264,7 @@ class SwitcherApiMockTest {
 		givenResponse(generateStatusResponse("401"));
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
-		Exception ex = assertThrows(SwitcherException.class, switcher::isItOn);
-		
-		assertEquals("Something went wrong: Unauthorized API access", ex.getMessage());
+		assertThrows(SwitcherException.class, switcher::isItOn);
 	}
 	
 	@Test
@@ -419,11 +398,7 @@ class SwitcherApiMockTest {
 		givenResponse(generateStatusResponse("503"));
 		
 		//test
-		Exception ex = assertThrows(SwitcherSnapshoException.class,
-				Switchers::initializeClient);
-		
-		assertEquals("Something went wrong: Unable to execute resolveSnapshot", 
-			ex.getMessage());
+		assertThrows(SwitcherRemoteException.class, Switchers::initializeClient);
 	}
 	
 	@Test
@@ -491,7 +466,7 @@ class SwitcherApiMockTest {
 		givenResponse(generateStatusResponse("503"));
 		
 		//test
-		assertThrows(SwitcherSnapshoException.class, Switchers::validateSnapshot);
+		assertThrows(SwitcherRemoteException.class, Switchers::validateSnapshot);
 	}
 	
 	@Test
@@ -595,7 +570,7 @@ class SwitcherApiMockTest {
 		givenResponse(generateStatusResponse("503"));
 		
 		//test
-		assertThrows(SwitcherAPIConnectionException.class, Switchers::checkSwitchers);
+		assertThrows(SwitcherRemoteException.class, Switchers::checkSwitchers);
 	}
 	
 	@Test

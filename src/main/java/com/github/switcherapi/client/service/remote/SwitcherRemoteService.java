@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.SwitcherExecutor;
-import com.github.switcherapi.client.exception.SwitcherAPIConnectionException;
+import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
@@ -46,14 +46,14 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 			}
 			
 			return response;
-		} catch (final SwitcherAPIConnectionException e) {
+		} catch (final SwitcherRemoteException e) {
 			logger.error("Failed to execute criteria - {}", e.getMessage());
 			return executeSilentCriteria(switcher, e);
 		}
 	}
 	
 	private CriteriaResponse executeSilentCriteria(final Switcher switcher, 
-			final SwitcherAPIConnectionException e) {
+			final SwitcherRemoteException e) {
 		if (SwitcherContextBase.contextBol(ContextKey.SILENT_MODE)) {
 			CriteriaResponse response = this.switcherOffline.executeCriteria(switcher);
 			if (logger.isDebugEnabled()) {
