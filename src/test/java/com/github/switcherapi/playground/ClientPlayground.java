@@ -8,9 +8,15 @@ import org.apache.logging.log4j.Logger;
 import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.model.Switcher;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class ClientPlayground {
 	
 	final static Logger logger = LogManager.getLogger(ClientPlayground.class);
+
+	private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	
 	public static void test() {
 		configure(ContextBuilder.builder()
@@ -21,10 +27,11 @@ public class ClientPlayground {
 				.component("switcher-playground"));
 		
 		initializeClient();
-		
 		Switcher switcher = getSwitcher(MY_SWITCHER);
 		switcher.setShowReason(true);
-		logger.info(switcher.isItOn());
+
+		scheduler.scheduleAtFixedRate(() ->
+				logger.info(switcher.isItOn()), 0, 10, TimeUnit.SECONDS);
 	}
 	
 	public static void main(String[] args) {
