@@ -22,6 +22,7 @@ class SnapshotWatcherWorkerTest {
 		SwitchersBase.configure(ContextBuilder.builder()
 			.contextLocation(SwitchersBase.class.getCanonicalName())
 			.snapshotLocation(SNAPSHOTS_LOCAL)
+			.environment("default")
 			.silentMode(false)
 			.offlineMode(true));
 
