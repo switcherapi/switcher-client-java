@@ -1,7 +1,7 @@
 package com.github.switcherapi.client.remote;
 
 import com.github.switcherapi.client.SwitcherContextBase;
-import com.github.switcherapi.client.exception.SwitcherRemoteException;
+import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.ContextKey;
 import jakarta.ws.rs.client.ClientBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +43,7 @@ public class ClientWSBuilder {
 
             return ClientBuilder.newBuilder().sslContext(sslContext);
         } catch (Exception e) {
-            throw new SwitcherRemoteException("Error while building SSL context", e);
+            throw new SwitcherException("Error while building SSL context", e);
         }
     }
 
