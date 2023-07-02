@@ -14,7 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -41,7 +40,7 @@ public class ClientWSImpl implements ClientWS {
 	private final Client client;
 
 	public ClientWSImpl() {
-		this.client = ClientBuilder.newClient();
+		this.client = ClientWSBuilder.builder().build();
 	}
 
 	@Override
