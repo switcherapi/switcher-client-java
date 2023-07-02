@@ -77,6 +77,8 @@ switcher.snapshot.skipvalidation -> true/false Skip snapshotValidation() that ca
 switcher.snapshot.updateinterval -> Enable the Snapshot Auto Update given an interval of time - e.g. 1s (s: seconds, m: minutes)
 switcher.silent -> true/false Contingency in case of some problem with connectivity with the API
 switcher.retry -> Time given to the module to re-establish connectivity with the API - e.g. 5s (s: seconds - m: minutes - h: hours)
+switcher.truststore.path -> Path to the truststore file
+switcher.truststore.password -> Truststore password
 
 (Java 8 applications only)
 switcher.regextimeout -> Time in ms given to Timed Match Worker used for offline Regex (ReDoS safety mechanism) - 3000 default value
