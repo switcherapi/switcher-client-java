@@ -51,6 +51,10 @@ class SwitcherProperties {
 
 	private boolean offlineMode;
 
+	private String truststorePath;
+
+	private String truststorePassword;
+
 	public SwitcherProperties() {
 		this.environment = DEFAULT_ENV;
 		this.regexTimeout = DEFAULT_REGEX_TIMEOUT;
@@ -72,6 +76,8 @@ class SwitcherProperties {
 		setOfflineMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.OFFLINE_MODE.getParam(), prop)));
 		setRetryAfter(SwitcherUtils.resolveProperties(ContextKey.RETRY_AFTER.getParam(), prop));
 		setRegexTimeout(SwitcherUtils.resolveProperties(ContextKey.REGEX_TIMEOUT.getParam(), prop));
+		setTruststorePath(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PATH.getParam(), prop));
+		setTruststorePassword(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));
 	}
 	
 	public <T> T getValue(ContextKey contextKey, Class<T> type) {
@@ -207,6 +213,22 @@ class SwitcherProperties {
 
 	public void setOfflineMode(boolean offlineMode) {
 		this.offlineMode = offlineMode;
+	}
+
+	public String getTruststorePath() {
+		return truststorePath;
+	}
+
+	public void setTruststorePath(String truststorePath) {
+		this.truststorePath = truststorePath;
+	}
+
+	public String getTruststorePassword() {
+		return truststorePassword;
+	}
+
+	public void setTruststorePassword(String truststorePassword) {
+		this.truststorePassword = truststorePassword;
 	}
 
 }

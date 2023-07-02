@@ -110,4 +110,14 @@ public class ContextBuilder {
 		return this;
 	}
 
+	public ContextBuilder truststorePath(String truststorePath) {
+		properties.setTruststorePath(truststorePath);
+		return this;
+	}
+
+	public ContextBuilder truststorePassword(String truststorePassword) {
+		properties.setTruststorePassword(truststorePassword);
+		return this;
+	}
+
 }

@@ -82,7 +82,17 @@ public enum ContextKey {
 	/**
 	 * (Number) Defines the Timed Match regex time out.
 	 */
-	REGEX_TIMEOUT("switcher.regextimeout", "regexTimeout");
+	REGEX_TIMEOUT("switcher.regextimeout", "regexTimeout"),
+
+	/**
+	 * (Path) Defines the path for the trustsore file.
+	 */
+	TRUSTSTORE_PATH("switcher.truststore.path", "truststorePath"),
+
+	/**
+	 * (String) Defines the password for the truststore file.
+	 */
+	TRUSTSTORE_PASSWORD("switcher.truststore.password", "truststorePassword");
 	
 	private final String param;
 	private final String propField;
