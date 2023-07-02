@@ -1,19 +1,7 @@
 package com.github.switcherapi.client.remote;
 
-import java.util.Optional;
-import java.util.Set;
-
-import com.github.switcherapi.client.exception.*;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.github.switcherapi.client.SwitcherContextBase;
+import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Snapshot;
@@ -22,6 +10,16 @@ import com.github.switcherapi.client.model.response.AuthRequest;
 import com.github.switcherapi.client.model.response.AuthResponse;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Roger Floriano (petruki)
@@ -42,7 +40,7 @@ public class ClientWSImpl implements ClientWS {
 	private final Client client;
 	
 	public ClientWSImpl() {
-		this.client = ClientBuilder.newClient();
+		this.client = ClientWSBuilder.builder().build();
 	}
 	
 	@Override

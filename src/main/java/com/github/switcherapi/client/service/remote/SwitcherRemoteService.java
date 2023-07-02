@@ -47,7 +47,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 			
 			return response;
 		} catch (final SwitcherRemoteException e) {
-			logger.error("Failed to execute criteria - {}", e.getMessage());
+			logger.error("Failed to execute criteria - {}\nCause: {}", e.getMessage(), e.getCause());
 			return executeSilentCriteria(switcher, e);
 		}
 	}
