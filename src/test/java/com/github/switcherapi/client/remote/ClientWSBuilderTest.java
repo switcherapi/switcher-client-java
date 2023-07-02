@@ -2,7 +2,7 @@ package com.github.switcherapi.client.remote;
 
 import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.SwitcherContextBase;
-import com.github.switcherapi.client.exception.SwitcherRemoteException;
+import com.github.switcherapi.client.exception.SwitcherException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
@@ -57,7 +57,7 @@ class ClientWSBuilderTest {
                 .truststorePassword("INVALID"));
 
         // test
-        assertThrows(SwitcherRemoteException.class, ClientWSBuilder::builder);
+        assertThrows(SwitcherException.class, ClientWSBuilder::builder);
     }
 
     @Test
@@ -68,6 +68,6 @@ class ClientWSBuilderTest {
                 .truststorePassword("changeit"));
 
         // test
-        assertThrows(SwitcherRemoteException.class, ClientWSBuilder::builder);
+        assertThrows(SwitcherException.class, ClientWSBuilder::builder);
     }
 }
