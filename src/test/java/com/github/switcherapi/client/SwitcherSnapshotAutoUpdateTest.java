@@ -107,10 +107,10 @@ class SwitcherSnapshotAutoUpdateTest {
 	 *
 	 * @return Generated mock /graphql response based on src/test/resources/default.json
 	 */
-	private MockResponse generateSnapshotResponse() {
+	private MockResponse generateSnapshotResponse(String fromFile) {
 		final Snapshot mockedSnapshot = new Snapshot();
 		final Criteria criteria = new Criteria();
-		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/default.json"));
+		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/" + fromFile));
 		mockedSnapshot.setData(criteria);
 
 		Gson gson = new Gson();
@@ -131,7 +131,7 @@ class SwitcherSnapshotAutoUpdateTest {
 			givenResponse(generateMockAuth());
 
 			//graphql
-			givenResponse(generateSnapshotResponse());
+			givenResponse(generateSnapshotResponse("default.json"));
 		}
 	}
 
@@ -209,6 +209,35 @@ class SwitcherSnapshotAutoUpdateTest {
 		CountDownLatch waiter = new CountDownLatch(1);
 		waiter.await(1, TimeUnit.SECONDS);
 		assertEquals(1, Switchers.getSnapshotVersion());
+	}
+
+	@Test
+	@Order(4)
+	void shouldUpdateSnapshot_online_inMemory() throws InterruptedException {
+		//given
+		//load snapshot in-memory
+		givenResponse(generateMockAuth()); //auth
+		givenResponse(generateSnapshotResponse("default_outdated.json")); //graphql
+
+		//update snapshot
+		givenSnapshotUpdateResponse(false);
+
+		//that
+		Switchers.configure(ContextBuilder.builder()
+				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
+				.snapshotLocation(null)
+				.environment("generated_mock_default_5")
+				.offlineMode(true)
+				.snapshotAutoLoad(true)
+				.snapshotAutoUpdateInterval("1m"));
+
+		Switchers.initializeClient();
+		assertEquals(1, Switchers.getSnapshotVersion());
+
+		//test
+		CountDownLatch waiter = new CountDownLatch(1);
+		waiter.await(2, TimeUnit.SECONDS);
+		assertEquals(2, Switchers.getSnapshotVersion());
 	}
 
 }

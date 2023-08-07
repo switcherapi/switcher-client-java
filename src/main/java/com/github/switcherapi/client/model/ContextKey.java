@@ -34,11 +34,6 @@ public enum ContextKey {
 	ENVIRONMENT("switcher.environment", "environment"),
 	
 	/**
-	 * (String) The absolute path of the snapshot file, including the file's name.
-	 */
-	SNAPSHOT_FILE("switcher.snapshot.file", "snapshotFile"),
-	
-	/**
 	 * (String) Folder path where all snapshot files are located.
 	 */
 	SNAPSHOT_LOCATION("switcher.snapshot.location", "snapshotLocation"),

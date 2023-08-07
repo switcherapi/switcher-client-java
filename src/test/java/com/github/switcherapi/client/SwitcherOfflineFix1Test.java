@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherOfflineFix1Test {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 	
 	private final static String PAYLOAD_FIXTURE = new Gson().toJson(Product.getFixture());
 	
@@ -33,7 +33,7 @@ class SwitcherOfflineFix1Test {
 		SwitcherContext.loadProperties();
 		SwitcherContext.configure(ContextBuilder.builder()
 				.snapshotLocation(SNAPSHOTS_LOCAL)
-				.environment("snapshot_fixture1")
+				.environment("fixture1")
 				.offlineMode(true));
 		
 		SwitcherContext.initializeClient();
@@ -42,7 +42,7 @@ class SwitcherOfflineFix1Test {
 	@Test
 	void offlineShouldValidateContext() {
 		assertEquals(SNAPSHOTS_LOCAL, SwitcherContext.contextStr(ContextKey.SNAPSHOT_LOCATION));
-		assertEquals("snapshot_fixture1", SwitcherContext.contextStr(ContextKey.ENVIRONMENT));
+		assertEquals("fixture1", SwitcherContext.contextStr(ContextKey.ENVIRONMENT));
 		assertTrue(SwitcherContext.contextBol(ContextKey.OFFLINE_MODE));
 	}
 	

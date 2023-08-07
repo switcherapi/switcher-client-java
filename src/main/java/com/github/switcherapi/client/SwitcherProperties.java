@@ -35,8 +35,6 @@ class SwitcherProperties {
 
 	private String snapshotLocation;
 
-	private String snapshotFile;
-
 	private String snapshotAutoUpdateInterval;
 
 	private String retryAfter;
@@ -67,7 +65,6 @@ class SwitcherProperties {
 		setDomain(SwitcherUtils.resolveProperties(ContextKey.DOMAIN.getParam(), prop));
 		setComponent(SwitcherUtils.resolveProperties(ContextKey.COMPONENT.getParam(), prop));
 		setEnvironment(SwitcherUtils.resolveProperties(ContextKey.ENVIRONMENT.getParam(), prop));
-		setSnapshotFile(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_FILE.getParam(), prop));
 		setSnapshotLocation(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_LOCATION.getParam(), prop));
 		setSnapshotSkipValidation(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_SKIP_VALIDATION.getParam(), prop)));
 		setSnapshotAutoLoad(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_LOAD.getParam(), prop)));
@@ -146,14 +143,6 @@ class SwitcherProperties {
 
 	public void setSnapshotLocation(String snapshotLocation) {
 		this.snapshotLocation = snapshotLocation;
-	}
-
-	public String getSnapshotFile() {
-		return snapshotFile;
-	}
-
-	public void setSnapshotFile(String snapshotFile) {
-		this.snapshotFile = snapshotFile;
 	}
 
 	public String getSnapshotAutoUpdateInterval() {
