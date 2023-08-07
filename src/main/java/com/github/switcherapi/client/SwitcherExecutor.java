@@ -94,9 +94,11 @@ public abstract class SwitcherExecutor {
 		
 		try {
 			final Snapshot snapshot = ClientRemoteService.getInstance().resolveSnapshot();
-			SnapshotLoader.saveSnapshot(snapshot, 
-					SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION), 
-					environment);
+			final String snapshotLocation = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION);
+
+			if (snapshotLocation != null) {
+				SnapshotLoader.saveSnapshot(snapshot, snapshotLocation, environment);
+			}
 			
 			return snapshot.getDomain();
 		} catch (SwitcherRemoteException | SwitcherSnapshotWriteException e) {

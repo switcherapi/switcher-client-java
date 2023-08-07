@@ -13,14 +13,14 @@ import com.github.switcherapi.client.model.Switcher;
 
 class SwitcherOfflineFix2Test {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 	
 	@BeforeAll
 	static void setupContext() {
 		SwitcherContext.loadProperties();
 		SwitcherContext.configure(ContextBuilder.builder()
 				.snapshotLocation(SNAPSHOTS_LOCAL)
-				.environment("snapshot_fixture2")
+				.environment("fixture2")
 				.offlineMode(true));
 		
 		SwitcherContext.initializeClient();

@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Roger Floriano (petruki)
@@ -40,7 +41,9 @@ public class ClientWSImpl implements ClientWS {
 	private final Client client;
 	
 	public ClientWSImpl() {
-		this.client = ClientWSBuilder.builder().build();
+		this.client = ClientWSBuilder.builder()
+				.connectTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+				.build();
 	}
 	
 	@Override

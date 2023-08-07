@@ -18,9 +18,9 @@ import com.github.switcherapi.client.model.Switcher;
 
 class SwitcherBypassTest {
 	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
-	private static final String FIXTURE1 = "/snapshot_fixture1.json";
-	private static final String FIXTURE2 = "/snapshot_fixture2.json";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
+	private static final String FIXTURE1 = "fixture1";
+	private static final String FIXTURE2 = "fixture2";
 	
 	@BeforeAll
 	static void setupContext() {
@@ -36,7 +36,7 @@ class SwitcherBypassTest {
 	@Test
 	void shouldReturnFalse_afterAssumingItsFalse() {
 		//given
-		SwitcherContext.configure(ContextBuilder.builder().snapshotFile(SNAPSHOTS_LOCAL + FIXTURE1));
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE1));
 		SwitcherContext.initializeClient();
 		
 		//test
@@ -50,7 +50,7 @@ class SwitcherBypassTest {
 	@Test
 	void shouldReturnTrue_afterAssumingItsTrue() {
 		//given
-		SwitcherContext.configure(ContextBuilder.builder().snapshotFile(SNAPSHOTS_LOCAL + FIXTURE2));
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
 		SwitcherContext.initializeClient();
 		
 		Switcher switcher = getSwitcher(USECASE111);
@@ -63,7 +63,7 @@ class SwitcherBypassTest {
 	@Test
 	void shouldReturnTrue_afterForgettingItWasFalse() {
 		//given
-		SwitcherContext.configure(ContextBuilder.builder().snapshotFile(SNAPSHOTS_LOCAL + FIXTURE1));
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE1));
 		SwitcherContext.initializeClient();
 		
 		//test
@@ -80,7 +80,7 @@ class SwitcherBypassTest {
 	@Test
 	void shouldReturnFalse_afterAssumingItsTrue() {
 		//given
-		SwitcherContext.configure(ContextBuilder.builder().snapshotFile(SNAPSHOTS_LOCAL + FIXTURE2));
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
 		SwitcherContext.initializeClient();
 		
 		//test
@@ -98,7 +98,7 @@ class SwitcherBypassTest {
 	@SwitcherMock(key = USECASE111, result = false)
 	void shouldReturnFalse_usingParametrizedTest() {
 		//given
-		SwitcherContext.configure(ContextBuilder.builder().snapshotFile(SNAPSHOTS_LOCAL + FIXTURE2));
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
 		SwitcherContext.initializeClient();
 		
 		//test
@@ -110,7 +110,7 @@ class SwitcherBypassTest {
 	@SwitcherMock(key = USECASE111, result = true)
 	void shouldReturnTrue_usingParametrizedTest() {
 		//given
-		SwitcherContext.configure(ContextBuilder.builder().snapshotFile(SNAPSHOTS_LOCAL + FIXTURE2));
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
 		SwitcherContext.initializeClient();
 		
 		//test

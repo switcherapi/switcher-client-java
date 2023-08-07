@@ -70,13 +70,12 @@ public class ContextBuilder {
 		return this;
 	}
 
-	public ContextBuilder snapshotFile(String snapshotFile) {
-		properties.setSnapshotFile(snapshotFile);
-		return this;
-	}
-
 	public ContextBuilder snapshotAutoUpdateInterval(String snapshotAutoUpdateInterval) {
 		properties.setSnapshotAutoUpdateInterval(snapshotAutoUpdateInterval);
+
+		if (snapshotAutoUpdateInterval != null)
+			properties.setSnapshotAutoLoad(true);
+
 		return this;
 	}
 
@@ -102,6 +101,10 @@ public class ContextBuilder {
 
 	public ContextBuilder silentMode(boolean silentMode) {
 		properties.setSilentMode(silentMode);
+
+		if (silentMode)
+			properties.setSnapshotAutoLoad(true);
+
 		return this;
 	}
 
