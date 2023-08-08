@@ -3,11 +3,8 @@ package com.github.switcherapi.client;
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,33 +72,6 @@ class SwitcherContextTest {
 	}
 	
 	@Test
-	void shouldThrowErrorWhenAutoLoad_noValidLocation() {
-		Switchers.configure(ContextBuilder.builder()
-				.snapshotLocation(Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/invalid")
-				.offlineMode(true)
-				.snapshotAutoLoad(false));
-		
-		Exception ex = assertThrows(SwitcherContextException.class,
-				Switchers::initializeClient);
-		
-		assertEquals(String.format(
-				CONTEXT_ERROR, SwitcherContextValidator.ERR_SNAPSHOT_LOCATION), ex.getMessage());
-	}
-	
-	@Test
-	void shouldThrowErrorWhenAutoLoad_noLocation() {
-		Switchers.configure(ContextBuilder.builder()
-				.snapshotLocation(null)
-				.snapshotAutoLoad(true));
-		
-		Exception ex = assertThrows(SwitcherContextException.class,
-				Switchers::initializeClient);
-		
-		assertEquals(String.format(
-				CONTEXT_ERROR, SwitcherContextValidator.ERR_SNAPSHOT_LOCATION), ex.getMessage());
-	}
-	
-	@Test
 	void shouldThrowErrorWhenSilentMode_noRetryTimer() {
 		Switchers.configure(ContextBuilder.builder()
 				.silentMode(true)
@@ -140,22 +110,6 @@ class SwitcherContextTest {
 
 		assertEquals(String.format(
 				CONTEXT_ERROR, String.format(SwitcherContextValidator.ERR_FORMAT, "switcher.regextimeout", "class java.lang.Integer")),
-				ex.getMessage());
-	}
-
-	@Test
-	void shouldThrowError_invalidSnapshotUpdateInterval() {
-		Switchers.configure(ContextBuilder.builder()
-				.snapshotAutoUpdateInterval("2s")
-				.url("http://localhost")
-				.snapshotLocation(null)
-				.snapshotFile(null));
-
-		Exception ex = assertThrows(SwitcherContextException.class,
-				Switchers::initializeClient);
-
-		assertEquals(String.format(
-						CONTEXT_ERROR, SwitcherContextValidator.ERR_SNAPSHOT_AUTO_UPDATE),
 				ex.getMessage());
 	}
 

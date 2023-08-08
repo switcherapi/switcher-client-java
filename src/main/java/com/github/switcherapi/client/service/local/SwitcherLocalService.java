@@ -39,13 +39,12 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	 * @throws SwitcherSnapshotLoadException in case it was not possible to load snapshot automatically
 	 */
 	public void init() {
-		final String snapshotFile = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_FILE);
 		final String snapshotLocation = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION);
 		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
 		final boolean snapshotAutoload = SwitcherContextBase.contextBol(ContextKey.SNAPSHOT_AUTO_LOAD);
-		
-		if (StringUtils.isNotBlank(snapshotFile)) {
-			this.domain = SnapshotLoader.loadSnapshot(snapshotFile);
+
+		if (StringUtils.isBlank(snapshotLocation) && snapshotAutoload) {
+			this.domain = this.initializeSnapshotFromAPI();
 		} else if (StringUtils.isNotBlank(snapshotLocation)) {
 			try {
 				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
