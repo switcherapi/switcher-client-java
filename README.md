@@ -70,7 +70,6 @@ switcher.domain -> Domain name
 #optional
 switcher.environment -> Environment name
 switcher.offline -> true/false When offline, it will only use a local snapshot file
-switcher.snapshot.file -> Snapshot file path
 switcher.snapshot.location -> Folder from where snapshots will be saved/read
 switcher.snapshot.auto -> true/false Automated lookup for snapshot when loading the application
 switcher.snapshot.skipvalidation -> true/false Skip snapshotValidation() that can be used for UT executions
@@ -183,8 +182,8 @@ switcher.throttle(1000).isItOn();
 ```
 
 ## Offline settings
-You can also force the Switcher library to work offline. In this case, the snapshot location must be set up, so the context can be re-built using the offline configuration.
-Or you can just configure the Client SDK using the properties file.
+You can also set the Switcher library to work offline. It will use a local snapshot file to retrieve the switchers configuration.<br>
+This feature is useful for testing purposes or when you need to run your application without internet access.
 
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
@@ -199,9 +198,8 @@ switcher.isItOn();
 
 
 ## Real-time snapshot updater
-Let the Switcher Client manage your application local snapshot file.
-
-In order to minimize roundtrips and unnecessary file parsing, try to use one of these features to improve the overall performance when accessing snapshots locally.
+Let the Switcher Client manage your application local snapshot.<br>
+These features allow you to configure the SDK to automatically update the snapshot in the background.
 
 1. This feature will update the in-memory Snapshot every time the file is modified.
 
@@ -210,17 +208,16 @@ MyAppFeatures.watchSnapshot();
 MyAppFeatures.stopWatchingSnapshot();
 ```
 
-2. You can also perform snapshot update validation to verify if there are changes to be pulled. This will ensure that your application is running the most recent version of your remote configuration.
+2. You can also perform snapshot update validation to verify if there are changes to be pulled.
 
 ```java
 MyAppFeatures.validateSnapshot();
 ```
 
 3. Enable the Client SDK to execute Snapshot Auto Updates in the background using configuration. It basically encapsulates the validateSnapshot feature into a scheduled task managed by the SDK.
-It requires to set either snapshotFile or snapshotLocation. 
 
 ```java
-// It will check and update the local/in-memory snapshot to the latest version
+// It will check and update the local/in-memory snapshot to the latest version every second
 MyAppFeatures.configure(ContextBuilder.builder()
 	.snapshotAutoUpdateInterval("1s")
 	.snapshotLocation("/src/resources"));

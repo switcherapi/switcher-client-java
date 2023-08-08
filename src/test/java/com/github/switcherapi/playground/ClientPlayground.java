@@ -30,8 +30,11 @@ public class ClientPlayground {
 		Switcher switcher = getSwitcher(MY_SWITCHER);
 		switcher.setShowReason(true);
 
-		scheduler.scheduleAtFixedRate(() ->
-				logger.info(switcher.isItOn()), 0, 10, TimeUnit.SECONDS);
+		scheduler.scheduleAtFixedRate(() -> {
+			long time = System.currentTimeMillis();
+			logger.info("Switcher is on: " + switcher.isItOn());
+			logger.info("Time elapsed: " + (System.currentTimeMillis() - time));
+		}, 0, 10, TimeUnit.SECONDS);
 	}
 	
 	public static void main(String[] args) {

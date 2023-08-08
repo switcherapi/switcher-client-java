@@ -40,65 +40,12 @@ class SwitcherUtilsTest {
 	}
 	
 	@Test
-	void shouldReturnError_snapshotNotFound() {
-		SwitcherContext.configure(ContextBuilder.builder()
-				.snapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json"));
-		
-		assertThrows(SwitcherSnapshotLoadException.class ,
-				SwitcherContext::initializeClient);
-	}
-	
-	@Test
-	void shouldReturnError_offlineSnapshotNotFound() {
-		SwitcherContext.configure(ContextBuilder.builder()
-				.snapshotFile(SNAPSHOTS_LOCAL + "/UNKWNOW_SNAPSHOT_FILE.json")
-				.offlineMode(true));
-		
-		assertThrows(SwitcherContextException.class,
-				SwitcherContext::initializeClient);
-	}
-	
-	@Test
 	void shouldReturnOk_offlineLocationFound() {
 		SwitcherContext.configure(ContextBuilder.builder()
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.offlineMode(true));
 		
 		assertDoesNotThrow(SwitcherContext::initializeClient);
-	}
-	
-	@Test
-	void shouldReturnError_offlineFolderLocationNotFound() {
-		SwitcherContext.configure(ContextBuilder.builder()
-				.snapshotFile(null)
-				.snapshotLocation(SNAPSHOTS_LOCAL + "/UNKNOWN_LOCATION")
-				.offlineMode(true));
-		
-		assertThrows(SwitcherContextException.class,
-				SwitcherContext::initializeClient);
-	}
-	
-	@Test
-	void shouldReturnError_offlineFileLocationNotFound() {
-		SwitcherContext.configure(ContextBuilder.builder()
-				.snapshotFile(null)
-				.environment("UNKNOWN_ENVIRONMENT")
-				.snapshotLocation(SNAPSHOTS_LOCAL)
-				.offlineMode(true));
-		
-		assertThrows(SwitcherContextException.class,
-				SwitcherContext::initializeClient);
-	}
-	
-	@Test
-	void shouldReturnError_offlineNoLocationAndFileSpecified() {
-		SwitcherContext.configure(ContextBuilder.builder()
-				.snapshotLocation(null)
-				.snapshotFile(null)
-				.offlineMode(true));
-		
-		assertThrows(SwitcherContextException.class,
-				SwitcherContext::initializeClient);
 	}
 	
 	@Test

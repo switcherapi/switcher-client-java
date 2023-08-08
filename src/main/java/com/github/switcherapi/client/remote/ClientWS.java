@@ -15,7 +15,8 @@ import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
  * @since 2019-12-24
  */
 public interface ClientWS {
-	
+
+	Integer DEFAULT_TIMEOUT_SECONDS = 3;
 	String HEADER_AUTHORIZATION = "Authorization";
 	String HEADER_APIKEY = "switcher-api-key";
 	String TOKEN_TEXT = "Bearer %s";

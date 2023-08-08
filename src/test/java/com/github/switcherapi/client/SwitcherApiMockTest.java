@@ -38,17 +38,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SwitcherApiMockTest {
-	
-	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
+
+	private static final String RESOURCES_PATH = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
+	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 	
 	private static MockWebServer mockBackEnd;
 	
 	@BeforeAll
 	static void setup() throws IOException {
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/not_accessible"));
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/new_folder/generated_on_new_folder.json"));
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/new_folder"));
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default.json"));
+		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/not_accessible"));
+		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/new_folder/generated_on_new_folder.json"));
+		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/new_folder"));
+		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/generated_mock_default.json"));
 		
         mockBackEnd = new MockWebServer();
         mockBackEnd.start();
@@ -65,9 +66,9 @@ class SwitcherApiMockTest {
         
         //clean generated outputs
     	SwitcherContext.stopWatchingSnapshot();
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/new_folder/generated_on_new_folder.json"));
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/new_folder"));
-		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default.json"));
+		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/new_folder/generated_on_new_folder.json"));
+		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/new_folder"));
+		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/generated_mock_default.json"));
     }
 	
 	@BeforeEach
@@ -151,7 +152,7 @@ class SwitcherApiMockTest {
 	private MockResponse generateSnapshotResponse() {
 		final Snapshot mockedSnapshot = new Snapshot();
 		final Criteria criteria = new Criteria();
-		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/default.json"));
+		criteria.setDomain(SnapshotLoader.loadSnapshot(RESOURCES_PATH + "/default.json"));
 		mockedSnapshot.setData(criteria);
 		
 		Gson gson = new Gson();
@@ -275,7 +276,7 @@ class SwitcherApiMockTest {
 		//given
 		Switchers.configure(ContextBuilder.builder()
 				.snapshotLocation(SNAPSHOTS_LOCAL)
-				.environment("snapshot_fixture1")
+				.environment("fixture1")
 				.silentMode(true)
 				.retryAfter("5s"));
 		
@@ -348,7 +349,7 @@ class SwitcherApiMockTest {
 		givenResponse(generateSnapshotResponse());
 		
 		//test
-		Switchers.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL));
+		Switchers.configure(ContextBuilder.builder().snapshotLocation(RESOURCES_PATH));
 		
 		assertDoesNotThrow(() -> {
 			Switchers.initializeClient();
@@ -373,7 +374,7 @@ class SwitcherApiMockTest {
 		//given
 		Switchers.configure(ContextBuilder.builder()
 				.snapshotAutoLoad(true)
-				.snapshotLocation(SNAPSHOTS_LOCAL + "/new_folder")
+				.snapshotLocation(RESOURCES_PATH + "/new_folder")
 				.environment("generated_on_new_folder"));
 		
 		//auth
@@ -391,7 +392,7 @@ class SwitcherApiMockTest {
 		//given
 		Switchers.configure(ContextBuilder.builder()
 				.snapshotAutoLoad(true)
-				.snapshotLocation(SNAPSHOTS_LOCAL + "/new_folder")
+				.snapshotLocation(RESOURCES_PATH + "/new_folder")
 				.environment("generated_on_new_folder"));
 		
 		//auth
@@ -409,7 +410,7 @@ class SwitcherApiMockTest {
 		//given
 		Switchers.configure(ContextBuilder.builder()
 				.snapshotAutoLoad(false)
-				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.snapshotLocation(RESOURCES_PATH)
 				.environment("generated_mock_default"));
 		
 		Switchers.initializeClient();
@@ -430,7 +431,7 @@ class SwitcherApiMockTest {
 		Switchers.configure(ContextBuilder.builder()
 				.offlineMode(true)
 				.snapshotAutoLoad(false)
-				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.snapshotLocation(RESOURCES_PATH)
 				.environment("default"));
 		
 		Switchers.initializeClient();
@@ -457,7 +458,7 @@ class SwitcherApiMockTest {
 		Switchers.configure(ContextBuilder.builder()
 				.offlineMode(true)
 				.snapshotAutoLoad(false)
-				.snapshotLocation(SNAPSHOTS_LOCAL)
+				.snapshotLocation(RESOURCES_PATH)
 				.environment("default"));
 		
 		Switchers.initializeClient();
@@ -478,12 +479,12 @@ class SwitcherApiMockTest {
 		//given
 		Switchers.configure(ContextBuilder.builder()
 				.snapshotAutoLoad(true)
-				.snapshotLocation(SNAPSHOTS_LOCAL + "/not_accessible"));
+				.snapshotLocation(RESOURCES_PATH + "/not_accessible"));
 		
 		//test
 		assertDoesNotThrow(() -> {
 			try (final RandomAccessFile raFile = 
-					new RandomAccessFile(SNAPSHOTS_LOCAL + "/not_accessible", "rw")) {
+					new RandomAccessFile(RESOURCES_PATH + "/not_accessible", "rw")) {
 				
 				//given an inaccessible folder
 				raFile.getChannel().lock();
@@ -506,12 +507,12 @@ class SwitcherApiMockTest {
 		//given
 		Switchers.configure(ContextBuilder.builder()
 				.snapshotAutoLoad(true)
-				.snapshotLocation(SNAPSHOTS_LOCAL + "/not_accessible/folder"));
+				.snapshotLocation(RESOURCES_PATH + "/not_accessible/folder"));
 		
 		//test
 		assertDoesNotThrow(() -> {
 			try (final RandomAccessFile raFile = 
-					new RandomAccessFile(SNAPSHOTS_LOCAL + "/not_accessible", "rw")) {
+					new RandomAccessFile(RESOURCES_PATH + "/not_accessible", "rw")) {
 				
 				//given an inaccessible folder
 				raFile.getChannel().lock();
