@@ -129,13 +129,13 @@
 		<!-- test -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-params</artifactId>
+			<artifactId>junit-jupiter-engine</artifactId>
 			<version>${junit.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
+			<artifactId>junit-jupiter-params</artifactId>
 			<version>${junit.version}</version>
 			<scope>provided</scope>
 		</dependency>
