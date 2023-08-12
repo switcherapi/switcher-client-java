@@ -41,8 +41,10 @@ public class ClientWSImpl implements ClientWS {
 	private final Client client;
 	
 	public ClientWSImpl() {
+		final int timeoutMs = Integer.parseInt(SwitcherContextBase.contextStr(ContextKey.TIMEOUT_MS));
 		this.client = ClientWSBuilder.builder()
-				.connectTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+				.readTimeout(timeoutMs, TimeUnit.MILLISECONDS)
+				.connectTimeout(timeoutMs, TimeUnit.MILLISECONDS)
 				.build();
 	}
 	
