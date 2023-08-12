@@ -21,6 +21,8 @@ class SwitcherProperties {
 
 	public static final String DEFAULT_REGEX_TIMEOUT = "3000";
 
+	public static final String DEFAULT_TIMEOUT_MS = "3000";
+
 	private String contextLocation;
 
 	private String url;
@@ -53,9 +55,12 @@ class SwitcherProperties {
 
 	private String truststorePassword;
 
+	private String timeoutMs;
+
 	public SwitcherProperties() {
 		this.environment = DEFAULT_ENV;
 		this.regexTimeout = DEFAULT_REGEX_TIMEOUT;
+		this.timeoutMs = DEFAULT_TIMEOUT_MS;
 	}
 	
 	public void loadFromProperties(Properties prop) {
@@ -75,6 +80,7 @@ class SwitcherProperties {
 		setRegexTimeout(SwitcherUtils.resolveProperties(ContextKey.REGEX_TIMEOUT.getParam(), prop));
 		setTruststorePath(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PATH.getParam(), prop));
 		setTruststorePassword(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));
+		setTimeoutMs(SwitcherUtils.resolveProperties(ContextKey.TIMEOUT_MS.getParam(), prop));
 	}
 	
 	public <T> T getValue(ContextKey contextKey, Class<T> type) {
@@ -131,10 +137,11 @@ class SwitcherProperties {
 	}
 
 	public void setEnvironment(String environment) {
-		if (!StringUtils.isBlank(environment))
+		if (!StringUtils.isBlank(environment)) {
 			this.environment = environment;
-		else
+		} else {
 			this.environment = DEFAULT_ENV;
+		}
 	}
 
 	public String getSnapshotLocation() {
@@ -168,8 +175,9 @@ class SwitcherProperties {
 	public void setRegexTimeout(String regexTimeout) {
 		if (!StringUtils.isBlank(regexTimeout)) {
 			this.regexTimeout = regexTimeout;
-		} else
+		} else {
 			this.regexTimeout = DEFAULT_REGEX_TIMEOUT;
+		}
 	}
 
 	public boolean isSnapshotAutoLoad() {
@@ -218,6 +226,18 @@ class SwitcherProperties {
 
 	public void setTruststorePassword(String truststorePassword) {
 		this.truststorePassword = truststorePassword;
+	}
+
+	public String getTimeoutMs() {
+		return timeoutMs;
+	}
+
+    public void setTimeoutMs(String timeoutMs) {
+		if (!StringUtils.isBlank(timeoutMs)) {
+			this.timeoutMs = timeoutMs;
+		} else {
+			this.timeoutMs = DEFAULT_TIMEOUT_MS;
+		}
 	}
 
 }

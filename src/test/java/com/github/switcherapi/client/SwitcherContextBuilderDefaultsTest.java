@@ -26,4 +26,13 @@ class SwitcherContextBuilderDefaultsTest {
         assertEquals(SwitcherProperties.DEFAULT_REGEX_TIMEOUT, SwitchersBase.contextStr(ContextKey.REGEX_TIMEOUT));
     }
 
+    @Test
+    void shouldLoadDefault_timeoutMs() {
+        //given
+        SwitchersBase.configure(ContextBuilder.builder(true).timeoutMs(""));
+
+        //test
+        assertEquals(SwitcherProperties.DEFAULT_TIMEOUT_MS, SwitchersBase.contextStr(ContextKey.TIMEOUT_MS));
+    }
+
 }

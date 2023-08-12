@@ -126,7 +126,6 @@ class SwitcherApiMockTest {
 	 */
 	private MockResponse generateStatusResponse(String code) {
 		return new MockResponse().setStatus(String.format("HTTP/1.1 %s", code));
-	
 	}
 	
 	/**

@@ -78,6 +78,7 @@ switcher.silent -> true/false Contingency in case of some problem with connectiv
 switcher.retry -> Time given to the module to re-establish connectivity with the API - e.g. 5s (s: seconds - m: minutes - h: hours)
 switcher.truststore.path -> Path to the truststore file
 switcher.truststore.password -> Truststore password
+switcher.timeout -> Time in ms given to the API to respond - 3000 default value
 
 (Java 8 applications only)
 switcher.regextimeout -> Time in ms given to Timed Match Worker used for offline Regex (ReDoS safety mechanism) - 3000 default value

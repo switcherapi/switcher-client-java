@@ -123,4 +123,8 @@ public class ContextBuilder {
 		return this;
 	}
 
+    public ContextBuilder timeoutMs(String timeoutMs) {
+		properties.setTimeoutMs(timeoutMs);
+		return this;
+	}
 }
