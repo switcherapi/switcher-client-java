@@ -87,7 +87,12 @@ public enum ContextKey {
 	/**
 	 * (String) Defines the password for the truststore file.
 	 */
-	TRUSTSTORE_PASSWORD("switcher.truststore.password", "truststorePassword");
+	TRUSTSTORE_PASSWORD("switcher.truststore.password", "truststorePassword"),
+
+	/**
+	 * (Number) Defines the timeout in ms for the Remote client.
+	 */
+	TIMEOUT_MS("switcher.timeout", "timeoutMs");
 	
 	private final String param;
 	private final String propField;
