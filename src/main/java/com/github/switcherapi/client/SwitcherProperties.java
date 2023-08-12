@@ -12,7 +12,7 @@ import com.github.switcherapi.client.utils.SwitcherUtils;
 /**
  * The configuration definition object contains all necessary SDK properties to
  * control the API client behaviors, access and snapshot location.
- * 
+ *
  * @author Roger Floriano (petruki)
  */
 class SwitcherProperties {
@@ -20,6 +20,8 @@ class SwitcherProperties {
 	public static final String DEFAULT_ENV = "default";
 
 	public static final String DEFAULT_REGEX_TIMEOUT = "3000";
+
+	public static final String DEFAULT_TIMEOUT_MS = "3000";
 
 	private String contextLocation;
 
@@ -53,14 +55,17 @@ class SwitcherProperties {
 
 	private String truststorePassword;
 
+	private String timeoutMs;
+
 	public SwitcherProperties() {
 		this.environment = DEFAULT_ENV;
 		this.regexTimeout = DEFAULT_REGEX_TIMEOUT;
+		this.timeoutMs = DEFAULT_TIMEOUT_MS;
 	}
-	
+
 	public void loadFromProperties(Properties prop) {
-        setContextLocation(SwitcherUtils.resolveProperties(ContextKey.CONTEXT_LOCATION.getParam(), prop));
-        setUrl(SwitcherUtils.resolveProperties(ContextKey.URL.getParam(), prop));
+		setContextLocation(SwitcherUtils.resolveProperties(ContextKey.CONTEXT_LOCATION.getParam(), prop));
+		setUrl(SwitcherUtils.resolveProperties(ContextKey.URL.getParam(), prop));
 		setApiKey(SwitcherUtils.resolveProperties(ContextKey.APIKEY.getParam(), prop));
 		setDomain(SwitcherUtils.resolveProperties(ContextKey.DOMAIN.getParam(), prop));
 		setComponent(SwitcherUtils.resolveProperties(ContextKey.COMPONENT.getParam(), prop));
@@ -75,8 +80,9 @@ class SwitcherProperties {
 		setRegexTimeout(SwitcherUtils.resolveProperties(ContextKey.REGEX_TIMEOUT.getParam(), prop));
 		setTruststorePath(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PATH.getParam(), prop));
 		setTruststorePassword(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));
+		setTimeoutMs(SwitcherUtils.resolveProperties(ContextKey.TIMEOUT_MS.getParam(), prop));
 	}
-	
+
 	public <T> T getValue(ContextKey contextKey, Class<T> type) {
 		try {
 			final Field field = SwitcherProperties.class.getDeclaredField(contextKey.getPropField());
@@ -131,10 +137,11 @@ class SwitcherProperties {
 	}
 
 	public void setEnvironment(String environment) {
-		if (!StringUtils.isBlank(environment))
+		if (!StringUtils.isBlank(environment)) {
 			this.environment = environment;
-		else
+		} else {
 			this.environment = DEFAULT_ENV;
+		}
 	}
 
 	public String getSnapshotLocation() {
@@ -168,8 +175,9 @@ class SwitcherProperties {
 	public void setRegexTimeout(String regexTimeout) {
 		if (!StringUtils.isBlank(regexTimeout)) {
 			this.regexTimeout = regexTimeout;
-		} else
+		} else {
 			this.regexTimeout = DEFAULT_REGEX_TIMEOUT;
+		}
 	}
 
 	public boolean isSnapshotAutoLoad() {
@@ -218,6 +226,18 @@ class SwitcherProperties {
 
 	public void setTruststorePassword(String truststorePassword) {
 		this.truststorePassword = truststorePassword;
+	}
+
+	public String getTimeoutMs() {
+		return timeoutMs;
+	}
+
+	public void setTimeoutMs(String timeoutMs) {
+		if (!StringUtils.isBlank(timeoutMs)) {
+			this.timeoutMs = timeoutMs;
+		} else {
+			this.timeoutMs = DEFAULT_TIMEOUT_MS;
+		}
 	}
 
 }
