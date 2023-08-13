@@ -1,13 +1,5 @@
 package com.github.switcherapi.client;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import com.github.switcherapi.client.service.remote.ClientRemote;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.client.model.ContextKey;
@@ -15,9 +7,15 @@ import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
-import com.github.switcherapi.client.service.remote.ClientRemoteService;
+import com.github.switcherapi.client.service.remote.ClientRemote;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The Executor provides an API to handle Remote and Local functionalities that
