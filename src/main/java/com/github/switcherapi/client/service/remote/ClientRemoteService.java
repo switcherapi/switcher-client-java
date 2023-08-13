@@ -55,13 +55,7 @@ public class ClientRemoteService {
 		final TokenStatus tokenStatus = this.isTokenValid();
 
 		try {
-			if (tokenStatus == TokenStatus.INVALID) {
-				this.auth();
-			}
-
-			if (tokenStatus == TokenStatus.SILENT) {
-				throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL));
-			}
+			this.auth(tokenStatus);
 
 			return this.clientWs.executeCriteriaService(switcher,
 					Optional.of(this.authResponse).orElseGet(AuthResponse::new).getToken());
@@ -73,21 +67,17 @@ public class ClientRemoteService {
 			throw e;
 		}
 	}
-	
+
 	public Snapshot resolveSnapshot() throws SwitcherException {
-		if (this.isTokenValid() == TokenStatus.INVALID) {
-			this.auth();
-		}
+		this.auth(this.isTokenValid());
 		
 		return this.clientWs.resolveSnapshot(
 				Optional.of(this.authResponse).orElseGet(AuthResponse::new).getToken());
 	}
 	
 	public boolean checkSnapshotVersion(final long version) {
-		if (this.isTokenValid() == TokenStatus.INVALID) {
-			this.auth();
-		}
-				
+		this.auth(this.isTokenValid());
+
 		final SnapshotVersionResponse snapshotVersionResponse = this.clientWs.checkSnapshotVersion(version,
 				Optional.of(this.authResponse).orElseGet(AuthResponse::new).getToken());
 
@@ -98,13 +88,7 @@ public class ClientRemoteService {
 		final TokenStatus tokenStatus = this.isTokenValid();
 
 		try {
-			if (tokenStatus == TokenStatus.INVALID) {
-				this.auth();
-			}
-
-			if (tokenStatus == TokenStatus.SILENT) {
-				throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL));
-			}
+			this.auth(tokenStatus);
 
 			return this.clientWs.checkSwitchers(switchers,
 					Optional.of(this.authResponse).orElseGet(AuthResponse::new).getToken());
@@ -116,15 +100,14 @@ public class ClientRemoteService {
 			throw e;
 		}
 	}
-	
-	private void auth() {
-		try {
+
+	private void auth(TokenStatus tokenStatus) {
+		if (tokenStatus == TokenStatus.INVALID) {
 			this.authResponse = this.clientWs.auth().orElseGet(AuthResponse::new);
-		} catch (final SwitcherException e) {
-			throw e;
-		} catch (final Exception e) {
-			this.setSilentModeExpiration();
-			throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL), e);
+		}
+
+		if (tokenStatus == TokenStatus.SILENT) {
+			throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL));
 		}
 	}
 	

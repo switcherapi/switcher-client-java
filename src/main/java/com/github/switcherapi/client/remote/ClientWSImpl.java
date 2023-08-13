@@ -90,18 +90,22 @@ public class ClientWSImpl implements ClientWS {
 		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(AUTH_URL, url));
 
-		final Response response = myResource.request(MediaType.APPLICATION_JSON)
-				.header(HEADER_APIKEY, SwitcherContextBase.contextStr(ContextKey.APIKEY))
-				.post(Entity.json(authRequest));
+		try {
+			final Response response = myResource.request(MediaType.APPLICATION_JSON)
+					.header(HEADER_APIKEY, SwitcherContextBase.contextStr(ContextKey.APIKEY))
+					.post(Entity.json(authRequest));
 
-		if (response.getStatus() == 200) {
-			Optional<AuthResponse> authResponse = Optional.of(response.readEntity(AuthResponse.class));
-			response.close();
+			if (response.getStatus() == 200) {
+				Optional<AuthResponse> authResponse = Optional.of(response.readEntity(AuthResponse.class));
+				response.close();
 
-			return authResponse;
+				return authResponse;
+			}
+
+			throw new SwitcherRemoteException(url, response.getStatus());
+		} catch (Exception e) {
+			throw new SwitcherRemoteException(url, e);
 		}
-
-		throw new SwitcherRemoteException(url, response.getStatus());
 	}
 	
 	@Override
