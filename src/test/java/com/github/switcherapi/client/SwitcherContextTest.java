@@ -72,19 +72,6 @@ class SwitcherContextTest {
 	}
 	
 	@Test
-	void shouldThrowErrorWhenSilentMode_noRetryTimer() {
-		Switchers.configure(ContextBuilder.builder()
-				.silentMode(true)
-				.retryAfter(null));
-		
-		Exception ex = assertThrows(SwitcherContextException.class,
-				Switchers::initializeClient);
-		
-		assertEquals(String.format(
-				CONTEXT_ERROR, SwitcherContextValidator.ERR_RETRY), ex.getMessage());
-	}
-	
-	@Test
 	void shouldThrowError_invalidSwitcher() {
 		Exception ex = assertThrows(SwitcherKeyNotFoundException.class, () ->
 				Switchers.getSwitcher("INVALID_SWITCHER"));

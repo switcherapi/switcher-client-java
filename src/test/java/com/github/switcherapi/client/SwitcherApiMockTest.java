@@ -78,10 +78,9 @@ class SwitcherApiMockTest {
 				.snapshotLocation(null)
 				.snapshotSkipValidation(false)
 				.environment("default")
-				.silentMode(false)
+				.silentMode(null)
 				.snapshotAutoLoad(false)
-				.snapshotAutoUpdateInterval(null)
-				.retryAfter(null));
+				.snapshotAutoUpdateInterval(null));
 		
 		Switchers.initializeClient();
 	}
@@ -273,8 +272,7 @@ class SwitcherApiMockTest {
 		Switchers.configure(ContextBuilder.builder()
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("fixture1")
-				.silentMode(true)
-				.retryAfter("5s"));
+				.silentMode("5s"));
 		
 		Switchers.initializeClient();
 		

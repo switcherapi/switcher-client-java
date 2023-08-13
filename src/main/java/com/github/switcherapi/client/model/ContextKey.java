@@ -60,14 +60,9 @@ public enum ContextKey {
 	SNAPSHOT_AUTO_UPDATE_INTERVAL("switcher.snapshot.updateinterval", "snapshotAutoUpdateInterval"),
 	
 	/**
-	 * (boolean) Activate silent mode when the Switcher API becomes offline.
+	 * (String) Defines if client will work in silent mode by specifying the time interval to retry
 	 */
 	SILENT_MODE("switcher.silent", "silentMode"),
-	
-	/**
-	 * (String) Time given to the library retry reaching the online Switcher API after using the silent mode.
-	 */
-	RETRY_AFTER("switcher.retry", "retryAfter"),
 	
 	/**
 	 * (boolean) Defines if client will work offline.
