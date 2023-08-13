@@ -57,10 +57,9 @@ class ClientWSTest {
                 .snapshotLocation(null)
                 .snapshotSkipValidation(false)
                 .environment("default")
-                .silentMode(false)
+                .silentMode(null)
                 .snapshotAutoLoad(false)
                 .snapshotAutoUpdateInterval(null)
-                .retryAfter(null)
                 .timeoutMs(null));
 
         Switchers.initializeClient();

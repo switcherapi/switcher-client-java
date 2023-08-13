@@ -39,15 +39,13 @@ class SwitcherProperties {
 
 	private String snapshotAutoUpdateInterval;
 
-	private String retryAfter;
-
 	private String regexTimeout;
+
+	private String silentMode;
 
 	private boolean snapshotAutoLoad;
 
 	private boolean snapshotSkipValidation;
-
-	private boolean silentMode;
 
 	private boolean offlineMode;
 
@@ -74,9 +72,8 @@ class SwitcherProperties {
 		setSnapshotSkipValidation(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_SKIP_VALIDATION.getParam(), prop)));
 		setSnapshotAutoLoad(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_LOAD.getParam(), prop)));
 		setSnapshotAutoUpdateInterval(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL.getParam(), prop));
-		setSilentMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SILENT_MODE.getParam(), prop)));
+		setSilentMode(SwitcherUtils.resolveProperties(ContextKey.SILENT_MODE.getParam(), prop));
 		setOfflineMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.OFFLINE_MODE.getParam(), prop)));
-		setRetryAfter(SwitcherUtils.resolveProperties(ContextKey.RETRY_AFTER.getParam(), prop));
 		setRegexTimeout(SwitcherUtils.resolveProperties(ContextKey.REGEX_TIMEOUT.getParam(), prop));
 		setTruststorePath(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PATH.getParam(), prop));
 		setTruststorePassword(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));
@@ -160,14 +157,6 @@ class SwitcherProperties {
 		this.snapshotAutoUpdateInterval = snapshotAutoUpdateInterval;
 	}
 
-	public String getRetryAfter() {
-		return retryAfter;
-	}
-
-	public void setRetryAfter(String retryAfter) {
-		this.retryAfter = retryAfter;
-	}
-
 	public String getRegexTimeout() {
 		return regexTimeout;
 	}
@@ -196,11 +185,11 @@ class SwitcherProperties {
 		this.snapshotSkipValidation = snapshotSkipValidation;
 	}
 
-	public boolean isSilentMode() {
+	public String getSilentMode() {
 		return silentMode;
 	}
 
-	public void setSilentMode(boolean silentMode) {
+	public void setSilentMode(String silentMode) {
 		this.silentMode = silentMode;
 	}
 
