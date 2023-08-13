@@ -320,9 +320,6 @@ class SwitcherApiMockTest {
 		CountDownLatch waiter = new CountDownLatch(1);
 		waiter.await(2, TimeUnit.SECONDS);
 		
-		//isAlive
-		givenResponse(generateStatusResponse("200"));
-		
 		//auth
 		givenResponse(generateMockAuth(2));
 		
@@ -340,9 +337,6 @@ class SwitcherApiMockTest {
 		
 		//criteria/snapshot_check
 		givenResponse(generateCheckSnapshotVersionResponse("false"));
-		
-		//auth isAlive
-		givenResponse(generateMockAuth(10));
 		
 		//graphql
 		givenResponse(generateSnapshotResponse());
@@ -440,9 +434,6 @@ class SwitcherApiMockTest {
 		
 		//criteria/snapshot_check
 		givenResponse(generateCheckSnapshotVersionResponse("false"));
-		
-		//auth isAlive
-		givenResponse(generateMockAuth(10));
 		
 		//graphql
 		givenResponse(generateSnapshotResponse());
