@@ -54,7 +54,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	
 	private CriteriaResponse executeSilentCriteria(final Switcher switcher, 
 			final SwitcherRemoteException e) {
-		if (SwitcherContextBase.contextBol(ContextKey.SILENT_MODE)) {
+		if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.SILENT_MODE))) {
 			CriteriaResponse response = this.switcherOffline.executeCriteria(switcher);
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("[Silent] response: %s", response));
