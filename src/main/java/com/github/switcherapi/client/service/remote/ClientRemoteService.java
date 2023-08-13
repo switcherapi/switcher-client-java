@@ -1,13 +1,9 @@
 package com.github.switcherapi.client.service.remote;
 
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
-
 import com.github.switcherapi.client.SwitcherContextBase;
-import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
+import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Snapshot;
@@ -19,100 +15,118 @@ import com.github.switcherapi.client.remote.ClientWS;
 import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 
+import java.util.Date;
+import java.util.Optional;
+import java.util.Set;
+
 /**
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class ClientRemoteService {
 	
-	private static ClientRemoteService instance;
-	
 	private final ClientWS clientWs;
 	
-	private Optional<AuthResponse> authResponse = Optional.empty();
+	private AuthResponse authResponse;
+
+	private enum TokenStatus {
+		VALID, INVALID, SILENT
+	}
+
+	private enum Singleton {
+		INSTANCE;
+
+		private final ClientRemoteService instance = new ClientRemoteService();
+
+		public ClientRemoteService getInstance() {
+			return this.instance;
+		}
+	}
 	
 	private ClientRemoteService() {
 		this.clientWs = new ClientWSImpl();
 	}
 	
 	public static ClientRemoteService getInstance() {
-		if (instance == null) {
-			instance = new ClientRemoteService();
-		}
-		return instance;
+		return Singleton.INSTANCE.getInstance();
 	}
 	
 	public CriteriaResponse executeCriteria(final Switcher switcher)  {
-		if (!this.isTokenValid()) {
-			this.auth();
+		final TokenStatus tokenStatus = this.isTokenValid();
+
+		try {
+			this.auth(tokenStatus);
+
+			return this.clientWs.executeCriteriaService(switcher,
+					Optional.of(this.authResponse).orElseGet(AuthResponse::new).getToken());
+		} catch (final SwitcherRemoteException e) {
+			if (tokenStatus != TokenStatus.SILENT) {
+				this.setSilentModeExpiration();
+			}
+
+			throw e;
 		}
-		
-		return this.clientWs.executeCriteriaService(
-				switcher, this.authResponse.get().getToken());
 	}
-	
+
 	public Snapshot resolveSnapshot() throws SwitcherException {
-		if (!this.isTokenValid()) {
-			this.auth();
-		}
+		this.auth(this.isTokenValid());
 		
 		return this.clientWs.resolveSnapshot(
-				this.authResponse.orElseGet(AuthResponse::new).getToken());
+				Optional.of(this.authResponse).orElseGet(AuthResponse::new).getToken());
 	}
 	
 	public boolean checkSnapshotVersion(final long version) {
-		if (!this.isTokenValid()) {
-			this.auth();
-		}
-				
-		final SnapshotVersionResponse snapshotVersionResponse = this.clientWs.checkSnapshotVersion(version, 
-				this.authResponse.orElseGet(AuthResponse::new).getToken());
+		this.auth(this.isTokenValid());
+
+		final SnapshotVersionResponse snapshotVersionResponse = this.clientWs.checkSnapshotVersion(version,
+				Optional.of(this.authResponse).orElseGet(AuthResponse::new).getToken());
 
 		return snapshotVersionResponse.isUpdated();
 	}
 	
 	public SwitchersCheck checkSwitchers(final Set<String> switchers) {
+		final TokenStatus tokenStatus = this.isTokenValid();
+
 		try {
-			if (!this.isTokenValid()) {
-				this.auth();
+			this.auth(tokenStatus);
+
+			return this.clientWs.checkSwitchers(switchers,
+					Optional.of(this.authResponse).orElseGet(AuthResponse::new).getToken());
+		} catch (final SwitcherRemoteException e) {
+			if (tokenStatus != TokenStatus.SILENT) {
+				this.setSilentModeExpiration();
 			}
-					
-			return this.clientWs.checkSwitchers(switchers, 
-					this.authResponse.orElseGet(AuthResponse::new).getToken());
-		} catch (final Exception e) {
-			throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL), e);
-		}
-	}
-	
-	private void auth() {
-		try {
-			this.authResponse = this.clientWs.auth();
-		} catch (final SwitcherException e) {
+
 			throw e;
-		} catch (final Exception e) {
-			this.setSilentModeExpiration();
-			throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL), e);
+		}
+	}
+
+	private void auth(TokenStatus tokenStatus) {
+		if (tokenStatus == TokenStatus.INVALID) {
+			this.authResponse = this.clientWs.auth().orElseGet(AuthResponse::new);
+		}
+
+		if (tokenStatus == TokenStatus.SILENT) {
+			throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL));
 		}
 	}
 	
-	private boolean isTokenValid() throws SwitcherRemoteException,
+	private TokenStatus isTokenValid() throws SwitcherRemoteException,
 		SwitcherInvalidDateTimeArgumentException {
-		
-		if (this.authResponse.isPresent()) {
-			if (this.authResponse.get().getToken().equals(ContextKey.SILENT_MODE.getParam()) 
-					&& !this.authResponse.get().isExpired()) {
-				throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL));
-			} else {
-				if (!this.clientWs.isAlive()) {
-					this.setSilentModeExpiration();
-					throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL));
-				}
-				
-				return !this.authResponse.orElseGet(AuthResponse::new).isExpired();
-			}
+
+		final Optional<AuthResponse> optAuthResponse = Optional.ofNullable(this.authResponse);
+
+		if (optAuthResponse.isEmpty()) {
+			return TokenStatus.INVALID;
 		}
-		
-		return false;
+
+		if (optAuthResponse.get().getToken().equals(ContextKey.SILENT_MODE.getParam())
+				&& !optAuthResponse.get().isExpired()) {
+			return TokenStatus.SILENT;
+		}
+
+		return optAuthResponse.orElseGet(AuthResponse::new).isExpired() ?
+				TokenStatus.INVALID : TokenStatus.VALID;
 	}
 	
 	private void setSilentModeExpiration() throws SwitcherInvalidDateTimeArgumentException {
@@ -122,12 +136,12 @@ public class ClientRemoteService {
 			
 			response.setToken(ContextKey.SILENT_MODE.getParam());
 			response.setExp(SwitcherUtils.addTimeDuration(addValue, new Date()).getTime()/1000);
-			this.authResponse = Optional.of(response);
+			this.authResponse = response;
 		}
 	}
 
 	public void clearAuthResponse() {
-		this.authResponse = Optional.empty();
+		this.authResponse = null;
 	}
 
 }
