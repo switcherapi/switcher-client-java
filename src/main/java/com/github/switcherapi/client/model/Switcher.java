@@ -45,7 +45,7 @@ public final class Switcher extends SwitcherBuilder {
 	 * Use {@link SwitcherContext#getSwitcher(String)} to create this object.
 	 * 
 	 * @param switcherKey name of the key created
-	 * @param context configuration object containing all information to start using switchers
+	 * @param context client context in which the switcher will be executed (local/remote)
 	 */
 	public Switcher(final String switcherKey, final SwitcherExecutor context) {
 		this.switcherKey = switcherKey;

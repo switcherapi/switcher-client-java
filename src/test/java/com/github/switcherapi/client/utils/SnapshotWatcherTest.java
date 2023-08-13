@@ -5,6 +5,7 @@ import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Snapshot;
+import com.github.switcherapi.fixture.CountDownHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -21,8 +22,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -72,13 +71,13 @@ class SnapshotWatcherTest {
 		SnapshotLoader.saveSnapshot(mockedSnapshot, SNAPSHOTS_LOCAL, "generated_watcher_default");
 	}
 	
-	void changeFixture(boolean domainStatus) {
+	void changeFixture() {
 		final Snapshot mockedSnapshot = new Snapshot();
 		final Criteria criteria = new Criteria();
 		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_watcher.json"));
 		mockedSnapshot.setData(criteria);
 		
-		criteria.getDomain().setActivated(domainStatus);
+		criteria.getDomain().setActivated(false);
 		
 		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		writeFixture(gson.toJson(mockedSnapshot));
@@ -98,39 +97,35 @@ class SnapshotWatcherTest {
 	}
 	
 	@Test
-	void shouldNotReloadDomainAfterChangingSnapshot() throws InterruptedException {
+	void shouldNotReloadDomainAfterChangingSnapshot() {
 		Switcher switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		
 		//initial value is true
 		assertTrue(switcher.isItOn());
-		
-		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(1, TimeUnit.SECONDS);
+
+		CountDownHelper.wait(1);
 		
 		SwitchersBase.stopWatchingSnapshot();
-		this.changeFixture(false);
-		
-		waiter = new CountDownLatch(1);
-		waiter.await(2, TimeUnit.SECONDS);
+		this.changeFixture();
+
+		CountDownHelper.wait(2);
 
 		//snapshot file updated - does not change as the watcher has been terminated
 		assertTrue(switcher.isItOn());
 	}
 	
 	@Test
-	void shouldReloadDomainAfterChangingSnapshot() throws InterruptedException {
+	void shouldReloadDomainAfterChangingSnapshot() {
 		Switcher switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		
 		//initial value is true
 		assertTrue(switcher.isItOn());
+
+		CountDownHelper.wait(1);
 		
-		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(1, TimeUnit.SECONDS);
-		
-		this.changeFixture(false);
-		
-		waiter = new CountDownLatch(1);
-		waiter.await(2, TimeUnit.SECONDS);
+		this.changeFixture();
+
+		CountDownHelper.wait(2);
 
 		//snapshot file updated - triggered domain reload
 		assertFalse(switcher.isItOn());
