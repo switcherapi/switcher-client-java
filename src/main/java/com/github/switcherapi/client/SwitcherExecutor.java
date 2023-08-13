@@ -1,12 +1,5 @@
 package com.github.switcherapi.client;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.client.model.ContextKey;
@@ -14,9 +7,15 @@ import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
-import com.github.switcherapi.client.service.remote.ClientRemoteService;
+import com.github.switcherapi.client.service.remote.ClientRemote;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The Executor provides an API to handle Remote and Local functionalities that
@@ -75,17 +74,17 @@ public abstract class SwitcherExecutor {
 	 */
 	public abstract long getSnapshotVersion();
 	
-	protected boolean checkSnapshotVersion(final Domain domain) {
+	protected boolean checkSnapshotVersion(ClientRemote clientRemote, final Domain domain) {
 		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("verifying snapshot version - environment: %s", environment));
 		}
 		
-		return ClientRemoteService.getInstance().checkSnapshotVersion(domain.getVersion());
+		return clientRemote.checkSnapshotVersion(domain.getVersion());
 	}
 	
-	protected Domain initializeSnapshotFromAPI() {
+	protected Domain initializeSnapshotFromAPI(ClientRemote clientRemote) {
 		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
 		
 		if (logger.isDebugEnabled()) {
@@ -93,7 +92,7 @@ public abstract class SwitcherExecutor {
 		}
 
 		try {
-			final Snapshot snapshot = ClientRemoteService.getInstance().resolveSnapshot();
+			final Snapshot snapshot = clientRemote.resolveSnapshot();
 			final String snapshotLocation = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION);
 
 			if (snapshotLocation != null) {

@@ -12,7 +12,7 @@ import com.github.switcherapi.client.utils.SwitcherUtils;
 /**
  * The configuration definition object contains all necessary SDK properties to
  * control the API client behaviors, access and snapshot location.
- *
+ * 
  * @author Roger Floriano (petruki)
  */
 class SwitcherProperties {
@@ -60,10 +60,10 @@ class SwitcherProperties {
 		this.regexTimeout = DEFAULT_REGEX_TIMEOUT;
 		this.timeoutMs = DEFAULT_TIMEOUT_MS;
 	}
-
+	
 	public void loadFromProperties(Properties prop) {
-		setContextLocation(SwitcherUtils.resolveProperties(ContextKey.CONTEXT_LOCATION.getParam(), prop));
-		setUrl(SwitcherUtils.resolveProperties(ContextKey.URL.getParam(), prop));
+        setContextLocation(SwitcherUtils.resolveProperties(ContextKey.CONTEXT_LOCATION.getParam(), prop));
+        setUrl(SwitcherUtils.resolveProperties(ContextKey.URL.getParam(), prop));
 		setApiKey(SwitcherUtils.resolveProperties(ContextKey.APIKEY.getParam(), prop));
 		setDomain(SwitcherUtils.resolveProperties(ContextKey.DOMAIN.getParam(), prop));
 		setComponent(SwitcherUtils.resolveProperties(ContextKey.COMPONENT.getParam(), prop));
@@ -79,7 +79,7 @@ class SwitcherProperties {
 		setTruststorePassword(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));
 		setTimeoutMs(SwitcherUtils.resolveProperties(ContextKey.TIMEOUT_MS.getParam(), prop));
 	}
-
+	
 	public <T> T getValue(ContextKey contextKey, Class<T> type) {
 		try {
 			final Field field = SwitcherProperties.class.getDeclaredField(contextKey.getPropField());
@@ -134,7 +134,7 @@ class SwitcherProperties {
 	}
 
 	public void setEnvironment(String environment) {
-		if (!StringUtils.isBlank(environment)) {
+		if (StringUtils.isNotBlank(environment)) {
 			this.environment = environment;
 		} else {
 			this.environment = DEFAULT_ENV;
@@ -162,7 +162,7 @@ class SwitcherProperties {
 	}
 
 	public void setRegexTimeout(String regexTimeout) {
-		if (!StringUtils.isBlank(regexTimeout)) {
+		if (StringUtils.isNotBlank(regexTimeout)) {
 			this.regexTimeout = regexTimeout;
 		} else {
 			this.regexTimeout = DEFAULT_REGEX_TIMEOUT;
@@ -221,8 +221,8 @@ class SwitcherProperties {
 		return timeoutMs;
 	}
 
-	public void setTimeoutMs(String timeoutMs) {
-		if (!StringUtils.isBlank(timeoutMs)) {
+    public void setTimeoutMs(String timeoutMs) {
+		if (StringUtils.isNotBlank(timeoutMs)) {
 			this.timeoutMs = timeoutMs;
 		} else {
 			this.timeoutMs = DEFAULT_TIMEOUT_MS;

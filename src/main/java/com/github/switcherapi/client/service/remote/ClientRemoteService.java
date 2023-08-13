@@ -24,7 +24,7 @@ import java.util.Set;
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class ClientRemoteService {
+public class ClientRemoteService implements ClientRemote {
 	
 	private final ClientWS clientWs;
 	
@@ -33,25 +33,12 @@ public class ClientRemoteService {
 	private enum TokenStatus {
 		VALID, INVALID, SILENT
 	}
-
-	private enum Singleton {
-		INSTANCE;
-
-		private final ClientRemoteService instance = new ClientRemoteService();
-
-		public ClientRemoteService getInstance() {
-			return this.instance;
-		}
-	}
 	
-	private ClientRemoteService() {
+	public ClientRemoteService() {
 		this.clientWs = new ClientWSImpl();
 	}
-	
-	public static ClientRemoteService getInstance() {
-		return Singleton.INSTANCE.getInstance();
-	}
-	
+
+	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher)  {
 		final TokenStatus tokenStatus = this.isTokenValid();
 
@@ -69,13 +56,15 @@ public class ClientRemoteService {
 		}
 	}
 
+	@Override
 	public Snapshot resolveSnapshot() throws SwitcherException {
 		this.auth(this.isTokenValid());
 		
 		return this.clientWs.resolveSnapshot(
 				Optional.of(this.authResponse).orElseGet(AuthResponse::new).getToken());
 	}
-	
+
+	@Override
 	public boolean checkSnapshotVersion(final long version) {
 		this.auth(this.isTokenValid());
 
@@ -84,7 +73,8 @@ public class ClientRemoteService {
 
 		return snapshotVersionResponse.isUpdated();
 	}
-	
+
+	@Override
 	public SwitchersCheck checkSwitchers(final Set<String> switchers) {
 		final TokenStatus tokenStatus = this.isTokenValid();
 
@@ -139,10 +129,6 @@ public class ClientRemoteService {
 			response.setExp(SwitcherUtils.addTimeDuration(addValue, new Date()).getTime()/1000);
 			this.authResponse = response;
 		}
-	}
-
-	public void clearAuthResponse() {
-		this.authResponse = null;
 	}
 
 }

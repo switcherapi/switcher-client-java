@@ -27,9 +27,12 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	private static final Logger logger = LogManager.getLogger(SwitcherRemoteService.class);
 	
 	private final SwitcherLocalService switcherOffline;
+
+	private final ClientRemote clientRemote;
 	
 	public SwitcherRemoteService() {
 		this.switcherOffline = new SwitcherLocalService();
+		this.clientRemote = new ClientRemoteService();
 	}
 
 	@Override
@@ -39,7 +42,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 		}
 		
 		try {
-			final CriteriaResponse response = ClientRemoteService.getInstance().executeCriteria(switcher);
+			final CriteriaResponse response = this.clientRemote.executeCriteria(switcher);
 			
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("[Online] response: %s", response));
@@ -70,16 +73,16 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	public boolean checkSnapshotVersion() {
 		if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION))
 				&& this.switcherOffline.getDomain() != null) {
-			return super.checkSnapshotVersion(this.switcherOffline.getDomain());
+			return super.checkSnapshotVersion(this.clientRemote, this.switcherOffline.getDomain());
 		}
 		
-		super.initializeSnapshotFromAPI();
+		super.initializeSnapshotFromAPI(this.clientRemote);
 		return Boolean.TRUE;
 	}
 
 	@Override
 	public void updateSnapshot() {
-		this.switcherOffline.setDomain(super.initializeSnapshotFromAPI());
+		this.switcherOffline.setDomain(super.initializeSnapshotFromAPI(this.clientRemote));
 	}
 	
 	@Override
@@ -88,7 +91,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 			logger.debug(String.format("switchers: %s", switchers));
 		}
 		
-		final SwitchersCheck response = ClientRemoteService.getInstance().checkSwitchers(switchers);
+		final SwitchersCheck response = this.clientRemote.checkSwitchers(switchers);
 		if (response.getNotFound() != null && response.getNotFound().length > 0) {
 			throw new SwitchersValidationException(Arrays.toString(response.getNotFound()));
 		}

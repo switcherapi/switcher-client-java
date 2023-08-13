@@ -9,6 +9,8 @@ import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.service.remote.ClientRemote;
+import com.github.switcherapi.client.service.remote.ClientRemoteService;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import org.apache.commons.lang3.StringUtils;
@@ -26,10 +28,13 @@ import java.util.Set;
 public class SwitcherLocalService extends SwitcherExecutor {
 	
 	private static final Logger logger = LogManager.getLogger(SwitcherLocalService.class);
+
+	private final ClientRemote clientRemote;
 	
 	private Domain domain;
 	
 	public SwitcherLocalService() {
+		this.clientRemote = new ClientRemoteService();
 		this.init();
 	}
 	
@@ -44,13 +49,13 @@ public class SwitcherLocalService extends SwitcherExecutor {
 		final boolean snapshotAutoload = SwitcherContextBase.contextBol(ContextKey.SNAPSHOT_AUTO_LOAD);
 
 		if (StringUtils.isBlank(snapshotLocation) && snapshotAutoload) {
-			this.domain = this.initializeSnapshotFromAPI();
+			this.domain = this.initializeSnapshotFromAPI(this.clientRemote);
 		} else if (StringUtils.isNotBlank(snapshotLocation)) {
 			try {
 				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
 			} catch (IOException e) {
 				if (snapshotAutoload) {
-					this.domain = this.initializeSnapshotFromAPI();
+					this.domain = this.initializeSnapshotFromAPI(this.clientRemote);
 				}
 			}
 		}
@@ -74,12 +79,12 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	
 	@Override
 	public boolean checkSnapshotVersion() {
-		return super.checkSnapshotVersion(this.domain);
+		return super.checkSnapshotVersion(this.clientRemote, this.domain);
 	}
 
 	@Override
 	public void updateSnapshot() {
-		this.domain = super.initializeSnapshotFromAPI();
+		this.domain = super.initializeSnapshotFromAPI(this.clientRemote);
 	}
 	
 	@Override

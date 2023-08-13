@@ -5,9 +5,9 @@ import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.remote.ClientWSImpl;
-import com.github.switcherapi.client.service.remote.ClientRemoteService;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
+import com.github.switcherapi.fixture.CountDownHelper;
 import com.google.gson.Gson;
 import mockwebserver3.MockResponse;
 import mockwebserver3.MockWebServer;
@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,7 +49,7 @@ class SwitcherSnapshotAutoUpdateTest {
     }
 
 	@AfterAll
-	static void tearDown() throws IOException, InterruptedException {
+	static void tearDown() throws IOException {
         mockBackEnd.shutdown();
 
         //clean generated outputs
@@ -59,14 +57,12 @@ class SwitcherSnapshotAutoUpdateTest {
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_3.json"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_4.json"));
 
-		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(10, TimeUnit.SECONDS);
+		CountDownHelper.wait(10);
     }
 
 	@BeforeEach
 	void resetSwitcherContextState() {
 		((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
-		ClientRemoteService.getInstance().clearAuthResponse();
 		SwitcherContextBase.terminateSnapshotAutoUpdateWorker();
 	}
 
@@ -138,7 +134,7 @@ class SwitcherSnapshotAutoUpdateTest {
 
 	@Test
 	@Order(1)
-	void shouldUpdateSnapshot_offline() throws InterruptedException {
+	void shouldUpdateSnapshot_offline() {
 		//given
 		givenSnapshotUpdateResponse(false);
 
@@ -155,14 +151,13 @@ class SwitcherSnapshotAutoUpdateTest {
 		assertEquals(1, Switchers.getSnapshotVersion());
 
 		//test
-		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(2, TimeUnit.SECONDS);
+		CountDownHelper.wait(2);
 		assertEquals(2, Switchers.getSnapshotVersion());
 	}
 
 	@Test
 	@Order(2)
-	void shouldUpdateSnapshot_online() throws InterruptedException {
+	void shouldUpdateSnapshot_online() {
 		//given
 		givenSnapshotUpdateResponse(false);
 
@@ -179,14 +174,13 @@ class SwitcherSnapshotAutoUpdateTest {
 		assertEquals(1, Switchers.getSnapshotVersion());
 
 		//test
-		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(2, TimeUnit.SECONDS);
+		CountDownHelper.wait(2);
 		assertEquals(2, Switchers.getSnapshotVersion());
 	}
 
 	@Test
 	@Order(3)
-	void shouldNotUpdateSnapshot_whenNoUpdateAvailable() throws InterruptedException {
+	void shouldNotUpdateSnapshot_whenNoUpdateAvailable() {
 		//given
 		givenSnapshotUpdateResponse(true);
 
@@ -203,14 +197,13 @@ class SwitcherSnapshotAutoUpdateTest {
 		assertEquals(1, Switchers.getSnapshotVersion());
 
 		//test - still the same version
-		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(1, TimeUnit.SECONDS);
+		CountDownHelper.wait(1);
 		assertEquals(1, Switchers.getSnapshotVersion());
 	}
 
 	@Test
 	@Order(4)
-	void shouldUpdateSnapshot_online_inMemory() throws InterruptedException {
+	void shouldUpdateSnapshot_online_inMemory() {
 		//given
 		givenResponse(generateMockAuth()); //auth
 		givenResponse(generateSnapshotResponse("default_outdated.json")); //graphql
@@ -230,8 +223,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		assertEquals(1, Switchers.getSnapshotVersion());
 
 		//test
-		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(2, TimeUnit.SECONDS);
+		CountDownHelper.wait(2);
 		assertEquals(2, Switchers.getSnapshotVersion());
 	}
 
