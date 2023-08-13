@@ -3,13 +3,12 @@ package com.github.switcherapi.client.utils;
 import com.github.switcherapi.SwitchersBase;
 import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.service.WorkerName;
+import com.github.switcherapi.fixture.CountDownHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -37,13 +36,12 @@ class SnapshotWatcherWorkerTest {
 	}
 
 	@Test
-	void shouldStartAndKillWorker() throws InterruptedException {
+	void shouldStartAndKillWorker() {
 		SwitchersBase.watchSnapshot();
 		assertWorker(true);
 
 		SwitchersBase.stopWatchingSnapshot();
-		CountDownLatch waiter = new CountDownLatch(1);
-		waiter.await(2, TimeUnit.SECONDS);
+		CountDownHelper.wait(2);
 
 		assertWorker(false);
 	}
