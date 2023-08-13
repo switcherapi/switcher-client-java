@@ -127,9 +127,6 @@ class SwitcherSnapshotAutoUpdateTest {
 		givenResponse(generateCheckSnapshotVersionResponse(Boolean.toString(isUpdated)));
 
 		if (!isUpdated) {
-			//auth isAlive
-			givenResponse(generateMockAuth());
-
 			//graphql
 			givenResponse(generateSnapshotResponse("default.json"));
 		}
@@ -215,12 +212,10 @@ class SwitcherSnapshotAutoUpdateTest {
 	@Order(4)
 	void shouldUpdateSnapshot_online_inMemory() throws InterruptedException {
 		//given
-		//load snapshot in-memory
 		givenResponse(generateMockAuth()); //auth
 		givenResponse(generateSnapshotResponse("default_outdated.json")); //graphql
-
-		//update snapshot
-		givenSnapshotUpdateResponse(false);
+		givenResponse(generateCheckSnapshotVersionResponse(Boolean.toString(false))); //criteria/snapshot_check
+		givenResponse(generateSnapshotResponse("default.json")); //graphql
 
 		//that
 		Switchers.configure(ContextBuilder.builder()

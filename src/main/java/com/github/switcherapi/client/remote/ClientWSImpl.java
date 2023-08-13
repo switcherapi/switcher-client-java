@@ -59,21 +59,25 @@ public class ClientWSImpl implements ClientWS {
 				.queryParam(Switcher.KEY, switcher.getSwitcherKey())
 				.queryParam(Switcher.SHOW_REASON, switcher.isShowReason())
 				.queryParam(Switcher.BYPASS_METRIC, switcher.isBypassMetrics());
-		
-		final Response response = myResource.request(MediaType.APPLICATION_JSON)
-				.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token))
-				.post(Entity.json(switcher.getInputRequest()));
 
-		if (response.getStatus() == 200) {
-			final CriteriaResponse criteriaResponse = response.readEntity(CriteriaResponse.class);
-			criteriaResponse.setSwitcherKey(switcher.getSwitcherKey());
-			criteriaResponse.setEntry(switcher.getEntry());
-			response.close();
+		try {
+			final Response response = myResource.request(MediaType.APPLICATION_JSON)
+					.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token))
+					.post(Entity.json(switcher.getInputRequest()));
 
-			return criteriaResponse;
+			if (response.getStatus() == 200) {
+				final CriteriaResponse criteriaResponse = response.readEntity(CriteriaResponse.class);
+				criteriaResponse.setSwitcherKey(switcher.getSwitcherKey());
+				criteriaResponse.setEntry(switcher.getEntry());
+				response.close();
+
+				return criteriaResponse;
+			}
+
+			throw new SwitcherRemoteException(url, response.getStatus());
+		} catch (Exception e) {
+			throw new SwitcherRemoteException(url, e);
 		}
-
-		throw new SwitcherRemoteException(url, response.getStatus());
 	}
 	
 	@Override
@@ -85,7 +89,7 @@ public class ClientWSImpl implements ClientWS {
 
 		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(AUTH_URL, url));
-		
+
 		final Response response = myResource.request(MediaType.APPLICATION_JSON)
 				.header(HEADER_APIKEY, SwitcherContextBase.contextStr(ContextKey.APIKEY))
 				.post(Entity.json(authRequest));
