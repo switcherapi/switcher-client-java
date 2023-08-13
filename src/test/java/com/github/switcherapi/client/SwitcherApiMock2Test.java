@@ -49,10 +49,9 @@ class SwitcherApiMock2Test {
 				.snapshotLocation(null)
 				.snapshotSkipValidation(false)
 				.environment("default")
-				.silentMode(false)
+				.silentMode(null)
 				.snapshotAutoLoad(false)
-				.snapshotAutoUpdateInterval(null)
-				.retryAfter(null));
+				.snapshotAutoUpdateInterval(null));
 		
 		Switchers.initializeClient();
 	}

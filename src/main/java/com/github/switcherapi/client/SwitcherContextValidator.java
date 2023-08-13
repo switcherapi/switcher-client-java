@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 class SwitcherContextValidator {
 
 	public static final String ERR_FORMAT = "Invalid parameter format for [%s]. Expected %s.";
-	public static final String ERR_RETRY = "Retry not defined [add: switcher.retry]";
 	public static final String ERR_URL = "URL not defined [add: switcher.url]";
 	public static final String ERR_API = "API Key not defined [add: switcher.apikey]";
 	public static final String ERR_DOMAIN = "Domain not defined [add: switcher.domain]";
@@ -46,10 +45,6 @@ class SwitcherContextValidator {
 	 * @param prop Configured properties
 	 */
 	public static void validateOptionals(final SwitcherProperties prop) {
-		if (prop.isSilentMode() && StringUtils.isBlank(prop.getRetryAfter())) {
-			throw new SwitcherContextException(ERR_RETRY);
-		}
-
 		try {
 			Integer.parseInt(prop.getRegexTimeout());
 		} catch (NumberFormatException e) {

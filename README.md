@@ -54,7 +54,7 @@ Define a feature class that extends SwitcherContext. This implementation will ce
 
 The Client SDK configuration must be defined in a properties file that contains all parameters for your application to start communicating with the API.
 
-### Inside of the resources folder, create a file named: switcherapi.properties.
+### Inside the resources' folder, create a file named: switcherapi.properties.
 
 Configure the parameters according to the definition below. 
 You can also use environment variables using the standard notation ${VALUE:DEFAULT_VALUE}
@@ -69,13 +69,12 @@ switcher.domain -> Domain name
 
 #optional
 switcher.environment -> Environment name
-switcher.offline -> true/false When offline, it will only use a local snapshot file
+switcher.offline -> true/false When offline, it will only use a local snapshot
 switcher.snapshot.location -> Folder from where snapshots will be saved/read
-switcher.snapshot.auto -> true/false Automated lookup for snapshot when loading the application
+switcher.snapshot.auto -> true/false Automated lookup for snapshot when initializing the client
 switcher.snapshot.skipvalidation -> true/false Skip snapshotValidation() that can be used for UT executions
 switcher.snapshot.updateinterval -> Enable the Snapshot Auto Update given an interval of time - e.g. 1s (s: seconds, m: minutes)
-switcher.silent -> true/false Contingency in case of some problem with connectivity with the API
-switcher.retry -> Time given to the module to re-establish connectivity with the API - e.g. 5s (s: seconds - m: minutes - h: hours)
+switcher.silent -> Enable contigency given the time for the client to retry - e.g. 5s (s: seconds - m: minutes - h: hours)
 switcher.truststore.path -> Path to the truststore file
 switcher.truststore.password -> Truststore password
 switcher.timeout -> Time in ms given to the API to respond - 3000 default value

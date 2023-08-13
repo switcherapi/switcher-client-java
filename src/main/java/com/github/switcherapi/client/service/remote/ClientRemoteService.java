@@ -14,6 +14,7 @@ import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
 import com.github.switcherapi.client.remote.ClientWS;
 import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.utils.SwitcherUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.Optional;
@@ -130,8 +131,8 @@ public class ClientRemoteService {
 	}
 	
 	private void setSilentModeExpiration() throws SwitcherInvalidDateTimeArgumentException {
-		if (SwitcherContextBase.contextBol(ContextKey.SILENT_MODE)) {
-			final String addValue = SwitcherContextBase.contextStr(ContextKey.RETRY_AFTER);
+		if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.SILENT_MODE))) {
+			final String addValue = SwitcherContextBase.contextStr(ContextKey.SILENT_MODE);
 			final AuthResponse response = new AuthResponse();
 			
 			response.setToken(ContextKey.SILENT_MODE.getParam());
