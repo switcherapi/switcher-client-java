@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.github.switcherapi.client.service.remote.ClientRemote;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -75,17 +76,17 @@ public abstract class SwitcherExecutor {
 	 */
 	public abstract long getSnapshotVersion();
 	
-	protected boolean checkSnapshotVersion(final Domain domain) {
+	protected boolean checkSnapshotVersion(ClientRemote clientRemote, final Domain domain) {
 		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("verifying snapshot version - environment: %s", environment));
 		}
 		
-		return ClientRemoteService.getInstance().checkSnapshotVersion(domain.getVersion());
+		return clientRemote.checkSnapshotVersion(domain.getVersion());
 	}
 	
-	protected Domain initializeSnapshotFromAPI() {
+	protected Domain initializeSnapshotFromAPI(ClientRemote clientRemote) {
 		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
 		
 		if (logger.isDebugEnabled()) {
@@ -93,7 +94,7 @@ public abstract class SwitcherExecutor {
 		}
 		
 		try {
-			final Snapshot snapshot = ClientRemoteService.getInstance().resolveSnapshot();
+			final Snapshot snapshot = clientRemote.resolveSnapshot();
 			final String snapshotLocation = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION);
 
 			if (snapshotLocation != null) {

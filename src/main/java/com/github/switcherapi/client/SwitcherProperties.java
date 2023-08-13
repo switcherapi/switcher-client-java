@@ -134,7 +134,7 @@ class SwitcherProperties {
 	}
 
 	public void setEnvironment(String environment) {
-		if (!StringUtils.isBlank(environment)) {
+		if (StringUtils.isNotBlank(environment)) {
 			this.environment = environment;
 		} else {
 			this.environment = DEFAULT_ENV;
@@ -162,7 +162,7 @@ class SwitcherProperties {
 	}
 
 	public void setRegexTimeout(String regexTimeout) {
-		if (!StringUtils.isBlank(regexTimeout)) {
+		if (StringUtils.isNotBlank(regexTimeout)) {
 			this.regexTimeout = regexTimeout;
 		} else {
 			this.regexTimeout = DEFAULT_REGEX_TIMEOUT;
@@ -222,7 +222,7 @@ class SwitcherProperties {
 	}
 
     public void setTimeoutMs(String timeoutMs) {
-		if (!StringUtils.isBlank(timeoutMs)) {
+		if (StringUtils.isNotBlank(timeoutMs)) {
 			this.timeoutMs = timeoutMs;
 		} else {
 			this.timeoutMs = DEFAULT_TIMEOUT_MS;
