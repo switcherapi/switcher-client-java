@@ -253,7 +253,7 @@ class SwitcherApiMockTest extends MockWebServerHelper {
 
 		assertDoesNotThrow(() -> {
 			Switchers.initializeClient();
-			assertTrue(Switchers.validateSnapshot());
+			assertFalse(Switchers.validateSnapshot());
 		});
 	}
 

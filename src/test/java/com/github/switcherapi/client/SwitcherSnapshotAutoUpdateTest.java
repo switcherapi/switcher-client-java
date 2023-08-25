@@ -227,4 +227,34 @@ class SwitcherSnapshotAutoUpdateTest {
 		assertEquals(2, Switchers.getSnapshotVersion());
 	}
 
+	@Test
+	@Order(5)
+	void shouldNotKillThread_whenAPI_wentOffline() {
+		//given
+		givenResponse(generateMockAuth()); //auth
+		givenResponse(generateSnapshotResponse("default_outdated.json")); //graphql
+
+		//that
+		Switchers.configure(ContextBuilder.builder()
+				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
+				.snapshotLocation(null)
+				.environment("generated_mock_default_6")
+				.offlineMode(true)
+				.snapshotAutoLoad(true)
+				.snapshotAutoUpdateInterval("1s"));
+
+		Switchers.initializeClient();
+		assertEquals(1, Switchers.getSnapshotVersion());
+
+		CountDownHelper.wait(1);
+
+		//given - API is online again
+		givenResponse(generateCheckSnapshotVersionResponse(Boolean.toString(false))); //criteria/snapshot_check
+		givenResponse(generateSnapshotResponse("default.json")); //graphql
+
+		//test
+		CountDownHelper.wait(2);
+		assertEquals(2, Switchers.getSnapshotVersion());
+	}
+
 }
