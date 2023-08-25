@@ -1,7 +1,5 @@
 package com.github.switcherapi.client;
 
-import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
-import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 
@@ -37,20 +35,14 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	}
 	
 	/**
-	 * Initialize Switcher Client
+	 * {@link SwitcherContextBase#initializeClient()}
 	 */
 	public static void initializeClient() {
 		SwitcherContextBase.initializeClient();
 	}
 	
 	/**
-	 * Return a ready-to-use Switcher that will invoke the criteria configured into the Switcher API or Snapshot
-	 * 
-	 * @param key name of the key created
-	 * @param keepEntries when true it will return a cached Switcher with all parameters used before
-	 * 
-	 * @return a ready to use Switcher
-	 * @throws SwitcherKeyNotFoundException in case the key was not properly loaded
+	 * {@link SwitcherContextBase#getSwitcher(String, boolean)}
 	 */
 	public static Switcher getSwitcher(String key, boolean keepEntries) {
 		return SwitcherContextBase.getSwitcher(key, keepEntries);
@@ -67,19 +59,14 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	}
 	
 	/**
-	 * Validate and update local snapshot file.<br>
-	 * It requires offline mode or SwitcherContextParam.SNAPSHOT_LOCATION configured
-	 * 
-	 * @return true if validation was performed
+	 * {@link SwitcherContextBase#validateSnapshot()}
 	 */
 	public static boolean validateSnapshot() {
 		return SwitcherContextBase.validateSnapshot();
 	}
 	
 	/**
-	 * Executes smoke test against the API to verify if all Switchers are properly configured
-	 * 
-	 * @throws SwitchersValidationException when one or more Switcher Key is not found
+	 * {@link SwitcherContextBase#checkSwitchers()}
 	 */
 	public static void checkSwitchers() {
 		SwitcherContextBase.checkSwitchers();
@@ -95,29 +82,21 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	}
 	
 	/**
-	 * Retrieve string context parameter based on contextKey
-	 * 
-	 * @param contextKey to be retrieved
-	 * @return Value configured for the context parameter
+	 * {@link SwitcherContextBase#contextStr(ContextKey)}
 	 */
 	public static String contextStr(ContextKey contextKey) {
 		return SwitcherContextBase.contextStr(contextKey);
 	}
 	
 	/**
-	 * Retrieve boolean context parameter based on contextKey
-	 * 
-	 * @param contextKey to be retrieved
-	 * @return Value configured for the context parameter
+	 * {@link SwitcherContextBase#contextBol(ContextKey)}
 	 */
 	public static boolean contextBol(ContextKey contextKey) {
 		return SwitcherContextBase.contextBol(contextKey);
 	}
 	
 	/**
-	 * Fluent builder to configure the Switcher Context
-	 * 
-	 * @param builder specification to be applied
+	 * {@link SwitcherContextBase#configure(ContextBuilder)}
 	 */
 	public static void configure(ContextBuilder builder) {
 		SwitcherContextBase.configure(builder);
