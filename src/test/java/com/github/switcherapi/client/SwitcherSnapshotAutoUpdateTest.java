@@ -238,7 +238,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		Switchers.configure(ContextBuilder.builder()
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(null)
-				.environment("generated_mock_default_5")
+				.environment("generated_mock_default_6")
 				.offlineMode(true)
 				.snapshotAutoLoad(true)
 				.snapshotAutoUpdateInterval("1s"));
