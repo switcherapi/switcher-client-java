@@ -253,7 +253,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		givenResponse(generateSnapshotResponse("default.json")); //graphql
 
 		//test
-		CountDownHelper.wait(1);
+		CountDownHelper.wait(2);
 		assertEquals(2, Switchers.getSnapshotVersion());
 	}
 
