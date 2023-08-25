@@ -116,7 +116,7 @@ public abstract class SwitcherContextBase {
 		}
 		
 		loadSwitchers();
-		scheduleSnapshotAutoUpdate();
+		scheduleSnapshotAutoUpdate(switcherProperties.getSnapshotAutoUpdateInterval(), null);
 		ContextBuilder.preConfigure(switcherProperties);
 	}
 	
@@ -163,15 +163,28 @@ public abstract class SwitcherContextBase {
 	}
 
 	/**
-	 * Configure worker for Scheduled Snapshot Auto Update based on the interval provided at
-	 * the configuration "switcher.snapshot.updateinterval"
+	 * Schedule a task to update the snapshot automatically.<br>
+	 * The task will be executed in a single thread executor service.
+	 *
+	 * @param intervalValue to be used for the update (e.g. 5s, 1m, 1h, 1d)
+	 * @param callback to be invoked when the snapshot is updated or when an error occurs
 	 */
-	private static void scheduleSnapshotAutoUpdate() {
-		if (StringUtils.isBlank(switcherProperties.getSnapshotAutoUpdateInterval()))
+	public static void scheduleSnapshotAutoUpdate(String intervalValue, SnapshotCallback callback) {
+		if (StringUtils.isBlank(intervalValue))
 			return;
 
-		final long interval = SwitcherUtils.getMillis(switcherProperties.getSnapshotAutoUpdateInterval());
-		final Runnable runnableSnapshotValidate = SwitcherContextBase::validateSnapshot;
+		final long interval = SwitcherUtils.getMillis(intervalValue);
+		final SnapshotCallback callbackFinal = Optional.ofNullable(callback).orElse(new SnapshotCallback());
+		final Runnable runnableSnapshotValidate = () -> {
+			try {
+				if (validateSnapshot()) {
+					callbackFinal.onSnapshotUpdate(instance.getSnapshotVersion());
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				callbackFinal.onSnapshotUpdateError(e);
+			}
+		};
 
 		initExecutorService();
 		scheduledExecutorService.scheduleAtFixedRate(runnableSnapshotValidate, 0, interval, TimeUnit.MILLISECONDS);
@@ -223,20 +236,17 @@ public abstract class SwitcherContextBase {
 	}
 	
 	/**
-	 * Validate and update local snapshot file.<br>
-	 * It requires offline mode or SwitcherContextParam.SNAPSHOT_LOCATION configured
+	 * Validate if the snapshot version is the same as the one in the API.<br>
+	 * If the version is different, it will update the snapshot in memory.
 	 * 
-	 * @return true if validation was performed
+	 * @return true if snapshot was updated
 	 */
 	public static boolean validateSnapshot() {
-		if (switcherProperties.isSnapshotSkipValidation()) {
+		if (switcherProperties.isSnapshotSkipValidation() || instance.checkSnapshotVersion()) {
 			return false;
 		}
-		
-		if (!instance.checkSnapshotVersion()) {
-			instance.updateSnapshot();
-		}
-		
+
+		instance.updateSnapshot();
 		return true;
 	}
 	
