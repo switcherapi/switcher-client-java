@@ -1,5 +1,7 @@
 package com.github.switcherapi.client;
 
+import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
+import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 
@@ -43,6 +45,12 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	
 	/**
 	 * {@link SwitcherContextBase#getSwitcher(String, boolean)}
+	 *
+	 * @param key name of the key created
+	 * @param keepEntries when true it will return a cached Switcher with all parameters used before
+	 *
+	 * @return a ready to use Switcher
+	 * @throws SwitcherKeyNotFoundException in case the key was not properly loaded
 	 */
 	public static Switcher getSwitcher(String key, boolean keepEntries) {
 		return SwitcherContextBase.getSwitcher(key, keepEntries);
@@ -60,6 +68,8 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	
 	/**
 	 * {@link SwitcherContextBase#validateSnapshot()}
+	 *
+	 * @return true if snapshot was updated
 	 */
 	public static boolean validateSnapshot() {
 		return SwitcherContextBase.validateSnapshot();
@@ -67,6 +77,8 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	
 	/**
 	 * {@link SwitcherContextBase#checkSwitchers()}
+	 *
+	 * @throws SwitchersValidationException when one or more Switcher Key is not found
 	 */
 	public static void checkSwitchers() {
 		SwitcherContextBase.checkSwitchers();
@@ -83,6 +95,9 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	
 	/**
 	 * {@link SwitcherContextBase#contextStr(ContextKey)}
+	 *
+	 * @param contextKey to be retrieved
+	 * @return Value configured for the context parameter
 	 */
 	public static String contextStr(ContextKey contextKey) {
 		return SwitcherContextBase.contextStr(contextKey);
@@ -90,6 +105,9 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	
 	/**
 	 * {@link SwitcherContextBase#contextBol(ContextKey)}
+	 *
+	 * @param contextKey to be retrieved
+	 * @return Value configured for the context parameter
 	 */
 	public static boolean contextBol(ContextKey contextKey) {
 		return SwitcherContextBase.contextBol(contextKey);
@@ -97,6 +115,8 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	
 	/**
 	 * {@link SwitcherContextBase#configure(ContextBuilder)}
+	 *
+	 * @param builder specification to be applied
 	 */
 	public static void configure(ContextBuilder builder) {
 		SwitcherContextBase.configure(builder);
