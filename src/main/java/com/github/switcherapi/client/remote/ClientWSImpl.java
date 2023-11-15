@@ -50,9 +50,7 @@ public class ClientWSImpl implements ClientWS {
 	
 	@Override
 	public CriteriaResponse executeCriteriaService(final Switcher switcher, final String token) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("switcher: %s", switcher));
-		}
+		logger.debug("switcher: {}", switcher);
 		
 		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, url))
