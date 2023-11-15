@@ -63,19 +63,12 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	
 	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("switcher: %s", switcher));
-		}
-		
+		logger.debug("switcher: {}", switcher);
 		final CriteriaResponse response = ClientLocalService.getInstance().executeCriteria(switcher, this.domain);
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("[Offline] response: %s", response));
-		}
+		logger.debug("[Offline] response: {}", response);
 		
 		return response;
 	}
-	
 	
 	@Override
 	public boolean checkSnapshotVersion() {
@@ -89,9 +82,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	
 	@Override
 	public void checkSwitchers(final Set<String> switchers) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("switchers: %s", switchers));
-		}
+		logger.debug("switchers: {}", switchers);
 		
 		final List<String> response = ClientLocalService.getInstance().checkSwitchers(switchers, this.domain);
 		if (!response.isEmpty()) {

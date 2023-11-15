@@ -37,16 +37,11 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 
 	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("switcher: %s", switcher));
-		}
+		logger.debug("switcher: {}", switcher);
 		
 		try {
 			final CriteriaResponse response = this.clientRemote.executeCriteria(switcher);
-			
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("[Online] response: %s", response));
-			}
+			logger.debug("[Online] response: {}", response);
 			
 			return response;
 		} catch (final SwitcherRemoteException e) {
@@ -59,9 +54,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 			final SwitcherRemoteException e) {
 		if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.SILENT_MODE))) {
 			CriteriaResponse response = this.switcherOffline.executeCriteria(switcher);
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("[Silent] response: %s", response));
-			}
+			logger.debug("[Silent] response: {}", response);
 			
 			return response;
 		} else {
@@ -87,9 +80,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	
 	@Override
 	public void checkSwitchers(final Set<String> switchers) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("switchers: %s", switchers));
-		}
+		logger.debug("switchers: {}", switchers);
 		
 		final SwitchersCheck response = this.clientRemote.checkSwitchers(switchers);
 		if (response.getNotFound() != null && response.getNotFound().length > 0) {

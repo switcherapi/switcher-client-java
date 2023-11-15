@@ -131,12 +131,8 @@ public class ClientLocalService {
 	 */
 	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input,
 			final Switcher switcher) {
-
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("configStrategies: %s", Arrays.toString(configStrategies)));
-			logger.debug(String.format("input: %s",
-					Arrays.toString(input != null ? input.toArray() : ArrayUtils.EMPTY_STRING_ARRAY)));
-		}
+		logger.debug("configStrategies: {}", () -> Arrays.toString(configStrategies));
+		logger.debug("input: {}", () -> Arrays.toString(input != null ? input.toArray() : ArrayUtils.EMPTY_STRING_ARRAY));
 
 		boolean result;
 		for (final Strategy strategy : configStrategies) {
