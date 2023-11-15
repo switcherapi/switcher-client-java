@@ -13,9 +13,7 @@ public class SnapshotCallback {
      * @param version of the new snapshot
      */
     public void onSnapshotUpdate(long version) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Snapshot updated: %s", version));
-        }
+        logger.debug("Snapshot updated: {}", version);
     }
 
     /**
@@ -24,8 +22,6 @@ public class SnapshotCallback {
      * @param e Exception
      */
     public void onSnapshotUpdateError(Exception e) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Failed to update snapshot: %s", e.getMessage()));
-        }
+        logger.debug("Failed to update snapshot: {}", e.getMessage());
     }
 }

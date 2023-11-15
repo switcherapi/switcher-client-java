@@ -17,9 +17,7 @@ public class SnapshotEventHandler {
 	private static final Logger logger = LogManager.getLogger(SnapshotEventHandler.class);
 	
 	public void onSuccess() {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Snapshot has been changed");
-		}
+		logger.debug("Snapshot has been changed");
 	}
 	
 	public void onError(SwitcherException exception) {

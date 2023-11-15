@@ -30,14 +30,10 @@ public class AsyncSwitcher implements Runnable {
 	 */
 	public synchronized void execute(final Switcher switcher) {
 		this.switcher = switcher;
-		
-		if (logger.isDebugEnabled())
-			logger.debug(String.format("nextRun: %s - currentTimeMillis: %s", nextRun,
-					System.currentTimeMillis()));
+		logger.debug("nextRun: {} - currentTimeMillis: {}", nextRun, System.currentTimeMillis());
 		
 		if (nextRun < System.currentTimeMillis()) {
-			if (logger.isDebugEnabled())
-				logger.debug("Running AsyncSwitcher");
+			logger.debug("Running AsyncSwitcher");
 
 			this.nextRun = System.currentTimeMillis() + switcher.delay;
 			new Thread(this, AsyncSwitcher.class.getName()).start();
