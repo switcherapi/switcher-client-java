@@ -32,11 +32,11 @@ public class SwitcherUtils {
 	
 	private static final Logger logger = LogManager.getLogger(SwitcherUtils.class);
 	
-	private static final String LOG_DATE = "date: %s";
+	private static final String LOG_DATE = "date: {}";
 	
-	private static final String LOG_TME = "time: %s";
+	private static final String LOG_TME = "time: {}";
 	
-	private static final String LOG_ADDVALUE = "addValue: %s";
+	private static final String LOG_ADDVALUE = "addValue: {}";
 	
 	/**
 	 * [0] = s (seconds) [1] = m (minutes) [2] = h (hours) [3] = d (days)
@@ -59,10 +59,8 @@ public class SwitcherUtils {
 	
 	public static Date addTimeDuration(final String addValue, final Date date) 
 			throws SwitcherInvalidDateTimeArgumentException {
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(LOG_ADDVALUE, addValue));
-			logger.debug(String.format(LOG_DATE, date));
-		}
+		logger.debug(LOG_ADDVALUE, addValue);
+		logger.debug(LOG_DATE, date);
 		
 		if (addValue.endsWith(DURATION[0])) {
 			return DateUtils.addSeconds(date, Integer.parseInt(addValue.replace(DURATION[0], StringUtils.EMPTY)));
@@ -78,9 +76,7 @@ public class SwitcherUtils {
 	}
 
 	public static long getMillis(final String time) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(LOG_TME, time));
-		}
+		logger.debug(LOG_TME, time);
 
 		if (time.endsWith(DURATION[0])) {
 			return (long) (Double.parseDouble(time.replace(DURATION[0], StringUtils.EMPTY)) * 1000L);
@@ -92,19 +88,15 @@ public class SwitcherUtils {
 	}
 	
 	public static String getFullDate(final String date) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(LOG_DATE, date));
-		}
+		logger.debug(LOG_DATE, date);
 		
 		final String time = RegExUtils.removePattern(date, FULL_DATE_REGEX).trim();
 		return getFullTime(date, time);
 	}
 
 	public static String getFullTime(final String date, final String time) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(LOG_DATE, date));
-			logger.debug(String.format(LOG_TME, time));
-		}
+		logger.debug(LOG_DATE, date);
+		logger.debug(LOG_TME, time);
 		
 		if (StringUtils.isBlank(time)) {
 			return String.format("%s 00:00:00", date);

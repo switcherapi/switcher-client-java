@@ -11,17 +11,13 @@ public abstract class Validator {
 	
 	protected static final Logger logger = LogManager.getLogger(Validator.class);
 	
-	public static final String DEBUG_SWITCHER_INPUT = "switcherInput: %s";
-	public static final String DEBUG_STRATEGY = "strategy: %s";
+	public static final String DEBUG_SWITCHER_INPUT = "switcherInput: {}";
+	public static final String DEBUG_STRATEGY = "strategy: {}";
 	
 	public boolean execute(final Strategy strategy, final Entry switcherInput) 
 			throws SwitcherException {
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(DEBUG_STRATEGY, strategy));
-			logger.debug(String.format(DEBUG_SWITCHER_INPUT, switcherInput));
-		}
-		
+		logger.debug(DEBUG_STRATEGY, strategy);
+		logger.debug(DEBUG_SWITCHER_INPUT, switcherInput);
 		return process(strategy, switcherInput);
 	}
 	

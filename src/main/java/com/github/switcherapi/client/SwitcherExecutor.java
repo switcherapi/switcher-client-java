@@ -76,20 +76,14 @@ public abstract class SwitcherExecutor {
 	
 	protected boolean checkSnapshotVersion(ClientRemote clientRemote, final Domain domain) {
 		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("verifying snapshot version - environment: %s", environment));
-		}
+		logger.debug("verifying snapshot version - environment: {}", environment);
 		
 		return clientRemote.checkSnapshotVersion(domain.getVersion());
 	}
 	
 	protected Domain initializeSnapshotFromAPI(ClientRemote clientRemote) {
 		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("initializing snapshot from API - environment: %s", environment));
-		}
+		logger.debug("initializing snapshot from API - environment: {}", environment);
 		
 		try {
 			final Snapshot snapshot = clientRemote.resolveSnapshot();
