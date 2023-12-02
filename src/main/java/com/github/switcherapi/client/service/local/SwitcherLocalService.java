@@ -2,6 +2,7 @@ package com.github.switcherapi.client.service.local;
 
 import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.SwitcherExecutor;
+import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
@@ -83,6 +84,10 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	@Override
 	public void checkSwitchers(final Set<String> switchers) {
 		logger.debug("switchers: {}", switchers);
+
+		if (this.domain == null) {
+			throw new SwitcherContextException("Snapshot not loaded");
+		}
 		
 		final List<String> response = ClientLocalService.getInstance().checkSwitchers(switchers, this.domain);
 		if (!response.isEmpty()) {
