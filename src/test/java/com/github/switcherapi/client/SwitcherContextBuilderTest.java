@@ -1,18 +1,17 @@
 package com.github.switcherapi.client;
 
-import static com.github.switcherapi.SwitchersBase.USECASE11;
-import static com.github.switcherapi.client.SwitcherContextBase.getSwitcher;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.nio.file.Paths;
-
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Test;
-
 import com.github.switcherapi.SwitchersBase;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Test;
+
+import java.nio.file.Paths;
+
+import static com.github.switcherapi.SwitchersBase.USECASE11;
+import static com.github.switcherapi.client.SwitcherContextBase.getSwitcher;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherContextBuilderTest {
 	
@@ -22,7 +21,7 @@ class SwitcherContextBuilderTest {
 	void shouldReturnSuccess() {
 		//given
 		SwitchersBase.configure(ContextBuilder.builder(true)
-				.contextLocation("com.github.switcherapi.SwitchersBase")
+				.contextLocation(SwitchersBase.class.getCanonicalName())
 				.url("http://localhost:3000")
 				.apiKey("API_KEY")
 				.domain("switcher-domain")
@@ -36,6 +35,26 @@ class SwitcherContextBuilderTest {
 		//test
 		Switcher switcher = getSwitcher(USECASE11);
 		assertTrue(switcher.isItOn());
+	}
+
+	@Test
+	void shouldReturnError_snapshotNotLoaded() {
+		//given
+		SwitchersBase.configure(ContextBuilder.builder(true)
+				.contextLocation(SwitchersBase.class.getCanonicalName())
+				.url("http://localhost:3000")
+				.apiKey("API_KEY")
+				.domain("switcher-domain")
+				.component("switcher-client")
+				.environment("default")
+				.snapshotLocation(null)
+				.offlineMode(true));
+
+		SwitchersBase.initializeClient();
+
+		//test
+		Exception exception = assertThrows(SwitcherContextException.class, SwitchersBase::checkSwitchers);
+		assertEquals("Something went wrong: Context has errors - Snapshot not loaded", exception.getMessage());
 	}
 	
 	@Test
