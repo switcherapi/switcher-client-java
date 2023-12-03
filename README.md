@@ -196,6 +196,24 @@ Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
 switcher.isItOn();
 ```
 
+## Hybrid settings
+Forcing Switchers to resolve remotely can help you define exclusive features that cannot be resolved locally.<br>
+This feature is ideal if you want to run the SDK in offline mode but still want to resolve a specific switcher remotely.
+
+```java
+MyAppFeatures.configure(ContextBuilder.builder()
+    .url("https://switcher-api.com")
+    .apiKey("API_KEY")
+    .domain("Playground")
+    .component("switcher-playground")    
+	.offline(true)
+	.snapshotLocation("/src/resources"));
+
+MyAppFeatures.initializeClient();
+
+Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
+switcher.forceOnline().isItOn();
+```
 
 ## Real-time snapshot updater
 Let the Switcher Client manage your application local snapshot.<br>
