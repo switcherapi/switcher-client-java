@@ -65,8 +65,15 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher) {
 		logger.debug("switcher: {}", switcher);
-		final CriteriaResponse response = ClientLocalService.getInstance().executeCriteria(switcher, this.domain);
-		logger.debug("[Offline] response: {}", response);
+
+		CriteriaResponse response;
+		if (switcher.isForceOnline()) {
+			response = this.clientRemote.executeCriteria(switcher);
+			logger.debug("[Online] response: {}", response);
+		} else {
+			response = ClientLocalService.getInstance().executeCriteria(switcher, this.domain);
+			logger.debug("[Offline] response: {}", response);
+		}
 		
 		return response;
 	}
