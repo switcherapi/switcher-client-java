@@ -19,7 +19,7 @@ public abstract class SwitcherBuilder {
 	
 	protected long delay = 0;
 
-	protected boolean forceOnline = false;
+	protected boolean forceRemote = false;
 	
 	protected List<Entry> entry;
 	
@@ -43,8 +43,8 @@ public abstract class SwitcherBuilder {
 	 *
 	 * @return switcher itself
 	 */
-	public SwitcherBuilder forceOnline() {
-		this.forceOnline = true;
+	public SwitcherBuilder forceRemote() {
+		this.forceRemote = true;
 		return this;
 	}
 	
@@ -194,7 +194,7 @@ public abstract class SwitcherBuilder {
 	 */
 	public abstract boolean isItOn() throws SwitcherException;
 
-	public boolean isForceOnline() {
-		return forceOnline;
+	public boolean isForceRemote() {
+		return forceRemote;
 	}
 }

@@ -138,7 +138,7 @@ public class SwitcherUtils {
 	/**
 	 * Initialize instance of SnapshotWatcher to run in the background.
 	 * 
-	 * @param executorInstance of an Online or Offline Switcher
+	 * @param executorInstance of a Remote or Local Switcher
 	 * @param handler to notify snapshot change events
 	 */
 	public static void watchSnapshot(final SwitcherExecutor executorInstance, SnapshotEventHandler handler) {

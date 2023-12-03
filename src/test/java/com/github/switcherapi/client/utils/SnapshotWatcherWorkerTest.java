@@ -24,7 +24,7 @@ class SnapshotWatcherWorkerTest {
 			.environment("default")
 			.silentMode(null)
 			.regexTimeout(null)
-			.offlineMode(true));
+			.local(true));
 
 		SwitchersBase.initializeClient();
 		SwitchersBase.stopWatchingSnapshot();

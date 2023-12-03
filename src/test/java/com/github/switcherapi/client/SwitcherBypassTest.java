@@ -25,7 +25,7 @@ class SwitcherBypassTest {
 	@BeforeAll
 	static void setupContext() {
 		SwitcherContext.loadProperties();
-		SwitcherContext.configure(ContextBuilder.builder().offlineMode(true));
+		SwitcherContext.configure(ContextBuilder.builder().local(true));
 	}
 	
 	@AfterAll

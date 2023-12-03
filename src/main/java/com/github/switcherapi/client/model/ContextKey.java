@@ -65,9 +65,9 @@ public enum ContextKey {
 	SILENT_MODE("switcher.silent", "silentMode"),
 	
 	/**
-	 * (boolean) Defines if client will work offline.
+	 * (boolean) Defines if client will work locally.
 	 */
-	OFFLINE_MODE("switcher.offline", "offlineMode"),
+	LOCAL_MODE("switcher.local", "local"),
 
 	/**
 	 * (Number) Defines the Timed Match regex time out.
