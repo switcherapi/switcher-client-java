@@ -18,6 +18,8 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
 public abstract class SwitcherBuilder {
 	
 	protected long delay = 0;
+
+	protected boolean forceOnline = false;
 	
 	protected List<Entry> entry;
 	
@@ -33,6 +35,16 @@ public abstract class SwitcherBuilder {
 	 */
 	public SwitcherBuilder throttle(long delay) {
 		this.delay = delay;
+		return this;
+	}
+
+	/**
+	 * Force Switcher to resolve remotely
+	 *
+	 * @return switcher itself
+	 */
+	public SwitcherBuilder forceOnline() {
+		this.forceOnline = true;
 		return this;
 	}
 	
@@ -182,4 +194,7 @@ public abstract class SwitcherBuilder {
 	 */
 	public abstract boolean isItOn() throws SwitcherException;
 
+	public boolean isForceOnline() {
+		return forceOnline;
+	}
 }
