@@ -35,7 +35,7 @@ class SwitcherApiMock2Test extends MockWebServerHelper {
 		((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 		
 		Switchers.configure(ContextBuilder.builder()
-				.offlineMode(false)
+				.local(false)
 				.snapshotLocation(null)
 				.snapshotSkipValidation(false)
 				.environment("default")
@@ -54,7 +54,7 @@ class SwitcherApiMock2Test extends MockWebServerHelper {
 		//criteria
 		givenResponse(generateStatusResponse("401"));
 		
-		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertThrows(SwitcherRemoteException.class, switcher::isItOn);
 	}
 

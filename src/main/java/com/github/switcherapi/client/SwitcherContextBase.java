@@ -109,7 +109,7 @@ public abstract class SwitcherContextBase {
 		validateContext();
 		validateSwitcherKeys();
 		
-		if (switcherProperties.isOfflineMode()) {
+		if (switcherProperties.isLocal()) {
 			instance = new SwitcherLocalService();
 		} else {
 			instance = new SwitcherRemoteService();

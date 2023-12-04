@@ -25,7 +25,7 @@ class SwitcherApiMock3Test extends MockWebServerHelper {
 		Switchers.initializeClient(); // SwitcherContext requires preload before config override
 		Switchers.configure(ContextBuilder.builder()
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
-				.offlineMode(true)
+				.local(true)
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.snapshotSkipValidation(false)
 				.environment("fixture1"));
@@ -61,7 +61,7 @@ class SwitcherApiMock3Test extends MockWebServerHelper {
 		
 		//test
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
-		assertFalse(switcher.forceOnline().isItOn());
+		assertFalse(switcher.forceRemote().isItOn());
 	}
 
 	@Test

@@ -116,7 +116,7 @@ public class ContextBuilder {
 	/**
 	 * Java 8 only
 	 *
-	 * @param regexTimeout Time in ms given to Timed Match Worker used for offline Regex (ReDoS safety mechanism) - 3000 default value
+	 * @param regexTimeout Time in ms given to Timed Match Worker used for local Regex (ReDoS safety mechanism) - 3000 default value
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder regexTimeout(String regexTimeout) {
@@ -157,11 +157,11 @@ public class ContextBuilder {
 	}
 
 	/**
-	 * @param offlineMode true/false When offline, it will only use a local snapshot
+	 * @param local true/false When local, it will only use a local snapshot
 	 * @return ContextBuilder
 	 */
-	public ContextBuilder offlineMode(boolean offlineMode) {
-		properties.setOfflineMode(offlineMode);
+	public ContextBuilder local(boolean local) {
+		properties.setLocal(local);
 		return this;
 	}
 
