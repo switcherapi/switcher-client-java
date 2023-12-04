@@ -134,7 +134,7 @@ class SwitcherSnapshotAutoUpdateTest {
 
 	@Test
 	@Order(1)
-	void shouldUpdateSnapshot_offline() {
+	void shouldUpdateSnapshot_local() {
 		//given
 		givenSnapshotUpdateResponse(false);
 
@@ -143,7 +143,7 @@ class SwitcherSnapshotAutoUpdateTest {
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("generated_mock_default_2")
-				.offlineMode(true)
+				.local(true)
 				.snapshotAutoLoad(false)
 				.snapshotAutoUpdateInterval("1m"));
 
@@ -157,7 +157,7 @@ class SwitcherSnapshotAutoUpdateTest {
 
 	@Test
 	@Order(2)
-	void shouldUpdateSnapshot_online() {
+	void shouldUpdateSnapshot_remote() {
 		//given
 		givenSnapshotUpdateResponse(false);
 
@@ -166,7 +166,7 @@ class SwitcherSnapshotAutoUpdateTest {
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("generated_mock_default_3")
-				.offlineMode(false)
+				.local(false)
 				.snapshotAutoLoad(false)
 				.snapshotAutoUpdateInterval("1m"));
 
@@ -189,7 +189,7 @@ class SwitcherSnapshotAutoUpdateTest {
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("generated_mock_default_4")
-				.offlineMode(true)
+				.local(true)
 				.snapshotAutoLoad(true)
 				.snapshotAutoUpdateInterval("1m"));
 
@@ -203,7 +203,7 @@ class SwitcherSnapshotAutoUpdateTest {
 
 	@Test
 	@Order(4)
-	void shouldUpdateSnapshot_online_inMemory() {
+	void shouldUpdateSnapshot_remote_inMemory() {
 		//given
 		givenResponse(generateMockAuth()); //auth
 		givenResponse(generateSnapshotResponse("default_outdated.json")); //graphql
@@ -215,7 +215,7 @@ class SwitcherSnapshotAutoUpdateTest {
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(null)
 				.environment("generated_mock_default_5")
-				.offlineMode(true)
+				.local(true)
 				.snapshotAutoLoad(true)
 				.snapshotAutoUpdateInterval("1m"));
 
@@ -229,7 +229,7 @@ class SwitcherSnapshotAutoUpdateTest {
 
 	@Test
 	@Order(5)
-	void shouldNotKillThread_whenAPI_wentOffline() {
+	void shouldNotKillThread_whenAPI_wentLocal() {
 		//given
 		givenResponse(generateMockAuth()); //auth
 		givenResponse(generateSnapshotResponse("default_outdated.json")); //graphql
@@ -239,7 +239,7 @@ class SwitcherSnapshotAutoUpdateTest {
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(null)
 				.environment("generated_mock_default_6")
-				.offlineMode(true)
+				.local(true)
 				.snapshotAutoLoad(true)
 				.snapshotAutoUpdateInterval("1s"));
 
@@ -248,7 +248,7 @@ class SwitcherSnapshotAutoUpdateTest {
 
 		CountDownHelper.wait(1);
 
-		//given - API is online again
+		//given - API is remote again
 		givenResponse(generateCheckSnapshotVersionResponse(Boolean.toString(false))); //criteria/snapshot_check
 		givenResponse(generateSnapshotResponse("default.json")); //graphql
 

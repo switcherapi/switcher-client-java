@@ -62,7 +62,7 @@ class SwitcherApiMockTest extends MockWebServerHelper {
 		((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 		
 		Switchers.configure(ContextBuilder.builder()
-				.offlineMode(false)
+				.local(false)
 				.snapshotLocation(null)
 				.snapshotSkipValidation(false)
 				.environment("default")
@@ -82,7 +82,7 @@ class SwitcherApiMockTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("true", false));
 		
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -95,7 +95,7 @@ class SwitcherApiMockTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("false", false));
 		
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertFalse(switcher.isItOn());
 	}
 	
@@ -111,7 +111,7 @@ class SwitcherApiMockTest extends MockWebServerHelper {
 		List<Entry> entries = new ArrayList<>();
 		entries.add(Entry.build(StrategyValidator.DATE, "2019-12-10"));
 		
-		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		
 		//test
 		assertTrue(switcher.isItOn(entries));
@@ -131,7 +131,7 @@ class SwitcherApiMockTest extends MockWebServerHelper {
 		List<Entry> entries = new ArrayList<>();
 		entries.add(Entry.build(StrategyValidator.DATE, "2019-12-10"));
 		
-		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		switcher.setShowReason(true);
 		
 		//test
@@ -150,7 +150,7 @@ class SwitcherApiMockTest extends MockWebServerHelper {
 		//criteria
 		givenResponse(generateStatusResponse("404"));
 		
-		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertThrows(SwitcherRemoteException.class, switcher::isItOn);
 	}
 	
@@ -159,7 +159,7 @@ class SwitcherApiMockTest extends MockWebServerHelper {
 		//auth
 		givenResponse(generateStatusResponse("401"));
 		
-		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertThrows(SwitcherException.class, switcher::isItOn);
 	}
 	
@@ -203,7 +203,7 @@ class SwitcherApiMockTest extends MockWebServerHelper {
 		//criteria
 		givenResponse(generateCriteriaResponse("true", false));
 		
-		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		
 		//test
 		assertTrue(switcher.isItOn());
@@ -326,10 +326,10 @@ class SwitcherApiMockTest extends MockWebServerHelper {
 	}
 	
 	@Test
-	void shouldValidateAndLoadSnapshot_whenOffline() {
+	void shouldValidateAndLoadSnapshot_whenLocal() {
 		//given
 		Switchers.configure(ContextBuilder.builder()
-				.offlineMode(true)
+				.local(true)
 				.snapshotAutoLoad(false)
 				.snapshotLocation(RESOURCES_PATH)
 				.environment("default"));
@@ -353,7 +353,7 @@ class SwitcherApiMockTest extends MockWebServerHelper {
 	void shouldNotValidateAndLoadSnapshot_serviceUnavailable() {
 		//given
 		Switchers.configure(ContextBuilder.builder()
-				.offlineMode(true)
+				.local(true)
 				.snapshotAutoLoad(false)
 				.snapshotLocation(RESOURCES_PATH)
 				.environment("default"));
@@ -486,7 +486,7 @@ class SwitcherApiMockTest extends MockWebServerHelper {
 		
 		
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		switcher.throttle(1000);
 		
 		for (int i = 0; i < 10; i++) {

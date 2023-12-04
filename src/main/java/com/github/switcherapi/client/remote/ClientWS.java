@@ -94,7 +94,7 @@ public interface ClientWS {
 	SwitchersCheck checkSwitchers(final Set<String> switchers, final String token);
 	
 	/**
-	 * @return Check whether API is online or not
+	 * @return Check whether API is remotely available or not
 	 */
 	boolean isAlive();
 }

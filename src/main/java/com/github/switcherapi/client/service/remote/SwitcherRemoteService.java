@@ -26,12 +26,12 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	
 	private static final Logger logger = LogManager.getLogger(SwitcherRemoteService.class);
 	
-	private final SwitcherLocalService switcherOffline;
+	private final SwitcherLocalService switcherLocal;
 
 	private final ClientRemote clientRemote;
 	
 	public SwitcherRemoteService() {
-		this.switcherOffline = new SwitcherLocalService();
+		this.switcherLocal = new SwitcherLocalService();
 		this.clientRemote = new ClientRemoteService();
 	}
 
@@ -41,7 +41,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 		
 		try {
 			final CriteriaResponse response = this.clientRemote.executeCriteria(switcher);
-			logger.debug("[Online] response: {}", response);
+			logger.debug("[Remote] response: {}", response);
 			
 			return response;
 		} catch (final SwitcherRemoteException e) {
@@ -53,7 +53,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	private CriteriaResponse executeSilentCriteria(final Switcher switcher, 
 			final SwitcherRemoteException e) {
 		if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.SILENT_MODE))) {
-			CriteriaResponse response = this.switcherOffline.executeCriteria(switcher);
+			CriteriaResponse response = this.switcherLocal.executeCriteria(switcher);
 			logger.debug("[Silent] response: {}", response);
 			
 			return response;
@@ -65,8 +65,8 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	@Override
 	public boolean checkSnapshotVersion() {
 		if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION))
-				&& this.switcherOffline.getDomain() != null) {
-			return super.checkSnapshotVersion(this.clientRemote, this.switcherOffline.getDomain());
+				&& this.switcherLocal.getDomain() != null) {
+			return super.checkSnapshotVersion(this.clientRemote, this.switcherLocal.getDomain());
 		}
 		
 		super.initializeSnapshotFromAPI(this.clientRemote);
@@ -75,7 +75,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 
 	@Override
 	public void updateSnapshot() {
-		this.switcherOffline.setDomain(super.initializeSnapshotFromAPI(this.clientRemote));
+		this.switcherLocal.setDomain(super.initializeSnapshotFromAPI(this.clientRemote));
 	}
 	
 	@Override
@@ -90,12 +90,12 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	
 	@Override
 	public boolean notifyChange(String snapshotFile, SnapshotEventHandler handler) {
-		return this.switcherOffline.notifyChange(snapshotFile, handler);
+		return this.switcherLocal.notifyChange(snapshotFile, handler);
 	}
 
 	@Override
 	public long getSnapshotVersion() {
-		return switcherOffline.getSnapshotVersion();
+		return switcherLocal.getSnapshotVersion();
 	}
 
 }

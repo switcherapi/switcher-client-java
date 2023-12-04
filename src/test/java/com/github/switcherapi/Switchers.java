@@ -6,7 +6,7 @@ import com.github.switcherapi.client.SwitcherKey;
 public class Switchers extends SwitcherContext {
 
 	@SwitcherKey
-	public static final String ONLINE_KEY = "ONLINE_KEY";
+	public static final String REMOTE_KEY = "REMOTE_KEY";
 
 	@SwitcherKey
 	public static final String USECASE11 = "USECASE11";
