@@ -26,7 +26,7 @@ Client Java for working with Switcher-API.
 https://github.com/switcherapi/switcher-api
 
 - Flexible and robust SDK that will keep your code clean and maintainable.
-- Able to work offline using a snapshot file pulled from your remote Switcher-API Domain.
+- Able to work local using a snapshot file pulled from your remote Switcher-API Domain.
 - Silent mode is a hybrid configuration that automatically enables contingent sub-processes in case of any connectivity issue.
 - Built-in mock implementation for clear and easy implementation of automated testing.
 - Easy to setup. Switcher Context is responsible to manage all the configuration complexity between your application and API.
@@ -69,7 +69,7 @@ switcher.domain -> Domain name
 
 #optional
 switcher.environment -> Environment name
-switcher.offline -> true/false When offline, it will only use a local snapshot
+switcher.local -> true/false When local, it will only use a local snapshot
 switcher.snapshot.location -> Folder from where snapshots will be saved/read
 switcher.snapshot.auto -> true/false Automated lookup for snapshot when initializing the client
 switcher.snapshot.skipvalidation -> true/false Skip snapshotValidation() that can be used for UT executions
@@ -80,7 +80,7 @@ switcher.truststore.password -> Truststore password
 switcher.timeout -> Time in ms given to the API to respond - 3000 default value
 
 (Java 8 applications only)
-switcher.regextimeout -> Time in ms given to Timed Match Worker used for offline Regex (ReDoS safety mechanism) - 3000 default value
+switcher.regextimeout -> Time in ms given to Timed Match Worker used for local Regex (ReDoS safety mechanism) - 3000 default value
 ```
 
 ## Client Context Properties - SwitcherContextBase
@@ -181,13 +181,13 @@ Improve the overall performance by using throttle feature to skip API calls in a
 switcher.throttle(1000).isItOn();
 ```
 
-## Offline settings
-You can also set the Switcher library to work offline. It will use a local snapshot file to retrieve the switchers configuration.<br>
+## Local settings
+You can also set the Switcher library to work locally. It will use a local snapshot file to retrieve the switchers configuration.<br>
 This feature is useful for testing purposes or when you need to run your application without internet access.
 
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
-	.offline(true)
+	.local(true)
 	.snapshotLocation("/src/resources"));
 
 MyAppFeatures.initializeClient();
@@ -198,7 +198,7 @@ switcher.isItOn();
 
 ## Hybrid settings
 Forcing Switchers to resolve remotely can help you define exclusive features that cannot be resolved locally.<br>
-This feature is ideal if you want to run the SDK in offline mode but still want to resolve a specific switcher remotely.
+This feature is ideal if you want to run the SDK in local mode but still want to resolve a specific switcher remotely.
 
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
@@ -206,13 +206,13 @@ MyAppFeatures.configure(ContextBuilder.builder()
     .apiKey("API_KEY")
     .domain("Playground")
     .component("switcher-playground")    
-	.offline(true)
+	.local(true)
 	.snapshotLocation("/src/resources"));
 
 MyAppFeatures.initializeClient();
 
 Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
-switcher.forceOnline().isItOn();
+switcher.forceRemote().isItOn();
 ```
 
 ## Real-time snapshot updater

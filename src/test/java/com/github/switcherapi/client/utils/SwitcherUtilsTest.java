@@ -40,10 +40,10 @@ class SwitcherUtilsTest {
 	}
 	
 	@Test
-	void shouldReturnOk_offlineLocationFound() {
+	void shouldReturnOk_localLocationFound() {
 		SwitcherContext.configure(ContextBuilder.builder()
 				.snapshotLocation(SNAPSHOTS_LOCAL)
-				.offlineMode(true));
+				.local(true));
 		
 		assertDoesNotThrow(SwitcherContext::initializeClient);
 	}

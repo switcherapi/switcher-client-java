@@ -47,7 +47,7 @@ class SwitcherProperties {
 
 	private boolean snapshotSkipValidation;
 
-	private boolean offlineMode;
+	private boolean local;
 
 	private String truststorePath;
 
@@ -73,7 +73,7 @@ class SwitcherProperties {
 		setSnapshotAutoLoad(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_LOAD.getParam(), prop)));
 		setSnapshotAutoUpdateInterval(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL.getParam(), prop));
 		setSilentMode(SwitcherUtils.resolveProperties(ContextKey.SILENT_MODE.getParam(), prop));
-		setOfflineMode(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.OFFLINE_MODE.getParam(), prop)));
+		setLocal(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.LOCAL_MODE.getParam(), prop)));
 		setRegexTimeout(SwitcherUtils.resolveProperties(ContextKey.REGEX_TIMEOUT.getParam(), prop));
 		setTruststorePath(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PATH.getParam(), prop));
 		setTruststorePassword(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));
@@ -193,12 +193,12 @@ class SwitcherProperties {
 		this.silentMode = silentMode;
 	}
 
-	public boolean isOfflineMode() {
-		return offlineMode;
+	public boolean isLocal() {
+		return local;
 	}
 
-	public void setOfflineMode(boolean offlineMode) {
-		this.offlineMode = offlineMode;
+	public void setLocal(boolean local) {
+		this.local = local;
 	}
 
 	public String getTruststorePath() {

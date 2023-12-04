@@ -27,7 +27,7 @@ import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
 
-class SwitcherOfflineFix3Test {
+class SwitcherLocalFix3Test {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 	
@@ -37,7 +37,7 @@ class SwitcherOfflineFix3Test {
 		SwitcherContext.configure(ContextBuilder.builder()
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("fixture3")
-				.offlineMode(true));
+				.local(true));
 		
 		SwitcherContext.initializeClient();
 	}
@@ -60,7 +60,7 @@ class SwitcherOfflineFix3Test {
 	
 	@ParameterizedTest()
 	@MethodSource("failTestArguments")
-	void offlineShouldReturnError(String useCaseKey, String strategyValidator, 
+	void localShouldReturnError(String useCaseKey, String strategyValidator, 
 			String input, Class<SwitcherException> error) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		switcher.prepareEntry(Entry.build(strategyValidator, input));
@@ -69,32 +69,32 @@ class SwitcherOfflineFix3Test {
 	}
 	
 	@Test
-	void offlineShouldCheckSwitchers() {
+	void localShouldCheckSwitchers() {
 		//given
 		Set<String> switchers = Sets.newHashSet();
 		switchers.add(Switchers.USECASE20);
 		switchers.add(Switchers.USECASE17);
 		switchers.add(Switchers.USECASE16);
 		
-		SwitcherLocalService switcherOffline = new SwitcherLocalService();
-		switcherOffline.init();
+		SwitcherLocalService switcherLocal = new SwitcherLocalService();
+		switcherLocal.init();
 		
 		//test
-		assertDoesNotThrow(() -> switcherOffline.checkSwitchers(switchers));
+		assertDoesNotThrow(() -> switcherLocal.checkSwitchers(switchers));
 	}
 	
 	@Test
-	void offlineShouldCheckSwitchers_notFound() {
+	void localShouldCheckSwitchers_notFound() {
 		//given
 		Set<String> notFound = Sets.newHashSet();
 		notFound.add("NOT_FOUND_1");
 		
-		SwitcherLocalService switcherOffline = new SwitcherLocalService();
-		switcherOffline.init();
+		SwitcherLocalService switcherLocal = new SwitcherLocalService();
+		switcherLocal.init();
 		
 		//test
 		Exception ex = assertThrows(SwitchersValidationException.class, () ->
-				switcherOffline.checkSwitchers(notFound));
+				switcherLocal.checkSwitchers(notFound));
 		
 		assertEquals(String.format(
 				"Something went wrong: Unable to load the following Switcher Key(s): %s", notFound), 

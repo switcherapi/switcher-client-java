@@ -28,7 +28,7 @@ class SwitcherContextBuilderTest {
 				.component("switcher-client")
 				.environment("default")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
-				.offlineMode(true));
+				.local(true));
 		
 		SwitchersBase.initializeClient();
 		
@@ -48,7 +48,7 @@ class SwitcherContextBuilderTest {
 				.component("switcher-client")
 				.environment("default")
 				.snapshotLocation(null)
-				.offlineMode(true));
+				.local(true));
 
 		SwitchersBase.initializeClient();
 
@@ -60,7 +60,7 @@ class SwitcherContextBuilderTest {
 	@Test
 	void shouldThrowError_wrongContextKeyTypeUsage() {
 		assertThrows(SwitcherContextException.class, () -> SwitchersBase.contextBol(ContextKey.DOMAIN));
-		assertThrows(SwitcherContextException.class, () -> SwitchersBase.contextStr(ContextKey.OFFLINE_MODE));
+		assertThrows(SwitcherContextException.class, () -> SwitchersBase.contextStr(ContextKey.LOCAL_MODE));
 	}
 
 }

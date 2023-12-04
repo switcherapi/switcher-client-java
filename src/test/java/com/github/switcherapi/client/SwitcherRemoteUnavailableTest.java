@@ -9,7 +9,7 @@ import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.Switcher;
 
-class SwitcherOnlineUnavailableTest {
+class SwitcherRemoteUnavailableTest {
 	
 	@BeforeEach
 	void setupContext() {
@@ -23,7 +23,7 @@ class SwitcherOnlineUnavailableTest {
 		SwitcherContext.initializeClient();
 		
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.ONLINE_KEY);
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertThrows(SwitcherRemoteException.class, switcher::isItOn);
 	}
 

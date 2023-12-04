@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SwitcherOfflineFix1Test {
+class SwitcherLocalFix1Test {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 	
@@ -34,44 +34,44 @@ class SwitcherOfflineFix1Test {
 		SwitcherContext.configure(ContextBuilder.builder()
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("fixture1")
-				.offlineMode(true));
+				.local(true));
 		
 		SwitcherContext.initializeClient();
 	}
 	
 	@Test
-	void offlineShouldValidateContext() {
+	void localShouldValidateContext() {
 		assertEquals(SNAPSHOTS_LOCAL, SwitcherContext.contextStr(ContextKey.SNAPSHOT_LOCATION));
 		assertEquals("fixture1", SwitcherContext.contextStr(ContextKey.ENVIRONMENT));
-		assertTrue(SwitcherContext.contextBol(ContextKey.OFFLINE_MODE));
+		assertTrue(SwitcherContext.contextBol(ContextKey.LOCAL_MODE));
 	}
 	
 	@Test
-	void offlineShouldReturnTrue() {
+	void localShouldReturnTrue() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11, true);
 		assertTrue(switcher.isItOn());
 	}
 	
 	@Test
-	void offlineShouldReturnFalse() {
+	void localShouldReturnFalse() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE12);
 		assertFalse(switcher.isItOn());
 	}
 	
 	@Test
-	void offlineShouldReturnFalse_groupDisabled() {
+	void localShouldReturnFalse_groupDisabled() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE21);
 		assertFalse(switcher.isItOn());
 	}
 	
 	@Test
-	void offlineShouldReturnTrue_strategyDisabled() {
+	void localShouldReturnTrue_strategyDisabled() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE71);
 		assertTrue(switcher.isItOn());
 	}
 	
 	@Test
-	void offlineShouldNotReturn_keyNotFound() {
+	void localShouldNotReturn_keyNotFound() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.NOT_FOUND_KEY);
 		assertThrows(SwitcherKeyNotFoundException.class, switcher::isItOn);
 	}
@@ -92,7 +92,7 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("dateTestArguments")
-	void offlineShouldTest_dateValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTest_dateValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.DATE, input);
 		
@@ -102,14 +102,14 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("dateTestArguments")
-	void offlineShouldTestChained_dateValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTestChained_dateValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		switcher.checkDate(input);
 		assertEquals(expected, switcher.isItOn());
 	}
 	
 	@Test
-	void offlineShouldReturnFalse_dateValidationWrongFormat() {
+	void localShouldReturnFalse_dateValidationWrongFormat() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
 		Entry input = Entry.build(StrategyValidator.DATE, "2019/121/13");
 		
@@ -136,7 +136,7 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("valueTestArguments")
-	void offlineShouldTest_valueValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTest_valueValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.VALUE, input);
 		
@@ -146,7 +146,7 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("valueTestArguments")
-	void offlineShouldTestChained_valueValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTestChained_valueValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		switcher.checkValue(input);
 		assertEquals(expected, switcher.isItOn());
@@ -177,7 +177,7 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("numericTestArguments")
-	void offlineShouldTest_numericValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTest_numericValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.NUMERIC, input);
 		
@@ -187,14 +187,14 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("numericTestArguments")
-	void offlineShouldTestChained_numericValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTestChained_numericValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		switcher.checkNumeric(input);
 		assertEquals(expected, switcher.isItOn());
 	}
 	
 	@Test
-	void offlineShouldReturnException_invalidNumericInput() {
+	void localShouldReturnException_invalidNumericInput() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE81);
 		Entry input = Entry.build(StrategyValidator.NUMERIC, "INVALID_NUMBER");
 		
@@ -218,7 +218,7 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("timeTestArguments")
-	void offlineShouldTest_timeValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTest_timeValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.TIME, input);
 		
@@ -228,14 +228,14 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("timeTestArguments")
-	void offlineShouldTestChained_timeValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTestChained_timeValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		switcher.checkTime(input);
 		assertEquals(expected, switcher.isItOn());
 	}
 	
 	@Test
-	void offlineShouldReturnFalse_timeValidationWrongFormat() {
+	void localShouldReturnFalse_timeValidationWrongFormat() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE53);
 		Entry input = Entry.build(StrategyValidator.TIME, "2019-12-10");
 		
@@ -259,7 +259,7 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("networkTestArguments")
-	void offlineShouldTest_networkValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTest_networkValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.NETWORK, input);
 		
@@ -269,20 +269,20 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("networkTestArguments")
-	void offlineShouldTestChained_networkValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTestChained_networkValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		switcher.checkNetwork(input);
 		assertEquals(expected, switcher.isItOn());
 	}
 	
 	@Test
-	void offlineShouldReturnFalse_strategyRequiresInput() {
+	void localShouldReturnFalse_strategyRequiresInput() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE63);
 		assertFalse(switcher.isItOn());
 	}
 	
 	@Test
-	void offlineShouldReturnFalse_invalidStrategyInput() {
+	void localShouldReturnFalse_invalidStrategyInput() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
 		switcher.prepareEntry(Entry.build(StrategyValidator.INVALID, "Value"));
 		assertFalse(switcher.isItOn());
@@ -309,7 +309,7 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("regexTestArguments")
-	void offlineShouldTest_regexValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTest_regexValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.REGEX, input);
 		
@@ -319,7 +319,7 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("regexTestArguments")
-	void offlineShouldTestChained_regexValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTestChained_regexValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		switcher.checkRegex(input);
 		assertEquals(expected, switcher.isItOn());
@@ -339,7 +339,7 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("payloadTestArguments")
-	void offlineShouldTest_payloadValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTest_payloadValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.PAYLOAD, input);
 		
@@ -349,7 +349,7 @@ class SwitcherOfflineFix1Test {
 	
 	@ParameterizedTest()
 	@MethodSource("payloadTestArguments")
-	void offlineShouldTestChained_payloadValidation(String useCaseKey, String input, boolean expected) {
+	void localShouldTestChained_payloadValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		switcher.checkPayload(input);
 		assertEquals(expected, switcher.isItOn());

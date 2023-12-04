@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.model.Switcher;
 
-class SwitcherOfflineFix2Test {
+class SwitcherLocalFix2Test {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 	
@@ -21,13 +21,13 @@ class SwitcherOfflineFix2Test {
 		SwitcherContext.configure(ContextBuilder.builder()
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("fixture2")
-				.offlineMode(true));
+				.local(true));
 		
 		SwitcherContext.initializeClient();
 	}
 	
 	@Test
-	void offlineShouldReturnFalse_domainDisabled() {
+	void localShouldReturnFalse_domainDisabled() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE111);
 		assertFalse(switcher.isItOn());
 	}

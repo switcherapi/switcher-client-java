@@ -32,8 +32,8 @@ class SwitcherContextValidator {
 			throw new SwitcherContextException(ERR_CONTEXT);
 		}
 		
-		if (!prop.isOfflineMode()) {
-			validateOnline(prop);
+		if (!prop.isLocal()) {
+			validateRemote(prop);
 		}
 		
 		validateOptionals(prop);
@@ -54,11 +54,11 @@ class SwitcherContextValidator {
 	}
 
 	/**
-	 * Validate context properties required to run online
+	 * Validate context properties required to run remote
 	 * 
 	 * @param prop Configured properties
 	 */
-	public static void validateOnline(final SwitcherProperties prop) {
+	public static void validateRemote(final SwitcherProperties prop) {
 		if (StringUtils.isBlank(prop.getUrl())) {
 			throw new SwitcherContextException(ERR_URL);
 		}
