@@ -1,13 +1,14 @@
 package com.github.switcherapi.client.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.github.switcherapi.client.SwitcherContext;
+import com.github.switcherapi.client.SwitcherContextBase;
+import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Builder class that simplifies how input are programmatically wrapped inside the Switcher.
@@ -17,14 +18,16 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
  */
 public abstract class SwitcherBuilder {
 	
-	protected long delay = 0;
+	protected long delay;
 
-	protected boolean forceRemote = false;
+	protected boolean remote;
 	
 	protected List<Entry> entry;
 	
 	protected SwitcherBuilder() {
-		entry = new ArrayList<>();
+		this.entry = new ArrayList<>();
+		this.remote = false;
+		this.delay = 0;
 	}
 	
 	/**
@@ -39,12 +42,19 @@ public abstract class SwitcherBuilder {
 	}
 
 	/**
-	 * Force Switcher to resolve remotely
+	 * Force Switcher to resolve remotely when true
 	 *
+	 * @param remote true to force remote resolution
 	 * @return switcher itself
+	 *
+	 * @throws SwitcherContextException if Switcher is not configured to run locally using local mode
 	 */
-	public SwitcherBuilder forceRemote() {
-		this.forceRemote = true;
+	public SwitcherBuilder remote(boolean remote) {
+		if (!SwitcherContextBase.contextBol(ContextKey.LOCAL_MODE)) {
+			throw new SwitcherContextException("Switcher is not configured to run locally");
+		}
+
+		this.remote = remote;
 		return this;
 	}
 	
@@ -194,7 +204,7 @@ public abstract class SwitcherBuilder {
 	 */
 	public abstract boolean isItOn() throws SwitcherException;
 
-	public boolean isForceRemote() {
-		return forceRemote;
+	public boolean isRemote() {
+		return remote;
 	}
 }
