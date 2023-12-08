@@ -1,6 +1,7 @@
 package com.github.switcherapi.client;
 
 import com.github.switcherapi.Switchers;
+import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.fixture.MockWebServerHelper;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SwitcherApiMock2Test extends MockWebServerHelper {
@@ -56,6 +58,14 @@ class SwitcherApiMock2Test extends MockWebServerHelper {
 		
 		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertThrows(SwitcherRemoteException.class, switcher::isItOn);
+	}
+
+	@Test
+	void shouldReturnError_switcherCannotRunLocally() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+
+		Exception ex = assertThrows(SwitcherContextException.class, () -> switcher.remote(false).isItOn());
+		assertEquals("Something went wrong: Context has errors - Switcher is not configured to run locally", ex.getMessage());
 	}
 
 }
