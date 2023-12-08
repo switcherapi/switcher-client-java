@@ -67,7 +67,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 		logger.debug("switcher: {}", switcher);
 
 		CriteriaResponse response;
-		if (switcher.isForceRemote()) {
+		if (switcher.isRemote()) {
 			response = this.clientRemote.executeCriteria(switcher);
 			logger.debug("[Remote] response: {}", response);
 		} else {
