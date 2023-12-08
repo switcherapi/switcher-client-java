@@ -64,7 +64,7 @@ class SwitcherApiMock2Test extends MockWebServerHelper {
 	void shouldReturnError_switcherCannotRunLocally() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 
-		Exception ex = assertThrows(SwitcherContextException.class, () -> switcher.remote(false).isItOn());
+		Exception ex = assertThrows(SwitcherContextException.class, () -> switcher.remote(false));
 		assertEquals("Something went wrong: Context has errors - Switcher is not configured to run locally", ex.getMessage());
 	}
 
