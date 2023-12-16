@@ -16,7 +16,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class SwitcherApiMock2Test extends MockWebServerHelper {
+class SwitcherFail2Test extends MockWebServerHelper {
 	
 	@BeforeAll
 	static void setup() throws IOException {
