@@ -48,8 +48,6 @@ class SwitcherSnapshotValidationTest extends MockWebServerHelper {
 				.silentMode(null)
 				.snapshotAutoLoad(false)
 				.snapshotAutoUpdateInterval(null));
-		
-		Switchers.initializeClient();
 	}
 
 	@Test
