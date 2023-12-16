@@ -50,12 +50,12 @@ class SwitcherBasicTest extends MockWebServerHelper {
 				.silentMode(null)
 				.snapshotAutoLoad(false)
 				.snapshotAutoUpdateInterval(null));
-		
-		Switchers.initializeClient();
 	}
 	
 	@Test
 	void shouldReturnTrue() {
+		Switchers.initializeClient();
+
 		//auth
 		givenResponse(generateMockAuth(10));
 		
@@ -69,6 +69,8 @@ class SwitcherBasicTest extends MockWebServerHelper {
 	
 	@Test
 	void shouldReturnFalse() {
+		Switchers.initializeClient();
+
 		//auth
 		givenResponse(generateMockAuth(10));
 		
@@ -114,6 +116,8 @@ class SwitcherBasicTest extends MockWebServerHelper {
 	
 	@Test
 	void shouldReturnTrue_withThrottle() {
+		Switchers.initializeClient();
+
 		// First call
 		givenResponse(generateMockAuth(10)); //auth
 		givenResponse(generateCriteriaResponse("true", false)); //criteria
@@ -121,7 +125,6 @@ class SwitcherBasicTest extends MockWebServerHelper {
 		// Async call
 		givenResponse(generateMockAuth(10)); //auth
 		givenResponse(generateCriteriaResponse("true", false)); //criteria
-		
 		
 		//test
 		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);

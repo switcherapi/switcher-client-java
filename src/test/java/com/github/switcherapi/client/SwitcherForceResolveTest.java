@@ -28,6 +28,8 @@ class SwitcherForceResolveTest extends MockWebServerHelper {
 				.local(true)
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.snapshotSkipValidation(false)
+				.snapshotAutoLoad(false)
+				.snapshotAutoUpdateInterval(null)
 				.environment("fixture1"));
 
         Switchers.initializeClient();
