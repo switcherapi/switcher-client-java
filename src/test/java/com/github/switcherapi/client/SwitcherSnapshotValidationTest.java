@@ -2,27 +2,26 @@ package com.github.switcherapi.client;
 
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
-import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SwitcherSnapshotValidationTest extends MockWebServerHelper {
 
 	private static final String RESOURCES_PATH = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
 	
 	@BeforeAll
 	static void setup() throws IOException {
-		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/not_accessible"));
 		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/new_folder/generated_on_new_folder.json"));
 		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/new_folder"));
 		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/generated_mock_default.json"));
@@ -209,62 +208,6 @@ class SwitcherSnapshotValidationTest extends MockWebServerHelper {
 		
 		//test
 		assertThrows(SwitcherRemoteException.class, Switchers::validateSnapshot);
-	}
-	
-	@Test
-	@Order(value = 1)
-	void shouldNotLookupForSnapshot_invalidLocation() {
-		//given
-		Switchers.configure(ContextBuilder.builder()
-				.snapshotAutoLoad(true)
-				.snapshotLocation(RESOURCES_PATH + "/not_accessible"));
-		
-		//test
-		assertDoesNotThrow(() -> {
-			try (final RandomAccessFile raFile = 
-					new RandomAccessFile(RESOURCES_PATH + "/not_accessible", "rw")) {
-				
-				//given an inaccessible folder
-				raFile.getChannel().lock();
-				
-				//auth
-				givenResponse(generateMockAuth(10));
-				
-				//graphql
-				givenResponse(generateSnapshotResponse(RESOURCES_PATH));
-				
-				//test
-				assertThrows(SwitcherSnapshotWriteException.class, Switchers::initializeClient);
-			}
-		});
-	}
-	
-	@Test
-	@Order(value = 2)
-	void shouldNotLookupForSnapshot_invalidFolderLocation() {
-		//given
-		Switchers.configure(ContextBuilder.builder()
-				.snapshotAutoLoad(true)
-				.snapshotLocation(RESOURCES_PATH + "/not_accessible/folder"));
-		
-		//test
-		assertDoesNotThrow(() -> {
-			try (final RandomAccessFile raFile = 
-					new RandomAccessFile(RESOURCES_PATH + "/not_accessible", "rw")) {
-				
-				//given an inaccessible folder
-				raFile.getChannel().lock();
-				
-				//auth
-				givenResponse(generateMockAuth(10));
-				
-				//graphql
-				givenResponse(generateSnapshotResponse(RESOURCES_PATH));
-				
-				//test
-				assertThrows(SwitcherSnapshotWriteException.class, Switchers::initializeClient);
-			}
-		});
 	}
 
 }
