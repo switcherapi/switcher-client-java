@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SwitcherBasicTest extends MockWebServerHelper {
+
+	private boolean authTokenGenerated = false;
 	
 	@BeforeAll
 	static void setup() throws IOException {
@@ -48,7 +50,7 @@ class SwitcherBasicTest extends MockWebServerHelper {
 	@Test
 	void shouldReturnTrue() {
 		//auth
-		givenResponse(generateMockAuth(10));
+		givenAuthResponse();
 		
 		//criteria
 		givenResponse(generateCriteriaResponse("true", false));
@@ -61,7 +63,7 @@ class SwitcherBasicTest extends MockWebServerHelper {
 	@Test
 	void shouldReturnFalse() {
 		//auth
-		givenResponse(generateMockAuth(10));
+		givenAuthResponse();
 		
 		//criteria
 		givenResponse(generateCriteriaResponse("false", false));
@@ -69,6 +71,15 @@ class SwitcherBasicTest extends MockWebServerHelper {
 		//test
 		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertFalse(switcher.isItOn());
+	}
+
+	// Helpers
+
+	private void givenAuthResponse() {
+		if (!authTokenGenerated) {
+			givenResponse(generateMockAuth(10));
+			authTokenGenerated = true;
+		}
 	}
 
 }
