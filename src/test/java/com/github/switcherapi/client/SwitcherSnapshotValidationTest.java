@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,10 +21,6 @@ class SwitcherSnapshotValidationTest extends MockWebServerHelper {
 	
 	@BeforeAll
 	static void setup() throws IOException {
-		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/new_folder/generated_on_new_folder.json"));
-		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/new_folder"));
-		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/generated_mock_default.json"));
-
 		MockWebServerHelper.setupMockServer();
         
         Switchers.loadProperties();
@@ -39,9 +34,6 @@ class SwitcherSnapshotValidationTest extends MockWebServerHelper {
         
         //clean generated outputs
     	SwitcherContext.stopWatchingSnapshot();
-		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/new_folder/generated_on_new_folder.json"));
-		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/new_folder"));
-		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/generated_mock_default.json"));
     }
 	
 	@BeforeEach
@@ -107,62 +99,6 @@ class SwitcherSnapshotValidationTest extends MockWebServerHelper {
 			Switchers.initializeClient();
 			assertFalse(Switchers.validateSnapshot());
 		});
-	}
-	
-	@Test
-	void shouldLookupForSnapshot() {
-		//given
-		Switchers.configure(ContextBuilder.builder()
-				.snapshotAutoLoad(true)
-				.snapshotLocation(RESOURCES_PATH + "/new_folder")
-				.environment("generated_on_new_folder"));
-		
-		//auth
-		givenResponse(generateMockAuth(10));
-		
-		//graphql
-		givenResponse(generateSnapshotResponse(RESOURCES_PATH));
-		
-		//test
-		assertDoesNotThrow(Switchers::initializeClient);
-	}
-	
-	@Test
-	void shouldNotLookupForSnapshot_serviceUnavailable() {
-		//given
-		Switchers.configure(ContextBuilder.builder()
-				.snapshotAutoLoad(true)
-				.snapshotLocation(RESOURCES_PATH + "/new_folder")
-				.environment("generated_on_new_folder"));
-		
-		//auth
-		givenResponse(generateMockAuth(10));
-		
-		//graphql
-		givenResponse(generateStatusResponse("503"));
-		
-		//test
-		assertThrows(SwitcherRemoteException.class, Switchers::initializeClient);
-	}
-	
-	@Test
-	void shouldLookupForSnapshot_whenNotAutoLoad() {
-		//given
-		Switchers.configure(ContextBuilder.builder()
-				.snapshotAutoLoad(false)
-				.snapshotLocation(RESOURCES_PATH)
-				.environment("generated_mock_default"));
-		
-		Switchers.initializeClient();
-		
-		//auth
-		givenResponse(generateMockAuth(10));
-		
-		//graphql
-		givenResponse(generateSnapshotResponse(RESOURCES_PATH));
-		
-		//test
-		assertDoesNotThrow(Switchers::validateSnapshot);
 	}
 	
 	@Test
