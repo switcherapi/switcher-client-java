@@ -25,7 +25,6 @@ class SwitcherSnapshotValidationTest extends MockWebServerHelper {
         
         Switchers.loadProperties();
         Switchers.configure(ContextBuilder.builder().url(String.format("http://localhost:%s", mockBackEnd.getPort())));
-        Switchers.initializeClient();
     }
 	
 	@AfterAll
