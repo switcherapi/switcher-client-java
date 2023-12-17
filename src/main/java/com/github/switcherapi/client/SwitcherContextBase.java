@@ -116,7 +116,7 @@ public abstract class SwitcherContextBase {
 		}
 		
 		loadSwitchers();
-		scheduleSnapshotAutoUpdate(switcherProperties.getSnapshotAutoUpdateInterval(), null);
+		scheduleSnapshotAutoUpdate(switcherProperties.getSnapshotAutoUpdateInterval());
 		ContextBuilder.preConfigure(switcherProperties);
 	}
 	
@@ -188,6 +188,16 @@ public abstract class SwitcherContextBase {
 
 		initExecutorService();
 		scheduledExecutorService.scheduleAtFixedRate(runnableSnapshotValidate, 0, interval, TimeUnit.MILLISECONDS);
+	}
+
+	/**
+	 * Schedule a task to update the snapshot automatically.<br>
+	 * The task will be executed in a single thread executor service.
+	 *
+	 * @param intervalValue to be used for the update (e.g. 5s, 1m, 1h, 1d)
+	 */
+	public static void scheduleSnapshotAutoUpdate(String intervalValue) {
+		scheduleSnapshotAutoUpdate(intervalValue, null);
 	}
 
 	/**

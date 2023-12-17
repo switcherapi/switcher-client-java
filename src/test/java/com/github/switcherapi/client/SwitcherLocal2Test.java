@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.model.Switcher;
 
-class SwitcherLocalFix2Test {
+class SwitcherLocal2Test {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 	
