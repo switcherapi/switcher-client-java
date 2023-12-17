@@ -58,6 +58,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_4.json"));
 
 		CountDownHelper.wait(10);
+		SwitcherContextBase.terminateSnapshotAutoUpdateWorker();
     }
 
 	@BeforeEach
