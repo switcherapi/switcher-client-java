@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SwitcherLocalFix1Test {
+class SwitcherLocal1Test {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 	

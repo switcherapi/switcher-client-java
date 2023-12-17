@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class SwitcherApiMock3Test extends MockWebServerHelper {
+class SwitcherForceResolveTest extends MockWebServerHelper {
 
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 	
@@ -21,12 +21,15 @@ class SwitcherApiMock3Test extends MockWebServerHelper {
 	static void setup() throws IOException {
 		MockWebServerHelper.setupMockServer();
 
+		Switchers.loadProperties(); // Load default properties from resources
 		Switchers.initializeClient(); // SwitcherContext requires preload before config override
-		Switchers.configure(ContextBuilder.builder()
+		Switchers.configure(ContextBuilder.builder() // Override default properties
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.local(true)
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.snapshotSkipValidation(false)
+				.snapshotAutoLoad(false)
+				.snapshotAutoUpdateInterval(null)
 				.environment("fixture1"));
 
         Switchers.initializeClient();
