@@ -27,7 +27,7 @@ import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
 
-class SwitcherLocalFix3Test {
+class SwitcherLocal3Test {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 	

@@ -15,7 +15,7 @@ import com.github.switcherapi.client.utils.SwitcherUtils;
  * 
  * @author Roger Floriano (petruki)
  */
-class SwitcherProperties {
+public class SwitcherProperties {
 
 	public static final String DEFAULT_ENV = "default";
 
