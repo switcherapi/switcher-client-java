@@ -59,11 +59,11 @@
 		<!-- utils -->
 		<commons-lang3.version>3.14.0</commons-lang3.version>
 		<commons-net.version>3.10.0</commons-net.version>
-		<log4j.version>2.20.0</log4j.version>
+		<log4j.version>2.23.0</log4j.version>
 
 		<!-- test -->
-		<okhttp.version>5.0.0-alpha.11</okhttp.version>
-		<junit.version>5.10.1</junit.version>
+		<okhttp.version>5.0.0-alpha.12</okhttp.version>
+		<junit.version>5.10.2</junit.version>
 		<junit-pioneer.version>1.9.1</junit-pioneer.version>
 
 		<!-- Plugins -->
@@ -72,7 +72,7 @@
 		<maven-surefire.version>3.0.0-M5</maven-surefire.version>
 		<maven-gpg.version>3.0.1</maven-gpg.version>
 		<sonar.version>3.9.1.2184</sonar.version>
-		<jacoco.version>0.8.9</jacoco.version>
+		<jacoco.version>0.8.11</jacoco.version>
 
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>

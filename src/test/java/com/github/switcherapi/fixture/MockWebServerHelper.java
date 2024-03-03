@@ -36,9 +36,10 @@ public class MockWebServerHelper {
     }
 
     protected MockResponse generateTimeOut(int timeoutMs) {
-        return new MockResponse()
-                .setResponseCode(200)
-                .setHeadersDelay(timeoutMs, TimeUnit.MILLISECONDS);
+        MockResponse.Builder builder = new MockResponse.Builder();
+        builder.code(200);
+        builder.headersDelay(timeoutMs, TimeUnit.MILLISECONDS);
+        return builder.build();
     }
 
     /**
@@ -48,10 +49,11 @@ public class MockWebServerHelper {
      * @return Generated mock /auth response
      */
     protected MockResponse generateMockAuth(int secondsAhead) {
-        return new MockResponse()
-                .setBody(String.format("{ \"token\": \"%s\", \"exp\": \"%s\" }",
-                        "mocked_token", SwitcherUtils.addTimeDuration(secondsAhead + "s", new Date()).getTime()/1000))
-                .addHeader("Content-Type", "application/json");
+        MockResponse.Builder builder = new MockResponse.Builder();
+        builder.body(String.format("{ \"token\": \"%s\", \"exp\": \"%s\" }",
+                "mocked_token", SwitcherUtils.addTimeDuration(secondsAhead + "s", new Date()).getTime()/1000));
+        builder.addHeader("Content-Type", "application/json");
+        return builder.build();
     }
 
     /**
@@ -66,9 +68,10 @@ public class MockWebServerHelper {
         mockedSnapshot.setData(criteria);
 
         Gson gson = new Gson();
-        return new MockResponse()
-                .setBody(gson.toJson(mockedSnapshot))
-                .addHeader("Content-Type", "application/json");
+        MockResponse.Builder builder = new MockResponse.Builder();
+        builder.body(gson.toJson(mockedSnapshot));
+        builder.addHeader("Content-Type", "application/json");
+        return builder.build();
     }
 
     /**
@@ -78,9 +81,10 @@ public class MockWebServerHelper {
      * @return Generated mock /criteria/snapshot_check response
      */
     protected MockResponse generateCheckSnapshotVersionResponse(String status) {
-        return new MockResponse()
-                .setBody(String.format("{ \"status\": \"%s\" }", status))
-                .addHeader("Content-Type", "application/json");
+        MockResponse.Builder builder = new MockResponse.Builder();
+        builder.body(String.format("{ \"status\": \"%s\" }", status));
+        builder.addHeader("Content-Type", "application/json");
+        return builder.build();
     }
 
     /**
@@ -90,8 +94,9 @@ public class MockWebServerHelper {
      * @return Generated mock /check response
      */
     protected MockResponse generateStatusResponse(String code) {
-        return new MockResponse().setStatus(String.format("HTTP/1.1 %s", code));
-
+        MockResponse.Builder builder = new MockResponse.Builder();
+        builder.status(code);
+        return builder.build();
     }
 
     /**
@@ -109,9 +114,10 @@ public class MockWebServerHelper {
             response = "{ \"result\": \"%s\" }";
         }
 
-        return new MockResponse()
-                .setBody(String.format(response, result))
-                .addHeader("Content-Type", "application/json");
+        MockResponse.Builder builder = new MockResponse.Builder();
+        builder.body(String.format(response, result));
+        builder.addHeader("Content-Type", "application/json");
+        return builder.build();
     }
 
     /**
@@ -126,9 +132,10 @@ public class MockWebServerHelper {
                 switchersNotFound.toArray(new String[0]));
 
         Gson gson = new Gson();
-        return new MockResponse()
-                .setBody(gson.toJson(switchersCheckNotFound))
-                .addHeader("Content-Type", "application/json");
+        MockResponse.Builder builder = new MockResponse.Builder();
+        builder.body(gson.toJson(switchersCheckNotFound));
+        builder.addHeader("Content-Type", "application/json");
+        return builder.build();
     }
 
 }

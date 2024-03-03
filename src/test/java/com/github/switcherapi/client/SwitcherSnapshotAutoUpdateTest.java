@@ -81,10 +81,11 @@ class SwitcherSnapshotAutoUpdateTest {
 	 * @see ClientWSImpl#auth()
 	 */
 	private MockResponse generateMockAuth() {
-		return new MockResponse()
-				.setBody(String.format("{ \"token\": \"%s\", \"exp\": \"%s\" }",
-						"mocked_token", SwitcherUtils.addTimeDuration(60 + "s", new Date()).getTime()/1000))
-				.addHeader("Content-Type", "application/json");
+		MockResponse.Builder builder = new MockResponse.Builder();
+		builder.body(String.format("{ \"token\": \"%s\", \"exp\": \"%s\" }",
+				"mocked_token", SwitcherUtils.addTimeDuration(60 + "s", new Date()).getTime()/1000));
+		builder.addHeader("Content-Type", "application/json");
+		return builder.build();
 	}
 
 	/**
@@ -94,9 +95,10 @@ class SwitcherSnapshotAutoUpdateTest {
 	 * @return Generated mock /criteria/snapshot_check response
 	 */
 	private MockResponse generateCheckSnapshotVersionResponse(String status) {
-		return new MockResponse()
-				.setBody(String.format("{ \"status\": \"%s\" }", status))
-				.addHeader("Content-Type", "application/json");
+		MockResponse.Builder builder = new MockResponse.Builder();
+		builder.body(String.format("{ \"status\": \"%s\" }", status));
+		builder.addHeader("Content-Type", "application/json");
+		return builder.build();
 	}
 
 	/**
@@ -111,9 +113,10 @@ class SwitcherSnapshotAutoUpdateTest {
 		mockedSnapshot.setData(criteria);
 
 		Gson gson = new Gson();
-		return new MockResponse()
-				.setBody(gson.toJson(mockedSnapshot))
-				.addHeader("Content-Type", "application/json");
+		MockResponse.Builder builder = new MockResponse.Builder();
+		builder.body(gson.toJson(mockedSnapshot));
+		builder.addHeader("Content-Type", "application/json");
+		return builder.build();
 	}
 
 	private void givenSnapshotUpdateResponse(boolean isUpdated) {
