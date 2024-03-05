@@ -1,8 +1,20 @@
 package com.github.switcherapi.client.utils;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import com.github.switcherapi.client.ContextBuilder;
+import com.github.switcherapi.client.SwitcherContext;
+import com.github.switcherapi.client.exception.SwitcherContextException;
+import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
+import com.github.switcherapi.client.model.ContextKey;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junitpioneer.jupiter.ClearEnvironmentVariable;
+import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -10,24 +22,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnJre;
-import org.junit.jupiter.api.condition.JRE;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junitpioneer.jupiter.ClearEnvironmentVariable;
-import org.junitpioneer.jupiter.SetEnvironmentVariable;
-
-import com.github.switcherapi.client.ContextBuilder;
-import com.github.switcherapi.client.SwitcherContext;
-import com.github.switcherapi.client.exception.SwitcherContextException;
-import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
-import com.github.switcherapi.client.model.ContextKey;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherUtilsTest {
 	
@@ -130,7 +125,6 @@ class SwitcherUtilsTest {
 	@ParameterizedTest()
 	@MethodSource("envArguments")
 	@SetEnvironmentVariable(key = "ENVIRONMENT", value = "staging")
-	@EnabledOnJre(value = { JRE.JAVA_8, JRE.JAVA_11 })
 	void shouldReadProperties(String property, String expectedValue) {
 		//given
 		Properties prop = new Properties();
@@ -143,7 +137,6 @@ class SwitcherUtilsTest {
 	
 	@Test
 	@SetEnvironmentVariable(key = "ENVIRONMENT", value = "test")
-	@EnabledOnJre(value = { JRE.JAVA_8, JRE.JAVA_11 })
 	void shouldReadPropertyFromEnvironmentIgnoreDefault() {
 		final String expected = "test";
 		
@@ -157,7 +150,6 @@ class SwitcherUtilsTest {
 	
 	@Test
 	@SetEnvironmentVariable(key = "ENVIRONMENT", value = "")
-	@EnabledOnJre(value = { JRE.JAVA_8, JRE.JAVA_11 })
 	void shouldNotReadUnsetProperty() {
 		//given
 		Properties prop = new Properties();
