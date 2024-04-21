@@ -26,6 +26,7 @@ class SwitcherThrottleTest extends MockWebServerHelper {
 	
 	@AfterAll
 	static void tearDown() throws IOException {
+		Switchers.terminateAsyncExecutorService();
 		MockWebServerHelper.tearDownMockServer();
     }
 	

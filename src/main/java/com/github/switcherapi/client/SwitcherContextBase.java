@@ -334,16 +334,18 @@ public abstract class SwitcherContextBase {
 	 * Cancel existing scheduled task for updating local Snapshot
 	 */
 	public static void terminateSnapshotAutoUpdateWorker() {
-		if (scheduledExecutorService != null)
+		if (scheduledExecutorService != null) {
 			scheduledExecutorService.shutdownNow();
+		}
 	}
 
 	/**
 	 * Cancel running asynchronous tasks used when throttle is enabled
 	 */
 	public static void terminateAsyncExecutorService() {
-		if (asyncExecutorService != null)
+		if (asyncExecutorService != null) {
 			asyncExecutorService.shutdownNow();
+		}
 	}
 	
 }

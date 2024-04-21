@@ -23,7 +23,6 @@ class SwitcherBasicTest extends MockWebServerHelper {
 		MockWebServerHelper.setupMockServer();
 
 		Switchers.terminateSnapshotAutoUpdateWorker();
-		Switchers.terminateAsyncExecutorService();
 		Switchers.loadProperties(); // Load default properties from resources
 		Switchers.initializeClient(); // SwitcherContext requires preload before config override
 		Switchers.configure(ContextBuilder.builder() // Override default properties
