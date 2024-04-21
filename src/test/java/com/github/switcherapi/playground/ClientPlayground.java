@@ -32,8 +32,8 @@ public class ClientPlayground {
 
 		scheduler.scheduleAtFixedRate(() -> {
 			long time = System.currentTimeMillis();
-			logger.info("Switcher is on: " + switcher.isItOn());
-			logger.info("Time elapsed: " + (System.currentTimeMillis() - time));
+            logger.info("Switcher is on: {}", switcher.isItOn());
+            logger.info("Time elapsed: {}", System.currentTimeMillis() - time);
 		}, 0, 10, TimeUnit.SECONDS);
 	}
 
