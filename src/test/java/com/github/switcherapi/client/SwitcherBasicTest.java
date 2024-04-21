@@ -4,7 +4,10 @@ import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
@@ -45,7 +48,6 @@ class SwitcherBasicTest extends MockWebServerHelper {
 	}
 	
 	@Test
-	@Disabled("This test is disabled because it start failing when using the new GitHub runners (Version: 20240414.1.0 - 2.0.361.1)")
 	void shouldReturnTrue() {
 		//auth
 		givenAuthResponse();
