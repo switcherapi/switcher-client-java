@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -67,6 +68,7 @@ public abstract class SwitcherContextBase {
 	protected static Map<String, Switcher> switchers;
 	protected static SwitcherExecutor instance;
 	private static ScheduledExecutorService scheduledExecutorService;
+	private static ExecutorService asyncExecutorService;
 	
 	protected SwitcherContextBase() {
 		throw new IllegalStateException("Context class cannot be instantiated");
@@ -154,12 +156,16 @@ public abstract class SwitcherContextBase {
 	 * Load Switcher instances into a map cache
 	 */
 	private static void loadSwitchers() {
-		if (switchers == null)
+		asyncExecutorService = Executors.newCachedThreadPool();
+
+		if (switchers == null) {
 			switchers = new HashMap<>();
+		}
 		
 		switchers.clear();
-		for (String key : switcherKeys)
-			switchers.put(key, new Switcher(key, instance));
+		for (String key : switcherKeys) {
+			switchers.put(key, new Switcher(key, instance, asyncExecutorService));
+		}
 	}
 
 	/**
@@ -330,6 +336,14 @@ public abstract class SwitcherContextBase {
 	public static void terminateSnapshotAutoUpdateWorker() {
 		if (scheduledExecutorService != null)
 			scheduledExecutorService.shutdownNow();
+	}
+
+	/**
+	 * Cancel running asynchronous tasks used when throttle is enabled
+	 */
+	public static void terminateAsyncExecutorService() {
+		if (asyncExecutorService != null)
+			asyncExecutorService.shutdownNow();
 	}
 	
 }

@@ -1,13 +1,11 @@
 package com.github.switcherapi.client.model;
 
+import com.github.switcherapi.client.exception.SwitcherException;
+import com.github.switcherapi.client.model.response.CriteriaResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.exception.SwitcherException;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
-
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Implementation handle asynchronous Criteria execution when using throttle.
@@ -27,8 +25,8 @@ public class AsyncSwitcher implements Runnable {
 
 	private long nextRun = 0;
 
-	public AsyncSwitcher() {
-		this.executorService = Executors.newCachedThreadPool();
+	public AsyncSwitcher(final ExecutorService executorService) {
+		this.executorService = executorService;
 	}
 
 	/**

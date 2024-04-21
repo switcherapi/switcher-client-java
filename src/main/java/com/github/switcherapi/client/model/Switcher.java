@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.SwitcherExecutor;
@@ -28,6 +29,8 @@ public final class Switcher extends SwitcherBuilder {
 	public static final String SHOW_REASON = "showReason";
 	
 	public static final String BYPASS_METRIC = "bypassMetric";
+
+	private final ExecutorService executorService;
 	
 	private final SwitcherExecutor context;
 	
@@ -47,7 +50,8 @@ public final class Switcher extends SwitcherBuilder {
 	 * @param switcherKey name of the key created
 	 * @param context client context in which the switcher will be executed (local/remote)
 	 */
-	public Switcher(final String switcherKey, final SwitcherExecutor context) {
+	public Switcher(final String switcherKey, final SwitcherExecutor context, final ExecutorService executorService) {
+		this.executorService = executorService;
 		this.switcherKey = switcherKey;
 		this.context = context;
 		this.historyExecution = new HashSet<>();
@@ -115,8 +119,9 @@ public final class Switcher extends SwitcherBuilder {
 		}
 		
 		if (canUseAsync()) {
-			if (asyncSwitcher == null)
-				asyncSwitcher = new AsyncSwitcher();
+			if (asyncSwitcher == null) {
+				asyncSwitcher = new AsyncSwitcher(executorService);
+			}
 			
 			asyncSwitcher.execute(this);
 			final CriteriaResponse response = getFromHistory();

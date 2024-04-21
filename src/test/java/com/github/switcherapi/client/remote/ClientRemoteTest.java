@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -52,14 +54,18 @@ class ClientRemoteTest extends MockWebServerHelper {
     @Test
     void shouldExecuteCriteria() {
         //given
+        ExecutorService executorService = Executors.newCachedThreadPool();
         givenResponse(generateMockAuth(100));
         givenResponse(generateCriteriaResponse("true", false));
 
-        Switcher switcher = new Switcher("KEY", new SwitcherRemoteService());
+        Switcher switcher = new Switcher("KEY", new SwitcherRemoteService(), executorService);
 
         //test
         CriteriaResponse actual = clientRemote.executeCriteria(switcher);
         assertTrue(actual.isItOn());
+
+        //tearDown
+        executorService.shutdownNow();
     }
 
     @Test
