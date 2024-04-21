@@ -43,7 +43,7 @@ public class AsyncSwitcher implements Runnable {
 			logger.debug("Running AsyncSwitcher");
 
 			this.nextRun = System.currentTimeMillis() + switcher.delay;
-			executorService.submit(this);
+			new Thread(this, AsyncSwitcher.class.getName()).start();
 		}
 	}
 
