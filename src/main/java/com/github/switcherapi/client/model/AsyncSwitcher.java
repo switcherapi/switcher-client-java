@@ -6,6 +6,9 @@ import org.apache.logging.log4j.Logger;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * Implementation handle asynchronous Criteria execution when using throttle.
  * <br>Threads are only created when the time calculated for the next run is lower than the current time.
@@ -18,9 +21,15 @@ public class AsyncSwitcher implements Runnable {
 
 	private static final Logger logger = LogManager.getLogger(AsyncSwitcher.class);
 
+	private final ExecutorService executorService;
+
 	private Switcher switcher;
 
 	private long nextRun = 0;
+
+	public AsyncSwitcher() {
+		this.executorService = Executors.newCachedThreadPool();
+	}
 
 	/**
 	 * Validate if next run is ready to be performed, otherwise it will skip and delegate the
@@ -36,7 +45,7 @@ public class AsyncSwitcher implements Runnable {
 			logger.debug("Running AsyncSwitcher");
 
 			this.nextRun = System.currentTimeMillis() + switcher.delay;
-			new Thread(this, AsyncSwitcher.class.getName()).start();
+			executorService.submit(this);
 		}
 	}
 
@@ -44,6 +53,9 @@ public class AsyncSwitcher implements Runnable {
 	public void run() {
 		try {
 			final CriteriaResponse response = switcher.getContext().executeCriteria(this.switcher);
+			switcher.getHistoryExecution().removeIf(item ->
+					this.switcher.getSwitcherKey().equals(item.getSwitcherKey()) &&
+					this.switcher.getEntry().equals(item.getEntry()));
 			switcher.getHistoryExecution().add(response);
 		} catch (SwitcherException e) {
 			logger.error(e);
