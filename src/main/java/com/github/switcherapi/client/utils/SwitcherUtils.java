@@ -21,6 +21,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,8 +60,8 @@ public class SwitcherUtils {
 	
 	public static Date addTimeDuration(final String addValue, final Date date) 
 			throws SwitcherInvalidDateTimeArgumentException {
-		logger.debug(LOG_ADDVALUE, addValue);
-		logger.debug(LOG_DATE, date);
+		SwitcherUtils.debug(logger, LOG_ADDVALUE, addValue);
+		SwitcherUtils.debug(logger, LOG_DATE, date);
 		
 		if (addValue.endsWith(DURATION[0])) {
 			return DateUtils.addSeconds(date, Integer.parseInt(addValue.replace(DURATION[0], StringUtils.EMPTY)));
@@ -76,7 +77,7 @@ public class SwitcherUtils {
 	}
 
 	public static long getMillis(final String time) {
-		logger.debug(LOG_TME, time);
+		SwitcherUtils.debug(logger, LOG_TME, time);
 
 		if (time.endsWith(DURATION[0])) {
 			return (long) (Double.parseDouble(time.replace(DURATION[0], StringUtils.EMPTY)) * 1000L);
@@ -88,15 +89,15 @@ public class SwitcherUtils {
 	}
 	
 	public static String getFullDate(final String date) {
-		logger.debug(LOG_DATE, date);
+		SwitcherUtils.debug(logger, LOG_DATE, date);
 		
 		final String time = RegExUtils.removePattern(date, FULL_DATE_REGEX).trim();
 		return getFullTime(date, time);
 	}
 
 	public static String getFullTime(final String date, final String time) {
-		logger.debug(LOG_DATE, date);
-		logger.debug(LOG_TME, time);
+		SwitcherUtils.debug(logger, LOG_DATE, date);
+		SwitcherUtils.debug(logger, LOG_TME, time);
 		
 		if (StringUtils.isBlank(time)) {
 			return String.format("%s 00:00:00", date);
@@ -189,6 +190,34 @@ public class SwitcherUtils {
 	}
 
 	/**
+	 * Log debug message if logger is enabled.
+	 * Use this method to avoid resource waste when logger is disabled.
+	 *
+	 * @param logger class logger
+	 * @param message to be logged
+	 * @param args arguments to be replaced in the message
+	 */
+	public static void debug(Logger logger, String message, Object... args) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(message, args);
+		}
+	}
+
+	/**
+	 * Log debug message if logger is enabled.
+	 * Use this method to avoid resource waste when logger is disabled.
+	 *
+	 * @param logger class logger
+	 * @param message to be logged
+	 * @param paramSuppliers parameters to be replaced in the message
+	 */
+	public static void debug(Logger logger, String message, Supplier<?> paramSuppliers) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(message, paramSuppliers);
+		}
+	}
+
+	/**
 	 * Resolve environment variable 'value'and extract its value from either
 	 * System environment or default argument.
 	 * 
@@ -201,15 +230,17 @@ public class SwitcherUtils {
 	    StringBuilder sBuilder = new StringBuilder();
 	    
 	    if (matcher.find()) {
-	        if (!setWithSystemEnv(matcher, sBuilder))
-	    	    throw new SwitcherContextException(String.format("Property %s not defined", value));
+	        if (!setWithSystemEnv(matcher, sBuilder)) {
+				throw new SwitcherContextException(String.format("Property %s not defined", value));
+			}
 	    } else {
         	pattern = Pattern.compile(ENV_DEFAULT_VARIABLE_PATTERN);
         	matcher = pattern.matcher(value);
         	
         	 if (matcher.find() &&
-    			 !setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null)
-        			sBuilder.append(matcher.group(2));
+    			 !setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null) {
+				 sBuilder.append(matcher.group(2));
+			 }
         }
 		return sBuilder;
 	}

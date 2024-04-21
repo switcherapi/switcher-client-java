@@ -14,6 +14,7 @@ import com.github.switcherapi.client.service.remote.ClientRemote;
 import com.github.switcherapi.client.service.remote.ClientRemoteService;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
+import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,15 +65,15 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	
 	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher) {
-		logger.debug("switcher: {}", switcher);
+		SwitcherUtils.debug(logger, "switcher: {}", switcher);
 
 		CriteriaResponse response;
 		if (switcher.isRemote()) {
 			response = this.clientRemote.executeCriteria(switcher);
-			logger.debug("[Remote] response: {}", response);
+			SwitcherUtils.debug(logger, "[Remote] response: {}", response);
 		} else {
 			response = ClientLocalService.getInstance().executeCriteria(switcher, this.domain);
-			logger.debug("[Local] response: {}", response);
+			SwitcherUtils.debug(logger, "[Local] response: {}", response);
 		}
 		
 		return response;
@@ -90,7 +91,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	
 	@Override
 	public void checkSwitchers(final Set<String> switchers) {
-		logger.debug("switchers: {}", switchers);
+		SwitcherUtils.debug(logger, "switchers: {}", switchers);
 
 		if (this.domain == null) {
 			throw new SwitcherContextException("Snapshot not loaded");
@@ -109,7 +110,8 @@ public class SwitcherLocalService extends SwitcherExecutor {
 		
 		try {
 			if (snapshotFile.equals(String.format("%s.json", environment))) {
-				logger.debug("Updating domain");
+				SwitcherUtils.debug(logger, "Updating domain");
+
 				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
 				handler.onSuccess();
 			}

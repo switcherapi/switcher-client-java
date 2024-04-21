@@ -1,5 +1,6 @@
 package com.github.switcherapi.client;
 
+import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,7 +14,7 @@ public class SnapshotCallback {
      * @param version of the new snapshot
      */
     public void onSnapshotUpdate(long version) {
-        logger.debug("Snapshot updated: {}", version);
+        SwitcherUtils.debug(logger, "Snapshot updated: {}", version);
     }
 
     /**
@@ -22,6 +23,6 @@ public class SnapshotCallback {
      * @param e Exception
      */
     public void onSnapshotUpdateError(Exception e) {
-        logger.debug("Failed to update snapshot: {}", e.getMessage());
+        SwitcherUtils.debug(logger, "Failed to update snapshot: {}", e.getMessage());
     }
 }

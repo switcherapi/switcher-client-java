@@ -222,7 +222,7 @@ public abstract class SwitcherContextBase {
 	 * @throws SwitcherKeyNotFoundException in case the key was not properly loaded
 	 */
 	public static Switcher getSwitcher(String key, boolean keepEntries) {
-		logger.debug("key: {} - keepEntries: {}", key, keepEntries);
+		SwitcherUtils.debug(logger, "key: {} - keepEntries: {}", key, keepEntries);
 		
 		if (!switchers.containsKey(key))
 			throw new SwitcherKeyNotFoundException(key);

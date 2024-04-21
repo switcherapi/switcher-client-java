@@ -1,5 +1,6 @@
 package com.github.switcherapi.client.model;
 
+import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,10 +40,10 @@ public class AsyncSwitcher implements Runnable {
 	 */
 	public synchronized void execute(final Switcher switcher) {
 		this.switcher = switcher;
-		logger.debug("nextRun: {} - currentTimeMillis: {}", nextRun, System.currentTimeMillis());
+		SwitcherUtils.debug(logger, "nextRun: {} - currentTimeMillis: {}", nextRun, System.currentTimeMillis());
 		
 		if (nextRun < System.currentTimeMillis()) {
-			logger.debug("Running AsyncSwitcher");
+			SwitcherUtils.debug(logger, "Running AsyncSwitcher");
 
 			this.nextRun = System.currentTimeMillis() + switcher.delay;
 			this.executorService.submit(this);
