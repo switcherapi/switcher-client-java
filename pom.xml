@@ -8,7 +8,7 @@
 	<groupId>com.github.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>2.0.6</version>
+	<version>2.0.7-SNAPSHOT</version>
 
 	<name>Switcher Client</name>
 	<description>Switcher Client SDK for working with Switcher API</description>
@@ -51,38 +51,40 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 
 		<!-- rest/json libs -->
-		<jersey-client.version>3.1.5</jersey-client.version>
-		<jersey-hk2.version>3.1.5</jersey-hk2.version>
-		<jersey-media-json-jackson.version>3.1.5</jersey-media-json-jackson.version>
+		<jersey-client.version>3.1.6</jersey-client.version>
+		<jersey-hk2.version>3.1.6</jersey-hk2.version>
+		<jersey-media-json-jackson.version>3.1.6</jersey-media-json-jackson.version>
 		<gson.version>2.10.1</gson.version>
 
 		<!-- utils -->
 		<commons-lang3.version>3.14.0</commons-lang3.version>
 		<commons-net.version>3.10.0</commons-net.version>
-		<log4j.version>2.23.0</log4j.version>
+		<log4j.version>2.23.1</log4j.version>
 
 		<!-- test -->
-		<okhttp.version>5.0.0-alpha.12</okhttp.version>
+		<okhttp.version>5.0.0-alpha.14</okhttp.version>
 		<junit.version>5.10.2</junit.version>
 		<junit-pioneer.version>2.2.0</junit-pioneer.version>
 
 		<!-- Plugins -->
-		<maven-compiler.version>3.12.1</maven-compiler.version>
-		<maven-source.version>3.3.0</maven-source.version>
-		<maven-surefire.version>3.2.5</maven-surefire.version>
-		<maven-gpg.version>3.1.0</maven-gpg.version>
-		<sonar.version>3.10.0.2594</sonar.version>
-		<jacoco.version>0.8.11</jacoco.version>
+		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+		<maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
+		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+		<maven-jar-plugin.version>3.4.1</maven-jar-plugin.version>
+		<maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
+		<sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
 
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.language>java</sonar.language>
 		<sonar.coverage.exclusions>
-	      **/model/**/*.java,
-	      **/exception/**/*.java,
-		  **/service/validators/RegexValidatorV8.java
-	    </sonar.coverage.exclusions>
+			**/model/**/*.java,
+			**/exception/**/*.java,
+			**/service/validators/RegexValidatorV8.java
+		</sonar.coverage.exclusions>
 	</properties>
 
 	<dependencies>
@@ -102,7 +104,7 @@
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>${jersey-media-json-jackson.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -242,7 +244,7 @@
 					<plugin>
 						<groupId>org.sonarsource.scanner.maven</groupId>
 						<artifactId>sonar-maven-plugin</artifactId>
-						<version>${sonar.version}</version>
+						<version>${sonar-maven-plugin.version}</version>
 						<executions>
 							<execution>
 								<phase>verify</phase>
@@ -263,7 +265,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>${maven-source.version}</version>
+						<version>${maven-source-plugin.version}</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -276,7 +278,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${maven-source.version}</version>
+						<version>${maven-javadoc-plugin.version}</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -289,7 +291,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>${maven-gpg.version}</version>
+						<version>${maven-gpg-plugin.version}</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -311,7 +313,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${maven-compiler.version}</version>
+					<version>${maven-compiler-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.sonarsource.scanner.maven</groupId>
@@ -321,7 +323,7 @@
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>${jacoco.version}</version>
+					<version>${jacoco-maven-plugin.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -339,7 +341,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven-surefire.version}</version>
+				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<argLine>
 						--add-opens java.base/java.util=ALL-UNNAMED
@@ -352,7 +354,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>${maven-source.version}</version>
+				<version>${maven-jar-plugin.version}</version>
 				<configuration>
 					<excludes>
 						<exclude>**/log4j2.properties</exclude>
