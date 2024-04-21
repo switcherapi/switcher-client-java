@@ -17,9 +17,7 @@ jobs:
   build-test:
     name: Build & Test - JDK ${{ github.event.inputs.jdk }} on ${{ github.event.inputs.os }}
 
-    runs-on:
-      os: ${{ github.event.inputs.os }}
-      java: ${{ github.event.inputs.jdk }}
+    runs-on: ${{ github.event.inputs.os }}
 
     steps:
       - name: Git checkout
