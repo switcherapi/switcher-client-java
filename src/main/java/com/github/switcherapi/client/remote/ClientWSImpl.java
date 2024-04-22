@@ -50,7 +50,7 @@ public class ClientWSImpl implements ClientWS {
 	
 	@Override
 	public CriteriaResponse executeCriteriaService(final Switcher switcher, final String token) {
-		logger.debug("switcher: {}", switcher);
+		SwitcherUtils.debug(logger, "switcher: {}", switcher);
 		
 		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, url))
@@ -97,8 +97,8 @@ public class ClientWSImpl implements ClientWS {
 				Optional<AuthResponse> authResponse = Optional.of(response.readEntity(AuthResponse.class));
 				response.close();
 
-			return authResponse;
-		}
+				return authResponse;
+			}
 
 			throw new SwitcherRemoteException(url, response.getStatus());
 		} catch (Exception e) {

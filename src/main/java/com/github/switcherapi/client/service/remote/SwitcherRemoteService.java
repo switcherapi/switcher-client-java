@@ -3,6 +3,7 @@ package com.github.switcherapi.client.service.remote;
 import java.util.Arrays;
 import java.util.Set;
 
+import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,11 +38,11 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 
 	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher) {
-		logger.debug("switcher: {}", switcher);
+		SwitcherUtils.debug(logger, "switcher: {}", switcher);
 		
 		try {
 			final CriteriaResponse response = this.clientRemote.executeCriteria(switcher);
-			logger.debug("[Remote] response: {}", response);
+			SwitcherUtils.debug(logger, "[Remote] response: {}", response);
 			
 			return response;
 		} catch (final SwitcherRemoteException e) {
@@ -54,7 +55,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 			final SwitcherRemoteException e) {
 		if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.SILENT_MODE))) {
 			CriteriaResponse response = this.switcherLocal.executeCriteria(switcher);
-			logger.debug("[Silent] response: {}", response);
+			SwitcherUtils.debug(logger, "[Silent] response: {}", response);
 			
 			return response;
 		} else {
@@ -80,7 +81,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	
 	@Override
 	public void checkSwitchers(final Set<String> switchers) {
-		logger.debug("switchers: {}", switchers);
+		SwitcherUtils.debug(logger, "switchers: {}", switchers);
 		
 		final SwitchersCheck response = this.clientRemote.checkSwitchers(switchers);
 		if (response.getNotFound() != null && response.getNotFound().length > 0) {

@@ -1,14 +1,5 @@
 package com.github.switcherapi.client.service.local;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.model.Entry;
@@ -19,6 +10,15 @@ import com.github.switcherapi.client.model.criteria.Group;
 import com.github.switcherapi.client.model.criteria.Strategy;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.service.ValidatorService;
+import com.github.switcherapi.client.utils.SwitcherUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Local Switcher Service retain the same main functionalities as the Remote,
@@ -131,8 +131,8 @@ public class ClientLocalService {
 	 */
 	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input,
 			final Switcher switcher) {
-		logger.debug("configStrategies: {}", () -> Arrays.toString(configStrategies));
-		logger.debug("input: {}", () -> Arrays.toString(input != null ? input.toArray() : ArrayUtils.EMPTY_STRING_ARRAY));
+		SwitcherUtils.debug(logger, "configStrategies: {}", () -> Arrays.toString(configStrategies));
+		SwitcherUtils.debug(logger, "input: {}", () -> Arrays.toString(input != null ? input.toArray() : ArrayUtils.EMPTY_STRING_ARRAY));
 
 		boolean result;
 		for (final Strategy strategy : configStrategies) {
