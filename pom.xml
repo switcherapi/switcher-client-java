@@ -70,8 +70,8 @@
 		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
 		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
-		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
 		<maven-jar-plugin.version>3.4.1</maven-jar-plugin.version>
+		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
 		<maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
 		<sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
@@ -344,6 +344,7 @@
 				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<argLine>
+						@{argLine}
 						--add-opens java.base/java.util=ALL-UNNAMED
 						--add-opens java.base/java.lang=ALL-UNNAMED
 					</argLine>

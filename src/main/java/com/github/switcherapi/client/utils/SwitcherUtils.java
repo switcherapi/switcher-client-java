@@ -230,7 +230,7 @@ public class SwitcherUtils {
 	    StringBuilder sBuilder = new StringBuilder();
 	    
 	    if (matcher.find()) {
-	        if (!setWithSystemEnv(matcher, sBuilder)) {
+	        if (setWithSystemEnv(matcher, sBuilder)) {
 				throw new SwitcherContextException(String.format("Property %s not defined", value));
 			}
 	    } else {
@@ -238,7 +238,7 @@ public class SwitcherUtils {
         	matcher = pattern.matcher(value);
         	
         	 if (matcher.find() &&
-    			 !setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null) {
+					 setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null) {
 				 sBuilder.append(matcher.group(2));
 			 }
         }
@@ -259,7 +259,7 @@ public class SwitcherUtils {
 			sBuilder.append(null == envVarValue ? StringUtils.EMPTY : envVarValue);		
 		}
 		
-		return !StringUtils.isEmpty(sBuilder.toString());
+		return StringUtils.isEmpty(sBuilder.toString());
 	}
 
 	/**
