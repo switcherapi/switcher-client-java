@@ -10,6 +10,7 @@ import com.github.switcherapi.client.model.response.AuthRequest;
 import com.github.switcherapi.client.model.response.AuthResponse;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
+import com.github.switcherapi.client.utils.SwitcherUtils;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
@@ -50,7 +51,7 @@ public class ClientWSImpl implements ClientWS {
 	
 	@Override
 	public CriteriaResponse executeCriteriaService(final Switcher switcher, final String token) {
-		logger.debug("switcher: {}", switcher);
+		SwitcherUtils.debug(logger, "switcher: {}", switcher);
 		
 		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, url))
