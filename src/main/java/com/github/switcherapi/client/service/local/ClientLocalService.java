@@ -39,18 +39,10 @@ public class ClientLocalService {
 	private static final String STRATEGY_FAIL_NO_INPUT_PATTERN = "Strategy %s did not receive any input";
 	private static final String CRITERIA_SUCCESS = "Success";
 
-	private static ClientLocalService instance;
 	private final ValidatorService validatorService;
 
-	private ClientLocalService() {
+	public ClientLocalService() {
 		this.validatorService = new ValidatorService();
-	}
-
-	public static ClientLocalService getInstance() {
-		if (instance == null) {
-			instance = new ClientLocalService();
-		}
-		return instance;
 	}
 
 	public List<String> checkSwitchers(final Set<String> switchers, final Domain domain) {

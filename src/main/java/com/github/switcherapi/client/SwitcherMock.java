@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
 /**
@@ -18,12 +19,15 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@ArgumentsSource(SwitcherMockRunner.class)
-@ExtendWith(SwitcherMockRunner.class)
+@ArgumentsSource(SwitcherMockExtension.class)
+@ExtendWith(SwitcherMockExtension.class)
+@ParameterizedTest
 public @interface SwitcherMock {
-	
-	String key();
-	
-	boolean result();
+
+	String key() default "";
+
+	boolean result() default true;
+
+	SwitcherMockValue[] switchers() default {};
 
 }
