@@ -32,11 +32,14 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	private static final Logger logger = LogManager.getLogger(SwitcherLocalService.class);
 
 	private final ClientRemote clientRemote;
+
+	private final ClientLocalService clientLocalService;
 	
 	private Domain domain;
 	
 	public SwitcherLocalService() {
 		this.clientRemote = new ClientRemoteService();
+		this.clientLocalService = new ClientLocalService();
 		this.init();
 	}
 	
@@ -72,7 +75,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 			response = this.clientRemote.executeCriteria(switcher);
 			SwitcherUtils.debug(logger, "[Remote] response: {}", response);
 		} else {
-			response = ClientLocalService.getInstance().executeCriteria(switcher, this.domain);
+			response = this.clientLocalService.executeCriteria(switcher, this.domain);
 			SwitcherUtils.debug(logger, "[Local] response: {}", response);
 		}
 		
@@ -97,7 +100,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 			throw new SwitcherContextException("Snapshot not loaded");
 		}
 		
-		final List<String> response = ClientLocalService.getInstance().checkSwitchers(switchers, this.domain);
+		final List<String> response = this.clientLocalService.checkSwitchers(switchers, this.domain);
 		if (!response.isEmpty()) {
 			throw new SwitchersValidationException(response.toString());
 		}
