@@ -10,6 +10,7 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.service.remote.ClientRemote;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
+import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -76,14 +77,14 @@ public abstract class SwitcherExecutor {
 	
 	protected boolean checkSnapshotVersion(ClientRemote clientRemote, final Domain domain) {
 		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
-		logger.debug("verifying snapshot version - environment: {}", environment);
+		SwitcherUtils.debug(logger, "verifying snapshot version - environment: {}", environment);
 		
 		return clientRemote.checkSnapshotVersion(domain.getVersion());
 	}
 	
 	protected Domain initializeSnapshotFromAPI(ClientRemote clientRemote) {
 		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
-		logger.debug("initializing snapshot from API - environment: {}", environment);
+		SwitcherUtils.debug(logger, "initializing snapshot from API - environment: {}", environment);
 		
 		try {
 			final Snapshot snapshot = clientRemote.resolveSnapshot();
