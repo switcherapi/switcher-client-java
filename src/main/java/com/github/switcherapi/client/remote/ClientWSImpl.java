@@ -10,6 +10,7 @@ import com.github.switcherapi.client.model.response.AuthRequest;
 import com.github.switcherapi.client.model.response.AuthResponse;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
+import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
