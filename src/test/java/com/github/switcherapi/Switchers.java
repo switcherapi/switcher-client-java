@@ -15,6 +15,9 @@ public class Switchers extends SwitcherContext {
 	public static final String USECASE111 = "USECASE111";
 
 	@SwitcherKey
+	public static final String USECASE112 = "USECASE112";
+
+	@SwitcherKey
 	public static final String USECASE12 = "USECASE12";
 
 	@SwitcherKey

@@ -15,6 +15,12 @@
                             "description": "Simple test - Domain disabled",
                             "activated": true,
                             "components": ["switcher-client"]
+                        },
+                        {
+                            "key": "USECASE112",
+                            "description": "Simple test - Domain disabled",
+                            "activated": true,
+                            "components": ["switcher-client"]
                         }
                     ]
                 }
