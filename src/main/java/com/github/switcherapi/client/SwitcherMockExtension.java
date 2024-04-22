@@ -1,5 +1,6 @@
 package com.github.switcherapi.client;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -28,18 +29,18 @@ class SwitcherMockExtension implements AfterTestExecutionCallback,
 	
 	private boolean result;
 
-	private SwitcherMockValue[] values;
+	private SwitcherMockValue[] switchers;
 
 	@Override
 	public void accept(SwitcherMock switcherTester) {
 		this.key = switcherTester.key();
 		this.result = switcherTester.result();
-		this.values = switcherTester.values();
+		this.switchers = switcherTester.switchers();
 	}
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		if (values != null && values.length > 0) {
+		if (ArrayUtils.isNotEmpty(switchers)) {
 			return provideMultipleArguments(context);
 		}
 
@@ -51,8 +52,9 @@ class SwitcherMockExtension implements AfterTestExecutionCallback,
 		Optional<ExtensionContext> parent = context.getParent();
 		if (parent.isPresent()) {
 			Store store = getStore(parent.get());
-			String[] keys;
-			if ((keys = store.remove(STORE_KEYS, String[].class)) != null) {
+			String[] keys = store.remove(STORE_KEYS, String[].class);
+
+			if (ArrayUtils.isNotEmpty(keys)) {
 				for (String keyStored : keys) {
 					SwitcherExecutor.forget(keyStored);
 				}
@@ -64,11 +66,11 @@ class SwitcherMockExtension implements AfterTestExecutionCallback,
 	}
 
 	private Stream<? extends Arguments> provideMultipleArguments(ExtensionContext context) {
-		String[] keys = Arrays.stream(values)
+		String[] keys = Arrays.stream(switchers)
 				.map(SwitcherMockValue::key)
 				.toArray(String[]::new);
 
-		for (SwitcherMockValue value : values) {
+		for (SwitcherMockValue value : switchers) {
 			SwitcherExecutor.assume(value.key(), value.result());
 		}
 

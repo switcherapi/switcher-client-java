@@ -28,6 +28,6 @@ public @interface SwitcherMock {
 
 	boolean result() default true;
 
-	SwitcherMockValue[] values() default {};
+	SwitcherMockValue[] switchers() default {};
 
 }

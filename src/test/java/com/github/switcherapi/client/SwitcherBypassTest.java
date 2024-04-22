@@ -113,7 +113,7 @@ class SwitcherBypassTest {
 		assertTrue(switcher.isItOn());
 	}
 
-	@SwitcherMock(values = {
+	@SwitcherMock(switchers = {
 			@SwitcherMockValue(key = USECASE111),
 			@SwitcherMockValue(key = USECASE112)
 	})
