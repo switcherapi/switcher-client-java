@@ -28,7 +28,7 @@ https://github.com/switcherapi/switcher-api
 - Flexible and robust SDK that will keep your code clean and maintainable.
 - Able to work local using a snapshot file pulled from your remote Switcher-API Domain.
 - Silent mode is a hybrid configuration that automatically enables contingent sub-processes in case of any connectivity issue.
-- Built-in mock implementation for clear and easy implementation of automated testing.
+- Built-in test annotation for clear and easy implementation of automated testing.
 - Easy to setup. Switcher Context is responsible to manage all the configuration complexity between your application and API.
 
 # Usage
@@ -241,8 +241,8 @@ MyAppFeatures.configure(ContextBuilder.builder()
 	.snapshotLocation("/src/resources"));
 ```
 
-## Built-in mock feature
-Write automated tests using this built-in mock mechanism to guide your test scenario according to what you want to test.
+## Built-in test feature
+Write automated tests using this built-in test annotation to guide your test scenario according to what you want to test.
 </br>*SwitcherExecutor* implementation has 2 methods that can make mock tests easier. Use assume to force a value to a switcher and forget to reset its original state.
 
 ```java
@@ -269,12 +269,32 @@ void testSwitchers() {
 }
 ```
 
-#### SwitcherMock annotation - Requires JUnit 5 Jupiter
-Predefine Switchers result outside your test methods via Parameterized Test.
+#### SwitcherTest annotation - Requires JUnit 5 Jupiter
+Predefine Switchers result outside your test methods with the SwitcherTest annotation.
 </br>It encapsulates the test and makes sure that the Switcher returns to its original state after concluding the test.
 
+Simple use case (result is default to true, so it can be omitted):
 ```java
-@SwitcherMock(key = MY_SWITCHER, result = true)
+@SwitcherTest(key = MY_SWITCHER, result = true)
+void testMyFeature() {
+   assertTrue(instance.myFeature());
+}
+```
+
+Multiple Switchers where more than one Switcher is used in the test:
+```java
+@SwitcherTest(switchers = {
+    @SwitcherTestValue(key = MY_SWITCHER),
+    @SwitcherTestValue(key = MY_SWITCHER2)
+})
+void testMyFeature() {
+   assertTrue(instance.myFeature());
+}
+```
+
+AB Test scenario where your test should return the same result regardless of the Switcher result:
+```java
+@SwitcherTest(key = MY_SWITCHER, abTest = true)
 void testMyFeature() {
    assertTrue(instance.myFeature());
 }
