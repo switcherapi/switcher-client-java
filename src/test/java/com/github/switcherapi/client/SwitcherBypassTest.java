@@ -1,6 +1,8 @@
 package com.github.switcherapi.client;
 
 import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.test.SwitcherTest;
+import com.github.switcherapi.client.test.SwitcherTestValue;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,8 +12,7 @@ import java.nio.file.Paths;
 
 import static com.github.switcherapi.Switchers.*;
 import static com.github.switcherapi.client.SwitcherContext.getSwitcher;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherBypassTest {
 
@@ -91,7 +92,7 @@ class SwitcherBypassTest {
 		assertFalse(switcher.isItOn());
 	}
 
-	@SwitcherMock(key = USECASE111, result = false)
+	@SwitcherTest(key = USECASE111, result = false)
 	void shouldReturnFalse_usingParametrizedTest() {
 		//given
 		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
@@ -102,7 +103,7 @@ class SwitcherBypassTest {
 		assertFalse(switcher.isItOn());
 	}
 
-	@SwitcherMock(key = USECASE111)
+	@SwitcherTest(key = USECASE111)
 	void shouldReturnTrue_usingParametrizedTest() {
 		//given
 		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
@@ -113,9 +114,9 @@ class SwitcherBypassTest {
 		assertTrue(switcher.isItOn());
 	}
 
-	@SwitcherMock(switchers = {
-			@SwitcherMockValue(key = USECASE111),
-			@SwitcherMockValue(key = USECASE112)
+	@SwitcherTest(switchers = {
+			@SwitcherTestValue(key = USECASE111),
+			@SwitcherTestValue(key = USECASE112)
 	})
 	void shouldReturnTrue_usingParametrizedTestWithMultipleValues() {
 		//given
@@ -128,6 +129,27 @@ class SwitcherBypassTest {
 
 		switcher = getSwitcher(USECASE112);
 		assertTrue(switcher.isItOn());
+	}
+
+	@SwitcherTest(key = USECASE111, abTest = true)
+	void shouldReturnSameResult_usingAbTest() {
+		assertEquals("Switcher key is " + USECASE111, workBothWay());
+	}
+
+	/**
+	 * Fake scenario to test both ways of building a String.
+	 * It is used to AB Test behavior when the same result is expected.
+	 */
+	private String workBothWay() {
+		Switcher switcher = getSwitcher(USECASE111);
+
+		// Using String.format
+		if (switcher.isItOn()) {
+			return String.format("Switcher key is %s", USECASE111);
+		}
+
+		// Using String concatenation
+        return "Switcher key is " + USECASE111;
 	}
 
 }

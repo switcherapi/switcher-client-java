@@ -1,5 +1,7 @@
 package com.github.switcherapi.client;
 
+import com.github.switcherapi.client.test.SwitcherTest;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -15,7 +17,7 @@ import java.lang.annotation.Target;
  * 
  * <p>
  * The attribute name is used to be sent to the API and its value
- * is used to work with {@link SwitcherMock}
+ * is used to work with {@link SwitcherTest}
  * 
  * @author Roger Floriano (petruki)
  */
