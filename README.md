@@ -274,7 +274,6 @@ Predefine Switchers result outside your test methods via Parameterized Test.
 </br>It encapsulates the test and makes sure that the Switcher returns to its original state after concluding the test.
 
 ```java
-@ParameterizedTest
 @SwitcherMock(key = MY_SWITCHER, result = true)
 void testMyFeature() {
    assertTrue(instance.myFeature());

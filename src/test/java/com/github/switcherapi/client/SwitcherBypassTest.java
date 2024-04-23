@@ -1,20 +1,17 @@
 package com.github.switcherapi.client;
 
-import static com.github.switcherapi.Switchers.USECASE11;
-import static com.github.switcherapi.Switchers.USECASE111;
-import static com.github.switcherapi.client.SwitcherContext.getSwitcher;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.nio.file.Paths;
-
+import com.github.switcherapi.client.model.Switcher;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
 
-import com.github.switcherapi.client.model.Switcher;
+import java.nio.file.Paths;
+
+import static com.github.switcherapi.Switchers.*;
+import static com.github.switcherapi.client.SwitcherContext.getSwitcher;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SwitcherBypassTest {
 
@@ -93,8 +90,7 @@ class SwitcherBypassTest {
 		SwitcherExecutor.forget(USECASE111);
 		assertFalse(switcher.isItOn());
 	}
-	
-	@ParameterizedTest
+
 	@SwitcherMock(key = USECASE111, result = false)
 	void shouldReturnFalse_usingParametrizedTest() {
 		//given
@@ -105,9 +101,8 @@ class SwitcherBypassTest {
 		Switcher switcher = getSwitcher(USECASE111);
 		assertFalse(switcher.isItOn());
 	}
-	
-	@ParameterizedTest
-	@SwitcherMock(key = USECASE111, result = true)
+
+	@SwitcherMock(key = USECASE111)
 	void shouldReturnTrue_usingParametrizedTest() {
 		//given
 		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
@@ -115,6 +110,23 @@ class SwitcherBypassTest {
 		
 		//test
 		Switcher switcher = getSwitcher(USECASE111);
+		assertTrue(switcher.isItOn());
+	}
+
+	@SwitcherMock(switchers = {
+			@SwitcherMockValue(key = USECASE111),
+			@SwitcherMockValue(key = USECASE112)
+	})
+	void shouldReturnTrue_usingParametrizedTestWithMultipleValues() {
+		//given
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
+		SwitcherContext.initializeClient();
+
+		//test
+		Switcher switcher = getSwitcher(USECASE111);
+		assertTrue(switcher.isItOn());
+
+		switcher = getSwitcher(USECASE112);
 		assertTrue(switcher.isItOn());
 	}
 
