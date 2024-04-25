@@ -132,6 +132,14 @@ Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
 switcher.isItOn();
 ```
 
+Or, you can submit the switcher request and get the criteria response, which contains result, reason and metadata that can be used for any additional verification.
+
+```java
+CriteriaResponse response = switcher.submit();
+response.isItOn(); // true/false
+response.getReason(); // Descriptive response based on result value
+```
+
 2. **Strategy validation - preparing input**
 Loading information into the switcher can be made by using *prepareEntry*, in case you want to include input from a different place of your code. Otherwise, it is also possible to include everything in the same call.
 
