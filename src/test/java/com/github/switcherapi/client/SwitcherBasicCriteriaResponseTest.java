@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -76,9 +76,10 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 
 		//test
 		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
-		CriteriaResponse response = switcher.submit(List.of(
-				Entry.build(StrategyValidator.VALUE, "value"),
-				Entry.build(StrategyValidator.NUMERIC, "10")));
+		CriteriaResponse response = switcher.submit(new ArrayList<Entry>() {{
+			add(Entry.build(StrategyValidator.VALUE, "value"));
+			add(Entry.build(StrategyValidator.NUMERIC, "10"));
+		}});
 
 		assertFalse(response.isItOn());
 		assertEquals("Strategy VALUE_VALIDATION does not agree", response.getReason());
