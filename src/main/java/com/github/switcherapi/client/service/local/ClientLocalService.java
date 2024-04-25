@@ -128,13 +128,15 @@ public class ClientLocalService {
 
 		boolean result;
 		for (final Strategy strategy : configStrategies) {
-			if (!strategy.isActivated())
+			if (!strategy.isActivated()) {
 				continue;
+			}
 
 			final Entry switcherInput = tryGetSwitcherInput(input, strategy);
 			
-			if (switcherInput == null)
+			if (switcherInput == null) {
 				return strategyFailed(switcher, strategy, STRATEGY_FAIL_NO_INPUT_PATTERN);
+			}
 
 			result = validatorService.execute(strategy, switcherInput);
 			if (!result) {
