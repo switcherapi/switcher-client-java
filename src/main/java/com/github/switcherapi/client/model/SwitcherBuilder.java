@@ -143,13 +143,6 @@ public abstract class SwitcherBuilder {
 	}
 	
 	/**
-	 * Creates a Switcher given the configuration assigned via {@link SwitcherBuilder}
-	 * 
-	 * @return {@link Switcher}
-	 */
-	public abstract Switcher build();
-	
-	/**
 	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.
 	 * 
 	 * @param entry input object
@@ -176,17 +169,6 @@ public abstract class SwitcherBuilder {
 	public abstract Switcher prepareEntry(final Entry entry);
 	
 	/**
-	 * Convenient method to send all the information necessary to run the criteria.
-	 * 
-	 * @param entry input object
-	 * @param add if false, the list will be cleaned and the entry provided will be the only input for this Switcher.
-	 * @return criteria result
-	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
-	 */
-	public abstract boolean isItOn(final Entry entry, final boolean add) 
-			throws SwitcherException;
-	
-	/**
 	 * This method is going to invoke the criteria overwriting the existing input if it was added earlier.
 	 * 
 	 * @param entry input object
@@ -203,6 +185,24 @@ public abstract class SwitcherBuilder {
 	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
 	 */
 	public abstract boolean isItOn() throws SwitcherException;
+
+	/**
+	 * This method is going to invoke the criteria overwriting the existing input if it was added earlier.
+	 *
+	 * @param entry input object
+	 * @return criteria response
+	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
+	 */
+	public abstract CriteriaResponse submit(final List<Entry> entry) throws SwitcherException;
+
+	/**
+	 * Execute criteria based on a given switcher key provided via {@link SwitcherContext#getSwitcher(String)}.
+	 * <br>The detailed result is available in list of {@link CriteriaResponse}.
+	 *
+	 * @return criteria response
+	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
+	 */
+	public abstract CriteriaResponse submit() throws SwitcherException;
 
 	public boolean isRemote() {
 		return remote;

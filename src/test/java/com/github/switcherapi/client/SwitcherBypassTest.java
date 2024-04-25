@@ -1,6 +1,7 @@
 package com.github.switcherapi.client;
 
 import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.test.SwitcherTest;
 import com.github.switcherapi.client.test.SwitcherTestValue;
 import org.apache.commons.lang3.StringUtils;
@@ -93,7 +94,7 @@ class SwitcherBypassTest {
 	}
 
 	@SwitcherTest(key = USECASE111, result = false)
-	void shouldReturnFalse_usingParametrizedTest() {
+	void shouldReturnFalse_usingAnnotationAsFalse() {
 		//given
 		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
 		SwitcherContext.initializeClient();
@@ -104,21 +105,34 @@ class SwitcherBypassTest {
 	}
 
 	@SwitcherTest(key = USECASE111)
-	void shouldReturnTrue_usingParametrizedTest() {
+	void shouldReturnTrue_usingAnnotationAsTrue() {
 		//given
 		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
 		SwitcherContext.initializeClient();
-		
+
 		//test
 		Switcher switcher = getSwitcher(USECASE111);
 		assertTrue(switcher.isItOn());
+	}
+
+	@SwitcherTest(key = USECASE111)
+	void shouldReturnSwitcherBypassedAsReason() {
+		//given
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
+		SwitcherContext.initializeClient();
+
+		//test
+		Switcher switcher = getSwitcher(USECASE111);
+		CriteriaResponse criteriaResponse = switcher.submit();
+		assertTrue(criteriaResponse.isItOn());
+		assertEquals("Switcher bypassed", criteriaResponse.getReason());
 	}
 
 	@SwitcherTest(switchers = {
 			@SwitcherTestValue(key = USECASE111),
 			@SwitcherTestValue(key = USECASE112)
 	})
-	void shouldReturnTrue_usingParametrizedTestWithMultipleValues() {
+	void shouldReturnTrue_usingMultipleSwitchersAnnotation() {
 		//given
 		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
 		SwitcherContext.initializeClient();

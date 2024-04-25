@@ -1,14 +1,11 @@
 package com.github.switcherapi.client.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
+
+import java.util.*;
 
 /**
  * Switchers are responsible for wrapping the input and output coming from the Switcher API.
@@ -19,7 +16,8 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
  * 
  * @see #isItOn()
  * @see #isItOn(List)
- * @see #isItOn(Entry, boolean)
+ * @see #submit()
+ * @see #submit(List)
  */
 public final class Switcher extends SwitcherBuilder {
 	
@@ -57,49 +55,41 @@ public final class Switcher extends SwitcherBuilder {
 		return super.delay > 0 && !this.historyExecution.isEmpty();
 	}
 	
-	private CriteriaResponse getFromHistory() {
+	private Optional<CriteriaResponse> getFromHistory() {
 		for (CriteriaResponse criteriaResponse : historyExecution) {
-			if (criteriaResponse.getEntry().equals(getEntry()))
-				return criteriaResponse;
+			if (criteriaResponse.getEntry().equals(getEntry())) {
+				return Optional.of(criteriaResponse);
+			}
 		}
-		return null;
-	}
-	
-	@Override
-	public Switcher build() {
-		return this;
+		return Optional.empty();
 	}
 	
 	@Override
 	public Switcher prepareEntry(final List<Entry> entry) {
 		this.entry = entry;
-		return build();
+		return this;
 	}
 	
 	@Override
 	public Switcher prepareEntry(final Entry entry, final boolean add) {
-		if (this.entry == null)
+		if (this.entry == null) {
 			this.entry = new ArrayList<>();
-		
-		if (!add) 
+		}
+
+		if (!add) {
 			this.entry.clear();
-		
-		if (!this.entry.contains(entry))
+		}
+
+		if (!this.entry.contains(entry)) {
 			this.entry.add(entry);
+		}
 		
-		return build();
+		return this;
 	}
 	
 	@Override
 	public Switcher prepareEntry(final Entry entry) {
 		return this.prepareEntry(entry, false);
-	}
-	
-	@Override
-	public boolean isItOn(final Entry entry, final boolean add) 
-			throws SwitcherException {
-		this.prepareEntry(entry, add);
-		return this.isItOn();
 	}
 	
 	@Override
@@ -110,23 +100,38 @@ public final class Switcher extends SwitcherBuilder {
 	
 	@Override
 	public boolean isItOn() throws SwitcherException {
+		final CriteriaResponse response = submit();
+		return response.isItOn();
+	}
+
+	@Override
+	public CriteriaResponse submit(final List<Entry> entry) throws SwitcherException {
+		this.entry = entry;
+		return this.submit();
+	}
+
+	@Override
+	public CriteriaResponse submit() throws SwitcherException {
 		if (SwitcherExecutor.getBypass().containsKey(switcherKey)) {
-			return SwitcherExecutor.getBypass().get(switcherKey);
+			return new CriteriaResponse(
+					SwitcherExecutor.getBypass().get(switcherKey), "Switcher bypassed", this);
 		}
-		
+
 		if (canUseAsync()) {
-			if (asyncSwitcher == null)
+			if (asyncSwitcher == null) {
 				asyncSwitcher = new AsyncSwitcher();
-			
+			}
+
 			asyncSwitcher.execute(this);
-			final CriteriaResponse response = getFromHistory();
-			if (response != null)
-				return response.isItOn();
+			final Optional<CriteriaResponse> response = getFromHistory();
+			if (response.isPresent()) {
+				return response.get();
+			}
 		}
-		
+
 		final CriteriaResponse response = this.context.executeCriteria(this);
 		this.historyExecution.add(response);
-		return response.isItOn();
+		return response;
 	}
 	
 	/**
