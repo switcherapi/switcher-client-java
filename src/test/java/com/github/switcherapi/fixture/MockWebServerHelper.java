@@ -107,11 +107,36 @@ public class MockWebServerHelper {
      * @return Generated mock /criteria response
      */
     protected MockResponse generateCriteriaResponse(String result, boolean reason) {
-        String response;
         if (reason) {
-            response = "{ \"result\": \"%s\", \"reason\": \"Success\" }";
+            return generateCriteriaResponse(result, "Success");
+        }
+
+        return generateCriteriaResponse(result);
+    }
+
+    /**
+     * @see ClientWSImpl#executeCriteriaService(Switcher, String)
+     *
+     * @param result returned by the criteria execution
+     * @return Generated mock /criteria response
+     */
+    protected MockResponse generateCriteriaResponse(String result) {
+        return generateCriteriaResponse(result, null);
+    }
+
+    /**
+     * @see ClientWSImpl#executeCriteriaService(Switcher, String)
+     *
+     * @param result returned by the criteria execution
+     * @param reason returned by the criteria execution
+     * @return Generated mock /criteria response
+     */
+    protected MockResponse generateCriteriaResponse(String result, String reason) {
+        String response;
+        if (reason == null) {
+            response = String.format("{ \"result\": \"%s\" }", result);
         } else {
-            response = "{ \"result\": \"%s\" }";
+            response = String.format("{ \"result\": \"%s\", \"reason\": \"%s\" }", result, reason);
         }
 
         MockResponse.Builder builder = new MockResponse.Builder();
