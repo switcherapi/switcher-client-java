@@ -26,6 +26,8 @@ public @interface SwitcherTest {
 
 	boolean result() default true;
 
+	String metadata() default "";
+
 	boolean abTest() default false;
 
 	SwitcherTestValue[] switchers() default {};

@@ -1,10 +1,10 @@
 package com.github.switcherapi.client;
 
 import com.github.switcherapi.Switchers;
-import com.github.switcherapi.client.model.Entry;
-import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.fixture.MetadataErrorSample;
+import com.github.switcherapi.fixture.MetadataSample;
 import com.github.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
 import org.junit.jupiter.api.AfterAll;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -76,13 +75,44 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 
 		//test
 		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
-		CriteriaResponse response = switcher.submit(new ArrayList<Entry>() {{
-			add(Entry.build(StrategyValidator.VALUE, "value"));
-			add(Entry.build(StrategyValidator.NUMERIC, "10"));
-		}});
+		CriteriaResponse response = switcher
+				.checkValue("value")
+				.checkNumeric("10")
+				.submit();
 
 		assertFalse(response.isItOn());
 		assertEquals("Strategy VALUE_VALIDATION does not agree", response.getReason());
+	}
+
+	@Test
+	void shouldReturnCriteriaResponseWithMetadata() {
+		//auth
+		givenAuthResponse();
+
+		//criteria
+		givenResponse(generateCriteriaResponse(new MetadataSample("123")));
+
+		//test
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		CriteriaResponse response = switcher.submit();
+
+		assertEquals("123", response.getMetadata(MetadataSample.class).getTransactionId());
+	}
+
+	@Test
+	void shouldReturnCriteriaResponseWithWrongMetadata() {
+		//auth
+		givenAuthResponse();
+
+		//criteria
+		givenResponse(generateCriteriaResponse(new MetadataErrorSample("123")));
+
+		//test
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		CriteriaResponse response = switcher.submit();
+
+		assertNotNull(response.getMetadata(MetadataSample.class));
+		assertNull(response.getMetadata(MetadataSample.class).getTransactionId());
 	}
 
 	// Helpers

@@ -28,7 +28,6 @@ public class ClientPlayground {
 		
 		initializeClient();
 		Switcher switcher = getSwitcher(MY_SWITCHER);
-		switcher.setShowReason(true);
 
 		scheduler.scheduleAtFixedRate(() -> {
 			long time = System.currentTimeMillis();

@@ -6,4 +6,6 @@ public @interface SwitcherTestValue {
 
     boolean result() default true;
 
+    String metadata() default "";
+
 }
