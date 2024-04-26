@@ -146,6 +146,23 @@ public class MockWebServerHelper {
     }
 
     /**
+     * @see ClientWSImpl#executeCriteriaService(Switcher, String)
+     *
+     * @param metadata returned by the criteria execution
+     * @return Generated mock /criteria response
+     */
+    protected <T> MockResponse generateCriteriaResponse(T metadata) {
+        String jsonMetadata = new Gson().toJson(metadata);
+        String response = String.format("{ \"result\": \"%s\", \"reason\": \"%s\", \"metadata\": %s }",
+                true, "Success", jsonMetadata);
+
+        MockResponse.Builder builder = new MockResponse.Builder();
+        builder.body(String.format(response, true));
+        builder.addHeader("Content-Type", "application/json");
+        return builder.build();
+    }
+
+    /**
      * @see ClientWSImpl#checkSwitchers(Set, String)
      *
      * @param switchersNotFound Switcher Keys forced to be not found

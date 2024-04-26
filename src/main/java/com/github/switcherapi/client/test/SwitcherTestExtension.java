@@ -78,14 +78,14 @@ class SwitcherTestExtension implements TestTemplateInvocationContextProvider,
 				.toArray(String[]::new);
 
 		for (SwitcherTestValue value : switcherTest.switchers()) {
-			SwitcherExecutor.assume(value.key(), inverted != value.result());
+			SwitcherExecutor.assume(value.key(), inverted != value.result(), value.metadata());
 		}
 
 		getStore(context).put(STORE_KEYS, keys);
 	}
 
 	private void mockSingleSwitcher(ExtensionContext context, SwitcherTest switcherTest, boolean inverted) {
-		SwitcherExecutor.assume(switcherTest.key(), inverted != switcherTest.result());
+		SwitcherExecutor.assume(switcherTest.key(), inverted != switcherTest.result(), switcherTest.metadata());
 		getStore(context).put(STORE_KEY, switcherTest.key());
 	}
 	
