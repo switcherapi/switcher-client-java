@@ -4,6 +4,8 @@ import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.test.SwitcherTest;
 import com.github.switcherapi.client.test.SwitcherTestValue;
+import com.github.switcherapi.fixture.MetadataErrorSample;
+import com.github.switcherapi.fixture.MetadataSample;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -148,6 +150,37 @@ class SwitcherBypassTest {
 	@SwitcherTest(key = USECASE111, abTest = true)
 	void shouldReturnSameResult_usingAbTest() {
 		assertEquals("Switcher key is " + USECASE111, workBothWay());
+	}
+
+	@SwitcherTest(key = USECASE111, metadata = "{ \"transactionId\": \"123\" }")
+	void shouldReturnWithMetadata() {
+		//given
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
+		SwitcherContext.initializeClient();
+
+		//test
+		Switcher switcher = getSwitcher(USECASE111);
+		CriteriaResponse criteriaResponse = switcher.submit();
+		assertEquals("123", criteriaResponse.getMetadata(MetadataSample.class).getTransactionId());
+	}
+
+	@SwitcherTest(switchers = {
+			@SwitcherTestValue(key = USECASE111, metadata = "{ \"transactionId\": \"123\" }"),
+			@SwitcherTestValue(key = USECASE112, metadata = "{ \"errorId\": \"321\" }")
+	})
+	void shouldReturnWithMetadata_usingMultipleSwitchersAnnotation() {
+		//given
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
+		SwitcherContext.initializeClient();
+
+		//test
+		Switcher switcher = getSwitcher(USECASE111);
+		CriteriaResponse criteriaResponse = switcher.submit();
+		assertEquals("123", criteriaResponse.getMetadata(MetadataSample.class).getTransactionId());
+
+		switcher = getSwitcher(USECASE112);
+		criteriaResponse = switcher.submit();
+		assertEquals("321", criteriaResponse.getMetadata(MetadataErrorSample.class).getErrorId());
 	}
 
 	/**

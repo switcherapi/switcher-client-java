@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.Switcher;
+import com.google.gson.Gson;
 
 /**
  * @author Roger Floriano (petruki)
@@ -15,6 +16,8 @@ public class CriteriaResponse {
 	private boolean result;
 
 	private String reason;
+
+	private Object metadata;
 
 	private String switcherKey;
 
@@ -28,6 +31,12 @@ public class CriteriaResponse {
 		this.reason = reason;
 		this.switcherKey = switcher.getSwitcherKey();
 		this.entry = switcher.getEntry();
+	}
+
+	public CriteriaResponse buildFromSwitcher(Switcher switcher) {
+		this.switcherKey = switcher.getSwitcherKey();
+		this.entry = switcher.getEntry();
+		return this;
 	}
 
 	public boolean isItOn() {
@@ -44,6 +53,15 @@ public class CriteriaResponse {
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public <T> T getMetadata(Class<T> clazz) {
+		Gson gson = new Gson();
+		return gson.fromJson(gson.toJson(metadata), clazz);
+	}
+
+	public void setMetadata(Object metadata) {
+		this.metadata = metadata;
 	}
 
 	public String getSwitcherKey() {
@@ -85,13 +103,11 @@ public class CriteriaResponse {
 	@Override
 	public String toString() {
 		final StringBuilder toString = new StringBuilder();
-		toString.append("CriteriaResponse [");
-		toString.append("switcherKey=").append(switcherKey);
-		toString.append(", result=").append(result);
-		if (reason != null)
-			toString.append(", reason=").append(reason);
-		toString.append(" ]");
-
+		toString.append("CriteriaResponse [result=").append(result)
+				.append(", reason=").append(reason)
+				.append(", metadata=").append(metadata)
+				.append(", switcherKey=").append(switcherKey)
+				.append(", entry=").append(entry).append("]");
 		return toString.toString();
 	}
 

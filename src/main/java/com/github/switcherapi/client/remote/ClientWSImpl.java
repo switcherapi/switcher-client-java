@@ -56,7 +56,7 @@ public class ClientWSImpl implements ClientWS {
 		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, url))
 				.queryParam(Switcher.KEY, switcher.getSwitcherKey())
-				.queryParam(Switcher.SHOW_REASON, switcher.isShowReason())
+				.queryParam(Switcher.SHOW_REASON, Boolean.TRUE)
 				.queryParam(Switcher.BYPASS_METRIC, switcher.isBypassMetrics());
 
 		try {

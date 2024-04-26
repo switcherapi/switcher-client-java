@@ -15,9 +15,7 @@ import java.util.*;
  * @since 2019-12-24
  * 
  * @see #isItOn()
- * @see #isItOn(List)
  * @see #submit()
- * @see #submit(List)
  */
 public final class Switcher extends SwitcherBuilder {
 	
@@ -34,10 +32,6 @@ public final class Switcher extends SwitcherBuilder {
 	private final Set<CriteriaResponse> historyExecution;
 
 	private AsyncSwitcher asyncSwitcher;
-	
-	private boolean bypassMetrics = Boolean.FALSE;
-	
-	private boolean showReason = Boolean.FALSE;
 	
 	/**
 	 * Use {@link SwitcherContext#getSwitcher(String)} to create this object.
@@ -93,28 +87,15 @@ public final class Switcher extends SwitcherBuilder {
 	}
 	
 	@Override
-	public boolean isItOn(final List<Entry> entry) throws SwitcherException {
-		this.entry = entry;
-		return this.isItOn();
-	}
-	
-	@Override
 	public boolean isItOn() throws SwitcherException {
 		final CriteriaResponse response = submit();
 		return response.isItOn();
 	}
 
 	@Override
-	public CriteriaResponse submit(final List<Entry> entry) throws SwitcherException {
-		this.entry = entry;
-		return this.submit();
-	}
-
-	@Override
 	public CriteriaResponse submit() throws SwitcherException {
 		if (SwitcherExecutor.getBypass().containsKey(switcherKey)) {
-			return new CriteriaResponse(
-					SwitcherExecutor.getBypass().get(switcherKey), "Switcher bypassed", this);
+			return SwitcherExecutor.getBypass().get(switcherKey).buildFromSwitcher(this);
 		}
 
 		if (canUseAsync()) {
@@ -149,18 +130,6 @@ public final class Switcher extends SwitcherBuilder {
 		return bypassMetrics;
 	}
 
-	public void setBypassMetrics(boolean bypassMetrics) {
-		this.bypassMetrics = bypassMetrics;
-	}
-
-	public boolean isShowReason() {
-		return showReason;
-	}
-
-	public void setShowReason(boolean showReason) {
-		this.showReason = showReason;
-	}
-
 	public String getSwitcherKey() {
 		return this.switcherKey;
 	}
@@ -183,8 +152,8 @@ public final class Switcher extends SwitcherBuilder {
 
 	@Override
 	public String toString() {
-		return String.format("Switcher [switcherKey= %s, entry= %s, bypassMetrics= %s, showReason= %s]", 
-				switcherKey, entry, bypassMetrics, showReason);
+		return String.format("Switcher [switcherKey= %s, entry= %s, bypassMetrics= %s]",
+				switcherKey, entry, bypassMetrics);
 	}
 	
 	public static class GsonInputRequest {
