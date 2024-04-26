@@ -138,6 +138,7 @@ Or, you can submit the switcher request and get the criteria response, which con
 CriteriaResponse response = switcher.submit();
 response.isItOn(); // true/false
 response.getReason(); // Descriptive response based on result value
+response.getMetadata(YourMetadata.class); // Additional information
 ```
 
 2. **Strategy validation - preparing input**
@@ -150,8 +151,6 @@ entries.add(Entry.build(StrategyValidator.DATE, "2020-12-10"));
 
 switcher.prepareEntry(entries);
 switcher.isItOn();
-//or
-switcher.isItOn(entries);
 ```
 
 3. **Strategy validation - Fluent style**

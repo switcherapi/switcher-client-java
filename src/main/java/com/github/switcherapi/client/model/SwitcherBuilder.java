@@ -21,12 +21,13 @@ public abstract class SwitcherBuilder {
 	protected long delay;
 
 	protected boolean remote;
+
+	protected boolean bypassMetrics;
 	
 	protected List<Entry> entry;
 	
 	protected SwitcherBuilder() {
 		this.entry = new ArrayList<>();
-		this.remote = false;
 		this.delay = 0;
 	}
 	
@@ -66,8 +67,9 @@ public abstract class SwitcherBuilder {
 	 * @return switcher itself
 	 */
 	public SwitcherBuilder check(StrategyValidator strategy, String input) {
-		if (StringUtils.isNotBlank(input))
+		if (StringUtils.isNotBlank(input)) {
 			entry.add(Entry.build(strategy, input));
+		}
 		
 		return this;
 	}
@@ -141,6 +143,16 @@ public abstract class SwitcherBuilder {
 	public SwitcherBuilder checkPayload(String input) {
 		return check(StrategyValidator.PAYLOAD, input);
 	}
+
+	/**
+	 * Force Switcher to bypass metrics
+	 *
+	 * @return switcher itself
+	 */
+	public SwitcherBuilder bypassMetrics() {
+		this.bypassMetrics = true;
+		return this;
+	}
 	
 	/**
 	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.
@@ -169,15 +181,6 @@ public abstract class SwitcherBuilder {
 	public abstract Switcher prepareEntry(final Entry entry);
 	
 	/**
-	 * This method is going to invoke the criteria overwriting the existing input if it was added earlier.
-	 * 
-	 * @param entry input object
-	 * @return criteria result
-	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
-	 */
-	public abstract boolean isItOn(final List<Entry> entry) throws SwitcherException;
-	
-	/**
 	 * Execute criteria based on a given switcher key provided via {@link SwitcherContext#getSwitcher(String)}.
 	 * <br>The detailed result is available in list of {@link CriteriaResponse}.
 	 * 
@@ -185,15 +188,6 @@ public abstract class SwitcherBuilder {
 	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
 	 */
 	public abstract boolean isItOn() throws SwitcherException;
-
-	/**
-	 * This method is going to invoke the criteria overwriting the existing input if it was added earlier.
-	 *
-	 * @param entry input object
-	 * @return criteria response
-	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
-	 */
-	public abstract CriteriaResponse submit(final List<Entry> entry) throws SwitcherException;
 
 	/**
 	 * Execute criteria based on a given switcher key provided via {@link SwitcherContext#getSwitcher(String)}.

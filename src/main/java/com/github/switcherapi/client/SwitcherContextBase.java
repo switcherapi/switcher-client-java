@@ -154,12 +154,14 @@ public abstract class SwitcherContextBase {
 	 * Load Switcher instances into a map cache
 	 */
 	private static void loadSwitchers() {
-		if (switchers == null)
+		if (switchers == null) {
 			switchers = new HashMap<>();
+		}
 		
 		switchers.clear();
-		for (String key : switcherKeys)
+		for (String key : switcherKeys) {
 			switchers.put(key, new Switcher(key, instance));
+		}
 	}
 
 	/**
@@ -170,8 +172,9 @@ public abstract class SwitcherContextBase {
 	 * @param callback to be invoked when the snapshot is updated or when an error occurs
 	 */
 	public static void scheduleSnapshotAutoUpdate(String intervalValue, SnapshotCallback callback) {
-		if (StringUtils.isBlank(intervalValue))
+		if (StringUtils.isBlank(intervalValue)) {
 			return;
+		}
 
 		final long interval = SwitcherUtils.getMillis(intervalValue);
 		final SnapshotCallback callbackFinal = Optional.ofNullable(callback).orElse(new SnapshotCallback());
@@ -224,12 +227,14 @@ public abstract class SwitcherContextBase {
 	public static Switcher getSwitcher(String key, boolean keepEntries) {
 		SwitcherUtils.debug(logger, "key: {} - keepEntries: {}", key, keepEntries);
 		
-		if (!switchers.containsKey(key))
+		if (!switchers.containsKey(key)) {
 			throw new SwitcherKeyNotFoundException(key);
+		}
 		
 		final Switcher switcher = switchers.get(key);
-		if (!keepEntries)
+		if (!keepEntries) {
 			switcher.resetEntry();
+		}
 		
 		return switcher;
 	}
@@ -328,8 +333,9 @@ public abstract class SwitcherContextBase {
 	 * Cancel existing scheduled task for updating local Snapshot
 	 */
 	public static void terminateSnapshotAutoUpdateWorker() {
-		if (scheduledExecutorService != null)
+		if (scheduledExecutorService != null) {
 			scheduledExecutorService.shutdownNow();
+		}
 	}
 	
 }

@@ -11,6 +11,8 @@ import com.github.switcherapi.client.service.remote.ClientRemote;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
+import com.google.gson.Gson;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +31,7 @@ public abstract class SwitcherExecutor {
 	
 	private static final Logger logger = LogManager.getLogger(SwitcherExecutor.class);
 	
-	private static final Map<String, Boolean> bypass = new HashMap<>();
+	private static final Map<String, CriteriaResponse> bypass = new HashMap<>();
 	
 	/**
 	 * Execute criteria based on the Switcher configuration
@@ -108,7 +110,27 @@ public abstract class SwitcherExecutor {
 	 * @param expectedResult that will be returned when performing isItOn
 	 */
 	public static void assume(final String key, boolean expectedResult) {
-		bypass.put(key, expectedResult);
+		assume(key, expectedResult, null);
+	}
+
+	/**
+	 * It manipulates the result of a given Switcher key.
+	 *
+	 * @param key name of the key that you want to change the result
+	 * @param metadata additional information about the assumption (JSON)
+	 * @param expectedResult that will be returned when performing isItOn
+	 */
+	public static void assume(final String key, boolean expectedResult, String metadata) {
+		CriteriaResponse criteriaResponse =  new CriteriaResponse();
+		criteriaResponse.setResult(expectedResult);
+		criteriaResponse.setReason("Switcher bypassed");
+
+		if (StringUtils.isNotBlank(metadata)) {
+			Gson gson = new Gson();
+			criteriaResponse.setMetadata(gson.fromJson(metadata, Object.class));
+		}
+
+		bypass.put(key, criteriaResponse);
 	}
 	
 	/**
@@ -120,7 +142,7 @@ public abstract class SwitcherExecutor {
 		bypass.remove(key);
 	}
 
-	public static Map<String, Boolean> getBypass() {
+	public static Map<String, CriteriaResponse> getBypass() {
 		return bypass;
 	}
 }
