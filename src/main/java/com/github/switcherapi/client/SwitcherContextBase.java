@@ -170,10 +170,11 @@ public abstract class SwitcherContextBase {
 	 *
 	 * @param intervalValue to be used for the update (e.g. 5s, 1m, 1h, 1d)
 	 * @param callback to be invoked when the snapshot is updated or when an error occurs
+	 * @return true if the task was scheduled successfully
 	 */
-	public static void scheduleSnapshotAutoUpdate(String intervalValue, SnapshotCallback callback) {
-		if (StringUtils.isBlank(intervalValue)) {
-			return;
+	public static boolean scheduleSnapshotAutoUpdate(String intervalValue, SnapshotCallback callback) {
+		if (StringUtils.isBlank(intervalValue) || scheduledExecutorService != null) {
+			return false;
 		}
 
 		final long interval = SwitcherUtils.getMillis(intervalValue);
@@ -191,6 +192,7 @@ public abstract class SwitcherContextBase {
 
 		initExecutorService();
 		scheduledExecutorService.scheduleAtFixedRate(runnableSnapshotValidate, 0, interval, TimeUnit.MILLISECONDS);
+		return true;
 	}
 
 	/**
@@ -198,9 +200,10 @@ public abstract class SwitcherContextBase {
 	 * The task will be executed in a single thread executor service.
 	 *
 	 * @param intervalValue to be used for the update (e.g. 5s, 1m, 1h, 1d)
+	 * @return true if the task was scheduled successfully
 	 */
-	public static void scheduleSnapshotAutoUpdate(String intervalValue) {
-		scheduleSnapshotAutoUpdate(intervalValue, null);
+	public static boolean scheduleSnapshotAutoUpdate(String intervalValue) {
+		return scheduleSnapshotAutoUpdate(intervalValue, null);
 	}
 
 	/**
@@ -335,6 +338,7 @@ public abstract class SwitcherContextBase {
 	public static void terminateSnapshotAutoUpdateWorker() {
 		if (scheduledExecutorService != null) {
 			scheduledExecutorService.shutdownNow();
+			scheduledExecutorService = null;
 		}
 	}
 	

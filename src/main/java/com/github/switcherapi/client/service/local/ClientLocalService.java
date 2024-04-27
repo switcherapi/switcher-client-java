@@ -123,8 +123,8 @@ public class ClientLocalService {
 	 */
 	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input,
 			final Switcher switcher) {
-		SwitcherUtils.debug(logger, "configStrategies: {}", () -> Arrays.toString(configStrategies));
-		SwitcherUtils.debug(logger, "input: {}", () -> Arrays.toString(input != null ? input.toArray() : ArrayUtils.EMPTY_STRING_ARRAY));
+		SwitcherUtils.debugSupplier(logger, "configStrategies: {}", Arrays.toString(configStrategies));
+		SwitcherUtils.debugSupplier(logger, "input: {}", Arrays.toString(input != null ? input.toArray() : ArrayUtils.EMPTY_STRING_ARRAY));
 
 		boolean result;
 		for (final Strategy strategy : configStrategies) {
@@ -153,8 +153,9 @@ public class ClientLocalService {
 	}
 	
 	private Entry tryGetSwitcherInput(final List<Entry> input, Strategy strategy) {
-		if (input == null)
+		if (input == null) {
 			return null;
+		}
 		
 		return input.stream()
 				.filter(i -> i.getStrategy().equals(strategy.getStrategy()))

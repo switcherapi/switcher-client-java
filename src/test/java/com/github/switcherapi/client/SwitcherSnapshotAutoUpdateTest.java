@@ -20,8 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SwitcherSnapshotAutoUpdateTest {
@@ -259,6 +258,27 @@ class SwitcherSnapshotAutoUpdateTest {
 		//test
 		CountDownHelper.wait(2);
 		assertEquals(2, Switchers.getSnapshotVersion());
+	}
+
+	@Test
+	@Order(6)
+	void shouldPreventSnapshotAutoUpdateToStart_whenAlreadySetup() {
+		//given
+		givenResponse(generateMockAuth()); //auth
+		givenResponse(generateSnapshotResponse("default.json")); //graphql
+
+		//that
+		Switchers.configure(ContextBuilder.builder()
+				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
+				.snapshotLocation(null)
+				.environment("generated_mock_default_6")
+				.local(true)
+				.snapshotAutoLoad(true)
+				.snapshotAutoUpdateInterval("1s"));
+
+		Switchers.initializeClient();
+		boolean started = Switchers.scheduleSnapshotAutoUpdate("1m");
+		assertFalse(started);
 	}
 
 }
