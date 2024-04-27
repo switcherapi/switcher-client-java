@@ -153,8 +153,9 @@ public class ClientLocalService {
 	}
 	
 	private Entry tryGetSwitcherInput(final List<Entry> input, Strategy strategy) {
-		if (input == null)
+		if (input == null) {
 			return null;
+		}
 		
 		return input.stream()
 				.filter(i -> i.getStrategy().equals(strategy.getStrategy()))
