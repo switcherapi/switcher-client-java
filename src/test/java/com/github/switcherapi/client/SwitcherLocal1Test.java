@@ -18,6 +18,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -74,6 +75,16 @@ class SwitcherLocal1Test {
 	void localShouldNotReturn_keyNotFound() {
 		Switcher switcher = Switchers.getSwitcher(Switchers.NOT_FOUND_KEY);
 		assertThrows(SwitcherKeyNotFoundException.class, switcher::isItOn);
+	}
+
+	@Test
+	void localShouldReturnFalse_nullEntryForStrategy() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE31);
+
+		List<Entry> entry = null;
+		assertFalse(switcher
+				.prepareEntry(entry)
+				.isItOn());
 	}
 	
 	static Stream<Arguments> dateTestArguments() {
