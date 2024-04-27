@@ -57,14 +57,14 @@ public class SnapshotWatcher implements Runnable {
 		    		WatchEvent<Path> ev = (WatchEvent<Path>) event;
 		    		Path filename = ev.context();
 		    		
-		    		if (executorInstance != null)
-		    			executorInstance.notifyChange(filename.toString(), handler);
+		    		if (executorInstance != null) {
+						executorInstance.notifyChange(filename.toString(), handler);
+					}
 		    	}
-			    
-			    boolean valid = key.reset();
-			    
-			    if (!valid)
-			        break;
+
+			    if (!key.reset()) {
+					break;
+				}
 		    }
 		} catch (IOException | InterruptedException | ClosedWatchServiceException e) {
 			Thread.currentThread().interrupt();
@@ -74,8 +74,9 @@ public class SnapshotWatcher implements Runnable {
 	
 	public void terminate() {
 		try {
-			if (watcher != null)
+			if (watcher != null) {
 				watcher.close();
+			}
 		} catch (IOException e) {
 			logger.error(e);
 		}
