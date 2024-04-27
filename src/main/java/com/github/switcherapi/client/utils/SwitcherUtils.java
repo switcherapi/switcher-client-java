@@ -21,7 +21,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -143,8 +142,9 @@ public class SwitcherUtils {
 	 * @param handler to notify snapshot change events
 	 */
 	public static void watchSnapshot(final SwitcherExecutor executorInstance, SnapshotEventHandler handler) {
-		if (watcher == null)
+		if (watcher == null) {
 			watcher = new SnapshotWatcher(executorInstance, handler);
+		}
 
 		initExecutorService();
 		executorService.submit(watcher);
@@ -211,14 +211,14 @@ public class SwitcherUtils {
 	 * @param message to be logged
 	 * @param paramSuppliers parameters to be replaced in the message
 	 */
-	public static void debug(Logger logger, String message, Supplier<?> paramSuppliers) {
+	public static void debugSupplier(Logger logger, String message, Object paramSuppliers) {
 		if (logger.isDebugEnabled()) {
-			logger.debug(message, paramSuppliers);
+			logger.debug(message, () -> paramSuppliers);
 		}
 	}
 
 	/**
-	 * Resolve environment variable 'value'and extract its value from either
+	 * Resolve environment variable 'value' and extract its value from either
 	 * System environment or default argument.
 	 * 
 	 * @param value assigned from the properties file

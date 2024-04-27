@@ -154,7 +154,7 @@ switcher.isItOn();
 ```
 
 3. **Strategy validation - Fluent style**
-Create chained calls using 'getSwitcher' then 'prepareEntry' then 'isItOn' functions.
+Create chained calls to validate the switcher with a more readable and maintainable code.
 
 ```java
 import static **.MyAppFeatures.*;
@@ -165,32 +165,22 @@ getSwitcher(FEATURE01)
 	.isItOn();
 ```
 
-4. **Strategy validation - all-in-one execution**
-All-in-one method is fast and include everything you need to execute a complex call to the API. Stack inputs changing the last parameter to *true* in case you need to add more values to the strategy validator.
-
-```java
-switcher.isItOn(FEATURE01, Entry.build(StrategyValidator.NETWORK, "10.0.0.3"), false);
-//or simply
-switcher.checkNetwork("10.0.0.3").isItOn();
-```
-
-5. **Accessing the response history**
-Switchers when created store the last execution result from a given switcher key. This can be useful for troubleshooting or internal logging.
+4. **Accessing the response history**
+Switchers stores the last execution result from a given switcher key/entry.
 
 ```java
 switcher.getHistoryExecution();
 ```
 
-6. **Throttling**
-Improve the overall performance by using throttle feature to skip API calls in a short time. This feature is ideal for critical or repetitive code executions that requires high performance.
+5. **Throttling**
+Run Switchers asynchronously when using throttling. It will return the last known value until the throttle time is over.
 
 ```java
 switcher.throttle(1000).isItOn();
 ```
 
 ## Local settings
-You can also set the Switcher library to work locally. It will use a local snapshot file to retrieve the switchers configuration.<br>
-This feature is useful for testing purposes or when you need to run your application without internet access.
+You can also set the Switcher library to work locally. It will use a local snapshot file to retrieve the switchers configuration.
 
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
@@ -208,19 +198,37 @@ Forcing Switchers to resolve remotely can help you define exclusive features tha
 This feature is ideal if you want to run the SDK in local mode but still want to resolve a specific switcher remotely.
 
 ```java
-MyAppFeatures.configure(ContextBuilder.builder()
-    .url("https://switcher-api.com")
-    .apiKey("API_KEY")
-    .domain("Playground")
-    .component("switcher-playground")    
-	.local(true)
-	.snapshotLocation("/src/resources"));
-
-MyAppFeatures.initializeClient();
-
-Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
 switcher.forceRemote().isItOn();
 ```
+
+Another option is to use in-memory loaded snapshots to resolve the switchers.<br>
+Switcher SDK will schedule a background task to update snapshot in-memory a new version is available.
+
+```java
+MyAppFeatures.configure(ContextBuilder.builder()
+    .url("https://api.switcherapi.com")
+    .apiKey("[API-KEY]")
+    .domain("Playground")
+    .local(true)
+    .snapshotAutoLoad(true)
+    .snapshotAutoUpdateInterval("5s") // You can choose to configure here or using `scheduleSnapshotAutoUpdate`
+    .component("switcher-playground"));
+
+MyAppFeatures.initializeClient();
+MyAppFeatures.scheduleSnapshotAutoUpdate("5s", new SnapshotCallback() {
+    @Override
+    public void onSnapshotUpdate(long version) {
+        logger.info("Snapshot updated: {}", version);
+    }
+
+    @Override
+    public void onSnapshotUpdateError(Exception e) {
+        logger.error("Failed to update snapshot: {}", e.getMessage());
+    }
+});
+```
+
+
 
 ## Real-time snapshot updater
 Let the Switcher Client manage your application local snapshot.<br>
