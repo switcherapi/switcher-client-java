@@ -8,7 +8,7 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
 import java.util.*;
 
 /**
- * Switchers are responsible for wrapping the input and output coming from the Switcher API.
+ * Switchers are the entry point to evaluate criteria and return the result.
  * <br>To execute a criteria evaluation, use one of the available methods: {@link #isItOn()}.
  * 
  * @author Roger Floriano (petruki)
@@ -56,6 +56,11 @@ public final class Switcher extends SwitcherBuilder {
 			}
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public Switcher build() {
+		return this;
 	}
 	
 	@Override
