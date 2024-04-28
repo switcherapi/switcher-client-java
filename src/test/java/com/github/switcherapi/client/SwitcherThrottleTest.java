@@ -56,10 +56,13 @@ class SwitcherThrottleTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("true", false)); //criteria
 		
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		Switcher switcher = Switchers
+				.getSwitcher(Switchers.REMOTE_KEY)
+				.throttle(1000)
+				.build();
 		
 		for (int i = 0; i < 10; i++) {
-			assertTrue(switcher.throttle(1000).isItOn());
+			assertTrue(switcher.isItOn());
 		}
 		
 		// Async call
