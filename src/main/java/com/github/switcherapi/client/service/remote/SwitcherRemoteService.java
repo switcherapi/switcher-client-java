@@ -47,20 +47,27 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 			return response;
 		} catch (final SwitcherRemoteException e) {
 			logger.error("Failed to execute criteria - {}\nCause: {}", e.getMessage(), e.getCause());
-			return executeSilentCriteria(switcher, e);
+			return tryExecuteLocalCriteria(switcher, e);
 		}
 	}
 	
-	private CriteriaResponse executeSilentCriteria(final Switcher switcher, 
-			final SwitcherRemoteException e) {
+	private CriteriaResponse tryExecuteLocalCriteria(final Switcher switcher,
+													 final SwitcherRemoteException e) {
 		if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.SILENT_MODE))) {
-			CriteriaResponse response = this.switcherLocal.executeCriteria(switcher);
+			final CriteriaResponse response = this.switcherLocal.executeCriteria(switcher);
 			SwitcherUtils.debug(logger, "[Silent] response: {}", response);
-			
+
 			return response;
-		} else {
-			throw e;
 		}
+
+		if (StringUtils.isNotBlank(switcher.getDefaultResult())) {
+			final CriteriaResponse response = CriteriaResponse.buildFromDefault(switcher);
+			SwitcherUtils.debug(logger, "[Default] response: {}", response);
+
+			return response;
+		}
+
+		throw e;
 	}
 
 	@Override

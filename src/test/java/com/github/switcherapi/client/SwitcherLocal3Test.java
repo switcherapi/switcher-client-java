@@ -1,9 +1,5 @@
 package com.github.switcherapi.client;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.nio.file.Paths;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -26,6 +22,8 @@ import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherLocal3Test {
 	
@@ -99,6 +97,12 @@ class SwitcherLocal3Test {
 		assertEquals(String.format(
 				"Something went wrong: Unable to load the following Switcher Key(s): %s", notFound), 
 				ex.getMessage());
+	}
+
+	@Test
+	void localShouldReturnTrue_defaultResult() {
+		Switcher switcher = Switchers.getSwitcher(Switchers.NOT_FOUND_KEY);
+		assertTrue(switcher.defaultResult(true).isItOn());
 	}
 
 }
