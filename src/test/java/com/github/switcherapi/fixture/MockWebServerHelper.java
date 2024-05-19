@@ -95,7 +95,7 @@ public class MockWebServerHelper {
      */
     protected MockResponse generateStatusResponse(String code) {
         MockResponse.Builder builder = new MockResponse.Builder();
-        builder.status(code);
+        builder.setCode(Integer.parseInt(code));
         return builder.build();
     }
 

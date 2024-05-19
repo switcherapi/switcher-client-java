@@ -63,6 +63,18 @@ class SwitcherFail1Test extends MockWebServerHelper {
 		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertThrows(SwitcherRemoteException.class, switcher::isItOn);
 	}
+
+	@Test
+	void shouldReturnSuccessDefaultResult_keyNotFound() {
+		//auth
+		givenResponse(generateMockAuth(10));
+
+		//criteria
+		givenResponse(generateStatusResponse("404"));
+
+		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		assertTrue(switcher.defaultResult(true).isItOn());
+	}
 	
 	@Test
 	void shouldReturnError_unauthorizedAPIAccess() {

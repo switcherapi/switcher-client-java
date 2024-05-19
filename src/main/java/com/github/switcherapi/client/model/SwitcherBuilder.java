@@ -23,6 +23,8 @@ public abstract class SwitcherBuilder {
 	protected boolean remote;
 
 	protected boolean bypassMetrics;
+
+	protected String defaultResult;
 	
 	protected List<Entry> entry;
 	
@@ -56,6 +58,17 @@ public abstract class SwitcherBuilder {
 		}
 
 		this.remote = remote;
+		return this;
+	}
+
+	/**
+	 * Set the default result when client panics
+	 *
+	 * @param defaultResult true/false
+	 * @return {@link SwitcherBuilder}
+	 */
+	public SwitcherBuilder defaultResult(boolean defaultResult) {
+		this.defaultResult = String.valueOf(defaultResult);
 		return this;
 	}
 	
@@ -218,5 +231,9 @@ public abstract class SwitcherBuilder {
 
 	public boolean isRemote() {
 		return remote;
+	}
+
+	public String getDefaultResult() {
+		return defaultResult;
 	}
 }
