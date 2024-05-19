@@ -77,11 +77,12 @@ public class SwitcherLocalService extends SwitcherExecutor {
 				SwitcherUtils.debug(logger, "[Local] response: {}", response);
 			}
 		} catch (SwitcherKeyNotFoundException e) {
-			if (StringUtils.isNotBlank(switcher.getDefaultResult())) {
-				return CriteriaResponse.buildFromDefault(switcher);
+			if (StringUtils.isBlank(switcher.getDefaultResult())) {
+				throw e;
 			}
 
-			throw e;
+			response = CriteriaResponse.buildFromDefault(switcher);
+			SwitcherUtils.debug(logger, "[Default] response: {}", response);
 		}
 		
 		return response;
