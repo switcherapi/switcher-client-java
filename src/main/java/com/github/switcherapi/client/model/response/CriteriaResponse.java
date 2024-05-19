@@ -39,6 +39,10 @@ public class CriteriaResponse {
 		return this;
 	}
 
+	public static CriteriaResponse buildFromDefault(Switcher switcher) {
+		return new CriteriaResponse(true, "Default result", switcher);
+	}
+
 	public boolean isItOn() {
 		return result;
 	}

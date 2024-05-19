@@ -2,10 +2,7 @@ package com.github.switcherapi.client.service.local;
 
 import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.SwitcherExecutor;
-import com.github.switcherapi.client.exception.SwitcherContextException;
-import com.github.switcherapi.client.exception.SwitcherException;
-import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
-import com.github.switcherapi.client.exception.SwitchersValidationException;
+import com.github.switcherapi.client.exception.*;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Domain;
@@ -71,12 +68,20 @@ public class SwitcherLocalService extends SwitcherExecutor {
 		SwitcherUtils.debug(logger, "switcher: {}", switcher);
 
 		CriteriaResponse response;
-		if (switcher.isRemote()) {
-			response = this.clientRemote.executeCriteria(switcher);
-			SwitcherUtils.debug(logger, "[Remote] response: {}", response);
-		} else {
-			response = this.clientLocalService.executeCriteria(switcher, this.domain);
-			SwitcherUtils.debug(logger, "[Local] response: {}", response);
+		try {
+			if (switcher.isRemote()) {
+				response = this.clientRemote.executeCriteria(switcher);
+				SwitcherUtils.debug(logger, "[Remote] response: {}", response);
+			} else {
+				response = this.clientLocalService.executeCriteria(switcher, this.domain);
+				SwitcherUtils.debug(logger, "[Local] response: {}", response);
+			}
+		} catch (SwitcherKeyNotFoundException e) {
+			if (StringUtils.isNotBlank(switcher.getDefaultResult())) {
+				return CriteriaResponse.buildFromDefault(switcher);
+			}
+
+			throw e;
 		}
 		
 		return response;

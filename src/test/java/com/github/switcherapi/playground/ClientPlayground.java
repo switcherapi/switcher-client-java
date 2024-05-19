@@ -24,6 +24,8 @@ public class ClientPlayground {
 				.url("https://api.switcherapi.com")
 				.apiKey("JDJiJDA4JEFweTZjSTR2bE9pUjNJOUYvRy9raC4vRS80Q2tzUnk1d3o1aXFmS2o5eWJmVW11cjR0ODNT")
 				.domain("Playground")
+                .local(true)
+                .snapshotLocation("src/test/resources/snapshot/playground")
 				.component("switcher-playground"));
 
 		initializeClient();
