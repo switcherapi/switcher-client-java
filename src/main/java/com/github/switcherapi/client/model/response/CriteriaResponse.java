@@ -13,6 +13,8 @@ import com.google.gson.Gson;
  */
 public class CriteriaResponse {
 
+	private static final String DEFAULT_REASON = "Default result";
+
 	private boolean result;
 
 	private String reason;
@@ -40,7 +42,8 @@ public class CriteriaResponse {
 	}
 
 	public static CriteriaResponse buildFromDefault(Switcher switcher) {
-		return new CriteriaResponse(true, "Default result", switcher);
+		return new CriteriaResponse(
+				Boolean.parseBoolean(switcher.getDefaultResult()), DEFAULT_REASON, switcher);
 	}
 
 	public boolean isItOn() {
