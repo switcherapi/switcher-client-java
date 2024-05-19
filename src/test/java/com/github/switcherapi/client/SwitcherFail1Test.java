@@ -14,8 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherFail1Test extends MockWebServerHelper {
 	
@@ -74,6 +73,7 @@ class SwitcherFail1Test extends MockWebServerHelper {
 
 		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertTrue(switcher.defaultResult(true).isItOn());
+		assertFalse(switcher.defaultResult(false).isItOn());
 	}
 	
 	@Test
