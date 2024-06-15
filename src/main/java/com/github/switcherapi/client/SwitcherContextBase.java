@@ -178,7 +178,7 @@ public abstract class SwitcherContextBase {
 		}
 
 		final long interval = SwitcherUtils.getMillis(intervalValue);
-		final SnapshotCallback callbackFinal = Optional.ofNullable(callback).orElse(new SnapshotCallback());
+		final SnapshotCallback callbackFinal = Optional.ofNullable(callback).orElse(new SnapshotCallback() {});
 		final Runnable runnableSnapshotValidate = () -> {
 			try {
 				if (validateSnapshot()) {
@@ -272,7 +272,7 @@ public abstract class SwitcherContextBase {
 	 * When the file is modified the in-memory snapshot will reload
 	 */
 	public static void watchSnapshot() {
-		watchSnapshot(new SnapshotEventHandler());
+		watchSnapshot(new SnapshotEventHandler() {});
 	}
 	
 	/**

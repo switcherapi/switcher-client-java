@@ -134,6 +134,11 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	}
 
 	@Override
+	public boolean notifyChange(final String snapshotFile) {
+		return this.notifyChange(snapshotFile, new SnapshotEventHandler() {});
+	}
+
+	@Override
 	public long getSnapshotVersion() {
 		return domain.getVersion();
 	}

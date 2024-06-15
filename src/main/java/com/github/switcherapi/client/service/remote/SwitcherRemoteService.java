@@ -102,6 +102,11 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	}
 
 	@Override
+	public boolean notifyChange(String snapshotFile) {
+		return this.switcherLocal.notifyChange(snapshotFile);
+	}
+
+	@Override
 	public long getSnapshotVersion() {
 		return switcherLocal.getSnapshotVersion();
 	}

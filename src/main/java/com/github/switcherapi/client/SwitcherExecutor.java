@@ -71,6 +71,14 @@ public abstract class SwitcherExecutor {
 	public abstract boolean notifyChange(final String snapshotFile, SnapshotEventHandler handler);
 
 	/**
+	 * Update in-memory snapshot.
+	 *
+	 * @param snapshotFile Path location
+	 * @return true if valid change
+	 */
+	public abstract boolean notifyChange(final String snapshotFile);
+
+	/**
 	 * Retrieve local snapshot version
 	 *
 	 * @return snapshot version
