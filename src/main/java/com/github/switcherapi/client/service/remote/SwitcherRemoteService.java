@@ -1,13 +1,5 @@
 package com.github.switcherapi.client.service.remote;
 
-import java.util.Arrays;
-import java.util.Set;
-
-import com.github.switcherapi.client.utils.SwitcherUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
@@ -17,7 +9,13 @@ import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
-import com.github.switcherapi.client.utils.SnapshotEventHandler;
+import com.github.switcherapi.client.utils.SwitcherUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
+import java.util.Set;
 
 /**
  * @author Roger Floriano (petruki)
@@ -94,16 +92,6 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 		if (response.getNotFound() != null && response.getNotFound().length > 0) {
 			throw new SwitchersValidationException(Arrays.toString(response.getNotFound()));
 		}
-	}
-	
-	@Override
-	public boolean notifyChange(String snapshotFile, SnapshotEventHandler handler) {
-		return this.switcherLocal.notifyChange(snapshotFile, handler);
-	}
-
-	@Override
-	public boolean notifyChange(String snapshotFile) {
-		return this.switcherLocal.notifyChange(snapshotFile);
 	}
 
 	@Override

@@ -62,6 +62,44 @@ public class SwitcherLocalService extends SwitcherExecutor {
 			}
 		}
 	}
+
+	/**
+	 * Update in-memory snapshot.
+	 *
+	 * @param snapshotFile Path location
+	 * @param handler to notify snapshot change events
+	 *
+	 * @return true if valid change
+	 */
+	public boolean notifyChange(final String snapshotFile, SnapshotEventHandler handler) {
+		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
+		final String snapshotLocation = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION);
+
+		try {
+			if (snapshotFile.equals(String.format("%s.json", environment))) {
+				SwitcherUtils.debug(logger, "Updating domain");
+
+				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
+				handler.onSuccess();
+			}
+		} catch (SwitcherSnapshotLoadException | IOException e) {
+			handler.onError(new SwitcherException(e.getMessage(), e));
+			logger.error(e);
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Update in-memory snapshot.
+	 *
+	 * @param snapshotFile Path location
+	 * @return true if valid change
+	 */
+	public boolean notifyChange(final String snapshotFile) {
+		return this.notifyChange(snapshotFile, new SnapshotEventHandler() {});
+	}
 	
 	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher) {
@@ -110,32 +148,6 @@ public class SwitcherLocalService extends SwitcherExecutor {
 		if (!response.isEmpty()) {
 			throw new SwitchersValidationException(response.toString());
 		}
-	}
-	
-	@Override
-	public boolean notifyChange(final String snapshotFile, SnapshotEventHandler handler) {
-		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
-		final String snapshotLocation = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION);
-		
-		try {
-			if (snapshotFile.equals(String.format("%s.json", environment))) {
-				SwitcherUtils.debug(logger, "Updating domain");
-
-				this.domain = SnapshotLoader.loadSnapshot(snapshotLocation, environment);
-				handler.onSuccess();
-			}
-		} catch (SwitcherSnapshotLoadException | IOException e) {
-			handler.onError(new SwitcherException(e.getMessage(), e));
-			logger.error(e);
-			return false;
-		}
-		
-		return true;
-	}
-
-	@Override
-	public boolean notifyChange(final String snapshotFile) {
-		return this.notifyChange(snapshotFile, new SnapshotEventHandler() {});
 	}
 
 	@Override

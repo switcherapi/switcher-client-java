@@ -59,24 +59,6 @@ public abstract class SwitcherExecutor {
 	 * @param switchers To be validated
 	 */
 	public abstract void checkSwitchers(final Set<String> switchers);
-	
-	/**
-	 * Update in-memory snapshot.
-	 * 
-	 * @param snapshotFile Path location
-	 * @param handler to notify snapshot change events
-	 * 
-	 * @return true if valid change
-	 */
-	public abstract boolean notifyChange(final String snapshotFile, SnapshotEventHandler handler);
-
-	/**
-	 * Update in-memory snapshot.
-	 *
-	 * @param snapshotFile Path location
-	 * @return true if valid change
-	 */
-	public abstract boolean notifyChange(final String snapshotFile);
 
 	/**
 	 * Retrieve local snapshot version

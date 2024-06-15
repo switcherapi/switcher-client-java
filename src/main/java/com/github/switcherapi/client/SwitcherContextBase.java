@@ -270,6 +270,9 @@ public abstract class SwitcherContextBase {
 	/**
 	 * Start watching snapshot files for modifications.<br>
 	 * When the file is modified the in-memory snapshot will reload
+	 *
+	 * <p>
+	 *     (*) Requires client to use local settings
 	 */
 	public static void watchSnapshot() {
 		watchSnapshot(new SnapshotEventHandler() {});
@@ -278,11 +281,20 @@ public abstract class SwitcherContextBase {
 	/**
 	 * Start watching snapshot files for modifications.<br>
 	 * When the file is modified the in-memory snapshot will reload
+	 *
+	 * <p>
+	 *     (*) Requires client to use local settings
 	 * 
 	 * @param handler to notify snapshot change events
+	 * @throws SwitcherException if using remote service
 	 */
 	public static void watchSnapshot(SnapshotEventHandler handler) {
-		SwitcherUtils.watchSnapshot(instance, handler);
+		if (!(instance instanceof SwitcherLocalService)) {
+			throw new SwitcherException("Cannot watch snapshot when using remote", new UnsupportedOperationException());
+		}
+
+		SwitcherLocalService executorInstance = (SwitcherLocalService) instance;
+		SwitcherUtils.watchSnapshot(executorInstance, handler);
 	}
 	
 	/**
