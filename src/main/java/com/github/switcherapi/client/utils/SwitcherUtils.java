@@ -1,10 +1,10 @@
 package com.github.switcherapi.client.utils;
 
-import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.service.WorkerName;
+import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -141,7 +141,7 @@ public class SwitcherUtils {
 	 * @param executorInstance of a Remote or Local Switcher
 	 * @param handler to notify snapshot change events
 	 */
-	public static void watchSnapshot(final SwitcherExecutor executorInstance, SnapshotEventHandler handler) {
+	public static void watchSnapshot(final SwitcherLocalService executorInstance, SnapshotEventHandler handler) {
 		if (watcher == null) {
 			watcher = new SnapshotWatcher(executorInstance, handler);
 		}
