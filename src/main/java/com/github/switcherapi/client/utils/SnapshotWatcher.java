@@ -1,23 +1,17 @@
 package com.github.switcherapi.client.utils;
 
-import java.io.IOException;
-import java.nio.file.ClosedWatchServiceException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
-
+import com.github.switcherapi.client.SwitcherContextBase;
+import com.github.switcherapi.client.model.ContextKey;
+import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.switcherapi.client.SwitcherContextBase;
-import com.github.switcherapi.client.SwitcherExecutor;
-import com.github.switcherapi.client.model.ContextKey;
+import java.io.IOException;
+import java.nio.file.*;
 
 /**
+ * SnapshotWatcher runs in a separate thread to watch for changes in the snapshot file.
+ *
  * @author Roger Floriano (petruki)
  * @since 2020-05-13
  */
@@ -29,9 +23,9 @@ public class SnapshotWatcher implements Runnable {
 	
 	private WatchService watcher;
 	
-	private SwitcherExecutor executorInstance;
+	private SwitcherLocalService executorInstance;
 	
-	public SnapshotWatcher(final SwitcherExecutor executorInstance, SnapshotEventHandler handler) {
+	public SnapshotWatcher(final SwitcherLocalService executorInstance, SnapshotEventHandler handler) {
 		this.executorInstance = executorInstance;
 		this.handler = handler;
 	}

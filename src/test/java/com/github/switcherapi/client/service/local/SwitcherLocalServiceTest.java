@@ -37,7 +37,7 @@ class SwitcherLocalServiceTest {
 		SwitchersBase.configure(ContextBuilder.builder()
 				.environment("defect_default"));
 		
-		assertFalse(service.notifyChange("defect_default.json", new SnapshotEventHandler()));
+		assertFalse(service.notifyChange("defect_default.json"));
 	}
 	
 	@Test
@@ -45,7 +45,7 @@ class SwitcherLocalServiceTest {
 		SwitchersBase.configure(ContextBuilder.builder()
 				.environment("snapshot_watcher"));
 		
-		assertTrue(service.notifyChange("snapshot_watcher.json", new SnapshotEventHandler()));
+		assertTrue(service.notifyChange("snapshot_watcher.json"));
 	}
 	
 	@Test
