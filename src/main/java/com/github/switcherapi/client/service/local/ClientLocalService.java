@@ -37,7 +37,6 @@ public class ClientLocalService {
 	
 	private static final String STRATEGY_FAIL_PATTERN = "Strategy %s does not agree";
 	private static final String STRATEGY_FAIL_NO_INPUT_PATTERN = "Strategy %s did not receive any input";
-	private static final String CRITERIA_SUCCESS = "Success";
 
 	private final ValidatorService validatorService;
 
@@ -48,69 +47,64 @@ public class ClientLocalService {
 	public List<String> checkSwitchers(final Set<String> switchers, final Domain domain) {
 		List<String> notFound = new ArrayList<>();
 
-		boolean found;
 		for (final String switcher : switchers) {
-			found = false;
-			for (final Group group : domain.getGroup()) {
-				if (Arrays.stream(group.getConfig()).anyMatch(config -> config.getKey().equals(switcher))) {
-					found = true;
-					break;
-				}
-			}
-
-			if (!found)
+			if (Arrays.stream(domain.getGroup()).noneMatch(group ->
+					Arrays.stream(group.getConfig()).anyMatch(config -> config.getKey().equals(switcher)))) {
 				notFound.add(switcher);
+			}
 		}
 
 		return notFound;
 	}
 
 	/**
-	 * Execute the criteria validation based on the configuration three. It starts
+	 * Execute the criteria validation based on the configuration tree. It starts
 	 * validating from the top of the node (Domain) ascending to the lower level
 	 * (Strategy)
 	 * 
 	 * @param switcher Configuration switcher to be validated
-	 * @param domain   Top level of the configuration three
+	 * @param domain   Top level of the configuration tree
 	 * @return The criteria result
 	 * @throws SwitcherException If encountered either invalid input or misconfiguration
 	 */
 	public CriteriaResponse executeCriteria(final Switcher switcher, final Domain domain) {
 		if (!domain.isActivated()) {
-			return new CriteriaResponse(false, DISABLED_DOMAIN, switcher);
+			return CriteriaResponse.buildResultFail(DISABLED_DOMAIN, switcher);
 		}
 
-		Config configFound = null;
+		Config config;
 		for (final Group group : domain.getGroup()) {
-			// validate in which group the switcher is configured
-			configFound = Arrays.stream(group.getConfig())
-					.filter(config -> config.getKey().equals(switcher.getSwitcherKey()))
-					.findFirst()
-					.orElse(null);
+			config = findConfigInGroup(group, switcher.getSwitcherKey());
 
-			if (configFound != null) {
-
-				if (!group.isActivated()) {
-					return new CriteriaResponse(false, DISABLED_GROUP, switcher);
-				}
-
-				if (!configFound.isActivated()) {
-					return new CriteriaResponse(false, DISABLED_CONFIG, switcher);
-				}
-
-				if (ArrayUtils.isNotEmpty(configFound.getStrategies())) {
-					return this.processOperation(configFound.getStrategies(), switcher.getEntry(), switcher);
-				}
-
-				break;
+			if (config != null) {
+				return getCriteriaResponse(switcher, group, config);
 			}
 		}
 
-		if (configFound == null) {
-			throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
+		throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
+	}
+
+	private CriteriaResponse getCriteriaResponse(Switcher switcher, Group group, Config config) {
+		if (!group.isActivated()) {
+			return CriteriaResponse.buildResultFail(DISABLED_GROUP, switcher);
 		}
 
-		return new CriteriaResponse(true, CRITERIA_SUCCESS, switcher);
+		if (!config.isActivated()) {
+			return CriteriaResponse.buildResultFail(DISABLED_CONFIG, switcher);
+		}
+
+		if (ArrayUtils.isNotEmpty(config.getStrategies())) {
+			return this.processOperation(config.getStrategies(), switcher.getEntry(), switcher);
+		}
+
+		return CriteriaResponse.buildResultSuccess(switcher);
+	}
+
+	private Config findConfigInGroup(final Group group, final String switcherKey) {
+		return Arrays.stream(group.getConfig())
+				.filter(c -> c.getKey().equals(switcherKey))
+				.findFirst()
+				.orElse(null);
 	}
 
 	/**
@@ -126,7 +120,6 @@ public class ClientLocalService {
 		SwitcherUtils.debugSupplier(logger, "configStrategies: {}", Arrays.toString(configStrategies));
 		SwitcherUtils.debugSupplier(logger, "input: {}", Arrays.toString(input != null ? input.toArray() : ArrayUtils.EMPTY_STRING_ARRAY));
 
-		boolean result;
 		for (final Strategy strategy : configStrategies) {
 			if (!strategy.isActivated()) {
 				continue;
@@ -138,18 +131,16 @@ public class ClientLocalService {
 				return strategyFailed(switcher, strategy, STRATEGY_FAIL_NO_INPUT_PATTERN);
 			}
 
-			result = validatorService.execute(strategy, switcherInput);
-			if (!result) {
+			if (!validatorService.execute(strategy, switcherInput)) {
 				return strategyFailed(switcher, strategy, STRATEGY_FAIL_PATTERN);
 			}
 		}
 
-		return new CriteriaResponse(true, CRITERIA_SUCCESS, switcher);
+		return CriteriaResponse.buildResultSuccess(switcher);
 	}
 	
 	private CriteriaResponse strategyFailed(Switcher switcher, Strategy strategy, String pattern) {
-		return new CriteriaResponse(false, String.format(pattern, strategy.getStrategy()),
-				switcher);
+		return CriteriaResponse.buildResultFail(String.format(pattern, strategy.getStrategy()), switcher);
 	}
 	
 	private Entry tryGetSwitcherInput(final List<Entry> input, Strategy strategy) {

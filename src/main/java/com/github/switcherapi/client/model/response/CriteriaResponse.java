@@ -15,6 +15,8 @@ public class CriteriaResponse {
 
 	private static final String DEFAULT_REASON = "Default result";
 
+	private static final String DEFAULT_SUCCESS = "Success";
+
 	private boolean result;
 
 	private String reason;
@@ -42,8 +44,15 @@ public class CriteriaResponse {
 	}
 
 	public static CriteriaResponse buildFromDefault(Switcher switcher) {
-		return new CriteriaResponse(
-				Boolean.parseBoolean(switcher.getDefaultResult()), DEFAULT_REASON, switcher);
+		return new CriteriaResponse(Boolean.parseBoolean(switcher.getDefaultResult()), DEFAULT_REASON, switcher);
+	}
+
+	public static CriteriaResponse buildResultFail(String reason, Switcher switcher) {
+		return new CriteriaResponse(Boolean.FALSE, reason, switcher);
+	}
+
+	public static CriteriaResponse buildResultSuccess(Switcher switcher) {
+		return new CriteriaResponse(Boolean.TRUE, DEFAULT_SUCCESS, switcher);
 	}
 
 	public boolean isItOn() {
