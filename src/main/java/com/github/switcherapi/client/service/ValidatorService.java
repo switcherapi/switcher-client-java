@@ -49,10 +49,11 @@ public class ValidatorService {
 	
 	public boolean execute(final Strategy strategy, final Entry switcherInput) 
 			throws SwitcherInvalidStrategyException {
-		if (validators.containsKey(strategy.getStrategyValidator()))
-			return validators.get(strategy.getStrategyValidator()).execute(strategy, switcherInput);
+		if (!validators.containsKey(strategy.getStrategyValidator())) {
+			throw new SwitcherInvalidStrategyException(strategy.getStrategy());
+		}
 
-		throw new SwitcherInvalidStrategyException(strategy.getStrategy());
+		return validators.get(strategy.getStrategyValidator()).execute(strategy, switcherInput);
 	}
 
 }
