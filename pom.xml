@@ -52,27 +52,27 @@
 		<argLine />
 
 		<!-- rest/json libs -->
-		<jersey-client.version>3.1.6</jersey-client.version>
-		<jersey-hk2.version>3.1.6</jersey-hk2.version>
-		<jersey-media-json-jackson.version>3.1.6</jersey-media-json-jackson.version>
-		<gson.version>2.10.1</gson.version>
+		<jersey-client.version>3.1.7</jersey-client.version>
+		<jersey-hk2.version>3.1.7</jersey-hk2.version>
+		<jersey-media-json-jackson.version>3.1.7</jersey-media-json-jackson.version>
+		<gson.version>2.11.0</gson.version>
 
 		<!-- utils -->
 		<commons-lang3.version>3.14.0</commons-lang3.version>
-		<commons-net.version>3.10.0</commons-net.version>
+		<commons-net.version>3.11.1</commons-net.version>
 		<log4j.version>2.23.1</log4j.version>
 
 		<!-- test -->
 		<okhttp.version>5.0.0-alpha.14</okhttp.version>
-		<junit.version>5.10.2</junit.version>
+		<junit.version>5.10.3</junit.version>
 		<junit-pioneer.version>2.2.0</junit-pioneer.version>
 
 		<!-- Plugins -->
 		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
 		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-		<maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
-		<maven-jar-plugin.version>3.4.1</maven-jar-plugin.version>
-		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+		<maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
+		<maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+		<maven-surefire-plugin.version>3.3.0</maven-surefire-plugin.version>
 		<maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
 		<sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
