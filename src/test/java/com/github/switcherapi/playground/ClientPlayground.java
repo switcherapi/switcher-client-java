@@ -13,8 +13,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ClientPlayground {
-	
-	final static Logger logger = LogManager.getLogger(ClientPlayground.class);
+
+	static final Logger logger = LogManager.getLogger(ClientPlayground.class);
 
 	private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	

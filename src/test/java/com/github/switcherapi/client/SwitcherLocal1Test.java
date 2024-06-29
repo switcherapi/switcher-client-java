@@ -27,7 +27,7 @@ class SwitcherLocal1Test {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 	
-	private final static String PAYLOAD_FIXTURE = new Gson().toJson(Product.getFixture());
+	private static final String PAYLOAD_FIXTURE = new Gson().toJson(Product.getFixture());
 	
 	@BeforeAll
 	static void setupContext() {
