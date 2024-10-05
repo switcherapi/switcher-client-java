@@ -16,12 +16,22 @@ public class ContextBuilder {
 		context = builder();
 		context.preBuild(switcherProperties);
 	}
-	
+
+	/**
+	 * Initialize the ContextBuilder preserving the existing context
+	 * @return ContextBuilder
+	 */
 	public static ContextBuilder builder() {
 		context = builder(false);
 		return context;
 	}
 
+	/**
+	 * Initialize the ContextBuilder using existing context or create a new one
+	 *
+	 * @param init true/false to create a new context
+	 * @return ContextBuilder
+	 */
 	public static ContextBuilder builder(boolean init) {
 		if (context == null || init)
 			context = new ContextBuilder();
