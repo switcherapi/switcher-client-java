@@ -142,7 +142,8 @@ class SwitcherSnapshotAutoUpdateTest {
 		givenSnapshotUpdateResponse(false);
 
 		//that
-		Switchers.configure(ContextBuilder.builder()
+		Switchers.configure(ContextBuilder.builder(true)
+				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("generated_mock_default_2")
@@ -165,8 +166,12 @@ class SwitcherSnapshotAutoUpdateTest {
 		givenSnapshotUpdateResponse(false);
 
 		//that
-		Switchers.configure(ContextBuilder.builder()
+		Switchers.configure(ContextBuilder.builder(true)
+				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
+				.apiKey("[API_KEY]")
+				.domain("Test")
+				.component("switcher-test")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("generated_mock_default_3")
 				.local(false)
@@ -188,7 +193,8 @@ class SwitcherSnapshotAutoUpdateTest {
 		givenSnapshotUpdateResponse(true);
 
 		//that
-		Switchers.configure(ContextBuilder.builder()
+		Switchers.configure(ContextBuilder.builder(true)
+				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("generated_mock_default_4")
@@ -214,7 +220,8 @@ class SwitcherSnapshotAutoUpdateTest {
 		givenResponse(generateSnapshotResponse("default.json")); //graphql
 
 		//that
-		Switchers.configure(ContextBuilder.builder()
+		Switchers.configure(ContextBuilder.builder(true)
+				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(null)
 				.environment("generated_mock_default_5")
@@ -238,7 +245,8 @@ class SwitcherSnapshotAutoUpdateTest {
 		givenResponse(generateSnapshotResponse("default_outdated.json")); //graphql
 
 		//that
-		Switchers.configure(ContextBuilder.builder()
+		Switchers.configure(ContextBuilder.builder(true)
+				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(null)
 				.environment("generated_mock_default_6")
@@ -268,7 +276,8 @@ class SwitcherSnapshotAutoUpdateTest {
 		givenResponse(generateSnapshotResponse("default.json")); //graphql
 
 		//that
-		Switchers.configure(ContextBuilder.builder()
+		Switchers.configure(ContextBuilder.builder(true)
+				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.snapshotLocation(null)
 				.environment("generated_mock_default_6")
