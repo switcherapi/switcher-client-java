@@ -1,7 +1,5 @@
 package com.github.switcherapi.client.utils;
 
-import com.github.switcherapi.client.SwitcherContextBase;
-import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,24 +18,28 @@ public class SnapshotWatcher implements Runnable {
 	private static final Logger logger = LogManager.getLogger(SnapshotWatcher.class);
 	
 	private final SnapshotEventHandler handler;
+
+	private final String snapshotLocation;
 	
 	private WatchService watcher;
 	
 	private SwitcherLocalService executorInstance;
 	
-	public SnapshotWatcher(final SwitcherLocalService executorInstance, SnapshotEventHandler handler) {
+	public SnapshotWatcher(final SwitcherLocalService executorInstance,
+						   final SnapshotEventHandler handler,
+						   final String snapshotLocation) {
 		this.executorInstance = executorInstance;
 		this.handler = handler;
+		this.snapshotLocation = snapshotLocation;
 	}
 
 	@Override
 	public void run() {
-		
 		WatchKey key;
 		
 		try {
 			watcher = FileSystems.getDefault().newWatchService();
-			final Path dir = Paths.get(SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION));
+			final Path dir = Paths.get(snapshotLocation);
 			dir.register(watcher,
 		    		StandardWatchEventKinds.ENTRY_DELETE,
 		    		StandardWatchEventKinds.ENTRY_MODIFY);

@@ -24,13 +24,16 @@ public class AsyncSwitcher implements Runnable {
 
 	private final ExecutorService executorService;
 
-	private final Switcher switcher;
+	private final SwitcherInterface switcherInterface;
+
+	private final long delay;
 
 	private long nextRun = 0;
 
-	public AsyncSwitcher(final Switcher switcher) {
+	public AsyncSwitcher(final SwitcherInterface switcherInterface, long delay) {
 		this.executorService = Executors.newCachedThreadPool();
-		this.switcher = switcher;
+		this.switcherInterface = switcherInterface;
+		this.delay = delay;
 	}
 
 	/**
@@ -43,7 +46,7 @@ public class AsyncSwitcher implements Runnable {
 		if (nextRun < System.currentTimeMillis()) {
 			SwitcherUtils.debug(logger, "Running AsyncSwitcher");
 
-			this.nextRun = System.currentTimeMillis() + switcher.delay;
+			this.nextRun = System.currentTimeMillis() + this.delay;
 			this.executorService.submit(this);
 		}
 	}
@@ -51,11 +54,13 @@ public class AsyncSwitcher implements Runnable {
 	@Override
 	public void run() {
 		try {
-			final CriteriaResponse response = switcher.getContext().executeCriteria(switcher);
-			switcher.getHistoryExecution().removeIf(item ->
-					switcher.getSwitcherKey().equals(item.getSwitcherKey()) &&
-					switcher.getEntry().equals(item.getEntry()));
-			switcher.getHistoryExecution().add(response);
+			final CriteriaResponse response = switcherInterface.executeCriteria();
+
+			switcherInterface.getHistoryExecution().removeIf(item ->
+					switcherInterface.getSwitcherKey().equals(item.getSwitcherKey()) &&
+							switcherInterface.getEntry().equals(item.getEntry()));
+
+			switcherInterface.getHistoryExecution().add(response);
 		} catch (SwitcherException e) {
 			logger.error(e);
 		}
