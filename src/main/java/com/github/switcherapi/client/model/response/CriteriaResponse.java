@@ -1,9 +1,6 @@
 package com.github.switcherapi.client.model.response;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.StrategyValidator;
@@ -111,7 +108,7 @@ public class CriteriaResponse {
 	}
 
 	public CriteriaResponse when(StrategyValidator strategy, String input) {
-		return when(strategy, List.of(input));
+		return when(strategy, Collections.singletonList(input));
 	}
 
 	public CriteriaResponse when(StrategyValidator strategy, List<String> inputs) {
