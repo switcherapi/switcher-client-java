@@ -8,7 +8,13 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Defines minimal contract for Switcher implementations.
+ * Defines minimal contract for Switcher implementations for:
+ *
+ * <ul>
+ *     <li>Switcher creation</li>
+ *     <li>Switcher execution</li>
+ *     <li>Switcher get input/output</li>
+ * </ul>
  */
 public interface SwitcherInterface {
 
@@ -102,10 +108,4 @@ public interface SwitcherInterface {
 	 */
 	List<Entry> getEntry();
 
-	/**
-	 * Get the delay for the next execution when using async call
-	 *
-	 * @return the delay for the next execution
-	 */
-	long getDelay();
 }

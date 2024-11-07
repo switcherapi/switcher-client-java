@@ -26,11 +26,14 @@ public class AsyncSwitcher implements Runnable {
 
 	private final SwitcherInterface switcherInterface;
 
+	private final long delay;
+
 	private long nextRun = 0;
 
-	public AsyncSwitcher(final SwitcherInterface switcherInterface) {
+	public AsyncSwitcher(final SwitcherInterface switcherInterface, long delay) {
 		this.executorService = Executors.newCachedThreadPool();
 		this.switcherInterface = switcherInterface;
+		this.delay = delay;
 	}
 
 	/**
@@ -43,7 +46,7 @@ public class AsyncSwitcher implements Runnable {
 		if (nextRun < System.currentTimeMillis()) {
 			SwitcherUtils.debug(logger, "Running AsyncSwitcher");
 
-			this.nextRun = System.currentTimeMillis() + switcherInterface.getDelay();
+			this.nextRun = System.currentTimeMillis() + this.delay;
 			this.executorService.submit(this);
 		}
 	}

@@ -90,7 +90,7 @@ public final class Switcher extends SwitcherBuilder {
 
 		if (canUseAsync()) {
 			if (asyncSwitcher == null) {
-				asyncSwitcher = new AsyncSwitcher(this);
+				asyncSwitcher = new AsyncSwitcher(this, super.delay);
 			}
 
 			asyncSwitcher.execute();
@@ -103,11 +103,6 @@ public final class Switcher extends SwitcherBuilder {
 		final CriteriaResponse response = this.context.executeCriteria(this);
 		this.historyExecution.add(response);
 		return response;
-	}
-
-	@Override
-	public long getDelay() {
-		return super.delay;
 	}
 
 	@Override
@@ -139,6 +134,10 @@ public final class Switcher extends SwitcherBuilder {
 		return new GsonInputRequest(
 				this.entry != null ?
 						this.entry.toArray(new Entry[0]) : null);
+	}
+
+	public long getDelay() {
+		return super.delay;
 	}
 
 	public boolean isBypassMetrics() {
