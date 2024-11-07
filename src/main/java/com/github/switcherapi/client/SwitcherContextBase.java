@@ -310,7 +310,8 @@ public abstract class SwitcherContextBase {
 		}
 
 		if (watcher == null) {
-			watcher = new SnapshotWatcher((SwitcherLocalService) instance, handler);
+			watcher = new SnapshotWatcher((SwitcherLocalService) instance, handler,
+					contextStr(ContextKey.SNAPSHOT_LOCATION));
 		}
 
 		initWatcherExecutorService();

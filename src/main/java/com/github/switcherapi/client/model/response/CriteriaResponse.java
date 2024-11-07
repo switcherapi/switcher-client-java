@@ -47,14 +47,19 @@ public class CriteriaResponse {
 		this.entry = switcher.getEntry();
 
 		if (Objects.nonNull(entry)) {
-			for (Entry entry : entry) {
-				if (entryWhen.containsKey(entry.getStrategy()) && !entryWhen.get(entry.getStrategy()).contains(entry.getInput())) {
+			for (Entry inputEntry : entry) {
+				if (!isEntryMatching(inputEntry)) {
 					return new CriteriaResponse(!this.result, this.reason, switcher);
 				}
 			}
 		}
 
 		return this;
+	}
+
+	private boolean isEntryMatching(Entry inputEntry) {
+		return entryWhen.containsKey(inputEntry.getStrategy()) &&
+				entryWhen.get(inputEntry.getStrategy()).contains(inputEntry.getInput());
 	}
 
 	public static CriteriaResponse buildFromDefault(Switcher switcher) {
