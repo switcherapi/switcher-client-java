@@ -17,7 +17,7 @@ import java.util.*;
  * @see #isItOn()
  * @see #submit()
  */
-public final class Switcher extends SwitcherBuilder {
+public final class Switcher extends SwitcherBuilder implements SwitcherInterface {
 	
 	public static final String KEY = "key";
 	
@@ -117,6 +117,31 @@ public final class Switcher extends SwitcherBuilder {
 		this.historyExecution.add(response);
 		return response;
 	}
+
+	@Override
+	public long getDelay() {
+		return super.delay;
+	}
+
+	@Override
+	public CriteriaResponse executeCriteria() {
+		return this.context.executeCriteria(this);
+	}
+
+	@Override
+	public synchronized Set<CriteriaResponse> getHistoryExecution() {
+		return this.historyExecution;
+	}
+
+	@Override
+	public String getSwitcherKey() {
+		return this.switcherKey;
+	}
+
+	@Override
+	public List<Entry> getEntry() {
+		return this.entry;
+	}
 	
 	/**
 	 * This method builds up the request made by the client to reach the Switcher API.
@@ -132,21 +157,9 @@ public final class Switcher extends SwitcherBuilder {
 	public boolean isBypassMetrics() {
 		return bypassMetrics;
 	}
-
-	public String getSwitcherKey() {
-		return this.switcherKey;
-	}
-
-	public List<Entry> getEntry() {
-		return this.entry;
-	}
 	
 	public void resetEntry() {
 		this.entry = new ArrayList<>();
-	}
-
-	public synchronized Set<CriteriaResponse> getHistoryExecution() {
-		return this.historyExecution;
 	}
 
 	@Override
