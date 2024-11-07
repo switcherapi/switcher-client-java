@@ -3,8 +3,6 @@ package com.github.switcherapi.client.utils;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.service.WorkerName;
-import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -19,8 +17,6 @@ import java.util.Date;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,10 +46,6 @@ public class SwitcherUtils {
 	private static final String ENV_DEFAULT_VARIABLE_PATTERN = "\\$\\{(\\w+):(.+)}";
 	
 	private static final String PAYLOAD_PATTERN = "%s.%s";
-	
-	private static SnapshotWatcher watcher;
-
-	private static ExecutorService executorService;
 	
 	private SwitcherUtils() {}
 	
@@ -133,36 +125,6 @@ public class SwitcherUtils {
 		}
 		
 		return keys;
-	}
-	
-	/**
-	 * Initialize instance of SnapshotWatcher to run in the background.
-	 * 
-	 * @param executorInstance of a Remote or Local Switcher
-	 * @param handler to notify snapshot change events
-	 */
-	public static void watchSnapshot(final SwitcherLocalService executorInstance, SnapshotEventHandler handler) {
-		if (watcher == null) {
-			watcher = new SnapshotWatcher(executorInstance, handler);
-		}
-
-		initExecutorService();
-		executorService.submit(watcher);
-	}
-	
-	/**
-	 * If an instance of SnapshotWatcher is available, this operation will force it to terminate
-	 * and indicates to GC that the instance should be wiped from the memory.
-	 */
-	public static void stopWatchingSnapshot() {
-		if (executorService != null) {
-			executorService.shutdownNow();
-		}
-
-		if (watcher != null) {
-			watcher.terminate();
-			watcher = null;
-		}
 	}
 	
 	/**
@@ -260,18 +222,6 @@ public class SwitcherUtils {
 		}
 		
 		return StringUtils.isEmpty(sBuilder.toString());
-	}
-
-	/**
-	 * Configure Executor Service for Snapshot Watch Worker
-	 */
-	private static void initExecutorService() {
-		executorService = Executors.newSingleThreadExecutor(r -> {
-			Thread thread = new Thread(r);
-			thread.setName(WorkerName.SNAPSHOT_WATCH_WORKER.toString());
-			thread.setDaemon(true);
-			return thread;
-		});
 	}
 
 }

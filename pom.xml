@@ -8,7 +8,7 @@
 	<groupId>com.github.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>2.1.1-SNAPSHOT</version>
+	<version>2.2.0-SNAPSHOT</version>
 
 	<name>Switcher Client</name>
 	<description>Switcher Client SDK for working with Switcher API</description>
@@ -52,9 +52,9 @@
 		<argLine />
 
 		<!-- rest/json libs -->
-		<jersey-client.version>3.1.8</jersey-client.version>
-		<jersey-hk2.version>3.1.8</jersey-hk2.version>
-		<jersey-media-json-jackson.version>3.1.8</jersey-media-json-jackson.version>
+		<jersey-client.version>3.1.9</jersey-client.version>
+		<jersey-hk2.version>3.1.9</jersey-hk2.version>
+		<jersey-media-json-jackson.version>3.1.9</jersey-media-json-jackson.version>
 		<gson.version>2.11.0</gson.version>
 
 		<!-- utils -->
@@ -64,7 +64,7 @@
 
 		<!-- test -->
 		<okhttp.version>5.0.0-alpha.14</okhttp.version>
-		<junit.version>5.11.1</junit.version>
+		<junit.version>5.11.3</junit.version>
 		<junit-pioneer.version>2.2.0</junit-pioneer.version>
 
 		<!-- Plugins -->
@@ -173,19 +173,19 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
-				<version>2.17.0</version>
+				<version>2.17.3</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>2.17.0</version>
+				<version>2.17.3</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.fasterxml.jackson.module</groupId>
 				<artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
-				<version>2.17.0</version>
+				<version>2.17.3</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

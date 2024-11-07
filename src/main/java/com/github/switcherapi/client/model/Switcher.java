@@ -25,8 +25,6 @@ public final class Switcher extends SwitcherBuilder {
 	
 	public static final String BYPASS_METRIC = "bypassMetric";
 	
-	private final SwitcherExecutor context;
-	
 	private final String switcherKey;
 	
 	private final Set<CriteriaResponse> historyExecution;
@@ -40,8 +38,8 @@ public final class Switcher extends SwitcherBuilder {
 	 * @param context client context in which the switcher will be executed (local/remote)
 	 */
 	public Switcher(final String switcherKey, final SwitcherExecutor context) {
+		super(context);
 		this.switcherKey = switcherKey;
-		this.context = context;
 		this.historyExecution = new HashSet<>();
 	}
 	
@@ -105,10 +103,10 @@ public final class Switcher extends SwitcherBuilder {
 
 		if (canUseAsync()) {
 			if (asyncSwitcher == null) {
-				asyncSwitcher = new AsyncSwitcher();
+				asyncSwitcher = new AsyncSwitcher(this);
 			}
 
-			asyncSwitcher.execute(this);
+			asyncSwitcher.execute();
 			final Optional<CriteriaResponse> response = getFromHistory();
 			if (response.isPresent()) {
 				return response.get();
@@ -149,10 +147,6 @@ public final class Switcher extends SwitcherBuilder {
 
 	public synchronized Set<CriteriaResponse> getHistoryExecution() {
 		return this.historyExecution;
-	}
-	
-	public SwitcherExecutor getContext() {
-		return context;
 	}
 
 	@Override

@@ -30,6 +30,8 @@ public @interface SwitcherTest {
 
 	boolean abTest() default false;
 
+	SwitcherTestWhen[] when() default {};
+
 	SwitcherTestValue[] switchers() default {};
 
 }
