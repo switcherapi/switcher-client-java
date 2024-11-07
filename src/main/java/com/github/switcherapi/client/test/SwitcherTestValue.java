@@ -8,4 +8,6 @@ public @interface SwitcherTestValue {
 
     String metadata() default "";
 
+    SwitcherTestWhen[] when() default {};
+
 }

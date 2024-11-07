@@ -91,15 +91,20 @@ public abstract class SwitcherExecutor {
 			throw e;
 		}
 	}
+
+	public boolean isLocalEnabled() {
+		return SwitcherContextBase.contextBol(ContextKey.LOCAL_MODE);
+	}
 	
 	/**
 	 * It manipulates the result of a given Switcher key.
 	 * 
 	 * @param key name of the key that you want to change the result
 	 * @param expectedResult that will be returned when performing isItOn
+	 * @return CriteriaResponse with the manipulated result
 	 */
-	public static void assume(final String key, boolean expectedResult) {
-		assume(key, expectedResult, null);
+	public static CriteriaResponse assume(final String key, boolean expectedResult) {
+		return assume(key, expectedResult, null);
 	}
 
 	/**
@@ -108,8 +113,9 @@ public abstract class SwitcherExecutor {
 	 * @param key name of the key that you want to change the result
 	 * @param metadata additional information about the assumption (JSON)
 	 * @param expectedResult that will be returned when performing isItOn
+	 * @return CriteriaResponse with the manipulated result
 	 */
-	public static void assume(final String key, boolean expectedResult, String metadata) {
+	public static CriteriaResponse assume(final String key, boolean expectedResult, String metadata) {
 		CriteriaResponse criteriaResponse =  new CriteriaResponse();
 		criteriaResponse.setResult(expectedResult);
 		criteriaResponse.setReason("Switcher bypassed");
@@ -120,6 +126,7 @@ public abstract class SwitcherExecutor {
 		}
 
 		bypass.put(key, criteriaResponse);
+		return criteriaResponse;
 	}
 	
 	/**

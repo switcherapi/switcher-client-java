@@ -270,6 +270,15 @@ SwitcherExecutor.forget(FEATURE01);
 switcher.isItOn(); // Now, it's going to return the result retrieved from the API or the Snapshot file
 ```
 
+For more complex scenarios where you need to test features based on specific inputs, you can use test conditions.
+
+```java
+Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01).checkValue("My value").build();
+
+SwitcherExecutor.assume(FEATURE01, true).when(StrategyValidator.VALUE, "My value");
+switcher.isItOn(); // 'true'
+
+```
 ## Smoke test
 Validate Switcher Keys on your testing pipelines before deploying a change.
 Switcher Keys may not be configured correctly and can cause your code to have undesired results.
@@ -310,6 +319,14 @@ void testMyFeature() {
 AB Test scenario where your test should return the same result regardless of the Switcher result:
 ```java
 @SwitcherTest(key = MY_SWITCHER, abTest = true)
+void testMyFeature() {
+   assertTrue(instance.myFeature());
+}
+```
+
+Using SwitcherTestWhen to define a specific condition for the test:
+```java
+@SwitcherTest(key = MY_SWITCHER, when = @SwitcherTestWhen(value = "My value"))
 void testMyFeature() {
    assertTrue(instance.myFeature());
 }

@@ -1,6 +1,7 @@
 package com.github.switcherapi.client.test;
 
 import com.github.switcherapi.client.SwitcherExecutor;
+import com.github.switcherapi.client.model.response.CriteriaResponse;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.extension.*;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -78,15 +79,23 @@ class SwitcherTestExtension implements TestTemplateInvocationContextProvider,
 				.toArray(String[]::new);
 
 		for (SwitcherTestValue value : switcherTest.switchers()) {
-			SwitcherExecutor.assume(value.key(), inverted != value.result(), value.metadata());
+			CriteriaResponse criteriaResponse = SwitcherExecutor.assume(value.key(), inverted != value.result(), value.metadata());
+			applySwitcherTestWhen(criteriaResponse, value.when());
 		}
 
 		getStore(context).put(STORE_KEYS, keys);
 	}
 
 	private void mockSingleSwitcher(ExtensionContext context, SwitcherTest switcherTest, boolean inverted) {
-		SwitcherExecutor.assume(switcherTest.key(), inverted != switcherTest.result(), switcherTest.metadata());
+		CriteriaResponse criteriaResponse = SwitcherExecutor.assume(switcherTest.key(), inverted != switcherTest.result(), switcherTest.metadata());
+		applySwitcherTestWhen(criteriaResponse, switcherTest.when());
 		getStore(context).put(STORE_KEY, switcherTest.key());
+	}
+
+	private void applySwitcherTestWhen(CriteriaResponse criteriaResponse, SwitcherTestWhen[] whens) {
+		for (SwitcherTestWhen when : whens) {
+			criteriaResponse.when(when.strategy(), Arrays.asList(when.input()));
+		}
 	}
 	
 	private Store getStore(ExtensionContext context) {

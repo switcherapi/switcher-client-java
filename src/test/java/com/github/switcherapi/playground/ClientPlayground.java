@@ -22,7 +22,7 @@ public class ClientPlayground {
 		configure(ContextBuilder.builder()
 				.contextLocation(Features.class.getCanonicalName())
 				.url("https://api.switcherapi.com")
-				.apiKey("JDJiJDA4JEFweTZjSTR2bE9pUjNJOUYvRy9raC4vRS80Q2tzUnk1d3o1aXFmS2o5eWJmVW11cjR0ODNT")
+				.apiKey("[API_KEY]")
 				.domain("Playground")
                 .local(true)
                 .snapshotLocation("src/test/resources/snapshot/playground")
@@ -35,7 +35,7 @@ public class ClientPlayground {
 			long time = System.currentTimeMillis();
             logger.info("Switcher is on: {}", switcher.isItOn());
             logger.info("Time elapsed: {}", System.currentTimeMillis() - time);
-		}, 0, 10, TimeUnit.SECONDS);
+		}, 0, 5, TimeUnit.SECONDS);
 	}
 
 	public static void main(String[] args) {

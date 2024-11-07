@@ -10,6 +10,7 @@ import com.github.switcherapi.client.service.WorkerName;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import com.github.switcherapi.client.service.remote.SwitcherRemoteService;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
+import com.github.switcherapi.client.utils.SnapshotWatcher;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -67,6 +69,8 @@ public abstract class SwitcherContextBase {
 	protected static Map<String, Switcher> switchers;
 	protected static SwitcherExecutor instance;
 	private static ScheduledExecutorService scheduledExecutorService;
+	private static ExecutorService watcherExecutorService;
+	private static SnapshotWatcher watcher;
 	
 	protected SwitcherContextBase() {
 		throw new IllegalStateException("Context class cannot be instantiated");
@@ -89,7 +93,7 @@ public abstract class SwitcherContextBase {
 	 * @param contextFilename to load properties from
 	 */
 	public static void loadProperties(String contextFilename) {
-		try (InputStream input = SwitcherContext.class
+		try (InputStream input = SwitcherContextBase.class
 				.getClassLoader().getResourceAsStream(String.format("%s.properties", contextFilename))) {
 			
 			Properties prop = new Properties();
@@ -190,7 +194,7 @@ public abstract class SwitcherContextBase {
 			}
 		};
 
-		initExecutorService();
+		initSnapshotExecutorService();
 		scheduledExecutorService.scheduleAtFixedRate(runnableSnapshotValidate, 0, interval, TimeUnit.MILLISECONDS);
 		return true;
 	}
@@ -209,10 +213,22 @@ public abstract class SwitcherContextBase {
 	/**
 	 * Configure Executor Service for Snapshot Update Worker
 	 */
-	private static void initExecutorService() {
+	private static void initSnapshotExecutorService() {
 		scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(r -> {
 			Thread thread = new Thread(r);
 			thread.setName(WorkerName.SNAPSHOT_UPDATE_WORKER.toString());
+			thread.setDaemon(true);
+			return thread;
+		});
+	}
+
+	/**
+	 * Configure Executor Service for Snapshot Watch Worker
+	 */
+	private static void initWatcherExecutorService() {
+		watcherExecutorService = Executors.newSingleThreadExecutor(r -> {
+			Thread thread = new Thread(r);
+			thread.setName(WorkerName.SNAPSHOT_WATCH_WORKER.toString());
 			thread.setDaemon(true);
 			return thread;
 		});
@@ -293,8 +309,12 @@ public abstract class SwitcherContextBase {
 			throw new SwitcherException("Cannot watch snapshot when using remote", new UnsupportedOperationException());
 		}
 
-		SwitcherLocalService executorInstance = (SwitcherLocalService) instance;
-		SwitcherUtils.watchSnapshot(executorInstance, handler);
+		if (watcher == null) {
+			watcher = new SnapshotWatcher((SwitcherLocalService) instance, handler);
+		}
+
+		initWatcherExecutorService();
+		watcherExecutorService.submit(watcher);
 	}
 	
 	/**
@@ -303,7 +323,11 @@ public abstract class SwitcherContextBase {
 	 * @throws SwitcherException if watch thread never started
 	 */
 	public static void stopWatchingSnapshot() {
-		SwitcherUtils.stopWatchingSnapshot();
+		if (watcher != null) {
+			watcherExecutorService.shutdownNow();
+			watcher.terminate();
+			watcher = null;
+		}
 	}
 	
 	/**
