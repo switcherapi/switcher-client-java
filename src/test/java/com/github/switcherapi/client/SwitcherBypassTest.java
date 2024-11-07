@@ -1,9 +1,11 @@
 package com.github.switcherapi.client;
 
+import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.test.SwitcherTest;
 import com.github.switcherapi.client.test.SwitcherTestValue;
+import com.github.switcherapi.client.test.SwitcherTestWhen;
 import com.github.switcherapi.fixture.MetadataErrorSample;
 import com.github.switcherapi.fixture.MetadataSample;
 import org.apache.commons.lang3.StringUtils;
@@ -106,6 +108,63 @@ class SwitcherBypassTest {
 		assertFalse(switcher.isItOn());
 	}
 
+	@SwitcherTest(key = USECASE41, when = {
+			@SwitcherTestWhen(strategy = StrategyValidator.VALUE, input = "Value1")
+	})
+	void shouldReturnTrue_usingAnnotationAsTrueWhenValueMatches() {
+		//given
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
+		SwitcherContext.initializeClient();
+
+		//test
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1").build();
+		assertTrue(switcher.isItOn());
+	}
+
+	@SwitcherTest(key = USECASE41, when = {
+			@SwitcherTestWhen(strategy = StrategyValidator.VALUE, input = { "Value1", "Value2" })
+	})
+	void shouldReturnTrue_usingAnnotationAsTrueWhenValueSetMatches() {
+		//given
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
+		SwitcherContext.initializeClient();
+
+		//test
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1").build();
+		assertTrue(switcher.isItOn());
+
+		switcher = getSwitcher(USECASE41).checkValue("Value2").build();
+		assertTrue(switcher.isItOn());
+	}
+
+	@SwitcherTest(key = USECASE41, switchers =
+		@SwitcherTestValue(key = USECASE41, when = {
+			@SwitcherTestWhen(strategy = StrategyValidator.VALUE, input = "Value1")
+		})
+	)
+	void shouldReturnTrue_usingMultipleSwitchersAnnotationWhenValueMatches() {
+		//given
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
+		SwitcherContext.initializeClient();
+
+		//test
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1").build();
+		assertTrue(switcher.isItOn());
+	}
+
+	@SwitcherTest(key = USECASE41, when = {
+			@SwitcherTestWhen(strategy = StrategyValidator.VALUE, input = "Value2")
+	})
+	void shouldReturnFalse_usingAnnotationAsTrueWhenValueNotMatches() {
+		//given
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
+		SwitcherContext.initializeClient();
+
+		//test
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1").build();
+		assertFalse(switcher.isItOn());
+	}
+
 	@SwitcherTest(key = USECASE111)
 	void shouldReturnTrue_usingAnnotationAsTrue() {
 		//given
@@ -181,6 +240,38 @@ class SwitcherBypassTest {
 		switcher = getSwitcher(USECASE112);
 		criteriaResponse = switcher.submit();
 		assertEquals("321", criteriaResponse.getMetadata(MetadataErrorSample.class).getErrorId());
+	}
+
+	@Test
+	void shouldReturnTrue_afterAssumingItsTrueWhenValueMatches() {
+		//given
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE1));
+		SwitcherContext.initializeClient();
+
+		//test
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1").build();
+
+		SwitcherExecutor.assume(USECASE41, true)
+						.when(StrategyValidator.VALUE, "Value1");
+
+		assertTrue(switcher.isItOn());
+	}
+
+	@Test
+	void shouldReturnFalse_afterAssumingItsTrueWhenValueNotMatches() {
+		//given
+		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE1));
+		SwitcherContext.initializeClient();
+
+		//test
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value2").build();
+
+		SwitcherExecutor.assume(USECASE41, true)
+				.when(StrategyValidator.VALUE, "Value1");
+
+		assertFalse(switcher.isItOn());
+		// check if no override was made during criteria submission
+		assertFalse(switcher.isItOn());
 	}
 
 	/**
