@@ -1,7 +1,7 @@
 package com.github.switcherapi.client.model;
 
 import com.github.switcherapi.client.SwitcherContext;
-import com.github.switcherapi.client.SwitcherContextBase;
+import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
@@ -17,6 +17,8 @@ import java.util.List;
  * @author Roger Floriano (petruki)
  */
 public abstract class SwitcherBuilder {
+
+	protected final SwitcherExecutor context;
 	
 	protected long delay;
 
@@ -28,7 +30,8 @@ public abstract class SwitcherBuilder {
 	
 	protected List<Entry> entry;
 	
-	protected SwitcherBuilder() {
+	protected SwitcherBuilder(final SwitcherExecutor context) {
+		this.context = context;
 		this.entry = new ArrayList<>();
 		this.delay = 0;
 	}
@@ -53,7 +56,7 @@ public abstract class SwitcherBuilder {
 	 * @throws SwitcherContextException if Switcher is not configured to run locally using local mode
 	 */
 	public SwitcherBuilder remote(boolean remote) {
-		if (!SwitcherContextBase.contextBol(ContextKey.LOCAL_MODE)) {
+		if (!this.context.isLocalEnabled()) {
 			throw new SwitcherContextException("Switcher is not configured to run locally");
 		}
 
@@ -235,5 +238,9 @@ public abstract class SwitcherBuilder {
 
 	public String getDefaultResult() {
 		return defaultResult;
+	}
+
+	public SwitcherExecutor getContext() {
+		return context;
 	}
 }

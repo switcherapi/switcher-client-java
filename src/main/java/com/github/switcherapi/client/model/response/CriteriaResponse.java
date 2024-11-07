@@ -1,9 +1,12 @@
 package com.github.switcherapi.client.model.response;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import com.github.switcherapi.client.model.Entry;
+import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
 import com.google.gson.Gson;
 
@@ -27,6 +30,8 @@ public class CriteriaResponse {
 
 	protected List<Entry> entry;
 
+	protected Map<String, List<String>> entryWhen;
+
 	public CriteriaResponse() {
 	}
 
@@ -40,6 +45,15 @@ public class CriteriaResponse {
 	public CriteriaResponse buildFromSwitcher(Switcher switcher) {
 		this.switcherKey = switcher.getSwitcherKey();
 		this.entry = switcher.getEntry();
+
+		if (Objects.nonNull(entry)) {
+			for (Entry entry : entry) {
+				if (entryWhen.containsKey(entry.getStrategy()) && !entryWhen.get(entry.getStrategy()).contains(entry.getInput())) {
+					return new CriteriaResponse(!this.result, this.reason, switcher);
+				}
+			}
+		}
+
 		return this;
 	}
 
@@ -96,6 +110,19 @@ public class CriteriaResponse {
 		this.entry = entry;
 	}
 
+	public CriteriaResponse when(StrategyValidator strategy, String input) {
+		return when(strategy, List.of(input));
+	}
+
+	public CriteriaResponse when(StrategyValidator strategy, List<String> inputs) {
+		if (entryWhen == null) {
+			entryWhen = new HashMap<>();
+		}
+
+		entryWhen.put(strategy.toString(), inputs);
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(entry, result, switcherKey);
@@ -118,13 +145,11 @@ public class CriteriaResponse {
 
 	@Override
 	public String toString() {
-		final StringBuilder toString = new StringBuilder();
-		toString.append("CriteriaResponse [result=").append(result)
-				.append(", reason=").append(reason)
-				.append(", metadata=").append(metadata)
-				.append(", switcherKey=").append(switcherKey)
-				.append(", entry=").append(entry).append("]");
-		return toString.toString();
+		return "CriteriaResponse [result=" + result +
+				", reason=" + reason +
+				", metadata=" + metadata +
+				", switcherKey=" + switcherKey +
+				", entry=" + entry + "]";
 	}
 
 }

@@ -24,22 +24,20 @@ public class AsyncSwitcher implements Runnable {
 
 	private final ExecutorService executorService;
 
-	private Switcher switcher;
+	private final Switcher switcher;
 
 	private long nextRun = 0;
 
-	public AsyncSwitcher() {
+	public AsyncSwitcher(final Switcher switcher) {
 		this.executorService = Executors.newCachedThreadPool();
+		this.switcher = switcher;
 	}
 
 	/**
 	 * Validate if next run is ready to be performed, otherwise it will skip and delegate the
 	 * Switcher result for the Switcher history execution.
-	 * 
-	 * @param switcher Instance of the current switcher being executed
 	 */
-	public synchronized void execute(final Switcher switcher) {
-		this.switcher = switcher;
+	public synchronized void execute() {
 		SwitcherUtils.debug(logger, "nextRun: {} - currentTimeMillis: {}", nextRun, System.currentTimeMillis());
 		
 		if (nextRun < System.currentTimeMillis()) {
@@ -53,10 +51,10 @@ public class AsyncSwitcher implements Runnable {
 	@Override
 	public void run() {
 		try {
-			final CriteriaResponse response = switcher.getContext().executeCriteria(this.switcher);
+			final CriteriaResponse response = switcher.getContext().executeCriteria(switcher);
 			switcher.getHistoryExecution().removeIf(item ->
-					this.switcher.getSwitcherKey().equals(item.getSwitcherKey()) &&
-					this.switcher.getEntry().equals(item.getEntry()));
+					switcher.getSwitcherKey().equals(item.getSwitcherKey()) &&
+					switcher.getEntry().equals(item.getEntry()));
 			switcher.getHistoryExecution().add(response);
 		} catch (SwitcherException e) {
 			logger.error(e);
