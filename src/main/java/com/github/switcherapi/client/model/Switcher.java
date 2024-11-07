@@ -17,7 +17,7 @@ import java.util.*;
  * @see #isItOn()
  * @see #submit()
  */
-public final class Switcher extends SwitcherBuilder implements SwitcherInterface {
+public final class Switcher extends SwitcherBuilder {
 	
 	public static final String KEY = "key";
 	
@@ -41,19 +41,6 @@ public final class Switcher extends SwitcherBuilder implements SwitcherInterface
 		super(context);
 		this.switcherKey = switcherKey;
 		this.historyExecution = new HashSet<>();
-	}
-	
-	private boolean canUseAsync() {
-		return super.delay > 0 && !this.historyExecution.isEmpty();
-	}
-	
-	private Optional<CriteriaResponse> getFromHistory() {
-		for (CriteriaResponse criteriaResponse : historyExecution) {
-			if (criteriaResponse.getEntry().equals(getEntry())) {
-				return Optional.of(criteriaResponse);
-			}
-		}
-		return Optional.empty();
 	}
 
 	@Override
@@ -160,6 +147,19 @@ public final class Switcher extends SwitcherBuilder implements SwitcherInterface
 	
 	public void resetEntry() {
 		this.entry = new ArrayList<>();
+	}
+
+	private boolean canUseAsync() {
+		return super.delay > 0 && !this.historyExecution.isEmpty();
+	}
+
+	private Optional<CriteriaResponse> getFromHistory() {
+		for (CriteriaResponse criteriaResponse : historyExecution) {
+			if (criteriaResponse.getEntry().equals(getEntry())) {
+				return Optional.of(criteriaResponse);
+			}
+		}
+		return Optional.empty();
 	}
 
 	@Override
