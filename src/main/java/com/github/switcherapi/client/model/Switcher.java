@@ -42,19 +42,6 @@ public final class Switcher extends SwitcherBuilder {
 		this.switcherKey = switcherKey;
 		this.historyExecution = new HashSet<>();
 	}
-	
-	private boolean canUseAsync() {
-		return super.delay > 0 && !this.historyExecution.isEmpty();
-	}
-	
-	private Optional<CriteriaResponse> getFromHistory() {
-		for (CriteriaResponse criteriaResponse : historyExecution) {
-			if (criteriaResponse.getEntry().equals(getEntry())) {
-				return Optional.of(criteriaResponse);
-			}
-		}
-		return Optional.empty();
-	}
 
 	@Override
 	public Switcher build() {
@@ -103,7 +90,7 @@ public final class Switcher extends SwitcherBuilder {
 
 		if (canUseAsync()) {
 			if (asyncSwitcher == null) {
-				asyncSwitcher = new AsyncSwitcher(this);
+				asyncSwitcher = new AsyncSwitcher(this, super.delay);
 			}
 
 			asyncSwitcher.execute();
@@ -117,6 +104,26 @@ public final class Switcher extends SwitcherBuilder {
 		this.historyExecution.add(response);
 		return response;
 	}
+
+	@Override
+	public CriteriaResponse executeCriteria() {
+		return this.context.executeCriteria(this);
+	}
+
+	@Override
+	public synchronized Set<CriteriaResponse> getHistoryExecution() {
+		return this.historyExecution;
+	}
+
+	@Override
+	public String getSwitcherKey() {
+		return this.switcherKey;
+	}
+
+	@Override
+	public List<Entry> getEntry() {
+		return this.entry;
+	}
 	
 	/**
 	 * This method builds up the request made by the client to reach the Switcher API.
@@ -129,24 +136,29 @@ public final class Switcher extends SwitcherBuilder {
 						this.entry.toArray(new Entry[0]) : null);
 	}
 
+	public long getDelay() {
+		return super.delay;
+	}
+
 	public boolean isBypassMetrics() {
 		return bypassMetrics;
-	}
-
-	public String getSwitcherKey() {
-		return this.switcherKey;
-	}
-
-	public List<Entry> getEntry() {
-		return this.entry;
 	}
 	
 	public void resetEntry() {
 		this.entry = new ArrayList<>();
 	}
 
-	public synchronized Set<CriteriaResponse> getHistoryExecution() {
-		return this.historyExecution;
+	private boolean canUseAsync() {
+		return super.delay > 0 && !this.historyExecution.isEmpty();
+	}
+
+	private Optional<CriteriaResponse> getFromHistory() {
+		for (CriteriaResponse criteriaResponse : historyExecution) {
+			if (criteriaResponse.getEntry().equals(getEntry())) {
+				return Optional.of(criteriaResponse);
+			}
+		}
+		return Optional.empty();
 	}
 
 	@Override

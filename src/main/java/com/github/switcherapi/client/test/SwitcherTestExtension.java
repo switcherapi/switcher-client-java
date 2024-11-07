@@ -34,9 +34,9 @@ class SwitcherTestExtension implements TestTemplateInvocationContextProvider,
 		SwitcherTest switcherTest = context.getRequiredTestMethod().getAnnotation(SwitcherTest.class);
 
 		if (switcherTest.abTest()) {
-			final SwitcherTestTemplate templateA = new SwitcherTestTemplate(switcherTest, true);
-			final SwitcherTestTemplate templateB = new SwitcherTestTemplate(switcherTest);
-			return Stream.of(templateA, templateB);
+			return Stream.of(
+					new SwitcherTestTemplate(switcherTest, true),
+					new SwitcherTestTemplate(switcherTest));
 		}
 
 		final SwitcherTestTemplate template = new SwitcherTestTemplate(switcherTest);
