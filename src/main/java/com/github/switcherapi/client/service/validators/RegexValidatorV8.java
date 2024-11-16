@@ -10,8 +10,8 @@ import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.criteria.Strategy;
 import com.github.switcherapi.client.service.WorkerName;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 @ValidatorComponent(type = StrategyValidator.REGEX)
 public class RegexValidatorV8 extends Validator {
 
-	private static final Logger logger = LogManager.getLogger(RegexValidatorV8.class);
+	private static final Logger logger = LoggerFactory.getLogger(RegexValidatorV8.class);
 
 	/**
 	 * Global flag to interrupt workers.
@@ -65,7 +65,7 @@ public class RegexValidatorV8 extends Validator {
 						try {
 							return timedMatch(switcherInput.getInput(), val);
 						} catch (TimeoutException | SwitcherValidatorException e) {
-							logger.error(e);
+							logger.error(e.getMessage(), e);
 							return false;
 						}
 					});
@@ -74,7 +74,7 @@ public class RegexValidatorV8 extends Validator {
 						try {
 							return timedMatch(switcherInput.getInput(), val);
 						} catch (TimeoutException | SwitcherValidatorException e) {
-							logger.error(e);
+							logger.error(e.getMessage(), e);
 							return true;
 						}
 					});
@@ -88,7 +88,7 @@ public class RegexValidatorV8 extends Validator {
 					throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
 			}
 		} catch (TimeoutException | SwitcherValidatorException e) {
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 			return false;
 		}
 	}
