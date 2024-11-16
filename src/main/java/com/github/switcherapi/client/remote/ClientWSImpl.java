@@ -10,9 +10,6 @@ import com.github.switcherapi.client.model.response.AuthRequest;
 import com.github.switcherapi.client.model.response.AuthResponse;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
-import com.github.switcherapi.client.utils.SwitcherUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -29,9 +26,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ClientWSImpl implements ClientWS {
 	
-	private static final Logger logger = LogManager.getLogger(ClientWSImpl.class);
-	
-	public static final String QUERY = 
+	public static final String QUERY =
 			"{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\", _component: \\\"%s\\\") { " +
 			"name version description activated " +
 			"group { name description activated " +
@@ -51,8 +46,6 @@ public class ClientWSImpl implements ClientWS {
 	
 	@Override
 	public CriteriaResponse executeCriteriaService(final Switcher switcher, final String token) {
-		SwitcherUtils.debug(logger, "switcher: {}", switcher);
-		
 		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, url))
 				.queryParam(Switcher.KEY, switcher.getSwitcherKey())

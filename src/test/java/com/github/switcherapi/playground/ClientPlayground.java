@@ -2,11 +2,10 @@ package com.github.switcherapi.playground;
 
 import static com.github.switcherapi.playground.Features.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.model.Switcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -14,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ClientPlayground {
 
-	static final Logger logger = LogManager.getLogger(ClientPlayground.class);
+	static final Logger logger = LoggerFactory.getLogger(ClientPlayground.class);
 
 	private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	
