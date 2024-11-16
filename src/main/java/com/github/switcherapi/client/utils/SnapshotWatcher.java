@@ -1,8 +1,8 @@
 package com.github.switcherapi.client.utils;
 
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -15,7 +15,7 @@ import java.nio.file.*;
  */
 public class SnapshotWatcher implements Runnable {
 	
-	private static final Logger logger = LogManager.getLogger(SnapshotWatcher.class);
+	private static final Logger logger = LoggerFactory.getLogger(SnapshotWatcher.class);
 	
 	private final SnapshotEventHandler handler;
 
@@ -74,7 +74,7 @@ public class SnapshotWatcher implements Runnable {
 				watcher.close();
 			}
 		} catch (IOException e) {
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 		}
 	}
 

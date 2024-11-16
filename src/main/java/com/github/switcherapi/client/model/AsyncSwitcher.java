@@ -1,11 +1,11 @@
 package com.github.switcherapi.client.model;
 
 import com.github.switcherapi.client.utils.SwitcherUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
  */
 public class AsyncSwitcher implements Runnable {
 
-	private static final Logger logger = LogManager.getLogger(AsyncSwitcher.class);
+	private static final Logger logger = LoggerFactory.getLogger(AsyncSwitcher.class);
 
 	private final ExecutorService executorService;
 
@@ -62,7 +62,7 @@ public class AsyncSwitcher implements Runnable {
 
 			switcherInterface.getHistoryExecution().add(response);
 		} catch (SwitcherException e) {
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 		}
 	}
 

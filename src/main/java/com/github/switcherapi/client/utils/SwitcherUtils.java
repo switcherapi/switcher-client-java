@@ -6,12 +6,11 @@ import com.github.switcherapi.client.model.ContextKey;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.internal.guava.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.Map.Entry;
@@ -26,7 +25,7 @@ import java.util.regex.Pattern;
  */
 public class SwitcherUtils {
 	
-	private static final Logger logger = LogManager.getLogger(SwitcherUtils.class);
+	private static final Logger logger = LoggerFactory.getLogger(SwitcherUtils.class);
 	
 	private static final String LOG_DATE = "date: {}";
 	
@@ -38,8 +37,6 @@ public class SwitcherUtils {
 	 * [0] = s (seconds) [1] = m (minutes) [2] = h (hours) [3] = d (days)
 	 */
 	private static final String[] DURATION = { "s", "m", "h", "d" };
-	
-	private static final String FULL_DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
 	
 	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+)}";
 	
@@ -77,28 +74,6 @@ public class SwitcherUtils {
 		}
 
 		throw new SwitcherInvalidDateTimeArgumentException(time);
-	}
-	
-	public static String getFullDate(final String date) {
-		SwitcherUtils.debug(logger, LOG_DATE, date);
-		
-		final String time = RegExUtils.removePattern(date, FULL_DATE_REGEX).trim();
-		return getFullTime(date, time);
-	}
-
-	public static String getFullTime(final String date, final String time) {
-		SwitcherUtils.debug(logger, LOG_DATE, date);
-		SwitcherUtils.debug(logger, LOG_TME, time);
-		
-		if (StringUtils.isBlank(time)) {
-			return String.format("%s 00:00:00", date);
-		} else if (time.split(":").length == 1) {
-			return String.format("%s %s:00:00", date.split(" ")[0], time);
-		} else if (time.split(":").length == 2) {
-			return String.format("%s %s:00", date.split(" ")[0], time);
-		}
-
-		return date;
 	}
 	
 	public static Set<String> payloadReader(String jsonStr, String prevKey) {
@@ -162,20 +137,6 @@ public class SwitcherUtils {
 	public static void debug(Logger logger, String message, Object... args) {
 		if (logger.isDebugEnabled()) {
 			logger.debug(message, args);
-		}
-	}
-
-	/**
-	 * Log debug message if logger is enabled.
-	 * Use this method to avoid resource waste when logger is disabled.
-	 *
-	 * @param logger class logger
-	 * @param message to be logged
-	 * @param paramSuppliers parameters to be replaced in the message
-	 */
-	public static void debugSupplier(Logger logger, String message, Object paramSuppliers) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(message, () -> paramSuppliers);
 		}
 	}
 

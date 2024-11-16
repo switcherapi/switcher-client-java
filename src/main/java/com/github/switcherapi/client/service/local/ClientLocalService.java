@@ -12,8 +12,8 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.service.ValidatorService;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +29,7 @@ import java.util.Set;
  */
 public class ClientLocalService {
 
-	private static final Logger logger = LogManager.getLogger(ClientLocalService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ClientLocalService.class);
 
 	public static final String DISABLED_DOMAIN = "Domain disabled";
 	public static final String DISABLED_GROUP = "Group disabled";
@@ -37,6 +37,8 @@ public class ClientLocalService {
 	
 	private static final String STRATEGY_FAIL_PATTERN = "Strategy %s does not agree";
 	private static final String STRATEGY_FAIL_NO_INPUT_PATTERN = "Strategy %s did not receive any input";
+
+	private static final String LOG_PROCESS_OP_TEMPLATE = "processOperation: configStrategies: %s";
 
 	private final ValidatorService validatorService;
 
@@ -117,8 +119,7 @@ public class ClientLocalService {
 	 */
 	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input,
 			final Switcher switcher) {
-		SwitcherUtils.debugSupplier(logger, "configStrategies: {}", Arrays.toString(configStrategies));
-		SwitcherUtils.debugSupplier(logger, "input: {}", Arrays.toString(input != null ? input.toArray() : ArrayUtils.EMPTY_STRING_ARRAY));
+		SwitcherUtils.debug(logger, LOG_PROCESS_OP_TEMPLATE, Arrays.toString(configStrategies));
 
 		for (final Strategy strategy : configStrategies) {
 			if (!strategy.isActivated()) {

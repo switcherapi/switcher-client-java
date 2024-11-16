@@ -8,8 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -22,7 +22,7 @@ import java.nio.file.Paths;
  */
 public class SnapshotLoader {
 	
-	private static final Logger logger = LogManager.getLogger(SnapshotLoader.class);
+	private static final Logger logger = LoggerFactory.getLogger(SnapshotLoader.class);
 	
 	private static final String SNAPSHOT_FILE_FORMAT = "%s/%s.json";
 
@@ -42,7 +42,7 @@ public class SnapshotLoader {
 			final Snapshot data = gson.fromJson(fileReader, Snapshot.class);
 			return data.getDomain();
 		} catch (JsonSyntaxException | JsonIOException | IOException e) {
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 			throw new SwitcherSnapshotLoadException(snapshotFile, e);
 		}
 	}
@@ -62,10 +62,10 @@ public class SnapshotLoader {
 			final Snapshot data = gson.fromJson(fileReader, Snapshot.class);
 			return data.getDomain();
 		} catch (JsonSyntaxException | JsonIOException e) {
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 			throw new SwitcherSnapshotLoadException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
 		} catch (IOException e) {
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -87,9 +87,9 @@ public class SnapshotLoader {
 			Path path = Paths.get(snapshotLocation);
 			if (!path.toFile().exists())
 				Files.createDirectories(path);
-		} catch (Exception ioe) {
-			logger.error(ioe);
-			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), ioe);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
 		}
 		
 		try (
@@ -98,7 +98,7 @@ public class SnapshotLoader {
 				final PrintWriter wr = new PrintWriter(bw)) {
 			wr.write(gson.toJson(snapshot));
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
 		}
 	}

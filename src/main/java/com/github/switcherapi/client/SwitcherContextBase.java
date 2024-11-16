@@ -13,8 +13,8 @@ import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotWatcher;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,7 +62,7 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class SwitcherContextBase {
 	
-	protected static final Logger logger = LogManager.getLogger(SwitcherContextBase.class);
+	protected static final Logger logger = LoggerFactory.getLogger(SwitcherContextBase.class);
 	
 	protected static SwitcherProperties switcherProperties;
 	protected static Set<String> switcherKeys;
@@ -189,7 +189,7 @@ public abstract class SwitcherContextBase {
 					callbackFinal.onSnapshotUpdate(instance.getSnapshotVersion());
 				}
 			} catch (Exception e) {
-				logger.error(e.getMessage());
+				logger.error(e.getMessage(), e);
 				callbackFinal.onSnapshotUpdateError(e);
 			}
 		};

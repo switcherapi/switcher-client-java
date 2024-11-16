@@ -11,8 +11,8 @@ import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -23,7 +23,7 @@ import java.util.Set;
  */
 public class SwitcherRemoteService extends SwitcherExecutor {
 	
-	private static final Logger logger = LogManager.getLogger(SwitcherRemoteService.class);
+	private static final Logger logger = LoggerFactory.getLogger(SwitcherRemoteService.class);
 	
 	private final SwitcherLocalService switcherLocal;
 
@@ -36,7 +36,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 
 	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher) {
-		SwitcherUtils.debug(logger, "switcher: {}", switcher);
+		SwitcherUtils.debug(logger, "[Remote] request:: {}", switcher);
 		
 		try {
 			final CriteriaResponse response = this.clientRemote.executeCriteria(switcher);
@@ -44,7 +44,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 			
 			return response;
 		} catch (final SwitcherRemoteException e) {
-			logger.error("Failed to execute criteria - {}\nCause: {}", e.getMessage(), e.getCause());
+			logger.error("Failed to execute criteria - Cause: {}", e.getMessage(), e.getCause());
 			return tryExecuteLocalCriteria(switcher, e);
 		}
 	}

@@ -12,8 +12,8 @@ import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ import java.util.Set;
  */
 public abstract class SwitcherExecutor {
 	
-	private static final Logger logger = LogManager.getLogger(SwitcherExecutor.class);
+	private static final Logger logger = LoggerFactory.getLogger(SwitcherExecutor.class);
 	
 	private static final Map<String, CriteriaResponse> bypass = new HashMap<>();
 	
@@ -87,7 +87,7 @@ public abstract class SwitcherExecutor {
 			
 			return snapshot.getDomain();
 		} catch (SwitcherRemoteException | SwitcherSnapshotWriteException e) {
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 			throw e;
 		}
 	}

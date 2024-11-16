@@ -1,7 +1,7 @@
 package com.github.switcherapi.client.utils;
 
 import com.github.switcherapi.client.exception.SwitcherException;
-import org.apache.logging.log4j.LogManager;
+import org.slf4j.LoggerFactory;
 
 /**
  * Access snapshot event handler when a file is modified.<br>
@@ -16,7 +16,7 @@ public interface SnapshotEventHandler {
 	 * Callback method that will be invoked when the snapshot is updated
 	 */
 	default void onSuccess() {
-		SwitcherUtils.debug(LogManager.getLogger(SnapshotEventHandler.class), "Snapshot has been changed");
+		SwitcherUtils.debug(LoggerFactory.getLogger(SnapshotEventHandler.class), "Snapshot has been changed");
 	}
 
 	/**
@@ -25,7 +25,7 @@ public interface SnapshotEventHandler {
 	 * @param exception Exception
 	 */
 	default void onError(SwitcherException exception) {
-		LogManager.getLogger(SnapshotEventHandler.class).error(exception);
+		LoggerFactory.getLogger(SnapshotEventHandler.class).error(exception.getMessage(), exception);
 	}
 
 }
