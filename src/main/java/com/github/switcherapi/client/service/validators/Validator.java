@@ -1,16 +1,15 @@
 package com.github.switcherapi.client.service.validators;
 
 import com.github.switcherapi.client.utils.SwitcherUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.criteria.Strategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class Validator {
 	
-	protected static final Logger logger = LogManager.getLogger(Validator.class);
+	protected static final Logger logger = LoggerFactory.getLogger(Validator.class);
 	
 	public static final String DEBUG_SWITCHER_INPUT = "switcherInput: {}";
 	public static final String DEBUG_STRATEGY = "strategy: {}";

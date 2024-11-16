@@ -10,14 +10,11 @@ import com.github.switcherapi.client.model.response.AuthRequest;
 import com.github.switcherapi.client.model.response.AuthResponse;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
-import com.github.switcherapi.client.utils.SwitcherUtils;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 import java.util.Set;
@@ -29,9 +26,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ClientWSImpl implements ClientWS {
 	
-	private static final Logger logger = LogManager.getLogger(ClientWSImpl.class);
-	
-	public static final String QUERY = 
+	public static final String QUERY =
 			"{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\", _component: \\\"%s\\\") { " +
 			"name version description activated " +
 			"group { name description activated " +
@@ -51,8 +46,6 @@ public class ClientWSImpl implements ClientWS {
 	
 	@Override
 	public CriteriaResponse executeCriteriaService(final Switcher switcher, final String token) {
-		SwitcherUtils.debug(logger, "switcher: {}", switcher);
-		
 		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, url))
 				.queryParam(Switcher.KEY, switcher.getSwitcherKey())
