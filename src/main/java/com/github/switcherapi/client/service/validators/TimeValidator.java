@@ -27,7 +27,6 @@ public class TimeValidator extends DateTimeValidator {
 			final String today = format.format(new Date());
 			return selectTimeOperationCase(strategy, switcherInput, today);
 		} catch (ParseException e) {
-			logger.error(e.getMessage(), e);
 			throw new SwitcherInvalidTimeFormat(strategy.getStrategy(), e);
 		}
 

@@ -24,7 +24,6 @@ public class DateValidator extends DateTimeValidator {
 		try {
 			return selectDateOperationCase(strategy, switcherInput);
 		} catch (ParseException e) {
-			logger.error(e.getMessage(), e);
 			throw new SwitcherInvalidTimeFormat(strategy.getStrategy(), e);
 		}
 	}

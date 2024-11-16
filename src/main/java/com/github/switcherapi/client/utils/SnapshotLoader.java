@@ -8,8 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -21,8 +19,6 @@ import java.nio.file.Paths;
  * @since 2019-12-24
  */
 public class SnapshotLoader {
-	
-	private static final Logger logger = LoggerFactory.getLogger(SnapshotLoader.class);
 	
 	private static final String SNAPSHOT_FILE_FORMAT = "%s/%s.json";
 
@@ -42,7 +38,6 @@ public class SnapshotLoader {
 			final Snapshot data = gson.fromJson(fileReader, Snapshot.class);
 			return data.getDomain();
 		} catch (JsonSyntaxException | JsonIOException | IOException e) {
-			logger.error(e.getMessage(), e);
 			throw new SwitcherSnapshotLoadException(snapshotFile, e);
 		}
 	}
@@ -62,11 +57,7 @@ public class SnapshotLoader {
 			final Snapshot data = gson.fromJson(fileReader, Snapshot.class);
 			return data.getDomain();
 		} catch (JsonSyntaxException | JsonIOException e) {
-			logger.error(e.getMessage(), e);
 			throw new SwitcherSnapshotLoadException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-			throw e;
 		}
 	}
 	
@@ -88,7 +79,6 @@ public class SnapshotLoader {
 			if (!path.toFile().exists())
 				Files.createDirectories(path);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
 			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
 		}
 		
@@ -98,7 +88,6 @@ public class SnapshotLoader {
 				final PrintWriter wr = new PrintWriter(bw)) {
 			wr.write(gson.toJson(snapshot));
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
 			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
 		}
 	}
