@@ -13,8 +13,8 @@ import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public class SwitcherLocalService extends SwitcherExecutor {
 	
-	private static final Logger logger = LogManager.getLogger(SwitcherLocalService.class);
+	private static final Logger logger = LoggerFactory.getLogger(SwitcherLocalService.class);
 
 	private final ClientRemote clientRemote;
 
@@ -84,7 +84,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 			}
 		} catch (SwitcherSnapshotLoadException | IOException e) {
 			handler.onError(new SwitcherException(e.getMessage(), e));
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 			return false;
 		}
 
@@ -103,7 +103,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	
 	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher) {
-		SwitcherUtils.debug(logger, "switcher: {}", switcher);
+		SwitcherUtils.debug(logger, "[Local] request: {}", switcher);
 
 		CriteriaResponse response;
 		try {

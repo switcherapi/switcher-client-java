@@ -9,12 +9,12 @@ import com.github.switcherapi.fixture.CountDownHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SnapshotWatcherTest {
 	
-	private static final Logger logger = LogManager.getLogger(SnapshotWatcherTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(SnapshotWatcherTest.class);
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
 	
@@ -92,7 +92,7 @@ class SnapshotWatcherTest {
 				final PrintWriter wr = new PrintWriter(bw)) {
 			wr.write(content);
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
