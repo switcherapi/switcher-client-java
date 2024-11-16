@@ -33,9 +33,11 @@ public class CriteriaResponse {
 	protected Map<String, List<String>> entryWhen;
 
 	public CriteriaResponse() {
+		entryWhen = new HashMap<>();
 	}
 
 	public CriteriaResponse(final boolean result, final String reason, final Switcher switcher) {
+		this();
 		this.result = result;
 		this.reason = reason;
 		this.switcherKey = switcher.getSwitcherKey();
@@ -58,7 +60,7 @@ public class CriteriaResponse {
 	}
 
 	private boolean isEntryMatching(Entry inputEntry) {
-		return entryWhen.containsKey(inputEntry.getStrategy()) &&
+		return entryWhen.isEmpty() || entryWhen.containsKey(inputEntry.getStrategy()) &&
 				entryWhen.get(inputEntry.getStrategy()).contains(inputEntry.getInput());
 	}
 
@@ -120,10 +122,6 @@ public class CriteriaResponse {
 	}
 
 	public CriteriaResponse when(StrategyValidator strategy, List<String> inputs) {
-		if (entryWhen == null) {
-			entryWhen = new HashMap<>();
-		}
-
 		entryWhen.put(strategy.toString(), inputs);
 		return this;
 	}
