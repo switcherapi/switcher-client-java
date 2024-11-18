@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
  * @author Roger Floriano (petruki)
  * @since 2023-02-18
  */
-@ValidatorComponent(type = StrategyValidator.REGEX)
 public class RegexValidatorV8 extends Validator {
 
 	private static final Logger logger = LoggerFactory.getLogger(RegexValidatorV8.class);
@@ -54,6 +53,11 @@ public class RegexValidatorV8 extends Validator {
 		if (System.getProperty("java.version").startsWith("1.8"))
 			return RegexValidatorV8.class;
 		return RegexValidator.class;
+	}
+
+	@Override
+	public StrategyValidator getType() {
+		return StrategyValidator.REGEX;
 	}
 
 	@Override
