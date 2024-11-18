@@ -12,10 +12,14 @@ import org.apache.commons.lang3.time.DateUtils;
 import java.text.ParseException;
 import java.util.Date;
 
-@ValidatorComponent(type = StrategyValidator.DATE)
 public class DateValidator extends DateTimeValidator {
 
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+	@Override
+	public StrategyValidator getType() {
+		return StrategyValidator.DATE;
+	}
 
 	@Override
 	public boolean process(final Strategy strategy, final Entry switcherInput) throws SwitcherInvalidOperationException,

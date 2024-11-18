@@ -7,10 +7,14 @@ import com.github.switcherapi.client.model.criteria.Strategy;
 
 import java.util.Arrays;
 
-@ValidatorComponent(type = StrategyValidator.REGEX)
 public class RegexValidator extends Validator {
 
 	private static final String DELIMITER_REGEX = "\\b%s\\b";
+
+	@Override
+	public StrategyValidator getType() {
+		return StrategyValidator.REGEX;
+	}
 
 	@Override
 	public boolean process(Strategy strategy, Entry switcherInput) throws SwitcherInvalidOperationException {

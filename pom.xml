@@ -49,6 +49,7 @@
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<argLine />
 
 		<!-- rest/json libs -->
 		<jersey-client.version>2.45</jersey-client.version>

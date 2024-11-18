@@ -1,8 +1,6 @@
 package com.github.switcherapi.client.service;
 
-import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidStrategyException;
-import com.github.switcherapi.client.exception.SwitcherInvalidValidatorException;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.criteria.Strategy;
@@ -20,31 +18,17 @@ public class ValidatorService {
 	}
 	
 	private void initializeValidators() {
-		registerValidator(DateValidator.class);
-		registerValidator(NetworkValidator.class);
-		registerValidator(NumericValidator.class);
-		registerValidator(PayloadValidator.class);
-		registerValidator(TimeValidator.class);
-		registerValidator(ValueValidator.class);
-		registerValidator(RegexValidatorV8.getPlatformValidator());
+		registerValidator(new DateValidator());
+		registerValidator(new NetworkValidator());
+		registerValidator(new NumericValidator());
+		registerValidator(new PayloadValidator());
+		registerValidator(new TimeValidator());
+		registerValidator(new ValueValidator());
+		registerValidator(new RegexValidatorV8());
 	}
 
-	private StrategyValidator getStrategyValidator(Class<? extends Validator> validatorClass) {
-		if (!validatorClass.isAnnotationPresent(ValidatorComponent.class)) {
-			throw new SwitcherInvalidValidatorException(validatorClass.getName());
-		}
-
-		return validatorClass.getAnnotation(ValidatorComponent.class).type();
-	}
-
-	public void registerValidator(Class<? extends Validator> validatorClass) {
-		try {
-			validators.put(getStrategyValidator(validatorClass), validatorClass.getConstructor().newInstance());
-		} catch (SwitcherInvalidValidatorException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new SwitcherException(e.getMessage(), e);
-		}
+	public void registerValidator(Validator validator) {
+		validators.put(validator.getType(), validator);
 	}
 	
 	public boolean execute(final Strategy strategy, final Entry switcherInput) 
