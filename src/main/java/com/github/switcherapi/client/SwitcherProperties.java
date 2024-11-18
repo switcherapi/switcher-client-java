@@ -1,13 +1,13 @@
 package com.github.switcherapi.client;
 
-import java.lang.reflect.Field;
-import java.util.Properties;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.utils.SwitcherUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * The configuration definition object contains all necessary SDK properties to
@@ -23,210 +23,90 @@ public class SwitcherProperties {
 
 	public static final String DEFAULT_TIMEOUT_MS = "3000";
 
-	private String contextLocation;
-
-	private String url;
-
-	private String apiKey;
-
-	private String domain;
-
-	private String component;
-
-	private String environment;
-
-	private String snapshotLocation;
-
-	private String snapshotAutoUpdateInterval;
-
-	private String regexTimeout;
-
-	private String silentMode;
-
-	private boolean snapshotAutoLoad;
-
-	private boolean snapshotSkipValidation;
-
-	private boolean local;
-
-	private String truststorePath;
-
-	private String truststorePassword;
-
-	private String timeoutMs;
+	private final Map<String, Object> properties = new HashMap<>();
 
 	public SwitcherProperties() {
-		this.environment = DEFAULT_ENV;
-		this.regexTimeout = DEFAULT_REGEX_TIMEOUT;
-		this.timeoutMs = DEFAULT_TIMEOUT_MS;
+		setDefaults();
+	}
+
+	private void setDefaults() {
+		setValue(ContextKey.ENVIRONMENT, DEFAULT_ENV);
+		setValue(ContextKey.REGEX_TIMEOUT, DEFAULT_REGEX_TIMEOUT);
+		setValue(ContextKey.TIMEOUT_MS, DEFAULT_TIMEOUT_MS);
+		setValue(ContextKey.SNAPSHOT_AUTO_LOAD, false);
+		setValue(ContextKey.SNAPSHOT_SKIP_VALIDATION, false);
+		setValue(ContextKey.LOCAL_MODE, false);
 	}
 	
 	public void loadFromProperties(Properties prop) {
-        setContextLocation(SwitcherUtils.resolveProperties(ContextKey.CONTEXT_LOCATION.getParam(), prop));
-        setUrl(SwitcherUtils.resolveProperties(ContextKey.URL.getParam(), prop));
-		setApiKey(SwitcherUtils.resolveProperties(ContextKey.APIKEY.getParam(), prop));
-		setDomain(SwitcherUtils.resolveProperties(ContextKey.DOMAIN.getParam(), prop));
-		setComponent(SwitcherUtils.resolveProperties(ContextKey.COMPONENT.getParam(), prop));
-		setEnvironment(SwitcherUtils.resolveProperties(ContextKey.ENVIRONMENT.getParam(), prop));
-		setSnapshotLocation(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_LOCATION.getParam(), prop));
-		setSnapshotSkipValidation(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_SKIP_VALIDATION.getParam(), prop)));
-		setSnapshotAutoLoad(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_LOAD.getParam(), prop)));
-		setSnapshotAutoUpdateInterval(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL.getParam(), prop));
-		setSilentMode(SwitcherUtils.resolveProperties(ContextKey.SILENT_MODE.getParam(), prop));
-		setLocal(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.LOCAL_MODE.getParam(), prop)));
-		setRegexTimeout(SwitcherUtils.resolveProperties(ContextKey.REGEX_TIMEOUT.getParam(), prop));
-		setTruststorePath(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PATH.getParam(), prop));
-		setTruststorePassword(SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));
-		setTimeoutMs(SwitcherUtils.resolveProperties(ContextKey.TIMEOUT_MS.getParam(), prop));
+		setValue(ContextKey.CONTEXT_LOCATION, SwitcherUtils.resolveProperties(ContextKey.CONTEXT_LOCATION.getParam(), prop));
+		setValue(ContextKey.URL, SwitcherUtils.resolveProperties(ContextKey.URL.getParam(), prop));
+		setValue(ContextKey.APIKEY, SwitcherUtils.resolveProperties(ContextKey.APIKEY.getParam(), prop));
+		setValue(ContextKey.DOMAIN, SwitcherUtils.resolveProperties(ContextKey.DOMAIN.getParam(), prop));
+		setValue(ContextKey.COMPONENT, SwitcherUtils.resolveProperties(ContextKey.COMPONENT.getParam(), prop));
+		setValue(ContextKey.ENVIRONMENT, getEnvironmentOrDefault(SwitcherUtils.resolveProperties(ContextKey.ENVIRONMENT.getParam(), prop)));
+		setValue(ContextKey.SNAPSHOT_LOCATION, SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_LOCATION.getParam(), prop));
+		setValue(ContextKey.SNAPSHOT_SKIP_VALIDATION, getBoolDefault(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_SKIP_VALIDATION.getParam(), prop)), false));
+		setValue(ContextKey.SNAPSHOT_AUTO_LOAD, getBoolDefault(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_LOAD.getParam(), prop)), false));
+		setValue(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL, SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL.getParam(), prop));
+		setValue(ContextKey.SILENT_MODE, SwitcherUtils.resolveProperties(ContextKey.SILENT_MODE.getParam(), prop));
+		setValue(ContextKey.LOCAL_MODE, getBoolDefault(Boolean.parseBoolean(SwitcherUtils.resolveProperties(ContextKey.LOCAL_MODE.getParam(), prop)), false));
+		setValue(ContextKey.REGEX_TIMEOUT, getRegexTimeoutOrDefault(SwitcherUtils.resolveProperties(ContextKey.REGEX_TIMEOUT.getParam(), prop)));
+		setValue(ContextKey.TRUSTSTORE_PATH, SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PATH.getParam(), prop));
+		setValue(ContextKey.TRUSTSTORE_PASSWORD, SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));
+		setValue(ContextKey.TIMEOUT_MS, getTimeoutMsOrDefault(SwitcherUtils.resolveProperties(ContextKey.TIMEOUT_MS.getParam(), prop)));
 	}
-	
-	public <T> T getValue(ContextKey contextKey, Class<T> type) {
+
+	public String getValue(ContextKey contextKey) {
+		return getValue(contextKey, String.class);
+	}
+
+	public Boolean getBoolean(ContextKey contextKey) {
+		return getValue(contextKey, Boolean.class);
+	}
+
+	private <T> T getValue(ContextKey contextKey, Class<T> type) {
 		try {
-			final Field field = SwitcherProperties.class.getDeclaredField(contextKey.getPropField());
-			return type.cast(field.get(this));
-		} catch (Exception e) {
+			return type.cast(properties.get(contextKey.getParam()));
+		} catch (ClassCastException e) {
 			throw new SwitcherContextException(e.getMessage());
 		}
 	}
 
-	public String getContextLocation() {
-		return contextLocation;
+	public void setValue(ContextKey contextKey, Object value) {
+		properties.put(contextKey.getParam(), value);
 	}
 
-	public void setContextLocation(String contextLocation) {
-		this.contextLocation = contextLocation;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getApiKey() {
-		return apiKey;
-	}
-
-	public void setApiKey(String apiKey) {
-		this.apiKey = apiKey;
-	}
-
-	public String getDomain() {
-		return domain;
-	}
-
-	public void setDomain(String domain) {
-		this.domain = domain;
-	}
-
-	public String getComponent() {
-		return component;
-	}
-
-	public void setComponent(String component) {
-		this.component = component;
-	}
-
-	public String getEnvironment() {
-		return environment;
-	}
-
-	public void setEnvironment(String environment) {
+	public String getEnvironmentOrDefault(String environment) {
 		if (StringUtils.isNotBlank(environment)) {
-			this.environment = environment;
-		} else {
-			this.environment = DEFAULT_ENV;
+			return environment;
 		}
+
+		return DEFAULT_ENV;
 	}
 
-	public String getSnapshotLocation() {
-		return snapshotLocation;
-	}
-
-	public void setSnapshotLocation(String snapshotLocation) {
-		this.snapshotLocation = snapshotLocation;
-	}
-
-	public String getSnapshotAutoUpdateInterval() {
-		return snapshotAutoUpdateInterval;
-	}
-
-	public void setSnapshotAutoUpdateInterval(String snapshotAutoUpdateInterval) {
-		this.snapshotAutoUpdateInterval = snapshotAutoUpdateInterval;
-	}
-
-	public String getRegexTimeout() {
-		return regexTimeout;
-	}
-
-	public void setRegexTimeout(String regexTimeout) {
+	public String getRegexTimeoutOrDefault(String regexTimeout) {
 		if (StringUtils.isNotBlank(regexTimeout)) {
-			this.regexTimeout = regexTimeout;
-		} else {
-			this.regexTimeout = DEFAULT_REGEX_TIMEOUT;
+			return regexTimeout;
 		}
+
+		return DEFAULT_REGEX_TIMEOUT;
 	}
 
-	public boolean isSnapshotAutoLoad() {
-		return snapshotAutoLoad;
-	}
-
-	public void setSnapshotAutoLoad(boolean snapshotAutoLoad) {
-		this.snapshotAutoLoad = snapshotAutoLoad;
-	}
-
-	public boolean isSnapshotSkipValidation() {
-		return snapshotSkipValidation;
-	}
-
-	public void setSnapshotSkipValidation(boolean snapshotSkipValidation) {
-		this.snapshotSkipValidation = snapshotSkipValidation;
-	}
-
-	public String getSilentMode() {
-		return silentMode;
-	}
-
-	public void setSilentMode(String silentMode) {
-		this.silentMode = silentMode;
-	}
-
-	public boolean isLocal() {
-		return local;
-	}
-
-	public void setLocal(boolean local) {
-		this.local = local;
-	}
-
-	public String getTruststorePath() {
-		return truststorePath;
-	}
-
-	public void setTruststorePath(String truststorePath) {
-		this.truststorePath = truststorePath;
-	}
-
-	public String getTruststorePassword() {
-		return truststorePassword;
-	}
-
-	public void setTruststorePassword(String truststorePassword) {
-		this.truststorePassword = truststorePassword;
-	}
-
-	public String getTimeoutMs() {
-		return timeoutMs;
-	}
-
-    public void setTimeoutMs(String timeoutMs) {
+	public String getTimeoutMsOrDefault(String timeoutMs) {
 		if (StringUtils.isNotBlank(timeoutMs)) {
-			this.timeoutMs = timeoutMs;
-		} else {
-			this.timeoutMs = DEFAULT_TIMEOUT_MS;
+			return timeoutMs;
 		}
+
+		return DEFAULT_TIMEOUT_MS;
+	}
+
+	public Boolean getBoolDefault(Boolean value, Boolean defaultValue) {
+		if (value != null) {
+			return value;
+		}
+
+		return defaultValue;
 	}
 
 }

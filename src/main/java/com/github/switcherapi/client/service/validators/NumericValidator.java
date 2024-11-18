@@ -1,17 +1,20 @@
 package com.github.switcherapi.client.service.validators;
 
-import java.util.Arrays;
-
-import org.apache.commons.lang3.math.NumberUtils;
-
 import com.github.switcherapi.client.exception.SwitcherInvalidNumericFormat;
 import com.github.switcherapi.client.exception.SwitcherInvalidOperationException;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.criteria.Strategy;
+import org.apache.commons.lang3.math.NumberUtils;
 
-@ValidatorComponent(type = StrategyValidator.NUMERIC)
+import java.util.Arrays;
+
 public class NumericValidator extends Validator {
+
+	@Override
+	public StrategyValidator getType() {
+		return StrategyValidator.NUMERIC;
+	}
 	
 	@Override
 	public boolean process(final Strategy strategy, final Entry switcherInput) {

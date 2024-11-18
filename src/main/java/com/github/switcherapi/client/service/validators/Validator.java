@@ -1,5 +1,6 @@
 package com.github.switcherapi.client.service.validators;
 
+import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.Entry;
@@ -23,5 +24,7 @@ public abstract class Validator {
 	
 	public abstract boolean process(final Strategy strategy, final Entry switcherInput) 
 			throws SwitcherException;
+
+	public abstract StrategyValidator getType();
 
 }
