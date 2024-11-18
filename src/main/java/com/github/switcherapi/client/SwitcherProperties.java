@@ -61,7 +61,7 @@ public class SwitcherProperties {
 		return getValue(contextKey, String.class);
 	}
 
-	public Boolean getBoolean(ContextKey contextKey) {
+	public boolean getBoolean(ContextKey contextKey) {
 		return getValue(contextKey, Boolean.class);
 	}
 
