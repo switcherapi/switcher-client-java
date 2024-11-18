@@ -8,7 +8,7 @@
 	<groupId>com.github.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.6.0</version>
+	<version>1.6.1-SNAPSHOT</version>
 
 	<name>Switcher Client</name>
 	<description>Switcher Client SDK for working with Switcher API</description>
@@ -49,6 +49,7 @@
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<argLine />
 
 		<!-- rest/json libs -->
 		<jersey-client.version>2.45</jersey-client.version>
