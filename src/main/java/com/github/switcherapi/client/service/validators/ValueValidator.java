@@ -1,14 +1,18 @@
 package com.github.switcherapi.client.service.validators;
 
-import java.util.Arrays;
-
 import com.github.switcherapi.client.exception.SwitcherInvalidOperationException;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.criteria.Strategy;
 
-@ValidatorComponent(type = StrategyValidator.VALUE)
+import java.util.Arrays;
+
 public class ValueValidator extends Validator {
+
+	@Override
+	public StrategyValidator getType() {
+		return StrategyValidator.VALUE;
+	}
 
 	@Override
 	public boolean process(Strategy strategy, Entry switcherInput) {

@@ -1,5 +1,6 @@
 package com.github.switcherapi.client;
 
+import com.github.switcherapi.client.model.ContextKey;
 import org.apache.commons.lang3.StringUtils;
 
 public class ContextBuilder {
@@ -52,7 +53,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder contextLocation(String contextLocation) {
-		properties.setContextLocation(contextLocation);
+		properties.setValue(ContextKey.CONTEXT_LOCATION, contextLocation);
 		return this;
 	}
 
@@ -61,7 +62,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder url(String url) {
-		properties.setUrl(url);
+		properties.setValue(ContextKey.URL, url);
 		return this;
 	}
 
@@ -70,7 +71,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder apiKey(String apiKey) {
-		properties.setApiKey(apiKey);
+		properties.setValue(ContextKey.APIKEY, apiKey);
 		return this;
 	}
 
@@ -79,7 +80,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder domain(String domain) {
-		properties.setDomain(domain);
+		properties.setValue(ContextKey.DOMAIN, domain);
 		return this;
 	}
 
@@ -88,7 +89,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder component(String component) {
-		properties.setComponent(component);
+		properties.setValue(ContextKey.COMPONENT, component);
 		return this;
 	}
 
@@ -97,7 +98,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder environment(String environment) {
-		properties.setEnvironment(environment);
+		properties.setValue(ContextKey.ENVIRONMENT, properties.getEnvironmentOrDefault(environment));
 		return this;
 	}
 
@@ -106,7 +107,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder snapshotLocation(String snapshotLocation) {
-		properties.setSnapshotLocation(snapshotLocation);
+		properties.setValue(ContextKey.SNAPSHOT_LOCATION, snapshotLocation);
 		return this;
 	}
 
@@ -115,10 +116,10 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder snapshotAutoUpdateInterval(String snapshotAutoUpdateInterval) {
-		properties.setSnapshotAutoUpdateInterval(snapshotAutoUpdateInterval);
+		properties.setValue(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL, snapshotAutoUpdateInterval);
 
 		if (snapshotAutoUpdateInterval != null)
-			properties.setSnapshotAutoLoad(true);
+			properties.setValue(ContextKey.SNAPSHOT_AUTO_LOAD, true);
 
 		return this;
 	}
@@ -130,7 +131,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder regexTimeout(String regexTimeout) {
-		properties.setRegexTimeout(regexTimeout);
+		properties.setValue(ContextKey.REGEX_TIMEOUT, properties.getRegexTimeoutOrDefault(regexTimeout));
 		return this;
 	}
 
@@ -139,7 +140,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder snapshotAutoLoad(boolean snapshotAutoLoad) {
-		properties.setSnapshotAutoLoad(snapshotAutoLoad);
+		properties.setValue(ContextKey.SNAPSHOT_AUTO_LOAD, snapshotAutoLoad);
 		return this;
 	}
 
@@ -148,7 +149,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder snapshotSkipValidation(boolean snapshotSkipValidation) {
-		properties.setSnapshotSkipValidation(snapshotSkipValidation);
+		properties.setValue(ContextKey.SNAPSHOT_SKIP_VALIDATION, snapshotSkipValidation);
 		return this;
 	}
 
@@ -157,10 +158,10 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder silentMode(String retryAfter) {
-		properties.setSilentMode(retryAfter);
+		properties.setValue(ContextKey.SILENT_MODE, retryAfter);
 
 		if (StringUtils.isNotBlank(retryAfter)) {
-			properties.setSnapshotAutoLoad(true);
+			properties.setValue(ContextKey.SNAPSHOT_AUTO_LOAD, true);
 		}
 
 		return this;
@@ -171,7 +172,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder local(boolean local) {
-		properties.setLocal(local);
+		properties.setValue(ContextKey.LOCAL_MODE, local);
 		return this;
 	}
 
@@ -180,7 +181,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder truststorePath(String truststorePath) {
-		properties.setTruststorePath(truststorePath);
+		properties.setValue(ContextKey.TRUSTSTORE_PATH, truststorePath);
 		return this;
 	}
 
@@ -189,7 +190,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder truststorePassword(String truststorePassword) {
-		properties.setTruststorePassword(truststorePassword);
+		properties.setValue(ContextKey.TRUSTSTORE_PASSWORD, truststorePassword);
 		return this;
 	}
 
@@ -198,7 +199,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
     public ContextBuilder timeoutMs(String timeoutMs) {
-		properties.setTimeoutMs(timeoutMs);
+		properties.setValue(ContextKey.TIMEOUT_MS, properties.getTimeoutMsOrDefault(timeoutMs));
 		return this;
 	}
 }

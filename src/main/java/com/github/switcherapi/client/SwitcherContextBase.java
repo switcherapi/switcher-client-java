@@ -113,14 +113,14 @@ public abstract class SwitcherContextBase {
 		validateContext();
 		validateSwitcherKeys();
 		
-		if (switcherProperties.isLocal()) {
+		if (contextBol(ContextKey.LOCAL_MODE)) {
 			instance = new SwitcherLocalService();
 		} else {
 			instance = new SwitcherRemoteService();
 		}
 		
 		loadSwitchers();
-		scheduleSnapshotAutoUpdate(switcherProperties.getSnapshotAutoUpdateInterval());
+		scheduleSnapshotAutoUpdate(contextStr(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL));
 		ContextBuilder.preConfigure(switcherProperties);
 	}
 	
@@ -143,7 +143,7 @@ public abstract class SwitcherContextBase {
 		try {
 			switcherKeys = new HashSet<>();
 			
-			final Class<?> clazz = Class.forName(switcherProperties.getContextLocation());
+			final Class<?> clazz = Class.forName(contextStr(ContextKey.CONTEXT_LOCATION));
 			for (Field field : clazz.getFields()) {
 				if (field.isAnnotationPresent(SwitcherKey.class)) {
 					switcherKeys.add(field.getName());
@@ -275,7 +275,7 @@ public abstract class SwitcherContextBase {
 	 * @return true if snapshot was updated
 	 */
 	public static boolean validateSnapshot() {
-		if (switcherProperties.isSnapshotSkipValidation() || instance.checkSnapshotVersion()) {
+		if (contextBol(ContextKey.SNAPSHOT_SKIP_VALIDATION) || instance.checkSnapshotVersion()) {
 			return false;
 		}
 
@@ -347,7 +347,7 @@ public abstract class SwitcherContextBase {
 	 * @return Value configured for the context parameter
 	 */
 	public static String contextStr(ContextKey contextKey) {
-		return switcherProperties.getValue(contextKey, String.class);
+		return switcherProperties.getValue(contextKey);
 	}
 	
 	/**
@@ -357,7 +357,7 @@ public abstract class SwitcherContextBase {
 	 * @return Value configured for the context parameter
 	 */
 	public static boolean contextBol(ContextKey contextKey) {
-		return switcherProperties.getValue(contextKey, Boolean.class);
+		return switcherProperties.getBoolean(contextKey);
 	}
 	
 	/**

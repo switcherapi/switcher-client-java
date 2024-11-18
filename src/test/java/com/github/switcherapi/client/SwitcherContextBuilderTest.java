@@ -59,6 +59,14 @@ class SwitcherContextBuilderTest {
 	
 	@Test
 	void shouldThrowError_wrongContextKeyTypeUsage() {
+		//given
+		SwitchersBase.configure(ContextBuilder.builder(true)
+				.contextLocation(SwitchersBase.class.getCanonicalName())
+				.domain("switcher-domain")
+				.local(true));
+
+		SwitchersBase.initializeClient();
+
 		assertThrows(SwitcherContextException.class, () -> SwitchersBase.contextBol(ContextKey.DOMAIN));
 		assertThrows(SwitcherContextException.class, () -> SwitchersBase.contextStr(ContextKey.LOCAL_MODE));
 	}
