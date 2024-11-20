@@ -6,6 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.github.switcherapi.client.remote.ClientWS;
+import com.github.switcherapi.client.remote.ClientWSImpl;
+import com.github.switcherapi.client.service.SwitcherValidator;
+import com.github.switcherapi.client.service.ValidatorService;
+import com.github.switcherapi.client.service.remote.ClientRemoteService;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -29,7 +34,9 @@ class SwitcherLocalServiceTest {
 				.environment("default")
 				.local(true));
 
-		service = new SwitcherLocalService();
+		ClientWS clientWS = new ClientWSImpl();
+		SwitcherValidator validatorService = new ValidatorService();
+		service = new SwitcherLocalService(new ClientRemoteService(clientWS), new ClientLocalService(validatorService));
 	}
 
 	@Test

@@ -1,12 +1,9 @@
 package com.github.switcherapi.client.model.response;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 /**
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-@JsonSerialize
 public class AuthResponse {
 
 	private String token;
@@ -22,11 +19,11 @@ public class AuthResponse {
 	}
 
 	public void setExp(long exp) {
-		this.exp = exp * 1000;
+		this.exp = exp;
 	}
 
 	public boolean isExpired() {
-		return this.exp < System.currentTimeMillis();
+		return (this.exp * 1000) < System.currentTimeMillis();
 	}
 
 }

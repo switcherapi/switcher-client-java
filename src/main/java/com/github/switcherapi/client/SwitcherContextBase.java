@@ -6,8 +6,15 @@ import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.remote.ClientWS;
+import com.github.switcherapi.client.remote.ClientWSImpl;
+import com.github.switcherapi.client.service.SwitcherValidator;
+import com.github.switcherapi.client.service.ValidatorService;
 import com.github.switcherapi.client.service.WorkerName;
+import com.github.switcherapi.client.service.local.ClientLocalService;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
+import com.github.switcherapi.client.service.remote.ClientRemote;
+import com.github.switcherapi.client.service.remote.ClientRemoteService;
 import com.github.switcherapi.client.service.remote.SwitcherRemoteService;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotWatcher;
@@ -70,7 +77,7 @@ public abstract class SwitcherContextBase {
 	protected static SwitcherExecutor instance;
 	private static ScheduledExecutorService scheduledExecutorService;
 	private static ExecutorService watcherExecutorService;
-	private static SnapshotWatcher watcher;
+	private static SnapshotWatcher watcherSnapshot;
 	
 	protected SwitcherContextBase() {
 		throw new IllegalStateException("Context class cannot be instantiated");
@@ -112,11 +119,16 @@ public abstract class SwitcherContextBase {
 	public static void initializeClient() {
 		validateContext();
 		validateSwitcherKeys();
-		
+
+		final ClientWS clientWS = new ClientWSImpl();
+		final SwitcherValidator validatorService = new ValidatorService();
+		final ClientRemote clientRemote = new ClientRemoteService(clientWS);
+		final ClientLocalService clientLocal = new ClientLocalService(validatorService);
+
 		if (contextBol(ContextKey.LOCAL_MODE)) {
-			instance = new SwitcherLocalService();
+			instance = new SwitcherLocalService(clientRemote, clientLocal);
 		} else {
-			instance = new SwitcherRemoteService();
+			instance = new SwitcherRemoteService(clientRemote, new SwitcherLocalService(clientRemote, clientLocal));
 		}
 		
 		loadSwitchers();
@@ -309,13 +321,13 @@ public abstract class SwitcherContextBase {
 			throw new SwitcherException("Cannot watch snapshot when using remote", new UnsupportedOperationException());
 		}
 
-		if (watcher == null) {
-			watcher = new SnapshotWatcher((SwitcherLocalService) instance, handler,
+		if (watcherSnapshot == null) {
+			watcherSnapshot = new SnapshotWatcher((SwitcherLocalService) instance, handler,
 					contextStr(ContextKey.SNAPSHOT_LOCATION));
 		}
 
 		initWatcherExecutorService();
-		watcherExecutorService.submit(watcher);
+		watcherExecutorService.submit(watcherSnapshot);
 	}
 	
 	/**
@@ -324,10 +336,10 @@ public abstract class SwitcherContextBase {
 	 * @throws SwitcherException if watch thread never started
 	 */
 	public static void stopWatchingSnapshot() {
-		if (watcher != null) {
+		if (watcherSnapshot != null) {
 			watcherExecutorService.shutdownNow();
-			watcher.terminate();
-			watcher = null;
+			watcherSnapshot.terminate();
+			watcherSnapshot = null;
 		}
 	}
 	

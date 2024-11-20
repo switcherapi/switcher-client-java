@@ -16,10 +16,11 @@ import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
  */
 public interface ClientWS {
 
-	Integer DEFAULT_TIMEOUT_SECONDS = 3;
+	int DEFAULT_TIMEOUT = 3000;
 	String HEADER_AUTHORIZATION = "Authorization";
 	String HEADER_APIKEY = "switcher-api-key";
 	String TOKEN_TEXT = "Bearer %s";
+	String[] CONTENT_TYPE = { "Content-Type", "application/json" };
 	
 	/**
 	 * Returns the token to access all available endpoints
@@ -29,7 +30,7 @@ public interface ClientWS {
 	/**
 	 * Returns the verification configured for a specific switcher (key)
 	 */
-	String CRITERIA_URL = "%s/criteria";
+	String CRITERIA_URL = "%s/criteria?%s=%s&%s=%s&%s=%s";
 	
 	/**
 	 * Returns the whole domain structure

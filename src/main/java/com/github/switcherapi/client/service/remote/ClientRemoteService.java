@@ -12,7 +12,6 @@ import com.github.switcherapi.client.model.response.AuthResponse;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
 import com.github.switcherapi.client.remote.ClientWS;
-import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,8 +33,8 @@ public class ClientRemoteService implements ClientRemote {
 		VALID, INVALID, SILENT
 	}
 	
-	public ClientRemoteService() {
-		this.clientWs = new ClientWSImpl();
+	public ClientRemoteService(ClientWS clientWs) {
+		this.clientWs = clientWs;
 	}
 
 	@Override

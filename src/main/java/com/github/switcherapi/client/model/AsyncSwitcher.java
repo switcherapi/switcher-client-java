@@ -1,9 +1,8 @@
 package com.github.switcherapi.client.model;
 
-import com.github.switcherapi.client.utils.SwitcherUtils;
-
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -76,4 +76,20 @@ class ClientWSTest extends MockWebServerHelper {
         assertTrue(response);
     }
 
+    @Test
+    void shouldUseDefaultPoolSize() {
+        // given
+        Switchers.configure(ContextBuilder.builder()
+                        .poolConnectionSize(null));
+
+        Switchers.initializeClient();
+
+        ClientWS clientWS = new ClientWSImpl();
+        givenResponse(generateTimeOut(100));
+
+        // test
+        boolean response = clientWS.isAlive();
+        assertTrue(response);
+    }
+
 }
