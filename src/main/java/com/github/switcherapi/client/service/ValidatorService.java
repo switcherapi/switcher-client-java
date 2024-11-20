@@ -8,7 +8,7 @@ import com.github.switcherapi.client.service.validators.*;
 
 import java.util.EnumMap;
 
-public class ValidatorService {
+public class ValidatorService implements SwitcherValidator {
 	
 	private final EnumMap<StrategyValidator, Validator> validators;
 	
@@ -27,10 +27,12 @@ public class ValidatorService {
 		registerValidator(new RegexValidatorV8());
 	}
 
+	@Override
 	public void registerValidator(Validator validator) {
 		validators.put(validator.getType(), validator);
 	}
-	
+
+	@Override
 	public boolean execute(final Strategy strategy, final Entry switcherInput) 
 			throws SwitcherInvalidStrategyException {
 		if (!validators.containsKey(strategy.getStrategyValidator())) {

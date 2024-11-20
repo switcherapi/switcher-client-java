@@ -31,6 +31,8 @@ public abstract class SwitcherExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(SwitcherExecutor.class);
 	
 	private static final Map<String, CriteriaResponse> bypass = new HashMap<>();
+
+	protected Domain domain;
 	
 	/**
 	 * Execute criteria based on the Switcher configuration
@@ -136,5 +138,13 @@ public abstract class SwitcherExecutor {
 
 	public static Map<String, CriteriaResponse> getBypass() {
 		return bypass;
+	}
+
+	public Domain getDomain() {
+		return domain;
+	}
+
+	public void setDomain(Domain domain) {
+		this.domain = domain;
 	}
 }

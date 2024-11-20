@@ -66,6 +66,11 @@ class SwitcherSnapshotAutoUpdateTest {
 		SwitcherContextBase.terminateSnapshotAutoUpdateWorker();
 	}
 
+	@AfterEach
+	void tearDownSnapshotAutoUpdateWorker() {
+		SwitcherContextBase.terminateSnapshotAutoUpdateWorker();
+	}
+
 	static void generateFixture(String environment) {
 		final Snapshot mockedSnapshot = new Snapshot();
 		final Criteria criteria = new Criteria();
@@ -145,6 +150,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		Switchers.configure(ContextBuilder.builder(true)
 				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
+				.apiKey("[API_KEY]")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("generated_mock_default_2")
 				.local(true)
@@ -223,6 +229,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		Switchers.configure(ContextBuilder.builder(true)
 				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
+				.apiKey("[API_KEY]")
 				.snapshotLocation(null)
 				.environment("generated_mock_default_5")
 				.local(true)
@@ -248,6 +255,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		Switchers.configure(ContextBuilder.builder(true)
 				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
+				.apiKey("[API_KEY]")
 				.snapshotLocation(null)
 				.environment("generated_mock_default_6")
 				.local(true)
@@ -279,6 +287,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		Switchers.configure(ContextBuilder.builder(true)
 				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
+				.apiKey("[API_KEY]")
 				.snapshotLocation(null)
 				.environment("generated_mock_default_6")
 				.local(true)

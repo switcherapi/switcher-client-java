@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 
 import static com.github.switcherapi.SwitchersBase.USECASE11;
 import static com.github.switcherapi.client.SwitcherContextBase.getSwitcher;
+import static com.github.switcherapi.client.SwitcherContextValidator.ERR_LOCAL;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherContextBuilderTest {
@@ -50,11 +51,9 @@ class SwitcherContextBuilderTest {
 				.snapshotLocation(null)
 				.local(true));
 
-		SwitchersBase.initializeClient();
-
 		//test
-		Exception exception = assertThrows(SwitcherContextException.class, SwitchersBase::checkSwitchers);
-		assertEquals("Something went wrong: Context has errors - Snapshot not loaded", exception.getMessage());
+		Exception exception = assertThrows(SwitcherContextException.class, SwitchersBase::initializeClient);
+		assertEquals("Something went wrong: Context has errors - " + ERR_LOCAL, exception.getMessage());
 	}
 	
 	@Test
@@ -63,6 +62,7 @@ class SwitcherContextBuilderTest {
 		SwitchersBase.configure(ContextBuilder.builder(true)
 				.contextLocation(SwitchersBase.class.getCanonicalName())
 				.domain("switcher-domain")
+				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.local(true));
 
 		SwitchersBase.initializeClient();

@@ -5,10 +5,8 @@ import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.*;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.service.remote.ClientRemote;
-import com.github.switcherapi.client.service.remote.ClientRemoteService;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
@@ -30,13 +28,11 @@ public class SwitcherLocalService extends SwitcherExecutor {
 
 	private final ClientRemote clientRemote;
 
-	private final ClientLocalService clientLocalService;
+	private final ClientLocal clientLocal;
 	
-	private Domain domain;
-	
-	public SwitcherLocalService() {
-		this.clientRemote = new ClientRemoteService();
-		this.clientLocalService = new ClientLocalService();
+	public SwitcherLocalService(ClientRemote clientRemote, ClientLocal clientLocal) {
+		this.clientRemote = clientRemote;
+		this.clientLocal = clientLocal;
 		this.init();
 	}
 	
@@ -111,7 +107,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 				response = this.clientRemote.executeCriteria(switcher);
 				SwitcherUtils.debug(logger, "[Remote] response: {}", response);
 			} else {
-				response = this.clientLocalService.executeCriteria(switcher, this.domain);
+				response = this.clientLocal.executeCriteria(switcher, this.domain);
 				SwitcherUtils.debug(logger, "[Local] response: {}", response);
 			}
 		} catch (SwitcherKeyNotFoundException e) {
@@ -139,12 +135,8 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	@Override
 	public void checkSwitchers(final Set<String> switchers) {
 		SwitcherUtils.debug(logger, "switchers: {}", switchers);
-
-		if (this.domain == null) {
-			throw new SwitcherContextException("Snapshot not loaded");
-		}
 		
-		final List<String> response = this.clientLocalService.checkSwitchers(switchers, this.domain);
+		final List<String> response = this.clientLocal.checkSwitchers(switchers, this.domain);
 		if (!response.isEmpty()) {
 			throw new SwitchersValidationException(response.toString());
 		}
@@ -155,11 +147,4 @@ public class SwitcherLocalService extends SwitcherExecutor {
 		return domain.getVersion();
 	}
 
-	public Domain getDomain() {
-		return domain;
-	}
-
-	public void setDomain(Domain domain) {
-		this.domain = domain;
-	}
 }

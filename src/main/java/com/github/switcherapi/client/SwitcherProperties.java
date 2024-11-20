@@ -55,6 +55,7 @@ public class SwitcherProperties {
 		setValue(ContextKey.TRUSTSTORE_PATH, SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PATH.getParam(), prop));
 		setValue(ContextKey.TRUSTSTORE_PASSWORD, SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));
 		setValue(ContextKey.TIMEOUT_MS, getTimeoutMsOrDefault(SwitcherUtils.resolveProperties(ContextKey.TIMEOUT_MS.getParam(), prop)));
+		setValue(ContextKey.POOL_CONNECTION_SIZE, SwitcherUtils.resolveProperties(ContextKey.POOL_CONNECTION_SIZE.getParam(), prop));
 	}
 
 	public String getValue(ContextKey contextKey) {

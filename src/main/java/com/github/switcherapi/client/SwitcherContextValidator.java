@@ -18,6 +18,8 @@ class SwitcherContextValidator {
 	public static final String ERR_DOMAIN = "Domain not defined [add: switcher.domain]";
 	public static final String ERR_COMPONENT = "Component not defined [add: switcher.component]";
 	public static final String ERR_CONTEXT = "Context class location not defined [add: switcher.context]";
+	public static final String ERR_LOCAL = "Snapshot location not defined [add: switcher.snapshot.location] " +
+			"or enable auto-load [add: switcher.snapshot.auto]";
 	
 	private SwitcherContextValidator() {}
 
@@ -34,6 +36,8 @@ class SwitcherContextValidator {
 		
 		if (!prop.getBoolean(ContextKey.LOCAL_MODE)) {
 			validateRemote(prop);
+		} else {
+			validateLocal(prop);
 		}
 		
 		validateOptionals(prop);
@@ -73,6 +77,18 @@ class SwitcherContextValidator {
 		
 		if (StringUtils.isBlank(prop.getValue(ContextKey.COMPONENT))) {
 			throw new SwitcherContextException(ERR_COMPONENT);
+		}
+	}
+
+	/**
+	 * Validate context properties required to run local
+	 *
+	 * @param prop Configured properties
+	 */
+	public static void validateLocal(final SwitcherProperties prop) {
+		if (StringUtils.isBlank(prop.getValue(ContextKey.SNAPSHOT_LOCATION)) &&
+				!prop.getBoolean(ContextKey.SNAPSHOT_AUTO_LOAD)) {
+			throw new SwitcherContextException(ERR_LOCAL);
 		}
 	}
 }
