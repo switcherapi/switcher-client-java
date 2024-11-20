@@ -180,10 +180,10 @@ public class ClientWSImpl implements ClientWS {
 					.GET().build(), HttpResponse.BodyHandlers.ofString());
 
 			return response.statusCode() == 200;
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			return false;
 		} catch (Exception e) {
-			if (e instanceof InterruptedException) {
-				Thread.currentThread().interrupt();
-			}
 			return false;
 		}
 	}
