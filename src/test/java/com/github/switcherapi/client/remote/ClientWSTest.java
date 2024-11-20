@@ -41,7 +41,7 @@ class ClientWSTest extends MockWebServerHelper {
     @Test
     void shouldBeAlive() {
         // given
-        ClientWS clientWS = new ClientWSImpl();
+        ClientWS clientWS = ClientWSImpl.build();
         givenResponse(generateTimeOut(100));
 
         // test
@@ -52,7 +52,7 @@ class ClientWSTest extends MockWebServerHelper {
     @Test
     void shouldTimeOut() {
         // given
-        ClientWS clientWS = new ClientWSImpl();
+        ClientWS clientWS = ClientWSImpl.build();
         givenResponse(generateTimeOut(3500));
 
         // test
@@ -68,8 +68,24 @@ class ClientWSTest extends MockWebServerHelper {
 
         Switchers.initializeClient();
 
-        ClientWS clientWS = new ClientWSImpl();
+        ClientWS clientWS = ClientWSImpl.build();
         givenResponse(generateTimeOut(3500));
+
+        // test
+        boolean response = clientWS.isAlive();
+        assertTrue(response);
+    }
+
+    @Test
+    void shouldUseDefaultPoolSize() {
+        // given
+        Switchers.configure(ContextBuilder.builder()
+                        .poolConnectionSize(null));
+
+        Switchers.initializeClient();
+
+        ClientWS clientWS = ClientWSImpl.build();
+        givenResponse(generateTimeOut(100));
 
         // test
         boolean response = clientWS.isAlive();

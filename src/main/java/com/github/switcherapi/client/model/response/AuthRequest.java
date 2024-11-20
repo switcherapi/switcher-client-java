@@ -1,12 +1,9 @@
 package com.github.switcherapi.client.model.response;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 /**
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-@JsonSerialize
 public class AuthRequest {
 
 	private String domain;
