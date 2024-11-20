@@ -16,12 +16,6 @@ import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
  */
 public interface ClientWS {
 
-	int DEFAULT_TIMEOUT = 3000;
-	String HEADER_AUTHORIZATION = "Authorization";
-	String HEADER_APIKEY = "switcher-api-key";
-	String TOKEN_TEXT = "Bearer %s";
-	String[] CONTENT_TYPE = { "Content-Type", "application/json" };
-	
 	/**
 	 * Returns the token to access all available endpoints
 	 */

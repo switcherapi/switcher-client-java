@@ -26,6 +26,12 @@ import java.util.Set;
  * @since 2019-12-24
  */
 public class ClientWSImpl implements ClientWS {
+
+	public static final int DEFAULT_TIMEOUT = 3000;
+	public static final String HEADER_AUTHORIZATION = "Authorization";
+	public static final String HEADER_APIKEY = "switcher-api-key";
+	public static final String TOKEN_TEXT = "Bearer %s";
+	public static final String[] CONTENT_TYPE = { "Content-Type", "application/json" };
 	
 	public static final String QUERY =
 			"{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\", _component: \\\"%s\\\") { " +
@@ -41,13 +47,20 @@ public class ClientWSImpl implements ClientWS {
 
 	private final Gson gson = new Gson();
 	
-	public ClientWSImpl() {
-		timeoutMs = Integer.parseInt(Objects.nonNull(SwitcherContextBase.contextStr(ContextKey.TIMEOUT_MS)) ?
+	public ClientWSImpl(HttpClient client, int timeoutMs) {
+		this.timeoutMs = timeoutMs;
+		this.client = client;
+	}
+
+	public static ClientWS build() {
+		int timeoutMs = Integer.parseInt(Objects.nonNull(SwitcherContextBase.contextStr(ContextKey.TIMEOUT_MS)) ?
 				SwitcherContextBase.contextStr(ContextKey.TIMEOUT_MS) : String.valueOf(DEFAULT_TIMEOUT));
 
-		this.client = ClientWSBuilder.builder()
+		HttpClient httpClient = ClientWSBuilder.builder()
 				.connectTimeout(Duration.ofMillis(timeoutMs))
 				.build();
+
+		return new ClientWSImpl(httpClient, timeoutMs);
 	}
 	
 	@Override
@@ -78,7 +91,7 @@ public class ClientWSImpl implements ClientWS {
 			criteriaResponse.setEntry(switcher.getEntry());
 			return criteriaResponse;
 		} catch (Exception e) {
-			throw new SwitcherRemoteException(url, e);
+			return exceptionHandler(e, url);
 		}
 	}
 	
@@ -106,7 +119,7 @@ public class ClientWSImpl implements ClientWS {
 
 			return Optional.of(gson.fromJson(response.body(), AuthResponse.class));
 		} catch (Exception e) {
-			throw new SwitcherRemoteException(url, e);
+			return exceptionHandler(e, url);
 		}
 	}
 	
@@ -132,7 +145,7 @@ public class ClientWSImpl implements ClientWS {
 
 			return gson.fromJson(response.body(), Snapshot.class);
 		} catch (Exception e) {
-			throw new SwitcherRemoteException(url, e);
+			return exceptionHandler(e, url);
 		}
 	}
 	
@@ -154,7 +167,7 @@ public class ClientWSImpl implements ClientWS {
 
 			return gson.fromJson(response.body(), SnapshotVersionResponse.class);
 		} catch (Exception e) {
-			throw new SwitcherRemoteException(url, e);
+			return exceptionHandler(e, url);
 		}
 	}
 	
@@ -168,6 +181,9 @@ public class ClientWSImpl implements ClientWS {
 
 			return response.statusCode() == 200;
 		} catch (Exception e) {
+			if (e instanceof InterruptedException) {
+				Thread.currentThread().interrupt();
+			}
 			return false;
 		}
 	}
@@ -190,8 +206,15 @@ public class ClientWSImpl implements ClientWS {
 
 			return gson.fromJson(response.body(), SwitchersCheck.class);
 		} catch (Exception e) {
-			throw new SwitcherRemoteException(url, e);
+			return exceptionHandler(e, url);
 		}
+	}
+
+	private <T> T exceptionHandler(Exception e, String url) {
+		if (e instanceof InterruptedException) {
+			Thread.currentThread().interrupt();
+		}
+		throw new SwitcherRemoteException(url, e);
 	}
 
 }

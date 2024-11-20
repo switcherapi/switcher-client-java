@@ -47,7 +47,7 @@ class ClientRemoteTest extends MockWebServerHelper {
 
     @BeforeEach
     void resetSwitcherContextState() {
-        clientRemote = new ClientRemoteService(new ClientWSImpl());
+        clientRemote = new ClientRemoteService(ClientWSImpl.build());
         ((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 
         Switchers.configure(ContextBuilder.builder().timeoutMs(null));
@@ -61,7 +61,6 @@ class ClientRemoteTest extends MockWebServerHelper {
         givenResponse(generateCriteriaResponse("true", false));
 
         SwitcherValidator validatorService = new ValidatorService();
-        ClientRemote clientRemote = new ClientRemoteService(new ClientWSImpl());
         ClientLocal clientLocal = new ClientLocalService(validatorService);
         Switcher switcher = new Switcher("KEY", new SwitcherRemoteService(clientRemote, new SwitcherLocalService(clientRemote, clientLocal)));
 

@@ -34,7 +34,7 @@ class SwitcherLocalServiceTest {
 				.environment("default")
 				.local(true));
 
-		ClientWS clientWS = new ClientWSImpl();
+		ClientWS clientWS = ClientWSImpl.build();
 		SwitcherValidator validatorService = new ValidatorService();
 		service = new SwitcherLocalService(new ClientRemoteService(clientWS), new ClientLocalService(validatorService));
 	}

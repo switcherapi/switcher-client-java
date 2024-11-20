@@ -6,7 +6,6 @@ import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.remote.ClientWS;
 import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.service.SwitcherValidator;
 import com.github.switcherapi.client.service.ValidatorService;
@@ -120,9 +119,8 @@ public abstract class SwitcherContextBase {
 		validateContext();
 		validateSwitcherKeys();
 
-		final ClientWS clientWS = new ClientWSImpl();
 		final SwitcherValidator validatorService = new ValidatorService();
-		final ClientRemote clientRemote = new ClientRemoteService(clientWS);
+		final ClientRemote clientRemote = new ClientRemoteService(ClientWSImpl.build());
 		final ClientLocalService clientLocal = new ClientLocalService(validatorService);
 
 		if (contextBol(ContextKey.LOCAL_MODE)) {
