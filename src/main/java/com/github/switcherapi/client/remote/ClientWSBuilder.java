@@ -10,10 +10,7 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.ws.rs.client.ClientBuilder;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.http.HttpClient;
 import java.security.KeyStore;
-import java.util.Objects;
-import java.util.concurrent.Executors;
 
 public class ClientWSBuilder {
 
@@ -25,18 +22,15 @@ public class ClientWSBuilder {
         throw new IllegalStateException("Utility class");
     }
 
-    public static HttpClient.Builder builder() {
-        int poolSize = Integer.parseInt(Objects.nonNull(SwitcherContextBase.contextStr(ContextKey.POOL_CONNECTION_SIZE)) ?
-                SwitcherContextBase.contextStr(ContextKey.POOL_CONNECTION_SIZE) : "10");
-
+    public static ClientBuilder builder() {
         if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.TRUSTSTORE_PATH))) {
-            return builderSSL(poolSize);
+            return builderSSL();
         }
 
-        return HttpClient.newBuilder().executor(Executors.newFixedThreadPool(poolSize));
+        return ClientBuilder.newBuilder();
     }
 
-    public static HttpClient.Builder builderSSL(int poolSize) {
+    public static ClientBuilder builderSSL() {
         try (InputStream readStream = new FileInputStream(SwitcherContextBase.contextStr(ContextKey.TRUSTSTORE_PATH))) {
             final KeyStore trustStore = KeyStore.getInstance(KEYSTORE_TYPE);
             trustStore.load(readStream, SwitcherContextBase.contextStr(ContextKey.TRUSTSTORE_PASSWORD).toCharArray());
@@ -47,7 +41,7 @@ public class ClientWSBuilder {
             final SSLContext sslContext = SSLContext.getInstance(PROTOCOL);
             sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
 
-            return HttpClient.newBuilder().sslContext(sslContext).executor(Executors.newFixedThreadPool(poolSize));
+            return ClientBuilder.newBuilder().sslContext(sslContext);
         } catch (Exception e) {
             throw new SwitcherException("Error while building SSL context", e);
         }

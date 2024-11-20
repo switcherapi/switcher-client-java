@@ -6,7 +6,7 @@ import com.github.switcherapi.client.exception.SwitcherException;
 import org.junit.jupiter.api.Test;
 
 import javax.net.ssl.SSLContext;
-import java.net.http.HttpClient;
+import javax.ws.rs.client.ClientBuilder;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,18 +21,18 @@ class ClientWSBuilderTest {
                 .truststorePassword(""));
 
         // test
-        HttpClient.Builder clientBuilder = ClientWSBuilder.builder();
+        ClientBuilder clientBuilder = ClientWSBuilder.builder();
         assertNotNull(clientBuilder);
 
-        SSLContext sslContext = clientBuilder.build().sslContext();
+        SSLContext sslContext = clientBuilder.build().getSslContext();
         assertNotNull(sslContext);
-        assertEquals("Default", sslContext.getProtocol());
+        assertEquals("TLS", sslContext.getProtocol());
     }
 
     @Test
     void shouldCreateClientBuilderSSL() {
         // given
-        var truststorePath = Objects.requireNonNull(getClass().getClassLoader()
+        String truststorePath = Objects.requireNonNull(getClass().getClassLoader()
                 .getResource("keystore.jks")).getPath();
 
         SwitcherContextBase.configure(ContextBuilder.builder()
@@ -40,10 +40,10 @@ class ClientWSBuilderTest {
                 .truststorePassword("changeit"));
 
         // test
-        HttpClient.Builder clientBuilder = ClientWSBuilder.builder();
+        ClientBuilder clientBuilder = ClientWSBuilder.builder();
         assertNotNull(clientBuilder);
 
-        SSLContext sslContext = clientBuilder.build().sslContext();
+        SSLContext sslContext = clientBuilder.build().getSslContext();
         assertNotNull(sslContext);
         assertEquals("TLSv1.2", sslContext.getProtocol());
     }
