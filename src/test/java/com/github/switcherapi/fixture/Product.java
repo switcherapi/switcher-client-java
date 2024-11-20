@@ -1,15 +1,11 @@
 package com.github.switcherapi.fixture;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 /**
  * Blueprint class to generate JSON to validate Payload algorithms
  * 
  * @author Roger Floriano (petruki)
  * @since 2022-06-13
  */
-@JsonInclude(Include.NON_NULL)
 public class Product {
 	
 	public String name;

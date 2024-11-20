@@ -1,11 +1,17 @@
 package com.github.switcherapi.client;
 
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import com.github.switcherapi.client.remote.ClientWS;
+import com.github.switcherapi.client.remote.ClientWSImpl;
+import com.github.switcherapi.client.service.SwitcherValidator;
+import com.github.switcherapi.client.service.ValidatorService;
+import com.github.switcherapi.client.service.local.ClientLocalService;
+import com.github.switcherapi.client.service.remote.ClientRemoteService;
 import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.internal.guava.Sets;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -69,12 +75,14 @@ class SwitcherLocal3Test {
 	@Test
 	void localShouldCheckSwitchers() {
 		//given
-		Set<String> switchers = Sets.newHashSet();
+		Set<String> switchers = new HashSet<>();
 		switchers.add(Switchers.USECASE20);
 		switchers.add(Switchers.USECASE17);
 		switchers.add(Switchers.USECASE16);
-		
-		SwitcherLocalService switcherLocal = new SwitcherLocalService();
+
+		ClientWS clientWS = ClientWSImpl.build();
+		SwitcherValidator validatorService = new ValidatorService();
+		SwitcherLocalService switcherLocal = new SwitcherLocalService(new ClientRemoteService(clientWS), new ClientLocalService(validatorService));
 		switcherLocal.init();
 		
 		//test
@@ -84,10 +92,12 @@ class SwitcherLocal3Test {
 	@Test
 	void localShouldCheckSwitchers_notFound() {
 		//given
-		Set<String> notFound = Sets.newHashSet();
+		Set<String> notFound = new HashSet<>();
 		notFound.add("NOT_FOUND_1");
-		
-		SwitcherLocalService switcherLocal = new SwitcherLocalService();
+
+		ClientWS clientWS = ClientWSImpl.build();
+		SwitcherValidator validatorService = new ValidatorService();
+		SwitcherLocalService switcherLocal = new SwitcherLocalService(new ClientRemoteService(clientWS), new ClientLocalService(validatorService));
 		switcherLocal.init();
 		
 		//test

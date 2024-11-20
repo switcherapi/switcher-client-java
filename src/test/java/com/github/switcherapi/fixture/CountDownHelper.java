@@ -13,10 +13,10 @@ public class CountDownHelper {
     public static void wait(int seconds) {
         try {
             CountDownLatch waiter = new CountDownLatch(1);
-            boolean finished = waiter.await(seconds, TimeUnit.SECONDS);
+            boolean await = waiter.await(seconds, TimeUnit.SECONDS);
 
-            if (!finished) {
-                logger.warn("Timeout reached");
+            if (!await) {
+                waiter.countDown();
             }
         } catch (InterruptedException e) {
             logger.error(e.getMessage(), e);

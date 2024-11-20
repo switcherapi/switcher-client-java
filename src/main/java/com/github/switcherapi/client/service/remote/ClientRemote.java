@@ -14,11 +14,38 @@ import java.util.Set;
  */
 public interface ClientRemote {
 
+    /**
+     * Execute the criteria validation based on the configuration tree. It starts
+     * validating from the top of the node (Domain) ascending to the lower level
+     * (Strategy)
+     *
+     * @param switcher Configuration switcher to be validated
+     * @return The criteria result
+     * @throws SwitcherException If encountered either invalid input or misconfiguration
+     */
     CriteriaResponse executeCriteria(final Switcher switcher);
 
+    /**
+     * Resolve the snapshot from the remote server
+     *
+     * @return The snapshot
+     * @throws SwitcherException If encountered either invalid input or misconfiguration
+     */
     Snapshot resolveSnapshot() throws SwitcherException;
 
+    /**
+     * Check if the snapshot version is the same as the one in the remote server
+     *
+     * @param version The version to be checked
+     * @return True if the version is the same
+     */
     boolean checkSnapshotVersion(final long version);
 
+    /**
+     * Check if the switchers are valid and if they are properly annotated with @SwitcherKey
+     *
+     * @param switchers List of switchers to be checked
+     * @return List of invalid switchers
+     */
     SwitchersCheck checkSwitchers(final Set<String> switchers);
 }

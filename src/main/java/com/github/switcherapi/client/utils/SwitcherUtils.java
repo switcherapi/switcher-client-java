@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.glassfish.jersey.internal.guava.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,11 +26,9 @@ public class SwitcherUtils {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SwitcherUtils.class);
 	
-	private static final String LOG_DATE = "date: {}";
-	
 	private static final String LOG_TME = "time: {}";
-	
-	private static final String LOG_ADDVALUE = "addValue: {}";
+
+	private static final String LOG_DATE_ADD_VALUE = "date: {} addValue: {}";
 	
 	/**
 	 * [0] = s (seconds) [1] = m (minutes) [2] = h (hours) [3] = d (days)
@@ -48,8 +45,7 @@ public class SwitcherUtils {
 	
 	public static Date addTimeDuration(final String addValue, final Date date) 
 			throws SwitcherInvalidDateTimeArgumentException {
-		SwitcherUtils.debug(logger, LOG_ADDVALUE, addValue);
-		SwitcherUtils.debug(logger, LOG_DATE, date);
+		SwitcherUtils.debug(logger, LOG_DATE_ADD_VALUE, date, addValue);
 		
 		if (addValue.endsWith(DURATION[0])) {
 			return DateUtils.addSeconds(date, Integer.parseInt(addValue.replace(DURATION[0], StringUtils.EMPTY)));
@@ -80,7 +76,7 @@ public class SwitcherUtils {
 		final JsonElement parser = JsonParser.parseString(jsonStr);
 		final JsonObject jsonObject = parser.getAsJsonObject();
 		
-		final Set<String> keys = Sets.newHashSet();
+		final Set<String> keys = new java.util.HashSet<>();
 		for (Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 			String key;
 			if (prevKey == null) {

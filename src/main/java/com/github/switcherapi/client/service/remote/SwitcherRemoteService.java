@@ -8,7 +8,6 @@ import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
-import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,13 +24,13 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SwitcherRemoteService.class);
 	
-	private final SwitcherLocalService switcherLocal;
+	private final SwitcherExecutor switcherLocal;
 
 	private final ClientRemote clientRemote;
 	
-	public SwitcherRemoteService() {
-		this.switcherLocal = new SwitcherLocalService();
-		this.clientRemote = new ClientRemoteService();
+	public SwitcherRemoteService(ClientRemote clientRemote, SwitcherExecutor switcherExecutor) {
+		this.clientRemote = clientRemote;
+		this.switcherLocal = switcherExecutor;
 	}
 
 	@Override

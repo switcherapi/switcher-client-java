@@ -136,10 +136,6 @@ public final class Switcher extends SwitcherBuilder {
 						this.entry.toArray(new Entry[0]) : null);
 	}
 
-	public long getDelay() {
-		return super.delay;
-	}
-
 	public boolean isBypassMetrics() {
 		return bypassMetrics;
 	}

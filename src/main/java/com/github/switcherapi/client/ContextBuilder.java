@@ -154,7 +154,7 @@ public class ContextBuilder {
 	}
 
 	/**
-	 * @param retryAfter Enable contigency given the time for the client to retry - e.g. 5s (s: seconds - m: minutes - h: hours)
+	 * @param retryAfter Enable contingency given the time for the client to retry - e.g. 5s (s: seconds - m: minutes - h: hours)
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder silentMode(String retryAfter) {
@@ -200,6 +200,15 @@ public class ContextBuilder {
 	 */
     public ContextBuilder timeoutMs(String timeoutMs) {
 		properties.setValue(ContextKey.TIMEOUT_MS, properties.getTimeoutMsOrDefault(timeoutMs));
+		return this;
+	}
+
+	/**
+	 * @param poolSize Number of threads for the pool connection - 10 default value
+	 * @return ContextBuilder
+	 */
+	public ContextBuilder poolConnectionSize(String poolSize) {
+		properties.setValue(ContextKey.POOL_CONNECTION_SIZE, poolSize);
 		return this;
 	}
 }

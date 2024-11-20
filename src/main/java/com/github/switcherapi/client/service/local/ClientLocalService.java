@@ -9,7 +9,7 @@ import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Group;
 import com.github.switcherapi.client.model.criteria.Strategy;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
-import com.github.switcherapi.client.service.ValidatorService;
+import com.github.switcherapi.client.service.SwitcherValidator;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ import java.util.Set;
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class ClientLocalService {
+public class ClientLocalService implements ClientLocal {
 
 	private static final Logger logger = LoggerFactory.getLogger(ClientLocalService.class);
 
@@ -38,14 +38,15 @@ public class ClientLocalService {
 	private static final String STRATEGY_FAIL_PATTERN = "Strategy %s does not agree";
 	private static final String STRATEGY_FAIL_NO_INPUT_PATTERN = "Strategy %s did not receive any input";
 
-	private static final String LOG_PROCESS_OP_TEMPLATE = "processOperation: configStrategies: %s";
+	private static final String LOG_PROCESS_OP_TEMPLATE = "processOperation: configStrategies: {}";
 
-	private final ValidatorService validatorService;
+	private final SwitcherValidator validatorService;
 
-	public ClientLocalService() {
-		this.validatorService = new ValidatorService();
+	public ClientLocalService(SwitcherValidator validatorService) {
+		this.validatorService = validatorService;
 	}
 
+	@Override
 	public List<String> checkSwitchers(final Set<String> switchers, final Domain domain) {
 		List<String> notFound = new ArrayList<>();
 
@@ -59,16 +60,7 @@ public class ClientLocalService {
 		return notFound;
 	}
 
-	/**
-	 * Execute the criteria validation based on the configuration tree. It starts
-	 * validating from the top of the node (Domain) ascending to the lower level
-	 * (Strategy)
-	 * 
-	 * @param switcher Configuration switcher to be validated
-	 * @param domain   Top level of the configuration tree
-	 * @return The criteria result
-	 * @throws SwitcherException If encountered either invalid input or misconfiguration
-	 */
+	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher, final Domain domain) {
 		if (!domain.isActivated()) {
 			return CriteriaResponse.buildResultFail(DISABLED_DOMAIN, switcher);

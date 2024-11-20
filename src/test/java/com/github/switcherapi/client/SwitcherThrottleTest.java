@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SwitcherThrottleTest extends MockWebServerHelper {
@@ -47,13 +48,12 @@ class SwitcherThrottleTest extends MockWebServerHelper {
 	void shouldReturnTrue_withThrottle() {
 		Switchers.initializeClient();
 
-		// First call
+		// Throttled call
 		givenResponse(generateMockAuth(10)); //auth
 		givenResponse(generateCriteriaResponse("true", false)); //criteria
 		
-		// Async call
-		givenResponse(generateMockAuth(10)); //auth
-		givenResponse(generateCriteriaResponse("true", false)); //criteria
+		// After throttle
+		givenResponse(generateCriteriaResponse("false", false)); //criteria
 		
 		//test
 		Switcher switcher = Switchers
@@ -61,16 +61,12 @@ class SwitcherThrottleTest extends MockWebServerHelper {
 				.throttle(1000)
 				.build();
 		
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 100; i++) {
 			assertTrue(switcher.isItOn());
 		}
-		
-		// Async call
-		givenResponse(generateMockAuth(10)); //auth
-		givenResponse(generateCriteriaResponse("true", false)); //criteria
 
 		CountDownHelper.wait(1);
-		assertTrue(switcher.isItOn());
+		assertFalse(switcher.isItOn());
 	}
 
 }

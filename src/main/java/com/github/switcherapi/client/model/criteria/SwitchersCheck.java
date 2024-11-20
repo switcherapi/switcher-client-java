@@ -3,7 +3,6 @@ package com.github.switcherapi.client.model.criteria;
 import java.util.Arrays;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.github.switcherapi.client.remote.ClientWS;
 
 /**
@@ -22,7 +21,6 @@ public class SwitchersCheck {
 	/**
 	 * Response field
 	 */
-	@JsonAlias("not_found")
 	private String[] notFound;
 	
 	public SwitchersCheck() {}

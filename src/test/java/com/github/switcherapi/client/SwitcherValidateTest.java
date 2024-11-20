@@ -4,13 +4,13 @@ import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
-import org.glassfish.jersey.internal.guava.Sets;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,7 +53,7 @@ class SwitcherValidateTest extends MockWebServerHelper {
 	@Test
 	void shouldValidateSwitchers() {
 		//given
-		final Set<String> notFound = Sets.newHashSet();
+		final Set<String> notFound = new HashSet<>();
 		
 		//auth
 		givenResponse(generateMockAuth(10));
@@ -68,7 +68,7 @@ class SwitcherValidateTest extends MockWebServerHelper {
 	@Test
 	void shouldValidateSwitchers_notConfiguredSwitcherBeingUsed() {
 		//given
-		final Set<String> notFound = Sets.newHashSet();
+		final Set<String> notFound = new HashSet<>();
 		notFound.add("NOT_FOUND_1");
 		
 		//auth
