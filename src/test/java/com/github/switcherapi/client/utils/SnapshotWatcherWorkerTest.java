@@ -23,7 +23,6 @@ class SnapshotWatcherWorkerTest {
 			.snapshotLocation(SNAPSHOTS_LOCAL)
 			.environment("default")
 			.silentMode(null)
-			.regexTimeout(null)
 			.local(true));
 
 		SwitchersBase.initializeClient();

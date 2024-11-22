@@ -5,7 +5,6 @@ import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Defines minimal contract for Switcher implementations for:
@@ -88,11 +87,11 @@ public interface SwitcherInterface {
 	CriteriaResponse executeCriteria();
 
 	/**
-	 * Get the history of executions.
+	 * Update the history of executions.
 	 *
-	 * @return the history of executions
+	 * @param response the response to be updated
 	 */
-	Set<CriteriaResponse> getHistoryExecution();
+	void updateHistoryExecution(CriteriaResponse response);
 
 	/**
 	 * Get the key of the switcher.

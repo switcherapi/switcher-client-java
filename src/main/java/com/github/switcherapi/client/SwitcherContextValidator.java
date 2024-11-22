@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
  */
 class SwitcherContextValidator {
 
-	public static final String ERR_FORMAT = "Invalid parameter format for [%s]. Expected %s.";
 	public static final String ERR_URL = "URL not defined [add: switcher.url]";
 	public static final String ERR_API = "API Key not defined [add: switcher.apikey]";
 	public static final String ERR_DOMAIN = "Domain not defined [add: switcher.domain]";
@@ -38,22 +37,6 @@ class SwitcherContextValidator {
 			validateRemote(prop);
 		} else {
 			validateLocal(prop);
-		}
-		
-		validateOptionals(prop);
-	}
-
-	/**
-	 * Validate optional context arguments
-	 * 
-	 * @param prop Configured properties
-	 */
-	public static void validateOptionals(final SwitcherProperties prop) {
-		try {
-			Integer.parseInt(prop.getValue(ContextKey.REGEX_TIMEOUT));
-		} catch (NumberFormatException e) {
-			throw new SwitcherContextException(
-					String.format(ERR_FORMAT, ContextKey.REGEX_TIMEOUT.getParam(), Integer.class));
 		}
 	}
 
