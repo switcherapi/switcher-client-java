@@ -98,7 +98,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder environment(String environment) {
-		properties.setValue(ContextKey.ENVIRONMENT, properties.getEnvironmentOrDefault(environment));
+		properties.setValue(ContextKey.ENVIRONMENT, properties.getValueDefault(environment, SwitcherProperties.DEFAULT_ENV));
 		return this;
 	}
 
@@ -130,8 +130,8 @@ public class ContextBuilder {
 	 * @param regexTimeout Time in ms given to Timed Match Worker used for local Regex (ReDoS safety mechanism) - 3000 default value
 	 * @return ContextBuilder
 	 */
-	public ContextBuilder regexTimeout(String regexTimeout) {
-		properties.setValue(ContextKey.REGEX_TIMEOUT, properties.getRegexTimeoutOrDefault(regexTimeout));
+	public ContextBuilder regexTimeout(int regexTimeout) {
+		properties.setValue(ContextKey.REGEX_TIMEOUT, regexTimeout);
 		return this;
 	}
 
@@ -198,8 +198,8 @@ public class ContextBuilder {
 	 * @param timeoutMs Time in ms given to the API to respond - 3000 default value
 	 * @return ContextBuilder
 	 */
-    public ContextBuilder timeoutMs(String timeoutMs) {
-		properties.setValue(ContextKey.TIMEOUT_MS, properties.getTimeoutMsOrDefault(timeoutMs));
+    public ContextBuilder timeoutMs(int timeoutMs) {
+		properties.setValue(ContextKey.TIMEOUT_MS, timeoutMs);
 		return this;
 	}
 
@@ -207,7 +207,7 @@ public class ContextBuilder {
 	 * @param poolSize Number of threads for the pool connection - 10 default value
 	 * @return ContextBuilder
 	 */
-	public ContextBuilder poolConnectionSize(String poolSize) {
+	public ContextBuilder poolConnectionSize(int poolSize) {
 		properties.setValue(ContextKey.POOL_CONNECTION_SIZE, poolSize);
 		return this;
 	}

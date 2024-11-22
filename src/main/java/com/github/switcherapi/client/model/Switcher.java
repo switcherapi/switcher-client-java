@@ -41,6 +41,7 @@ public final class Switcher extends SwitcherBuilder {
 		super(context);
 		this.switcherKey = switcherKey;
 		this.historyExecution = new HashSet<>();
+		this.entry = new ArrayList<>();
 	}
 
 	@Override
@@ -50,16 +51,12 @@ public final class Switcher extends SwitcherBuilder {
 	
 	@Override
 	public Switcher prepareEntry(final List<Entry> entry) {
-		this.entry = entry;
+		this.entry = Optional.ofNullable(entry).orElse(new ArrayList<>());
 		return this;
 	}
 	
 	@Override
 	public Switcher prepareEntry(final Entry entry, final boolean add) {
-		if (this.entry == null) {
-			this.entry = new ArrayList<>();
-		}
-
 		if (!add) {
 			this.entry.clear();
 		}
@@ -101,7 +98,7 @@ public final class Switcher extends SwitcherBuilder {
 		}
 
 		final CriteriaResponse response = this.context.executeCriteria(this);
-		this.historyExecution.add(response);
+		this.updateHistoryExecution(response);
 		return response;
 	}
 
@@ -111,8 +108,11 @@ public final class Switcher extends SwitcherBuilder {
 	}
 
 	@Override
-	public synchronized Set<CriteriaResponse> getHistoryExecution() {
-		return this.historyExecution;
+	public void updateHistoryExecution(final CriteriaResponse response) {
+		this.historyExecution.removeIf(item ->
+				this.switcherKey.equals(item.getSwitcherKey()) && this.entry.equals(item.getEntry()));
+
+		this.historyExecution.add(response);
 	}
 
 	@Override

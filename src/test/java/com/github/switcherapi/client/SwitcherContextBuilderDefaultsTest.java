@@ -18,21 +18,14 @@ class SwitcherContextBuilderDefaultsTest {
     }
 
     @Test
-    void shouldLoadDefault_regexTimeout() {
+    void shouldLoadDefaults() {
         //given
-        SwitchersBase.configure(ContextBuilder.builder(true).regexTimeout(""));
+        SwitchersBase.configure(ContextBuilder.builder(true));
 
         //test
-        assertEquals(SwitcherProperties.DEFAULT_REGEX_TIMEOUT, SwitchersBase.contextStr(ContextKey.REGEX_TIMEOUT));
-    }
-
-    @Test
-    void shouldLoadDefault_timeoutMs() {
-        //given
-        SwitchersBase.configure(ContextBuilder.builder(true).timeoutMs(""));
-
-        //test
-        assertEquals(SwitcherProperties.DEFAULT_TIMEOUT_MS, SwitchersBase.contextStr(ContextKey.TIMEOUT_MS));
+        assertEquals(SwitcherProperties.DEFAULT_REGEX_TIMEOUT, SwitchersBase.contextInt(ContextKey.REGEX_TIMEOUT));
+        assertEquals(SwitcherProperties.DEFAULT_TIMEOUT_MS, SwitchersBase.contextInt(ContextKey.TIMEOUT_MS));
+        assertEquals(SwitcherProperties.DEFAULT_ENV, SwitchersBase.contextStr(ContextKey.ENVIRONMENT));
     }
 
 }

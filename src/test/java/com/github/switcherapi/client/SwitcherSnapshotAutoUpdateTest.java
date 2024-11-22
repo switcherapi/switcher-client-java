@@ -4,13 +4,9 @@ import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.model.criteria.Criteria;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Snapshot;
-import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.utils.SnapshotLoader;
-import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.github.switcherapi.fixture.CountDownHelper;
-import com.google.gson.Gson;
-import mockwebserver3.MockResponse;
-import mockwebserver3.MockWebServer;
+import com.github.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
@@ -18,17 +14,14 @@ import org.junit.jupiter.api.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class SwitcherSnapshotAutoUpdateTest {
+class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/update";
 	private static final Domain DOMAIN_OUTDATED = SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/default_outdated.json");
-
-	private static MockWebServer mockBackEnd;
 
 	@BeforeAll
 	static void setup() throws IOException {
@@ -40,35 +33,28 @@ class SwitcherSnapshotAutoUpdateTest {
 		generateFixture("generated_mock_default_3");
 		generateFixture("generated_mock_default_4");
 
-        mockBackEnd = new MockWebServer();
-        mockBackEnd.start();
-		((QueueDispatcher) mockBackEnd.getDispatcher()).setFailFast(true);
-
+        setupMockServer();
         Switchers.loadProperties();
     }
 
 	@AfterAll
 	static void tearDown() throws IOException {
-        mockBackEnd.shutdown();
+		tearDownMockServer();
 
         //clean generated outputs
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_2.json"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_3.json"));
 		Files.deleteIfExists(Paths.get(SNAPSHOTS_LOCAL + "/generated_mock_default_4.json"));
 
-		CountDownHelper.wait(10);
 		SwitcherContextBase.terminateSnapshotAutoUpdateWorker();
     }
 
 	@BeforeEach
-	void resetSwitcherContextState() {
+	void restoreStubs() {
 		((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 		SwitcherContextBase.terminateSnapshotAutoUpdateWorker();
-	}
 
-	@AfterEach
-	void tearDownSnapshotAutoUpdateWorker() {
-		SwitcherContextBase.terminateSnapshotAutoUpdateWorker();
+		CountDownHelper.wait(1);
 	}
 
 	static void generateFixture(String environment) {
@@ -80,64 +66,17 @@ class SwitcherSnapshotAutoUpdateTest {
 		SnapshotLoader.saveSnapshot(mockedSnapshot, SNAPSHOTS_LOCAL, environment);
 	}
 
-	/**
-	 * @return Generated mock /auth response
-	 * @see ClientWSImpl#auth()
-	 */
-	private MockResponse generateMockAuth() {
-		MockResponse.Builder builder = new MockResponse.Builder();
-		builder.body(String.format("{ \"token\": \"%s\", \"exp\": \"%s\" }",
-				"mocked_token", SwitcherUtils.addTimeDuration(60 + "s", new Date()).getTime()/1000));
-		builder.addHeader("Content-Type", "application/json");
-		return builder.build();
-	}
-
-	/**
-	 * @see ClientWSImpl#checkSnapshotVersion(long, String)
-	 *
-	 * @param status is true when snapshot version is updated
-	 * @return Generated mock /criteria/snapshot_check response
-	 */
-	private MockResponse generateCheckSnapshotVersionResponse(String status) {
-		MockResponse.Builder builder = new MockResponse.Builder();
-		builder.body(String.format("{ \"status\": \"%s\" }", status));
-		builder.addHeader("Content-Type", "application/json");
-		return builder.build();
-	}
-
-	/**
-	 * @see ClientWSImpl#resolveSnapshot(String)
-	 *
-	 * @return Generated mock /graphql response based on src/test/resources/default.json
-	 */
-	private MockResponse generateSnapshotResponse(String fromFile) {
-		final Snapshot mockedSnapshot = new Snapshot();
-		final Criteria criteria = new Criteria();
-		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/" + fromFile));
-		mockedSnapshot.setData(criteria);
-
-		Gson gson = new Gson();
-		MockResponse.Builder builder = new MockResponse.Builder();
-		builder.body(gson.toJson(mockedSnapshot));
-		builder.addHeader("Content-Type", "application/json");
-		return builder.build();
-	}
-
 	private void givenSnapshotUpdateResponse(boolean isUpdated) {
 		//auth
-		givenResponse(generateMockAuth());
+		givenResponse(generateMockAuth(10));
 
 		//criteria/snapshot_check
 		givenResponse(generateCheckSnapshotVersionResponse(Boolean.toString(isUpdated)));
 
 		if (!isUpdated) {
 			//graphql
-			givenResponse(generateSnapshotResponse("default.json"));
+			givenResponse(generateSnapshotResponse("default.json", SNAPSHOTS_LOCAL));
 		}
-	}
-
-	private void givenResponse(MockResponse response) {
-		((QueueDispatcher) mockBackEnd.getDispatcher()).enqueueResponse(response);
 	}
 
 	@Test
@@ -202,6 +141,7 @@ class SwitcherSnapshotAutoUpdateTest {
 		Switchers.configure(ContextBuilder.builder(true)
 				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
+				.apiKey("[API_KEY]")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("generated_mock_default_4")
 				.local(true)
@@ -220,17 +160,16 @@ class SwitcherSnapshotAutoUpdateTest {
 	@Order(4)
 	void shouldUpdateSnapshot_remote_inMemory() {
 		//given
-		givenResponse(generateMockAuth()); //auth
-		givenResponse(generateSnapshotResponse("default_outdated.json")); //graphql
+		givenResponse(generateMockAuth(10)); //auth
+		givenResponse(generateSnapshotResponse("default_outdated.json", SNAPSHOTS_LOCAL)); //graphql
 		givenResponse(generateCheckSnapshotVersionResponse(Boolean.toString(false))); //criteria/snapshot_check
-		givenResponse(generateSnapshotResponse("default.json")); //graphql
+		givenResponse(generateSnapshotResponse("default.json", SNAPSHOTS_LOCAL)); //graphql
 
 		//that
 		Switchers.configure(ContextBuilder.builder(true)
 				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.apiKey("[API_KEY]")
-				.snapshotLocation(null)
 				.environment("generated_mock_default_5")
 				.local(true)
 				.snapshotAutoLoad(true)
@@ -248,15 +187,14 @@ class SwitcherSnapshotAutoUpdateTest {
 	@Order(5)
 	void shouldNotKillThread_whenAPI_wentLocal() {
 		//given
-		givenResponse(generateMockAuth()); //auth
-		givenResponse(generateSnapshotResponse("default_outdated.json")); //graphql
+		givenResponse(generateMockAuth(10)); //auth
+		givenResponse(generateSnapshotResponse("default_outdated.json", SNAPSHOTS_LOCAL)); //graphql
 
 		//that
 		Switchers.configure(ContextBuilder.builder(true)
 				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.apiKey("[API_KEY]")
-				.snapshotLocation(null)
 				.environment("generated_mock_default_6")
 				.local(true)
 				.snapshotAutoLoad(true)
@@ -269,7 +207,7 @@ class SwitcherSnapshotAutoUpdateTest {
 
 		//given - API is remote again
 		givenResponse(generateCheckSnapshotVersionResponse(Boolean.toString(false))); //criteria/snapshot_check
-		givenResponse(generateSnapshotResponse("default.json")); //graphql
+		givenResponse(generateSnapshotResponse("default.json", SNAPSHOTS_LOCAL)); //graphql
 
 		//test
 		CountDownHelper.wait(2);
@@ -280,15 +218,14 @@ class SwitcherSnapshotAutoUpdateTest {
 	@Order(6)
 	void shouldPreventSnapshotAutoUpdateToStart_whenAlreadySetup() {
 		//given
-		givenResponse(generateMockAuth()); //auth
-		givenResponse(generateSnapshotResponse("default.json")); //graphql
+		givenResponse(generateMockAuth(10)); //auth
+		givenResponse(generateSnapshotResponse("default.json", SNAPSHOTS_LOCAL)); //graphql
 
 		//that
 		Switchers.configure(ContextBuilder.builder(true)
 				.contextLocation(Switchers.class.getCanonicalName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.apiKey("[API_KEY]")
-				.snapshotLocation(null)
 				.environment("generated_mock_default_6")
 				.local(true)
 				.snapshotAutoLoad(true)
