@@ -85,12 +85,12 @@ public enum ContextKey {
 	TRUSTSTORE_PASSWORD("switcher.truststore.password"),
 
 	/**
-	 * (Number) Defines the timeout in ms for the Remote client.
+	 * (Number) Defines the timeout in ms for the Remote client (default is 3000).
 	 */
 	TIMEOUT_MS("switcher.timeout"),
 
 	/**
-	 * (Number) Defines a fixed number of threads for the pool connection (default is 10).
+	 * (Number) Defines a fixed number of threads for the pool connection (default is 2).
 	 */
 	POOL_CONNECTION_SIZE("switcher.poolsize");
 	

@@ -11,8 +11,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.http.HttpClient;
 import java.security.KeyStore;
-import java.util.Objects;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 
 public class ClientWSBuilder {
 
@@ -24,18 +23,15 @@ public class ClientWSBuilder {
         throw new IllegalStateException("Utility class");
     }
 
-    public static HttpClient.Builder builder() {
-        int poolSize = Integer.parseInt(Objects.nonNull(SwitcherContextBase.contextStr(ContextKey.POOL_CONNECTION_SIZE)) ?
-                SwitcherContextBase.contextStr(ContextKey.POOL_CONNECTION_SIZE) : "10");
-
+    public static HttpClient.Builder builder(final ExecutorService executorService) {
         if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.TRUSTSTORE_PATH))) {
-            return builderSSL(poolSize);
+            return builderSSL(executorService);
         }
 
-        return HttpClient.newBuilder().executor(Executors.newFixedThreadPool(poolSize));
+        return HttpClient.newBuilder().executor(executorService);
     }
 
-    public static HttpClient.Builder builderSSL(int poolSize) {
+    private static HttpClient.Builder builderSSL(final ExecutorService executorService) {
         try (InputStream readStream = new FileInputStream(SwitcherContextBase.contextStr(ContextKey.TRUSTSTORE_PATH))) {
             final KeyStore trustStore = KeyStore.getInstance(KEYSTORE_TYPE);
             trustStore.load(readStream, SwitcherContextBase.contextStr(ContextKey.TRUSTSTORE_PASSWORD).toCharArray());
@@ -46,7 +42,7 @@ public class ClientWSBuilder {
             final SSLContext sslContext = SSLContext.getInstance(PROTOCOL);
             sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
 
-            return HttpClient.newBuilder().sslContext(sslContext).executor(Executors.newFixedThreadPool(poolSize));
+            return HttpClient.newBuilder().sslContext(sslContext).executor(executorService);
         } catch (Exception e) {
             throw new SwitcherException("Error while building SSL context", e);
         }

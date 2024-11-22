@@ -78,7 +78,7 @@ switcher.silent -> Enable contigency given the time for the client to retry - e.
 switcher.truststore.path -> Path to the truststore file
 switcher.truststore.password -> Truststore password
 switcher.timeout -> Time in ms given to the API to respond - 3000 default value
-switcher.poolsize -> Number of threads used to execute the API - 10 default value
+switcher.poolsize -> Number of threads used to execute the API - 2 default value
 
 (Java 8 applications only)
 switcher.regextimeout -> Time in ms given to Timed Match Worker used for local Regex (ReDoS safety mechanism) - 3000 default value

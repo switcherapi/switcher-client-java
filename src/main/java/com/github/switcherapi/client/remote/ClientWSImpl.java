@@ -17,29 +17,17 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+
+import static com.github.switcherapi.client.remote.Constants.*;
 
 /**
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
 public class ClientWSImpl implements ClientWS {
-
-	public static final int DEFAULT_TIMEOUT = 3000;
-	public static final String HEADER_AUTHORIZATION = "Authorization";
-	public static final String HEADER_APIKEY = "switcher-api-key";
-	public static final String TOKEN_TEXT = "Bearer %s";
-	public static final String[] CONTENT_TYPE = { "Content-Type", "application/json" };
-	
-	public static final String QUERY =
-			"{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\", _component: \\\"%s\\\") { " +
-			"name version description activated " +
-			"group { name description activated " +
-			"config { key description activated " +
-			"strategies { strategy activated operation values } " +
-			"components } } } }\"}";
 	
 	private final HttpClient client;
 
@@ -52,11 +40,8 @@ public class ClientWSImpl implements ClientWS {
 		this.client = client;
 	}
 
-	public static ClientWS build() {
-		int timeoutMs = Integer.parseInt(Objects.nonNull(SwitcherContextBase.contextStr(ContextKey.TIMEOUT_MS)) ?
-				SwitcherContextBase.contextStr(ContextKey.TIMEOUT_MS) : String.valueOf(DEFAULT_TIMEOUT));
-
-		HttpClient httpClient = ClientWSBuilder.builder()
+	public static ClientWS build(final ExecutorService executorService, int timeoutMs) {
+		final HttpClient httpClient = ClientWSBuilder.builder(executorService)
 				.connectTimeout(Duration.ofMillis(timeoutMs))
 				.build();
 

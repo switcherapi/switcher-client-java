@@ -41,7 +41,7 @@ class SwitcherForceResolveTest extends MockWebServerHelper {
     }
 	
 	@BeforeEach
-	void resetSwitcherContextState() {
+	void restoreStubs() {
 		((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 	}
 

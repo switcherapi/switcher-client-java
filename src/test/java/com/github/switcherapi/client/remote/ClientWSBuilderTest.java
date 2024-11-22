@@ -3,15 +3,31 @@ package com.github.switcherapi.client.remote;
 import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.exception.SwitcherException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.net.ssl.SSLContext;
 import java.net.http.HttpClient;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ClientWSBuilderTest {
+
+    private static ExecutorService executorService;
+
+    @BeforeAll
+    static void setup() {
+        executorService = Executors.newSingleThreadExecutor();
+    }
+
+    @AfterAll
+    static void tearDown() {
+        executorService.shutdown();
+    }
 
     @Test
     void shouldCreateClientBuilder() {
@@ -21,7 +37,7 @@ class ClientWSBuilderTest {
                 .truststorePassword(""));
 
         // test
-        HttpClient.Builder clientBuilder = ClientWSBuilder.builder();
+        HttpClient.Builder clientBuilder = ClientWSBuilder.builder(executorService);
         assertNotNull(clientBuilder);
 
         SSLContext sslContext = clientBuilder.build().sslContext();
@@ -40,7 +56,7 @@ class ClientWSBuilderTest {
                 .truststorePassword("changeit"));
 
         // test
-        HttpClient.Builder clientBuilder = ClientWSBuilder.builder();
+        HttpClient.Builder clientBuilder = ClientWSBuilder.builder(executorService);
         assertNotNull(clientBuilder);
 
         SSLContext sslContext = clientBuilder.build().sslContext();
@@ -59,7 +75,7 @@ class ClientWSBuilderTest {
                 .truststorePassword("INVALID"));
 
         // test
-        assertThrows(SwitcherException.class, ClientWSBuilder::builder);
+        assertThrows(SwitcherException.class, () -> ClientWSBuilder.builder(executorService));
     }
 
     @Test
@@ -70,6 +86,6 @@ class ClientWSBuilderTest {
                 .truststorePassword("changeit"));
 
         // test
-        assertThrows(SwitcherException.class, ClientWSBuilder::builder);
+        assertThrows(SwitcherException.class, () -> ClientWSBuilder.builder(executorService));
     }
 }

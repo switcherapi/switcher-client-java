@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
 
-import static com.github.switcherapi.SwitchersBase.USECASE11;
-import static com.github.switcherapi.client.SwitcherContextBase.getSwitcher;
+import static com.github.switcherapi.SwitchersBase.*;
 import static com.github.switcherapi.client.SwitcherContextValidator.ERR_LOCAL;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +20,7 @@ class SwitcherContextBuilderTest {
 	@Test
 	void shouldReturnSuccess() {
 		//given
-		SwitchersBase.configure(ContextBuilder.builder(true)
+		configure(ContextBuilder.builder(true)
 				.contextLocation(SwitchersBase.class.getCanonicalName())
 				.url("http://localhost:3000")
 				.apiKey("API_KEY")
@@ -31,8 +30,8 @@ class SwitcherContextBuilderTest {
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.local(true));
 		
-		SwitchersBase.initializeClient();
-		
+		initializeClient();
+
 		//test
 		Switcher switcher = getSwitcher(USECASE11);
 		assertTrue(switcher.isItOn());
@@ -41,7 +40,7 @@ class SwitcherContextBuilderTest {
 	@Test
 	void shouldReturnError_snapshotNotLoaded() {
 		//given
-		SwitchersBase.configure(ContextBuilder.builder(true)
+		configure(ContextBuilder.builder(true)
 				.contextLocation(SwitchersBase.class.getCanonicalName())
 				.url("http://localhost:3000")
 				.apiKey("API_KEY")
@@ -59,13 +58,13 @@ class SwitcherContextBuilderTest {
 	@Test
 	void shouldThrowError_wrongContextKeyTypeUsage() {
 		//given
-		SwitchersBase.configure(ContextBuilder.builder(true)
+		configure(ContextBuilder.builder(true)
 				.contextLocation(SwitchersBase.class.getCanonicalName())
 				.domain("switcher-domain")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.local(true));
 
-		SwitchersBase.initializeClient();
+		initializeClient();
 
 		assertThrows(SwitcherContextException.class, () -> SwitchersBase.contextBol(ContextKey.DOMAIN));
 		assertThrows(SwitcherContextException.class, () -> SwitchersBase.contextStr(ContextKey.LOCAL_MODE));

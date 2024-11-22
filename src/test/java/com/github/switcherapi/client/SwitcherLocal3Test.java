@@ -3,6 +3,8 @@ package com.github.switcherapi.client;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 import com.github.switcherapi.client.remote.ClientWS;
@@ -12,6 +14,7 @@ import com.github.switcherapi.client.service.ValidatorService;
 import com.github.switcherapi.client.service.local.ClientLocalService;
 import com.github.switcherapi.client.service.remote.ClientRemoteService;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,14 +32,18 @@ import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
 
+import static com.github.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherLocal3Test {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
+
+	private static ExecutorService executorService;
 	
 	@BeforeAll
 	static void setupContext() {
+		executorService = Executors.newSingleThreadExecutor();
 		SwitcherContext.loadProperties();
 		SwitcherContext.configure(ContextBuilder.builder()
 				.snapshotLocation(SNAPSHOTS_LOCAL)
@@ -44,6 +51,11 @@ class SwitcherLocal3Test {
 				.local(true));
 		
 		SwitcherContext.initializeClient();
+	}
+
+	@AfterAll
+	static void tearDown() {
+		executorService.shutdown();
 	}
 	
 	static Stream<Arguments> failTestArguments() {
@@ -80,7 +92,7 @@ class SwitcherLocal3Test {
 		switchers.add(Switchers.USECASE17);
 		switchers.add(Switchers.USECASE16);
 
-		ClientWS clientWS = ClientWSImpl.build();
+		ClientWS clientWS = ClientWSImpl.build(executorService, DEFAULT_TIMEOUT);
 		SwitcherValidator validatorService = new ValidatorService();
 		SwitcherLocalService switcherLocal = new SwitcherLocalService(new ClientRemoteService(clientWS), new ClientLocalService(validatorService));
 		switcherLocal.init();
@@ -95,7 +107,7 @@ class SwitcherLocal3Test {
 		Set<String> notFound = new HashSet<>();
 		notFound.add("NOT_FOUND_1");
 
-		ClientWS clientWS = ClientWSImpl.build();
+		ClientWS clientWS = ClientWSImpl.build(executorService, DEFAULT_TIMEOUT);
 		SwitcherValidator validatorService = new ValidatorService();
 		SwitcherLocalService switcherLocal = new SwitcherLocalService(new ClientRemoteService(clientWS), new ClientLocalService(validatorService));
 		switcherLocal.init();

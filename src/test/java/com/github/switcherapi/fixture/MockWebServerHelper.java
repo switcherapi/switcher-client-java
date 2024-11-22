@@ -62,9 +62,18 @@ public class MockWebServerHelper {
      * @return Generated mock /graphql response based on src/test/resources/default.json
      */
     protected MockResponse generateSnapshotResponse(String resourcesPath) {
+        return generateSnapshotResponse("default.json", resourcesPath);
+    }
+
+    /**
+     * @see ClientWSImpl#resolveSnapshot(String)
+     *
+     * @return Generated mock /graphql response based on src/test/resources/default.json
+     */
+    protected MockResponse generateSnapshotResponse(String snapshotFile, String resourcesPath) {
         final Snapshot mockedSnapshot = new Snapshot();
         final Criteria criteria = new Criteria();
-        criteria.setDomain(SnapshotLoader.loadSnapshot(resourcesPath + "/default.json"));
+        criteria.setDomain(SnapshotLoader.loadSnapshot(resourcesPath + "/" + snapshotFile));
         mockedSnapshot.setData(criteria);
 
         Gson gson = new Gson();
