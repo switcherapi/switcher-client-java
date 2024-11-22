@@ -23,16 +23,22 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import static com.github.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClientRemoteTest extends MockWebServerHelper {
 
+    private static ExecutorService executorService;
+
     private ClientRemote clientRemote;
 
     @BeforeAll
     static void setup() throws IOException {
+        executorService = Executors.newSingleThreadExecutor();
         MockWebServerHelper.setupMockServer();
 
         Switchers.loadProperties();
@@ -43,14 +49,15 @@ class ClientRemoteTest extends MockWebServerHelper {
     @AfterAll
     static void tearDown() throws IOException {
         MockWebServerHelper.tearDownMockServer();
+        executorService.shutdown();
     }
 
     @BeforeEach
     void resetSwitcherContextState() {
-        clientRemote = new ClientRemoteService(ClientWSImpl.build());
+        clientRemote = new ClientRemoteService(ClientWSImpl.build(executorService, DEFAULT_TIMEOUT));
         ((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 
-        Switchers.configure(ContextBuilder.builder().timeoutMs(null));
+        Switchers.configure(ContextBuilder.builder());
         Switchers.initializeClient();
     }
 

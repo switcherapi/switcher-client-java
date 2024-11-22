@@ -6,10 +6,12 @@ import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.remote.ClientWS;
 import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.service.SwitcherValidator;
 import com.github.switcherapi.client.service.ValidatorService;
 import com.github.switcherapi.client.service.WorkerName;
+import com.github.switcherapi.client.service.local.ClientLocal;
 import com.github.switcherapi.client.service.local.ClientLocalService;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import com.github.switcherapi.client.service.remote.ClientRemote;
@@ -30,6 +32,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static com.github.switcherapi.client.remote.Constants.DEFAULT_POOL_SIZE;
+import static com.github.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
 
 /**
  * <b>Switcher Context Base Toolkit</b>
@@ -113,25 +118,40 @@ public abstract class SwitcherContextBase {
 	}
 	
 	/**
-	 * Initialize Switcher Client
+	 * Initialize Switcher Client SDK.<br>
+	 *
+	 * - Validate the context<br>
+	 * - Validate Switcher Keys<br>
+	 * - Build the Switcher Executor instance<br>
+	 * - Load Switchers into memory<br>
+	 * - Pre-configure the context<br>
 	 */
 	public static void initializeClient() {
 		validateContext();
 		validateSwitcherKeys();
-
-		final SwitcherValidator validatorService = new ValidatorService();
-		final ClientRemote clientRemote = new ClientRemoteService(ClientWSImpl.build());
-		final ClientLocalService clientLocal = new ClientLocalService(validatorService);
-
-		if (contextBol(ContextKey.LOCAL_MODE)) {
-			instance = new SwitcherLocalService(clientRemote, clientLocal);
-		} else {
-			instance = new SwitcherRemoteService(clientRemote, new SwitcherLocalService(clientRemote, clientLocal));
-		}
+		instance = buildInstance();
 		
 		loadSwitchers();
 		scheduleSnapshotAutoUpdate(contextStr(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL));
 		ContextBuilder.preConfigure(switcherProperties);
+	}
+
+	/**
+	 * Build the Switcher Executor instance based on the context
+	 *
+	 * @return SwitcherExecutor instance
+	 */
+	private static SwitcherExecutor buildInstance() {
+		final ClientWS clientWS = initRemotePoolExecutorService();
+		final SwitcherValidator validatorService = new ValidatorService();
+		final ClientRemote clientRemote = new ClientRemoteService(clientWS);
+		final ClientLocal clientLocal = new ClientLocalService(validatorService);
+
+		if (contextBol(ContextKey.LOCAL_MODE)) {
+			return new SwitcherLocalService(clientRemote, clientLocal);
+		} else {
+			return new SwitcherRemoteService(clientRemote, new SwitcherLocalService(clientRemote, clientLocal));
+		}
 	}
 	
 	/**
@@ -242,6 +262,24 @@ public abstract class SwitcherContextBase {
 			thread.setDaemon(true);
 			return thread;
 		});
+	}
+
+	/**
+	 * Configure Executor Service for Switcher Remote Worker
+	 */
+	private static ClientWS initRemotePoolExecutorService() {
+		int timeoutMs = Optional.ofNullable(contextInt(ContextKey.TIMEOUT_MS)).orElse(DEFAULT_TIMEOUT);
+		int poolSize = Optional.ofNullable(contextInt(ContextKey.POOL_CONNECTION_SIZE)).orElse(DEFAULT_POOL_SIZE);
+		String component = Optional.ofNullable(contextStr(ContextKey.COMPONENT)).orElse("switcher-client");
+
+		final ExecutorService remotePoolExecutorService = Executors.newFixedThreadPool(poolSize, r -> {
+			Thread thread = new Thread(r);
+			thread.setName(String.format("%s-%s", WorkerName.SWITCHER_REMOTE_WORKER, component));
+			thread.setDaemon(true);
+			return thread;
+		});
+
+		return ClientWSImpl.build(remotePoolExecutorService, timeoutMs);
 	}
 	
 	/**
@@ -358,6 +396,16 @@ public abstract class SwitcherContextBase {
 	 */
 	public static String contextStr(ContextKey contextKey) {
 		return switcherProperties.getValue(contextKey);
+	}
+
+	/**
+	 * Retrieve integer context parameter based on contextKey
+	 *
+	 * @param contextKey to be retrieved
+	 * @return Value configured for the context parameter
+	 */
+	public static Integer contextInt(ContextKey contextKey) {
+		return switcherProperties.getInt(contextKey);
 	}
 	
 	/**
