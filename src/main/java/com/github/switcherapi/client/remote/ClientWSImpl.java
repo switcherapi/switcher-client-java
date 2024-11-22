@@ -10,7 +10,6 @@ import com.github.switcherapi.client.model.response.AuthRequest;
 import com.github.switcherapi.client.model.response.AuthResponse;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
-import com.google.gson.Gson;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -19,8 +18,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static com.github.switcherapi.client.remote.Constants.*;
 
@@ -31,11 +30,8 @@ import static com.github.switcherapi.client.remote.Constants.*;
 public class ClientWSImpl implements ClientWS {
 
 	private final Client client;
-
-	private final int timeoutMs;
 	
-	public ClientWSImpl(Client client, int timeoutMs) {
-		this.timeoutMs = timeoutMs;
+	public ClientWSImpl(Client client) {
 		this.client = client;
 	}
 
@@ -44,7 +40,8 @@ public class ClientWSImpl implements ClientWS {
 				.readTimeout(timeoutMs, TimeUnit.MILLISECONDS)
 				.connectTimeout(timeoutMs, TimeUnit.MILLISECONDS)
 				.build();
-		return new ClientWSImpl(client, timeoutMs);
+
+		return new ClientWSImpl(client);
 	}
 
 	@Override

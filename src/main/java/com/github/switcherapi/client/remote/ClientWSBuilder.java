@@ -10,7 +10,6 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.ws.rs.client.ClientBuilder;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.http.HttpClient;
 import java.security.KeyStore;
 import java.util.concurrent.ExecutorService;
 
@@ -24,15 +23,15 @@ public class ClientWSBuilder {
         throw new IllegalStateException("Utility class");
     }
 
-    public static HttpClient.Builder builder(final ExecutorService executorService) {
+    public static ClientBuilder builder(final ExecutorService executorService) {
         if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.TRUSTSTORE_PATH))) {
             return builderSSL(executorService);
         }
 
-        return HttpClient.newBuilder().executor(executorService);
+        return ClientBuilder.newBuilder().executorService(executorService);
     }
 
-    private static HttpClient.Builder builderSSL(final ExecutorService executorService) {
+    private static ClientBuilder builderSSL(final ExecutorService executorService) {
         try (InputStream readStream = new FileInputStream(SwitcherContextBase.contextStr(ContextKey.TRUSTSTORE_PATH))) {
             final KeyStore trustStore = KeyStore.getInstance(KEYSTORE_TYPE);
             trustStore.load(readStream, SwitcherContextBase.contextStr(ContextKey.TRUSTSTORE_PASSWORD).toCharArray());
@@ -43,7 +42,7 @@ public class ClientWSBuilder {
             final SSLContext sslContext = SSLContext.getInstance(PROTOCOL);
             sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
 
-            return HttpClient.newBuilder().sslContext(sslContext).executor(executorService);
+            return ClientBuilder.newBuilder().sslContext(sslContext).executorService(executorService);
         } catch (Exception e) {
             throw new SwitcherException("Error while building SSL context", e);
         }

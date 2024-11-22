@@ -4,7 +4,6 @@ import com.github.switcherapi.Switchers;
 import com.github.switcherapi.SwitchersBase;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.service.WorkerName;
 import com.github.switcherapi.fixture.MockWebServerHelper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -50,11 +49,6 @@ class SwitcherContextRemoteExecutorTest extends MockWebServerHelper {
 		//test
 		Switcher switcher = SwitchersBase.getSwitcher(Switchers.USECASE11);
 		assertTrue(switcher.isItOn());
-
-		//assert pool size
-		long count = Thread.getAllStackTraces().keySet().stream().filter(thread ->
-				thread.getName().contains(String.format("%s-%s", WorkerName.SWITCHER_REMOTE_WORKER, "switcher-client-pool-test"))).count();
-		assertEquals(1, count);
 	}
 
 	@Test
@@ -81,7 +75,7 @@ class SwitcherContextRemoteExecutorTest extends MockWebServerHelper {
 		//test
 		Switcher switcher = SwitchersBase.getSwitcher(Switchers.USECASE11);
 		Exception ex = assertThrows(SwitcherRemoteException.class, switcher::isItOn);
-		assertEquals("request timed out", ex.getCause().getMessage());
+		assertEquals("java.net.SocketTimeoutException: Read timed out", ex.getCause().getMessage());
 	}
 
 }

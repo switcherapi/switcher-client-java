@@ -112,8 +112,7 @@ public class RegexValidatorV8 extends Validator {
 		final Future<Boolean> future = executor.submit(timedMatch);
 
 		try {
-			return future.get(Integer.parseInt(SwitcherContextBase.contextStr(ContextKey.REGEX_TIMEOUT)),
-					TimeUnit.MILLISECONDS);
+			return future.get(SwitcherContextBase.contextInt(ContextKey.REGEX_TIMEOUT), TimeUnit.MILLISECONDS);
 		} catch (TimeoutException e) {
 			workerInterrupted = true;
 			future.cancel(true);
