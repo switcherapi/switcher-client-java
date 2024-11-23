@@ -12,6 +12,7 @@ abstract class SwitcherConfig {
 	protected boolean local;
 	protected String silent;
 	protected Integer timeout;
+	protected Integer regexTimeout;
 	protected Integer poolSize;
 	protected SnapshotConfig snapshot;
 	protected TruststoreConfig truststore;
@@ -63,6 +64,10 @@ abstract class SwitcherConfig {
 
 	public void setTimeout(Integer timeout) {
 		this.timeout = timeout;
+	}
+
+	public void setRegexTimeout(Integer regexTimeout) {
+		this.regexTimeout = regexTimeout;
 	}
 
 	public void setPoolSize(Integer poolSize) {

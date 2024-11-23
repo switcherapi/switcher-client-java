@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 
+import static com.github.switcherapi.client.SwitcherProperties.DEFAULT_REGEX_TIMEOUT;
 import static com.github.switcherapi.client.SwitcherProperties.DEFAULT_TIMEOUT_MS;
 import static com.github.switcherapi.client.remote.Constants.DEFAULT_POOL_SIZE;
 
@@ -135,8 +136,9 @@ public class ContextBuilder {
 	 * @param regexTimeout Time in ms given to Timed Match Worker used for local Regex (ReDoS safety mechanism) - 3000 default value
 	 * @return ContextBuilder
 	 */
-	public ContextBuilder regexTimeout(int regexTimeout) {
-		properties.setValue(ContextKey.REGEX_TIMEOUT, regexTimeout);
+	public ContextBuilder regexTimeout(Integer regexTimeout) {
+		properties.setValue(ContextKey.REGEX_TIMEOUT,
+				Optional.ofNullable(regexTimeout).orElse(DEFAULT_REGEX_TIMEOUT));
 		return this;
 	}
 

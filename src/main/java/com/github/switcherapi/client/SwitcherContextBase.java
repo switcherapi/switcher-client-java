@@ -107,6 +107,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 				.component(component)
 				.local(local)
 				.silentMode(silent)
+				.regexTimeout(regexTimeout)
 				.timeoutMs(timeout)
 				.poolConnectionSize(poolSize)
 				.snapshotLocation(snapshot.getLocation())

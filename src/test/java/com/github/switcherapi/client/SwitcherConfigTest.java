@@ -57,6 +57,7 @@ class SwitcherConfigTest {
 		classConfig.setLocal(true);
 		classConfig.setSilent("5m");
 		classConfig.setTimeout(3000);
+		classConfig.setRegexTimeout(1000);
 		classConfig.setPoolSize(2);
 		classConfig.setSnapshot(snapshot);
 		classConfig.setTruststore(truststore);
