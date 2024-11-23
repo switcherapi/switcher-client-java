@@ -81,7 +81,8 @@
 		<sonar.coverage.exclusions>
 			**/model/**/*.java,
 			**/exception/**/*.java,
-			**/service/validators/RegexValidatorV8.java
+			**/service/validators/RegexValidatorV8.java,
+			**/client/remote/Constants.java
 		</sonar.coverage.exclusions>
 	</properties>
 

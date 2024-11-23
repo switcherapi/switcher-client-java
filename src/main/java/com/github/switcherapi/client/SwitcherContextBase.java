@@ -28,16 +28,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static com.github.switcherapi.client.remote.Constants.DEFAULT_POOL_SIZE;
 import static com.github.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
 
 /**
- * <b>Switcher Context Base Toolkit</b>
+ * <b>Switcher Context Base</b>
  * 
  * <p>
  * This class will load Switcher Properties internally, making it ready to use.
@@ -45,33 +42,45 @@ import static com.github.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
  * </p>
  * 
  * <p>
- * The Base implementation does not initialize the SDK automatically as it should be
- * used by applications that requires the context to be loaded from an external source.
+ * The Base context allows you to configure the Switcher Client using the {@link ContextBuilder} or
+ * simply override the {@link #configureClient()} method to configure the client programmatically.
  * </p>
  * 
  * <pre>
  * public class Features extends SwitcherContextBase {
+ *
  * 	&#064;SwitcherKey
  * 	public static final String MY_FEATURE = "MY_FEATURE";
+ *
+ *  	// Initialize the client using PostConstruct
+ * 	&#064;Override
+ * 	&#064;PostConstruct
+ * 	public void configureClient() {
+ * 		// you can add pre-configuration here
+ * 		super.configureClient();
+ * 		// you can add post-configuration here
+ * 	}
  * }
- * 
- * public void initializeSwitchers() {
+ *
+ * // Initialize the Switcher Client using ContextBuilder
+ * public void configureClient() {
  *  	Features.configure(ContextBuilder.builder()
  *   		.contextLocation("com.business.config.Features")
  *   		.apiKey("API_KEY")
  *   		.domain("Playground")
  *   		.component("switcher-playground")
  *   		.environment("default"));
- *    
+ *
  *  	Features.initializeClient();
  * }
+ *
  * </pre>
- * 
+ *
  * @see SwitcherKey
  * @author Roger Floriano (petruki)
  * @since 2022-06-19
  */
-public abstract class SwitcherContextBase {
+public abstract class SwitcherContextBase extends SwitcherConfig {
 	
 	protected static final Logger logger = LoggerFactory.getLogger(SwitcherContextBase.class);
 	
@@ -83,12 +92,31 @@ public abstract class SwitcherContextBase {
 	private static ExecutorService watcherExecutorService;
 	private static SnapshotWatcher watcherSnapshot;
 	
-	protected SwitcherContextBase() {
-		throw new IllegalStateException("Context class cannot be instantiated");
-	}
-	
 	static {
 		switcherProperties = new SwitcherProperties();
+	}
+
+	@Override
+	protected void configureClient() {
+		configure(ContextBuilder.builder(true)
+				.contextLocation(contextLocation)
+				.url(url)
+				.apiKey(apikey)
+				.domain(domain)
+				.environment(environment)
+				.component(component)
+				.local(local)
+				.silentMode(silent)
+				.timeoutMs(timeout)
+				.poolConnectionSize(poolSize)
+				.snapshotLocation(snapshot.getLocation())
+				.snapshotAutoLoad(snapshot.isAuto())
+				.snapshotSkipValidation(snapshot.isSkipValidation())
+				.snapshotAutoUpdateInterval(snapshot.getUpdateInterval())
+				.truststorePath(truststore.getPath())
+				.truststorePassword(truststore.getPassword()));
+
+		initializeClient();
 	}
 	
 	/**
@@ -97,6 +125,8 @@ public abstract class SwitcherContextBase {
 	 * <p>
 	 * Use this method optionally if you want to load the settings from a customized file name.
 	 * </p>
+	 *
+	 * Features must inherit {@link SwitcherContextBase}
 	 * <pre>
 	 * // Load from resources/switcherapi-test.properties 
 	 * Features.loadProperties("switcherapi-test");
@@ -134,6 +164,7 @@ public abstract class SwitcherContextBase {
 		loadSwitchers();
 		scheduleSnapshotAutoUpdate(contextStr(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL));
 		ContextBuilder.preConfigure(switcherProperties);
+		SwitcherUtils.debug(logger, "Switcher Client initialized");
 	}
 
 	/**
@@ -204,11 +235,11 @@ public abstract class SwitcherContextBase {
 	 *
 	 * @param intervalValue to be used for the update (e.g. 5s, 1m, 1h, 1d)
 	 * @param callback to be invoked when the snapshot is updated or when an error occurs
-	 * @return true if the task was scheduled successfully
+	 * @return ScheduledFuture instance
 	 */
-	public static boolean scheduleSnapshotAutoUpdate(String intervalValue, SnapshotCallback callback) {
+	public static ScheduledFuture<?> scheduleSnapshotAutoUpdate(String intervalValue, SnapshotCallback callback) {
 		if (StringUtils.isBlank(intervalValue) || scheduledExecutorService != null) {
-			return false;
+			return null;
 		}
 
 		final long interval = SwitcherUtils.getMillis(intervalValue);
@@ -225,8 +256,7 @@ public abstract class SwitcherContextBase {
 		};
 
 		initSnapshotExecutorService();
-		scheduledExecutorService.scheduleAtFixedRate(runnableSnapshotValidate, 0, interval, TimeUnit.MILLISECONDS);
-		return true;
+		return scheduledExecutorService.scheduleAtFixedRate(runnableSnapshotValidate, 0, interval, TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -234,9 +264,9 @@ public abstract class SwitcherContextBase {
 	 * The task will be executed in a single thread executor service.
 	 *
 	 * @param intervalValue to be used for the update (e.g. 5s, 1m, 1h, 1d)
-	 * @return true if the task was scheduled successfully
+	 * @return ScheduledFuture instance
 	 */
-	public static boolean scheduleSnapshotAutoUpdate(String intervalValue) {
+	public static ScheduledFuture<?> scheduleSnapshotAutoUpdate(String intervalValue) {
 		return scheduleSnapshotAutoUpdate(intervalValue, null);
 	}
 

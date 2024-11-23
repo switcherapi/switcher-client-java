@@ -48,7 +48,7 @@ class ClientWSBuilderTest {
     @Test
     void shouldCreateClientBuilderSSL() {
         // given
-        var truststorePath = Objects.requireNonNull(getClass().getClassLoader()
+        String truststorePath = Objects.requireNonNull(getClass().getClassLoader()
                 .getResource("keystore.jks")).getPath();
 
         SwitcherContextBase.configure(ContextBuilder.builder()

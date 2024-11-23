@@ -35,7 +35,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 
 	@Override
 	public CriteriaResponse executeCriteria(final Switcher switcher) {
-		SwitcherUtils.debug(logger, "[Remote] request:: {}", switcher);
+		SwitcherUtils.debug(logger, "[Remote] request: {}", switcher);
 		
 		try {
 			final CriteriaResponse response = this.clientRemote.executeCriteria(switcher);

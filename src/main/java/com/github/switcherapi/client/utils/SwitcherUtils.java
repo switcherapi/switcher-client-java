@@ -9,10 +9,10 @@ import com.google.gson.JsonParser;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -23,53 +23,39 @@ import java.util.regex.Pattern;
  * @since 2019-12-24
  */
 public class SwitcherUtils {
-	
-	private static final Logger logger = LoggerFactory.getLogger(SwitcherUtils.class);
-	
-	private static final String LOG_TME = "time: {}";
 
-	private static final String LOG_DATE_ADD_VALUE = "date: {} addValue: {}";
-	
-	/**
-	 * [0] = s (seconds) [1] = m (minutes) [2] = h (hours) [3] = d (days)
-	 */
-	private static final String[] DURATION = { "s", "m", "h", "d" };
-	
+	private static final String[] DURATION_UNIT = { "s", "m", "h", "d" };
 	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+)}";
-	
 	private static final String ENV_DEFAULT_VARIABLE_PATTERN = "\\$\\{(\\w+):(.+)}";
-	
 	private static final String PAYLOAD_PATTERN = "%s.%s";
 	
 	private SwitcherUtils() {}
 	
 	public static Date addTimeDuration(final String addValue, final Date date) 
 			throws SwitcherInvalidDateTimeArgumentException {
-		SwitcherUtils.debug(logger, LOG_DATE_ADD_VALUE, date, addValue);
-		
-		if (addValue.endsWith(DURATION[0])) {
-			return DateUtils.addSeconds(date, Integer.parseInt(addValue.replace(DURATION[0], StringUtils.EMPTY)));
-		} else if (addValue.endsWith(DURATION[1])) {
-			return DateUtils.addMinutes(date, Integer.parseInt(addValue.replace(DURATION[1], StringUtils.EMPTY)));
-		} else if (addValue.endsWith(DURATION[2])) {
-			return DateUtils.addHours(date, Integer.parseInt(addValue.replace(DURATION[2], StringUtils.EMPTY)));
-		} else if (addValue.endsWith(DURATION[3])) {
-			return DateUtils.addDays(date, Integer.parseInt(addValue.replace(DURATION[3], StringUtils.EMPTY)));
+		switch (addValue.charAt(addValue.length() - 1)) {
+			case 's':
+				return DateUtils.addSeconds(date, Integer.parseInt(addValue.replace(DURATION_UNIT[0], StringUtils.EMPTY)));
+			case 'm':
+				return DateUtils.addMinutes(date, Integer.parseInt(addValue.replace(DURATION_UNIT[1], StringUtils.EMPTY)));
+			case 'h':
+				return DateUtils.addHours(date, Integer.parseInt(addValue.replace(DURATION_UNIT[2], StringUtils.EMPTY)));
+			case 'd':
+				return DateUtils.addDays(date, Integer.parseInt(addValue.replace(DURATION_UNIT[3], StringUtils.EMPTY)));
+			default:
+				throw new SwitcherInvalidDateTimeArgumentException(addValue);
 		}
-		
-		throw new SwitcherInvalidDateTimeArgumentException(addValue);
 	}
 
 	public static long getMillis(final String time) {
-		SwitcherUtils.debug(logger, LOG_TME, time);
-
-		if (time.endsWith(DURATION[0])) {
-			return (long) (Double.parseDouble(time.replace(DURATION[0], StringUtils.EMPTY)) * 1000L);
-		} else if (time.endsWith(DURATION[1])) {
-			return (long) (Double.parseDouble(time.replace(DURATION[1], StringUtils.EMPTY)) * 60000L);
+		switch (time.charAt(time.length() - 1)) {
+			case 's':
+				return (long) (Double.parseDouble(time.replace(DURATION_UNIT[0], StringUtils.EMPTY)) * 1000L);
+			case 'm':
+				return (long) (Double.parseDouble(time.replace(DURATION_UNIT[1], StringUtils.EMPTY)) * 60000L);
+			default:
+				throw new SwitcherInvalidDateTimeArgumentException(time);
 		}
-
-		throw new SwitcherInvalidDateTimeArgumentException(time);
 	}
 	
 	public static Set<String> payloadReader(String jsonStr, String prevKey) {
@@ -79,7 +65,7 @@ public class SwitcherUtils {
 		final Set<String> keys = new java.util.HashSet<>();
 		for (Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 			String key;
-			if (prevKey == null) {
+			if (Objects.isNull(prevKey)) {
 				key = entry.getKey();
 			} else {
 				key = String.format(PAYLOAD_PATTERN, prevKey, entry.getKey());
@@ -116,8 +102,9 @@ public class SwitcherUtils {
 	    }
 
 	    final StringBuilder sBuilder = resolveEnvironmentVariable(value);
-	    if (sBuilder.toString().isEmpty())
-	    	return value;
+	    if (sBuilder.toString().isEmpty()) {
+			return value;
+		}
 	       
 	    return sBuilder.toString();
 	}
@@ -156,8 +143,7 @@ public class SwitcherUtils {
         	pattern = Pattern.compile(ENV_DEFAULT_VARIABLE_PATTERN);
         	matcher = pattern.matcher(value);
         	
-        	 if (matcher.find() &&
-					 setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null) {
+        	 if (matcher.find() && setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null) {
 				 sBuilder.append(matcher.group(2));
 			 }
         }
@@ -172,7 +158,7 @@ public class SwitcherUtils {
 	 * @return true if System.getenv returns a value
 	 */
 	private static boolean setWithSystemEnv(Matcher matcher, StringBuilder sBuilder) {
-		if (matcher.group(1) != null) {
+		if (Objects.nonNull(matcher.group(1))) {
 			String envVarName = matcher.group(1);
 			String envVarValue = System.getenv(envVarName);
 			sBuilder.append(null == envVarValue ? StringUtils.EMPTY : envVarValue);		
