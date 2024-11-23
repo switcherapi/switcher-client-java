@@ -1,11 +1,6 @@
 package com.github.switcherapi.client;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 abstract class SwitcherConfig {
-
-	private static final Logger logger = LoggerFactory.getLogger(SwitcherConfig.class);
 
 	protected String contextLocation;
 	protected String url;
@@ -21,7 +16,7 @@ abstract class SwitcherConfig {
 	protected SnapshotConfig snapshot;
 	protected TruststoreConfig truststore;
 
-	{
+	SwitcherConfig() {
 		this.snapshot = new SnapshotConfig();
 		this.truststore = new TruststoreConfig();
 	}

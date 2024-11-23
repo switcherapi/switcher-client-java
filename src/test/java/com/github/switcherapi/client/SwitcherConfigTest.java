@@ -11,7 +11,7 @@ import static com.github.switcherapi.SwitchersBase.USECASE11;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SwitcherConfigTest {
+class SwitcherConfigTest {
 
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 
