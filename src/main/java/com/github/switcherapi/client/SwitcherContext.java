@@ -6,7 +6,7 @@ import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 
 /**
- * <b>Switcher Context Toolkit</b>
+ * <b>Switcher Context</b>
  * <p>
  * 
  * This class will load Switcher Properties internally, making it ready to use.

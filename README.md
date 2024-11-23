@@ -101,13 +101,34 @@ MyAppFeatures.initializeClient();
 ```
 
 Or simply define a custom file properties to load everything from it.
-
 ```
 // Load from resources/switcherapi-test.properties 
 MyAppFeatures.loadProperties("switcherapi-test");
 ```
 
+Or using configureClient() with @PostConstruct to handle all the configuration build boilerplate.
+
+```java
+@ConfigurationProperties
+class MySwitcherClientConfig extends SwitcherContextBase {
+
+	@SwitcherKey
+	public static final String MY_SWITCHER = "MY_SWITCHER";
+	
+	@Override
+	@PostConstruct
+	public void configureClient() {
+		// you can add pre-configuration here
+		super.configureClient();
+		// you can add post-configuration here
+	}
+}
+```
+
 ### Defining your features
+
+Create a class that extends SwitcherContext if you are loading the configuration from the switcherapi.properties file.
+Or use SwitcherContextBase to define the configuration using the ContextBuilder or SwitcherConfig.
 
 ```java
 public class MyAppFeatures extends SwitcherContext {

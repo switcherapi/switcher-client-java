@@ -17,4 +17,5 @@ public final class Constants {
 					"strategies { strategy activated operation values } " +
 					"components } } } }\"}";
 
+	private Constants() {}
 }

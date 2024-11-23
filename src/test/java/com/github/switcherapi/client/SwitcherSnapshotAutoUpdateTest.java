@@ -14,6 +14,7 @@ import org.junit.jupiter.api.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.ScheduledFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -232,8 +233,8 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 				.snapshotAutoUpdateInterval("1s"));
 
 		Switchers.initializeClient();
-		boolean started = Switchers.scheduleSnapshotAutoUpdate("1m");
-		assertFalse(started);
+		ScheduledFuture<?> snapshotUpdater = Switchers.scheduleSnapshotAutoUpdate("1m");
+		assertNull(snapshotUpdater);
 	}
 
 }
