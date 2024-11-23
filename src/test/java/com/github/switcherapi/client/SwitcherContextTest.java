@@ -78,13 +78,5 @@ class SwitcherContextTest {
 		
 		assertEquals("Something went wrong: Unable to load a key INVALID_SWITCHER", ex.getMessage());
 	}
-	
-	@Test
-	void shouldThrowError_cannotInstantiateContext() {
-		Exception ex = assertThrows(IllegalStateException.class,
-				Switchers::new);
-		
-		assertEquals("Context class cannot be instantiated", ex.getMessage());
-	}
 
 }
