@@ -3,6 +3,11 @@ package com.github.switcherapi.client;
 import com.github.switcherapi.client.model.ContextKey;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Optional;
+
+import static com.github.switcherapi.client.SwitcherProperties.DEFAULT_TIMEOUT_MS;
+import static com.github.switcherapi.client.remote.Constants.DEFAULT_POOL_SIZE;
+
 public class ContextBuilder {
 	
 	private static ContextBuilder context;
@@ -198,8 +203,9 @@ public class ContextBuilder {
 	 * @param timeoutMs Time in ms given to the API to respond - 3000 default value
 	 * @return ContextBuilder
 	 */
-    public ContextBuilder timeoutMs(int timeoutMs) {
-		properties.setValue(ContextKey.TIMEOUT_MS, timeoutMs);
+    public ContextBuilder timeoutMs(Integer timeoutMs) {
+		properties.setValue(ContextKey.TIMEOUT_MS,
+				Optional.ofNullable(timeoutMs).orElse(DEFAULT_TIMEOUT_MS));
 		return this;
 	}
 
@@ -207,8 +213,9 @@ public class ContextBuilder {
 	 * @param poolSize Number of threads for the pool connection - 10 default value
 	 * @return ContextBuilder
 	 */
-	public ContextBuilder poolConnectionSize(int poolSize) {
-		properties.setValue(ContextKey.POOL_CONNECTION_SIZE, poolSize);
+	public ContextBuilder poolConnectionSize(Integer poolSize) {
+		properties.setValue(ContextKey.POOL_CONNECTION_SIZE,
+				Optional.ofNullable(poolSize).orElse(DEFAULT_POOL_SIZE));
 		return this;
 	}
 }
