@@ -1,6 +1,6 @@
 package com.github.switcherapi.client.remote;
 
-import com.github.switcherapi.client.SwitcherContextBase;
+import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
@@ -29,24 +29,27 @@ import static com.github.switcherapi.client.remote.Constants.*;
  */
 public class ClientWSImpl implements ClientWS {
 
+	private final SwitcherProperties switcherProperties;
+
 	private final Client client;
 	
-	public ClientWSImpl(Client client) {
+	public ClientWSImpl(SwitcherProperties switcherProperties, Client client) {
+		this.switcherProperties = switcherProperties;
 		this.client = client;
 	}
 
-	public static ClientWS build(final ExecutorService executorService, int timeoutMs) {
-		Client client = ClientWSBuilder.builder(executorService)
+	public static ClientWS build(SwitcherProperties switcherProperties, ExecutorService executorService, int timeoutMs) {
+		Client client = ClientWSBuilder.builder(executorService, switcherProperties)
 				.readTimeout(timeoutMs, TimeUnit.MILLISECONDS)
 				.connectTimeout(timeoutMs, TimeUnit.MILLISECONDS)
 				.build();
 
-		return new ClientWSImpl(client);
+		return new ClientWSImpl(switcherProperties, client);
 	}
 
 	@Override
 	public CriteriaResponse executeCriteriaService(final Switcher switcher, final String token) {
-		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
+		final String url = switcherProperties.getValue(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, url))
 				.queryParam(Switcher.KEY, switcher.getSwitcherKey())
 				.queryParam(Switcher.SHOW_REASON, Boolean.TRUE)
@@ -75,16 +78,16 @@ public class ClientWSImpl implements ClientWS {
 	@Override
 	public Optional<AuthResponse> auth() {
 		final AuthRequest authRequest = new AuthRequest();
-		authRequest.setDomain(SwitcherContextBase.contextStr(ContextKey.DOMAIN));
-		authRequest.setComponent(SwitcherContextBase.contextStr(ContextKey.COMPONENT));
-		authRequest.setEnvironment(SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT));
+		authRequest.setDomain(switcherProperties.getValue(ContextKey.DOMAIN));
+		authRequest.setComponent(switcherProperties.getValue(ContextKey.COMPONENT));
+		authRequest.setEnvironment(switcherProperties.getValue(ContextKey.ENVIRONMENT));
 
-		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
+		final String url = switcherProperties.getValue(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(AUTH_URL, url));
 
 		try {
 			final Response response = myResource.request(MediaType.APPLICATION_JSON)
-					.header(HEADER_APIKEY, SwitcherContextBase.contextStr(ContextKey.APIKEY))
+					.header(HEADER_APIKEY, switcherProperties.getValue(ContextKey.APIKEY))
 					.post(Entity.json(authRequest));
 
 			if (response.getStatus() == 200) {
@@ -102,15 +105,15 @@ public class ClientWSImpl implements ClientWS {
 
 	@Override
 	public Snapshot resolveSnapshot(final String token) {
-		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
+		final String url = switcherProperties.getValue(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(SNAPSHOT_URL, url));
 
 		final Response response = myResource.request(MediaType.APPLICATION_JSON)
 				.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token))
 				.post(Entity.json(String.format(QUERY,
-						SwitcherContextBase.contextStr(ContextKey.DOMAIN),
-						SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT),
-						SwitcherContextBase.contextStr(ContextKey.COMPONENT))));
+						switcherProperties.getValue(ContextKey.DOMAIN),
+						switcherProperties.getValue(ContextKey.ENVIRONMENT),
+						switcherProperties.getValue(ContextKey.COMPONENT))));
 
 		if (response.getStatus() == 200) {
 			final Snapshot snapshot = response.readEntity(Snapshot.class);
@@ -124,7 +127,7 @@ public class ClientWSImpl implements ClientWS {
 
 	@Override
 	public SnapshotVersionResponse checkSnapshotVersion(final long version, final String token) {
-		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
+		final String url = switcherProperties.getValue(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(SNAPSHOT_VERSION_CHECK, url, version));
 
 		final Response response = myResource.request(MediaType.APPLICATION_JSON)
@@ -145,7 +148,7 @@ public class ClientWSImpl implements ClientWS {
 	public boolean isAlive() {
 		try {
 			final WebTarget myResource = client.target(String.format(CHECK_URL,
-					SwitcherContextBase.contextStr(ContextKey.URL)));
+					switcherProperties.getValue(ContextKey.URL)));
 			final Response response = myResource.request(MediaType.APPLICATION_JSON).get();
 			return response.getStatus() == 200;
 		} catch (Exception e) {
@@ -155,7 +158,7 @@ public class ClientWSImpl implements ClientWS {
 
 	@Override
 	public SwitchersCheck checkSwitchers(Set<String> switchers, final String token) {
-		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
+		final String url = switcherProperties.getValue(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(CHECK_SWITCHERS, url));
 
 		final Response response = myResource.request(MediaType.APPLICATION_JSON)

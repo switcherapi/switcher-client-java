@@ -93,7 +93,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	private static SnapshotWatcher watcherSnapshot;
 	
 	static {
-		switcherProperties = new SwitcherProperties();
+		switcherProperties = new SwitcherPropertiesImpl();
 	}
 
 	@Override
@@ -176,13 +176,13 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	private static SwitcherExecutor buildInstance() {
 		final ClientWS clientWS = initRemotePoolExecutorService();
 		final SwitcherValidator validatorService = new ValidatorService();
-		final ClientRemote clientRemote = new ClientRemoteService(clientWS);
+		final ClientRemote clientRemote = new ClientRemoteService(clientWS, switcherProperties);
 		final ClientLocal clientLocal = new ClientLocalService(validatorService);
 
 		if (contextBol(ContextKey.LOCAL_MODE)) {
-			return new SwitcherLocalService(clientRemote, clientLocal);
+			return new SwitcherLocalService(clientRemote, clientLocal, switcherProperties);
 		} else {
-			return new SwitcherRemoteService(clientRemote, new SwitcherLocalService(clientRemote, clientLocal));
+			return new SwitcherRemoteService(clientRemote, new SwitcherLocalService(clientRemote, clientLocal, switcherProperties));
 		}
 	}
 	
@@ -310,7 +310,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 			return thread;
 		});
 
-		return ClientWSImpl.build(remotePoolExecutorService, timeoutMs);
+		return ClientWSImpl.build(switcherProperties, remotePoolExecutorService, timeoutMs);
 	}
 	
 	/**
@@ -447,6 +447,15 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 */
 	public static boolean contextBol(ContextKey contextKey) {
 		return switcherProperties.getBoolean(contextKey);
+	}
+
+	/**
+	 * Retrieve the Switcher Properties
+	 *
+	 * @return SwitcherProperties instance
+	 */
+	public static SwitcherProperties getSwitcherProperties() {
+		return switcherProperties;
 	}
 	
 	/**

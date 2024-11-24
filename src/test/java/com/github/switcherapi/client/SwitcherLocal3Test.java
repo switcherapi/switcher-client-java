@@ -92,9 +92,12 @@ class SwitcherLocal3Test {
 		switchers.add(Switchers.USECASE17);
 		switchers.add(Switchers.USECASE16);
 
-		ClientWS clientWS = ClientWSImpl.build(executorService, DEFAULT_TIMEOUT);
+		SwitcherProperties switcherProperties = SwitcherContext.getSwitcherProperties();
+		ClientWS clientWS = ClientWSImpl.build(switcherProperties, executorService, DEFAULT_TIMEOUT);
 		SwitcherValidator validatorService = new ValidatorService();
-		SwitcherLocalService switcherLocal = new SwitcherLocalService(new ClientRemoteService(clientWS), new ClientLocalService(validatorService));
+		SwitcherLocalService switcherLocal = new SwitcherLocalService(
+				new ClientRemoteService(clientWS, switcherProperties),
+				new ClientLocalService(validatorService), switcherProperties);
 		switcherLocal.init();
 		
 		//test
@@ -107,9 +110,12 @@ class SwitcherLocal3Test {
 		Set<String> notFound = new HashSet<>();
 		notFound.add("NOT_FOUND_1");
 
-		ClientWS clientWS = ClientWSImpl.build(executorService, DEFAULT_TIMEOUT);
+		SwitcherProperties switcherProperties = SwitcherContext.getSwitcherProperties();
+		ClientWS clientWS = ClientWSImpl.build(switcherProperties, executorService, DEFAULT_TIMEOUT);
 		SwitcherValidator validatorService = new ValidatorService();
-		SwitcherLocalService switcherLocal = new SwitcherLocalService(new ClientRemoteService(clientWS), new ClientLocalService(validatorService));
+		SwitcherLocalService switcherLocal = new SwitcherLocalService(
+				new ClientRemoteService(clientWS, switcherProperties),
+				new ClientLocalService(validatorService), switcherProperties);
 		switcherLocal.init();
 		
 		//test

@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.remote.ClientWS;
 import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.service.SwitcherValidator;
@@ -41,9 +42,12 @@ class SwitcherLocalServiceTest {
 				.environment("default")
 				.local(true));
 
-		ClientWS clientWS = ClientWSImpl.build(executorService, DEFAULT_TIMEOUT);
+		SwitcherProperties properties = SwitchersBase.getSwitcherProperties();
+		ClientWS clientWS = ClientWSImpl.build(properties, executorService, DEFAULT_TIMEOUT);
 		SwitcherValidator validatorService = new ValidatorService();
-		service = new SwitcherLocalService(new ClientRemoteService(clientWS), new ClientLocalService(validatorService));
+		service = new SwitcherLocalService(
+				new ClientRemoteService(clientWS, properties),
+				new ClientLocalService(validatorService), properties);
 	}
 
 	@AfterAll
