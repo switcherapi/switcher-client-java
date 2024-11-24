@@ -2,6 +2,8 @@ package com.github.switcherapi.client.remote;
 
 public final class Constants {
 
+	public static final String DEFAULT_ENV = "default";
+	public static final Integer DEFAULT_REGEX_TIMEOUT = 3000;
 	public static final int DEFAULT_TIMEOUT = 3000;
 	public static final int DEFAULT_POOL_SIZE = 2;
 	public static final String HEADER_AUTHORIZATION = "Authorization";

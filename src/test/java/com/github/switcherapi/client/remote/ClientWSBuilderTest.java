@@ -2,6 +2,7 @@ package com.github.switcherapi.client.remote;
 
 import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.SwitcherContextBase;
+import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.SwitcherException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,8 +37,10 @@ class ClientWSBuilderTest {
                 .truststorePath("")
                 .truststorePassword(""));
 
+        SwitcherProperties properties = SwitcherContextBase.getSwitcherProperties();
+
         // test
-        HttpClient.Builder clientBuilder = ClientWSBuilder.builder(executorService);
+        HttpClient.Builder clientBuilder = ClientWSBuilder.builder(executorService, properties);
         assertNotNull(clientBuilder);
 
         SSLContext sslContext = clientBuilder.build().sslContext();
@@ -55,8 +58,10 @@ class ClientWSBuilderTest {
                 .truststorePath(truststorePath)
                 .truststorePassword("changeit"));
 
+        SwitcherProperties properties = SwitcherContextBase.getSwitcherProperties();
+
         // test
-        HttpClient.Builder clientBuilder = ClientWSBuilder.builder(executorService);
+        HttpClient.Builder clientBuilder = ClientWSBuilder.builder(executorService, properties);
         assertNotNull(clientBuilder);
 
         SSLContext sslContext = clientBuilder.build().sslContext();
@@ -74,8 +79,10 @@ class ClientWSBuilderTest {
                 .truststorePath(truststorePath)
                 .truststorePassword("INVALID"));
 
+        SwitcherProperties properties = SwitcherContextBase.getSwitcherProperties();
+
         // test
-        assertThrows(SwitcherException.class, () -> ClientWSBuilder.builder(executorService));
+        assertThrows(SwitcherException.class, () -> ClientWSBuilder.builder(executorService, properties));
     }
 
     @Test
@@ -85,7 +92,9 @@ class ClientWSBuilderTest {
                 .truststorePath("INVALID")
                 .truststorePassword("changeit"));
 
+        SwitcherProperties properties = SwitcherContextBase.getSwitcherProperties();
+
         // test
-        assertThrows(SwitcherException.class, () -> ClientWSBuilder.builder(executorService));
+        assertThrows(SwitcherException.class, () -> ClientWSBuilder.builder(executorService, properties));
     }
 }

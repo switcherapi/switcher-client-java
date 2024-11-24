@@ -1,6 +1,6 @@
 package com.github.switcherapi.client.service.remote;
 
-import com.github.switcherapi.client.SwitcherContextBase;
+import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
@@ -24,6 +24,8 @@ import java.util.Set;
  * @since 2019-12-24
  */
 public class ClientRemoteService implements ClientRemote {
+
+	private final SwitcherProperties switcherProperties;
 	
 	private final ClientWS clientWs;
 	
@@ -33,8 +35,9 @@ public class ClientRemoteService implements ClientRemote {
 		VALID, INVALID, SILENT
 	}
 	
-	public ClientRemoteService(ClientWS clientWs) {
+	public ClientRemoteService(ClientWS clientWs, SwitcherProperties switcherProperties) {
 		this.clientWs = clientWs;
+		this.switcherProperties = switcherProperties;
 	}
 
 	@Override
@@ -97,7 +100,7 @@ public class ClientRemoteService implements ClientRemote {
 		}
 
 		if (tokenStatus == TokenStatus.SILENT) {
-			throw new SwitcherRemoteException(SwitcherContextBase.contextStr(ContextKey.URL));
+			throw new SwitcherRemoteException(switcherProperties.getValue(ContextKey.URL));
 		}
 	}
 	
@@ -120,8 +123,8 @@ public class ClientRemoteService implements ClientRemote {
 	}
 	
 	private void setSilentModeExpiration() throws SwitcherInvalidDateTimeArgumentException {
-		if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.SILENT_MODE))) {
-			final String addValue = SwitcherContextBase.contextStr(ContextKey.SILENT_MODE);
+		if (StringUtils.isNotBlank(switcherProperties.getValue(ContextKey.SILENT_MODE))) {
+			final String addValue = switcherProperties.getValue(ContextKey.SILENT_MODE);
 			final AuthResponse response = new AuthResponse();
 			
 			response.setToken(ContextKey.SILENT_MODE.getParam());

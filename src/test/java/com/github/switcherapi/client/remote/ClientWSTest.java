@@ -48,7 +48,7 @@ class ClientWSTest extends MockWebServerHelper {
     @Test
     void shouldBeAlive() {
         // given
-        ClientWS clientWS = ClientWSImpl.build(executorService, DEFAULT_TIMEOUT);
+        ClientWS clientWS = ClientWSImpl.build(Switchers.getSwitcherProperties(), executorService, DEFAULT_TIMEOUT);
         givenResponse(generateTimeOut(100));
 
         // test
@@ -59,7 +59,7 @@ class ClientWSTest extends MockWebServerHelper {
     @Test
     void shouldTimeOut() {
         // given
-        ClientWS clientWS = ClientWSImpl.build(executorService, DEFAULT_TIMEOUT);
+        ClientWS clientWS = ClientWSImpl.build(Switchers.getSwitcherProperties(), executorService, DEFAULT_TIMEOUT);
         givenResponse(generateTimeOut(3500));
 
         // test
@@ -69,7 +69,7 @@ class ClientWSTest extends MockWebServerHelper {
 
     @Test
     void shouldExtendTimeOut() {
-        ClientWS clientWS = ClientWSImpl.build(executorService, 4000);
+        ClientWS clientWS = ClientWSImpl.build(Switchers.getSwitcherProperties(), executorService, 4000);
         givenResponse(generateTimeOut(3500));
 
         // test
