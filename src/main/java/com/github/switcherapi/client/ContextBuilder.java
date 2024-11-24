@@ -130,17 +130,6 @@ public class ContextBuilder {
 	}
 
 	/**
-	 * Java 8 only
-	 *
-	 * @param regexTimeout Time in ms given to Timed Match Worker used for local Regex (ReDoS safety mechanism) - 3000 default value
-	 * @return ContextBuilder
-	 */
-	public ContextBuilder regexTimeout(int regexTimeout) {
-		switcherProperties.setValue(ContextKey.REGEX_TIMEOUT, regexTimeout);
-		return this;
-	}
-
-	/**
 	 * @param snapshotAutoLoad true/false Automated lookup for snapshot when initializing the client
 	 * @return ContextBuilder
 	 */
