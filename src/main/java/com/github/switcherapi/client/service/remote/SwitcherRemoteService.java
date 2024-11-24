@@ -1,6 +1,5 @@
 package com.github.switcherapi.client.service.remote;
 
-import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
@@ -29,6 +28,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	private final ClientRemote clientRemote;
 	
 	public SwitcherRemoteService(ClientRemote clientRemote, SwitcherExecutor switcherExecutor) {
+		super(switcherExecutor.getSwitcherProperties());
 		this.clientRemote = clientRemote;
 		this.switcherLocal = switcherExecutor;
 	}
@@ -50,7 +50,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	
 	private CriteriaResponse tryExecuteLocalCriteria(final Switcher switcher,
 													 final SwitcherRemoteException e) {
-		if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.SILENT_MODE))) {
+		if (StringUtils.isNotBlank(switcherProperties.getValue(ContextKey.SILENT_MODE))) {
 			final CriteriaResponse response = this.switcherLocal.executeCriteria(switcher);
 			SwitcherUtils.debug(logger, "[Silent] response: {}", response);
 
@@ -69,7 +69,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 
 	@Override
 	public boolean checkSnapshotVersion() {
-		if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION))
+		if (StringUtils.isNotBlank(switcherProperties.getValue(ContextKey.SNAPSHOT_LOCATION))
 				&& this.switcherLocal.getDomain() != null) {
 			return super.checkSnapshotVersion(this.clientRemote, this.switcherLocal.getDomain());
 		}

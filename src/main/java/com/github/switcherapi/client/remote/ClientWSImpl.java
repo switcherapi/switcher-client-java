@@ -1,6 +1,6 @@
 package com.github.switcherapi.client.remote;
 
-import com.github.switcherapi.client.SwitcherContextBase;
+import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
@@ -29,24 +29,27 @@ import static com.github.switcherapi.client.remote.Constants.*;
  */
 public class ClientWSImpl implements ClientWS {
 
+	private final SwitcherProperties switcherProperties;
+
 	private final Client client;
 	
-	public ClientWSImpl(Client client) {
+	public ClientWSImpl(SwitcherProperties switcherProperties, Client client) {
+		this.switcherProperties = switcherProperties;
 		this.client = client;
 	}
 
-	public static ClientWS build(final ExecutorService executorService, int timeoutMs) {
-		Client client = ClientWSBuilder.builder(executorService)
+	public static ClientWS build(SwitcherProperties switcherProperties, ExecutorService executorService, int timeoutMs) {
+		Client client = ClientWSBuilder.builder(executorService, switcherProperties)
 				.readTimeout(timeoutMs, TimeUnit.MILLISECONDS)
 				.connectTimeout(timeoutMs, TimeUnit.MILLISECONDS)
 				.build();
 
-		return new ClientWSImpl(client);
+		return new ClientWSImpl(switcherProperties, client);
 	}
 
 	@Override
 	public CriteriaResponse executeCriteriaService(final Switcher switcher, final String token) {
-		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
+		final String url = switcherProperties.getValue(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, url))
 				.queryParam(Switcher.KEY, switcher.getSwitcherKey())
 				.queryParam(Switcher.SHOW_REASON, Boolean.TRUE)
