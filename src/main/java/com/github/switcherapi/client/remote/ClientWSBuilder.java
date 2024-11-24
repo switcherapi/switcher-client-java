@@ -1,6 +1,6 @@
 package com.github.switcherapi.client.remote;
 
-import com.github.switcherapi.client.SwitcherContextBase;
+import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.model.ContextKey;
 import org.apache.commons.lang3.StringUtils;
@@ -23,18 +23,18 @@ public class ClientWSBuilder {
         throw new IllegalStateException("Utility class");
     }
 
-    public static HttpClient.Builder builder(final ExecutorService executorService) {
-        if (StringUtils.isNotBlank(SwitcherContextBase.contextStr(ContextKey.TRUSTSTORE_PATH))) {
-            return builderSSL(executorService);
+    public static HttpClient.Builder builder(final ExecutorService executorService, final SwitcherProperties switcherProperties) {
+        if (StringUtils.isNotBlank(switcherProperties.getValue(ContextKey.TRUSTSTORE_PATH))) {
+            return builderSSL(executorService, switcherProperties);
         }
 
         return HttpClient.newBuilder().executor(executorService);
     }
 
-    private static HttpClient.Builder builderSSL(final ExecutorService executorService) {
-        try (InputStream readStream = new FileInputStream(SwitcherContextBase.contextStr(ContextKey.TRUSTSTORE_PATH))) {
+    private static HttpClient.Builder builderSSL(final ExecutorService executorService, final SwitcherProperties switcherProperties) {
+        try (InputStream readStream = new FileInputStream(switcherProperties.getValue(ContextKey.TRUSTSTORE_PATH))) {
             final KeyStore trustStore = KeyStore.getInstance(KEYSTORE_TYPE);
-            trustStore.load(readStream, SwitcherContextBase.contextStr(ContextKey.TRUSTSTORE_PASSWORD).toCharArray());
+            trustStore.load(readStream, switcherProperties.getValue(ContextKey.TRUSTSTORE_PASSWORD).toCharArray());
 
             final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(trustStore);

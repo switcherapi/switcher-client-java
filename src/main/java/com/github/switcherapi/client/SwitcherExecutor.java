@@ -32,7 +32,13 @@ public abstract class SwitcherExecutor {
 	
 	private static final Map<String, CriteriaResponse> bypass = new HashMap<>();
 
+	protected final SwitcherProperties switcherProperties;
+
 	protected Domain domain;
+
+	protected SwitcherExecutor(final SwitcherProperties switcherProperties) {
+		this.switcherProperties = switcherProperties;
+	}
 	
 	/**
 	 * Execute criteria based on the Switcher configuration
@@ -69,7 +75,7 @@ public abstract class SwitcherExecutor {
 	public abstract long getSnapshotVersion();
 	
 	protected boolean checkSnapshotVersion(ClientRemote clientRemote, final Domain domain) {
-		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
+		final String environment = switcherProperties.getValue(ContextKey.ENVIRONMENT);
 		SwitcherUtils.debug(logger, "verifying snapshot version - environment: {}", environment);
 		
 		return clientRemote.checkSnapshotVersion(domain.getVersion());
@@ -77,11 +83,11 @@ public abstract class SwitcherExecutor {
 	
 	protected Domain initializeSnapshotFromAPI(ClientRemote clientRemote)
 			throws SwitcherRemoteException, SwitcherSnapshotWriteException {
-		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
+		final String environment = switcherProperties.getValue(ContextKey.ENVIRONMENT);
 		SwitcherUtils.debug(logger, "initializing snapshot from API - environment: {}", environment);
 
 		final Snapshot snapshot = clientRemote.resolveSnapshot();
-		final String snapshotLocation = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION);
+		final String snapshotLocation = switcherProperties.getValue(ContextKey.SNAPSHOT_LOCATION);
 
 		if (snapshotLocation != null) {
 			SnapshotLoader.saveSnapshot(snapshot, snapshotLocation, environment);
@@ -91,7 +97,7 @@ public abstract class SwitcherExecutor {
 	}
 
 	public boolean isLocalEnabled() {
-		return SwitcherContextBase.contextBol(ContextKey.LOCAL_MODE);
+		return switcherProperties.getBoolean(ContextKey.LOCAL_MODE);
 	}
 	
 	/**
@@ -138,6 +144,10 @@ public abstract class SwitcherExecutor {
 
 	public static Map<String, CriteriaResponse> getBypass() {
 		return bypass;
+	}
+
+	public SwitcherProperties getSwitcherProperties() {
+		return switcherProperties;
 	}
 
 	public Domain getDomain() {

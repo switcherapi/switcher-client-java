@@ -4,6 +4,7 @@ import com.github.switcherapi.SwitchersBase;
 import com.github.switcherapi.client.model.ContextKey;
 import org.junit.jupiter.api.Test;
 
+import static com.github.switcherapi.client.remote.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SwitcherContextBuilderDefaultsTest {
@@ -14,7 +15,7 @@ class SwitcherContextBuilderDefaultsTest {
         SwitchersBase.configure(ContextBuilder.builder(true).environment(null));
 
         //test
-        assertEquals(SwitcherProperties.DEFAULT_ENV, SwitchersBase.contextStr(ContextKey.ENVIRONMENT));
+        assertEquals(DEFAULT_ENV, SwitchersBase.contextStr(ContextKey.ENVIRONMENT));
     }
 
     @Test
@@ -23,9 +24,9 @@ class SwitcherContextBuilderDefaultsTest {
         SwitchersBase.configure(ContextBuilder.builder(true));
 
         //test
-        assertEquals(SwitcherProperties.DEFAULT_REGEX_TIMEOUT, SwitchersBase.contextInt(ContextKey.REGEX_TIMEOUT));
-        assertEquals(SwitcherProperties.DEFAULT_TIMEOUT_MS, SwitchersBase.contextInt(ContextKey.TIMEOUT_MS));
-        assertEquals(SwitcherProperties.DEFAULT_ENV, SwitchersBase.contextStr(ContextKey.ENVIRONMENT));
+        assertEquals(DEFAULT_REGEX_TIMEOUT, SwitchersBase.contextInt(ContextKey.REGEX_TIMEOUT));
+        assertEquals(DEFAULT_TIMEOUT, SwitchersBase.contextInt(ContextKey.TIMEOUT_MS));
+        assertEquals(DEFAULT_ENV, SwitchersBase.contextStr(ContextKey.ENVIRONMENT));
     }
 
 }

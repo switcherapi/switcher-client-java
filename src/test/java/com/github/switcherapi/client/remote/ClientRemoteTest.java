@@ -2,6 +2,7 @@ package com.github.switcherapi.client.remote;
 
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.ContextBuilder;
+import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.SwitchersCheck;
 import com.github.switcherapi.client.model.response.CriteriaResponse;
@@ -54,7 +55,8 @@ class ClientRemoteTest extends MockWebServerHelper {
 
     @BeforeEach
     void resetSwitcherContextState() {
-        clientRemote = new ClientRemoteService(ClientWSImpl.build(executorService, DEFAULT_TIMEOUT));
+        SwitcherProperties switcherProperties = Switchers.getSwitcherProperties();
+        clientRemote = new ClientRemoteService(ClientWSImpl.build(switcherProperties, executorService, DEFAULT_TIMEOUT), switcherProperties);
         ((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 
         Switchers.configure(ContextBuilder.builder());
@@ -69,7 +71,7 @@ class ClientRemoteTest extends MockWebServerHelper {
 
         SwitcherValidator validatorService = new ValidatorService();
         ClientLocal clientLocal = new ClientLocalService(validatorService);
-        Switcher switcher = new Switcher("KEY", new SwitcherRemoteService(clientRemote, new SwitcherLocalService(clientRemote, clientLocal)));
+        Switcher switcher = new Switcher("KEY", new SwitcherRemoteService(clientRemote, new SwitcherLocalService(clientRemote, clientLocal, Switchers.getSwitcherProperties())));
 
         //test
         CriteriaResponse actual = clientRemote.executeCriteria(switcher);

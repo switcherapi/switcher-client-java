@@ -1,7 +1,7 @@
 package com.github.switcherapi.client.service.local;
 
-import com.github.switcherapi.client.SwitcherContextBase;
 import com.github.switcherapi.client.SwitcherExecutor;
+import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.*;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
@@ -30,7 +30,8 @@ public class SwitcherLocalService extends SwitcherExecutor {
 
 	private final ClientLocal clientLocal;
 	
-	public SwitcherLocalService(ClientRemote clientRemote, ClientLocal clientLocal) {
+	public SwitcherLocalService(ClientRemote clientRemote, ClientLocal clientLocal, SwitcherProperties switcherProperties) {
+		super(switcherProperties);
 		this.clientRemote = clientRemote;
 		this.clientLocal = clientLocal;
 		this.init();
@@ -42,9 +43,9 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	 * @throws SwitcherSnapshotLoadException in case it was not possible to load snapshot automatically
 	 */
 	public void init() {
-		final String snapshotLocation = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION);
-		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
-		final boolean snapshotAutoload = SwitcherContextBase.contextBol(ContextKey.SNAPSHOT_AUTO_LOAD);
+		final String snapshotLocation = switcherProperties.getValue(ContextKey.SNAPSHOT_LOCATION);
+		final String environment = switcherProperties.getValue(ContextKey.ENVIRONMENT);
+		final boolean snapshotAutoload = switcherProperties.getBoolean(ContextKey.SNAPSHOT_AUTO_LOAD);
 		
 		if (StringUtils.isBlank(snapshotLocation) && snapshotAutoload) {
 			this.domain = this.initializeSnapshotFromAPI(this.clientRemote);
@@ -68,8 +69,8 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	 * @return true if valid change
 	 */
 	public boolean notifyChange(final String snapshotFile, SnapshotEventHandler handler) {
-		final String environment = SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT);
-		final String snapshotLocation = SwitcherContextBase.contextStr(ContextKey.SNAPSHOT_LOCATION);
+		final String environment = switcherProperties.getValue(ContextKey.ENVIRONMENT);
+		final String snapshotLocation = switcherProperties.getValue(ContextKey.SNAPSHOT_LOCATION);
 
 		try {
 			if (snapshotFile.equals(String.format("%s.json", environment))) {

@@ -1,6 +1,6 @@
 package com.github.switcherapi.client.remote;
 
-import com.github.switcherapi.client.SwitcherContextBase;
+import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
@@ -28,29 +28,32 @@ import static com.github.switcherapi.client.remote.Constants.*;
  * @since 2019-12-24
  */
 public class ClientWSImpl implements ClientWS {
-	
+
+	private final SwitcherProperties switcherProperties;
+
 	private final HttpClient client;
 
 	private final int timeoutMs;
 
 	private final Gson gson = new Gson();
 	
-	public ClientWSImpl(HttpClient client, int timeoutMs) {
+	public ClientWSImpl(SwitcherProperties switcherProperties, HttpClient client, int timeoutMs) {
+		this.switcherProperties = switcherProperties;
 		this.timeoutMs = timeoutMs;
 		this.client = client;
 	}
 
-	public static ClientWS build(final ExecutorService executorService, int timeoutMs) {
-		final HttpClient httpClient = ClientWSBuilder.builder(executorService)
+	public static ClientWS build(SwitcherProperties switcherProperties, ExecutorService executorService, int timeoutMs) {
+		final HttpClient httpClient = ClientWSBuilder.builder(executorService, switcherProperties)
 				.connectTimeout(Duration.ofMillis(timeoutMs))
 				.build();
 
-		return new ClientWSImpl(httpClient, timeoutMs);
+		return new ClientWSImpl(switcherProperties, httpClient, timeoutMs);
 	}
 	
 	@Override
 	public CriteriaResponse executeCriteriaService(final Switcher switcher, final String token) {
-		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
+		final String url = switcherProperties.getValue(ContextKey.URL);
 
 		try {
 			final URI uri = new URI(url)
@@ -83,20 +86,20 @@ public class ClientWSImpl implements ClientWS {
 	@Override
 	public Optional<AuthResponse> auth() {
 		final AuthRequest authRequest = new AuthRequest();
-		authRequest.setDomain(SwitcherContextBase.contextStr(ContextKey.DOMAIN));
-		authRequest.setComponent(SwitcherContextBase.contextStr(ContextKey.COMPONENT));
-		authRequest.setEnvironment(SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT));
+		authRequest.setDomain(switcherProperties.getValue(ContextKey.DOMAIN));
+		authRequest.setComponent(switcherProperties.getValue(ContextKey.COMPONENT));
+		authRequest.setEnvironment(switcherProperties.getValue(ContextKey.ENVIRONMENT));
 
-		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
+		final String url = switcherProperties.getValue(ContextKey.URL);
 
 		try {
 			final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
 					.uri(URI.create(String.format(AUTH_URL, url)))
-					.headers(HEADER_APIKEY, SwitcherContextBase.contextStr(ContextKey.APIKEY),
+					.headers(HEADER_APIKEY, switcherProperties.getValue(ContextKey.APIKEY),
 							CONTENT_TYPE[0], CONTENT_TYPE[1])
 					.timeout(Duration.ofMillis(timeoutMs))
-					.POST(HttpRequest.BodyPublishers.ofString(gson.toJson(authRequest)))
-					.build(), HttpResponse.BodyHandlers.ofString());
+					.POST(HttpRequest.BodyPublishers.ofString(gson.toJson(authRequest))
+					).build(), HttpResponse.BodyHandlers.ofString());
 
 			if (response.statusCode() != 200) {
 				throw new SwitcherRemoteException(url, response.statusCode());
@@ -110,7 +113,7 @@ public class ClientWSImpl implements ClientWS {
 	
 	@Override
 	public Snapshot resolveSnapshot(final String token) {
-		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
+		final String url = switcherProperties.getValue(ContextKey.URL);
 
 		try {
 			final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
@@ -119,9 +122,9 @@ public class ClientWSImpl implements ClientWS {
 							CONTENT_TYPE[0], CONTENT_TYPE[1])
 					.timeout(Duration.ofMillis(timeoutMs))
 					.POST(HttpRequest.BodyPublishers.ofString(String.format(QUERY,
-							SwitcherContextBase.contextStr(ContextKey.DOMAIN),
-							SwitcherContextBase.contextStr(ContextKey.ENVIRONMENT),
-							SwitcherContextBase.contextStr(ContextKey.COMPONENT)))
+							switcherProperties.getValue(ContextKey.DOMAIN),
+							switcherProperties.getValue(ContextKey.ENVIRONMENT),
+							switcherProperties.getValue(ContextKey.COMPONENT)))
 					).build(), HttpResponse.BodyHandlers.ofString());
 
 			if (response.statusCode() != 200) {
@@ -136,7 +139,7 @@ public class ClientWSImpl implements ClientWS {
 	
 	@Override
 	public SnapshotVersionResponse checkSnapshotVersion(final long version, final String token) {
-		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
+		final String url = switcherProperties.getValue(ContextKey.URL);
 
 		try {
 			final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
@@ -160,7 +163,7 @@ public class ClientWSImpl implements ClientWS {
 	public boolean isAlive() {
 		try {
 			HttpResponse<String> response = client.send(HttpRequest.newBuilder()
-					.uri(URI.create(String.format(CHECK_URL, SwitcherContextBase.contextStr(ContextKey.URL))))
+					.uri(URI.create(String.format(CHECK_URL, switcherProperties.getValue(ContextKey.URL))))
 					.timeout(Duration.ofMillis(timeoutMs))
 					.GET().build(), HttpResponse.BodyHandlers.ofString());
 
@@ -175,7 +178,7 @@ public class ClientWSImpl implements ClientWS {
 	
 	@Override
 	public SwitchersCheck checkSwitchers(Set<String> switchers, final String token) {
-		final String url = SwitcherContextBase.contextStr(ContextKey.URL);
+		final String url = switcherProperties.getValue(ContextKey.URL);
 
 		try {
 			final HttpResponse<String> response = client.send(HttpRequest.newBuilder()

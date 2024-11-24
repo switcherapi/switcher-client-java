@@ -37,7 +37,7 @@ class ClientWSBuilderTest {
                 .truststorePassword(""));
 
         // test
-        HttpClient.Builder clientBuilder = ClientWSBuilder.builder(executorService);
+        HttpClient.Builder clientBuilder = ClientWSBuilder.builder(executorService, SwitcherContextBase.getSwitcherProperties());
         assertNotNull(clientBuilder);
 
         SSLContext sslContext = clientBuilder.build().sslContext();
@@ -56,7 +56,7 @@ class ClientWSBuilderTest {
                 .truststorePassword("changeit"));
 
         // test
-        HttpClient.Builder clientBuilder = ClientWSBuilder.builder(executorService);
+        HttpClient.Builder clientBuilder = ClientWSBuilder.builder(executorService, SwitcherContextBase.getSwitcherProperties());
         assertNotNull(clientBuilder);
 
         SSLContext sslContext = clientBuilder.build().sslContext();
@@ -75,7 +75,7 @@ class ClientWSBuilderTest {
                 .truststorePassword("INVALID"));
 
         // test
-        assertThrows(SwitcherException.class, () -> ClientWSBuilder.builder(executorService));
+        assertThrows(SwitcherException.class, () -> ClientWSBuilder.builder(executorService, SwitcherContextBase.getSwitcherProperties()));
     }
 
     @Test
@@ -86,6 +86,6 @@ class ClientWSBuilderTest {
                 .truststorePassword("changeit"));
 
         // test
-        assertThrows(SwitcherException.class, () -> ClientWSBuilder.builder(executorService));
+        assertThrows(SwitcherException.class, () -> ClientWSBuilder.builder(executorService, SwitcherContextBase.getSwitcherProperties()));
     }
 }

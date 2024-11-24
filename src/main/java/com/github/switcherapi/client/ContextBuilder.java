@@ -5,17 +5,16 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 
-import static com.github.switcherapi.client.SwitcherProperties.DEFAULT_TIMEOUT_MS;
-import static com.github.switcherapi.client.remote.Constants.DEFAULT_POOL_SIZE;
+import static com.github.switcherapi.client.remote.Constants.*;
 
 public class ContextBuilder {
 	
 	private static ContextBuilder context;
 	
-	private SwitcherProperties properties;
+	private SwitcherProperties switcherProperties;
 	
-	private ContextBuilder() {
-		properties = new SwitcherProperties();
+	private ContextBuilder(SwitcherProperties switcherProperties) {
+		this.switcherProperties = switcherProperties;
 	}
 	
 	public static void preConfigure(SwitcherProperties switcherProperties) {
@@ -40,17 +39,17 @@ public class ContextBuilder {
 	 */
 	public static ContextBuilder builder(boolean init) {
 		if (context == null || init)
-			context = new ContextBuilder();
+			context = new ContextBuilder(new SwitcherPropertiesImpl());
 
 		return context;
 	}
 	
 	void preBuild(SwitcherProperties properties) {
-		this.properties = properties;
+		this.switcherProperties = properties;
 	}
-	
+
 	SwitcherProperties build() {
-		return this.properties;
+		return this.switcherProperties;
 	}
 
 	/**
@@ -58,7 +57,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder contextLocation(String contextLocation) {
-		properties.setValue(ContextKey.CONTEXT_LOCATION, contextLocation);
+		switcherProperties.setValue(ContextKey.CONTEXT_LOCATION, contextLocation);
 		return this;
 	}
 
@@ -67,7 +66,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder url(String url) {
-		properties.setValue(ContextKey.URL, url);
+		switcherProperties.setValue(ContextKey.URL, url);
 		return this;
 	}
 
@@ -76,7 +75,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder apiKey(String apiKey) {
-		properties.setValue(ContextKey.APIKEY, apiKey);
+		switcherProperties.setValue(ContextKey.APIKEY, apiKey);
 		return this;
 	}
 
@@ -85,7 +84,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder domain(String domain) {
-		properties.setValue(ContextKey.DOMAIN, domain);
+		switcherProperties.setValue(ContextKey.DOMAIN, domain);
 		return this;
 	}
 
@@ -94,7 +93,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder component(String component) {
-		properties.setValue(ContextKey.COMPONENT, component);
+		switcherProperties.setValue(ContextKey.COMPONENT, component);
 		return this;
 	}
 
@@ -103,7 +102,8 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder environment(String environment) {
-		properties.setValue(ContextKey.ENVIRONMENT, properties.getValueDefault(environment, SwitcherProperties.DEFAULT_ENV));
+		switcherProperties.setValue(ContextKey.ENVIRONMENT,
+				Optional.ofNullable(environment).orElse(DEFAULT_ENV));
 		return this;
 	}
 
@@ -112,7 +112,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder snapshotLocation(String snapshotLocation) {
-		properties.setValue(ContextKey.SNAPSHOT_LOCATION, snapshotLocation);
+		switcherProperties.setValue(ContextKey.SNAPSHOT_LOCATION, snapshotLocation);
 		return this;
 	}
 
@@ -121,10 +121,10 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder snapshotAutoUpdateInterval(String snapshotAutoUpdateInterval) {
-		properties.setValue(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL, snapshotAutoUpdateInterval);
+		switcherProperties.setValue(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL, snapshotAutoUpdateInterval);
 
 		if (snapshotAutoUpdateInterval != null)
-			properties.setValue(ContextKey.SNAPSHOT_AUTO_LOAD, true);
+			switcherProperties.setValue(ContextKey.SNAPSHOT_AUTO_LOAD, true);
 
 		return this;
 	}
@@ -136,7 +136,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder regexTimeout(int regexTimeout) {
-		properties.setValue(ContextKey.REGEX_TIMEOUT, regexTimeout);
+		switcherProperties.setValue(ContextKey.REGEX_TIMEOUT, regexTimeout);
 		return this;
 	}
 
@@ -145,7 +145,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder snapshotAutoLoad(boolean snapshotAutoLoad) {
-		properties.setValue(ContextKey.SNAPSHOT_AUTO_LOAD, snapshotAutoLoad);
+		switcherProperties.setValue(ContextKey.SNAPSHOT_AUTO_LOAD, snapshotAutoLoad);
 		return this;
 	}
 
@@ -154,7 +154,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder snapshotSkipValidation(boolean snapshotSkipValidation) {
-		properties.setValue(ContextKey.SNAPSHOT_SKIP_VALIDATION, snapshotSkipValidation);
+		switcherProperties.setValue(ContextKey.SNAPSHOT_SKIP_VALIDATION, snapshotSkipValidation);
 		return this;
 	}
 
@@ -163,10 +163,10 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder silentMode(String retryAfter) {
-		properties.setValue(ContextKey.SILENT_MODE, retryAfter);
+		switcherProperties.setValue(ContextKey.SILENT_MODE, retryAfter);
 
 		if (StringUtils.isNotBlank(retryAfter)) {
-			properties.setValue(ContextKey.SNAPSHOT_AUTO_LOAD, true);
+			switcherProperties.setValue(ContextKey.SNAPSHOT_AUTO_LOAD, true);
 		}
 
 		return this;
@@ -177,7 +177,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder local(boolean local) {
-		properties.setValue(ContextKey.LOCAL_MODE, local);
+		switcherProperties.setValue(ContextKey.LOCAL_MODE, local);
 		return this;
 	}
 
@@ -186,7 +186,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder truststorePath(String truststorePath) {
-		properties.setValue(ContextKey.TRUSTSTORE_PATH, truststorePath);
+		switcherProperties.setValue(ContextKey.TRUSTSTORE_PATH, truststorePath);
 		return this;
 	}
 
@@ -195,7 +195,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder truststorePassword(String truststorePassword) {
-		properties.setValue(ContextKey.TRUSTSTORE_PASSWORD, truststorePassword);
+		switcherProperties.setValue(ContextKey.TRUSTSTORE_PASSWORD, truststorePassword);
 		return this;
 	}
 
@@ -204,8 +204,8 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
     public ContextBuilder timeoutMs(Integer timeoutMs) {
-		properties.setValue(ContextKey.TIMEOUT_MS,
-				Optional.ofNullable(timeoutMs).orElse(DEFAULT_TIMEOUT_MS));
+		switcherProperties.setValue(ContextKey.TIMEOUT_MS,
+				Optional.ofNullable(timeoutMs).orElse(DEFAULT_TIMEOUT));
 		return this;
 	}
 
@@ -214,7 +214,7 @@ public class ContextBuilder {
 	 * @return ContextBuilder
 	 */
 	public ContextBuilder poolConnectionSize(Integer poolSize) {
-		properties.setValue(ContextKey.POOL_CONNECTION_SIZE,
+		switcherProperties.setValue(ContextKey.POOL_CONNECTION_SIZE,
 				Optional.ofNullable(poolSize).orElse(DEFAULT_POOL_SIZE));
 		return this;
 	}
