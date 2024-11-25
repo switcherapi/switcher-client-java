@@ -40,7 +40,7 @@ class SwitcherContextTest {
 	
 	@Test
 	void shouldThrowError_noContext() {
-		Switchers.configure(ContextBuilder.builder().contextLocation(null));
+		Switchers.configure(ContextBuilder.builder().context(null));
 		
 		Exception ex = assertThrows(SwitcherContextException.class,
 				Switchers::initializeClient);

@@ -2,7 +2,6 @@ package com.github.switcherapi.client;
 
 abstract class SwitcherConfig {
 
-	protected String contextLocation;
 	protected String url;
 	protected String apikey;
 	protected String domain;
@@ -30,9 +29,14 @@ abstract class SwitcherConfig {
 	 */
 	protected abstract void configureClient();
 
-	public void setContextLocation(String contextLocation) {
-		this.contextLocation = contextLocation;
-	}
+	/**
+	 * Initialize the Switcher Client using a context properties file.<br>
+	 * - Load context properties file {@link SwitcherContextBase#loadProperties(String)}<br>
+	 * - Initialize client {@link SwitcherContextBase#initializeClient()}<br>
+	 *
+	 * @param contextFile path to the context file
+	 */
+	protected abstract void configureClient(String contextFile);
 
 	public void setUrl(String url) {
 		this.url = url;

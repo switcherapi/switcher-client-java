@@ -19,7 +19,7 @@ public class ClientPlayground {
 	
 	public static void test() {
 		configure(ContextBuilder.builder()
-				.contextLocation(Features.class.getCanonicalName())
+				.context(Features.class.getCanonicalName())
 				.url("https://api.switcherapi.com")
 				.apiKey("[API_KEY]")
 				.domain("Playground")
