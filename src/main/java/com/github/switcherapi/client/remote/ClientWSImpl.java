@@ -48,7 +48,7 @@ public class ClientWSImpl implements ClientWS {
 	}
 
 	@Override
-	public CriteriaResponse executeCriteriaService(final Switcher switcher, final String token) {
+	public CriteriaResponse executeCriteria(final Switcher switcher, final String token) {
 		final String url = switcherProperties.getValue(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, url))
 				.queryParam(Switcher.KEY, switcher.getSwitcherKey())

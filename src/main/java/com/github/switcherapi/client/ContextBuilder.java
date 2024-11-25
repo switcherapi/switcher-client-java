@@ -53,11 +53,11 @@ public class ContextBuilder {
 	}
 
 	/**
-	 * @param contextLocation Feature class that extends SwitcherContext
+	 * @param context Feature class that extends SwitcherContext
 	 * @return ContextBuilder
 	 */
-	public ContextBuilder contextLocation(String contextLocation) {
-		switcherProperties.setValue(ContextKey.CONTEXT_LOCATION, contextLocation);
+	public ContextBuilder context(String context) {
+		switcherProperties.setValue(ContextKey.CONTEXT_LOCATION, context);
 		return this;
 	}
 
