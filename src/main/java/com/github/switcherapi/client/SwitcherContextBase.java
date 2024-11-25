@@ -99,8 +99,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 
 	@Override
 	protected void configureClient() {
-		SwitcherContextBase.contextBase = this;
-
+		setContextBase(this);
 		configure(ContextBuilder.builder(true)
 				.context(contextBase.getClass().getName())
 				.url(url)
@@ -125,12 +124,15 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 
 	@Override
 	protected void configureClient(String contextFile) {
-		SwitcherContextBase.contextBase = this;
-
+		setContextBase(this);
 		loadProperties(contextFile);
 
 		switcherProperties.setValue(ContextKey.CONTEXT_LOCATION, contextBase.getClass().getName());
 		initializeClient();
+	}
+
+	private synchronized static void setContextBase(SwitcherContextBase contextBase) {
+		SwitcherContextBase.contextBase = contextBase;
 	}
 
 	/**
