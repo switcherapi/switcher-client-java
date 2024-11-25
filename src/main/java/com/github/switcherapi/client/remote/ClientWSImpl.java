@@ -52,7 +52,7 @@ public class ClientWSImpl implements ClientWS {
 	}
 	
 	@Override
-	public CriteriaResponse executeCriteriaService(final Switcher switcher, final String token) {
+	public CriteriaResponse executeCriteria(final Switcher switcher, final String token) {
 		final String url = switcherProperties.getValue(ContextKey.URL);
 
 		try {
@@ -183,6 +183,7 @@ public class ClientWSImpl implements ClientWS {
 		try {
 			final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
 					.uri(URI.create(String.format(CHECK_SWITCHERS, url)))
+					.timeout(Duration.ofMillis(timeoutMs))
 					.headers(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token),
 							CONTENT_TYPE[0], CONTENT_TYPE[1])
 					.POST(HttpRequest.BodyPublishers.ofString(gson.toJson(new SwitchersCheck(switchers)))

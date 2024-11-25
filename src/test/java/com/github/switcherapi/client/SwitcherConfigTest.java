@@ -48,7 +48,6 @@ class SwitcherConfigTest {
 		truststore.setPath(null);
 		truststore.setPassword(null);
 
-		classConfig.setContextLocation(SwitchersBase.class.getName());
 		classConfig.setUrl("http://localhost:3000");
 		classConfig.setApikey("[API-KEY]");
 		classConfig.setComponent(component);
@@ -67,7 +66,6 @@ class SwitcherConfigTest {
 		SwitcherConfig.SnapshotConfig snapshot = new SwitcherConfig.SnapshotConfig();
 		snapshot.setLocation(SNAPSHOTS_LOCAL);
 
-		classConfig.setContextLocation(SwitchersBase.class.getName());
 		classConfig.setEnvironment("fixture1");
 		classConfig.setLocal(true);
 		classConfig.setSnapshot(snapshot);

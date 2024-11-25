@@ -14,7 +14,7 @@ class SnapshotWatcherErrorTest {
 	void shouldNotWatchSnapshotWhenRemote() {
 		//given
 		SwitchersBase.configure(ContextBuilder.builder(true)
-			.contextLocation(SwitchersBase.class.getCanonicalName())
+			.context(SwitchersBase.class.getCanonicalName())
 			.url("https://api.switcherapi.com")
 			.apiKey("[API_KEY]")
 			.domain("Test")

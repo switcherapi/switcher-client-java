@@ -61,7 +61,7 @@ You can also use environment variables using the standard notation ${VALUE:DEFAU
 
 ```
 #required
-switcher.context -> Feature class that extends SwitcherContext
+switcher.context -> Feature class that extends SwitcherContext/SwitcherContextBase
 switcher.url -> Switcher-API URL
 switcher.apikey -> Switcher-API key generated for the application/component
 switcher.component -> Application/component name

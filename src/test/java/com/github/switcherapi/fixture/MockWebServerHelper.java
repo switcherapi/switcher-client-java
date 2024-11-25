@@ -109,7 +109,7 @@ public class MockWebServerHelper {
     }
 
     /**
-     * @see ClientWSImpl#executeCriteriaService(Switcher, String)
+     * @see ClientWSImpl#executeCriteria(Switcher, String)
      *
      * @param result returned by the criteria execution
      * @param reason if you want to display along with the result
@@ -124,7 +124,7 @@ public class MockWebServerHelper {
     }
 
     /**
-     * @see ClientWSImpl#executeCriteriaService(Switcher, String)
+     * @see ClientWSImpl#executeCriteria(Switcher, String)
      *
      * @param result returned by the criteria execution
      * @return Generated mock /criteria response
@@ -134,7 +134,7 @@ public class MockWebServerHelper {
     }
 
     /**
-     * @see ClientWSImpl#executeCriteriaService(Switcher, String)
+     * @see ClientWSImpl#executeCriteria(Switcher, String)
      *
      * @param result returned by the criteria execution
      * @param reason returned by the criteria execution
@@ -155,7 +155,7 @@ public class MockWebServerHelper {
     }
 
     /**
-     * @see ClientWSImpl#executeCriteriaService(Switcher, String)
+     * @see ClientWSImpl#executeCriteria(Switcher, String)
      *
      * @param metadata returned by the criteria execution
      * @return Generated mock /criteria response

@@ -47,7 +47,7 @@ public class ClientRemoteService implements ClientRemote {
 		try {
 			this.auth(tokenStatus);
 
-			return this.clientWs.executeCriteriaService(switcher,
+			return this.clientWs.executeCriteria(switcher,
 					Optional.of(this.authResponse).orElseGet(AuthResponse::new).getToken());
 		} catch (final SwitcherRemoteException e) {
 			if (tokenStatus != TokenStatus.SILENT) {
