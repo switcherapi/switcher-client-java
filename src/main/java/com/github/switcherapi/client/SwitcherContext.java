@@ -33,7 +33,9 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	 * After loading the properties, it will validate the arguments and load the Switchers in memory.
 	 */
 	public static void loadProperties() {
-		loadProperties("switcherapi");
+		SwitcherContextBase.contextBase = null;
+		SwitcherContextBase.loadProperties("switcherapi");
+		SwitcherContextBase.initializeClient();
 	}
 	
 	/**
@@ -121,5 +123,5 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	public static void configure(ContextBuilder builder) {
 		SwitcherContextBase.configure(builder);
 	}
-	
+
 }

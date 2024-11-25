@@ -37,7 +37,7 @@ class SwitcherLocalServiceTest {
 	static void init() {
 		executorService = Executors.newSingleThreadExecutor();
 		SwitchersBase.configure(ContextBuilder.builder()
-				.contextLocation("com.github.switcherapi.SwitchersBase")
+				.context("com.github.switcherapi.SwitchersBase")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("default")
 				.local(true));

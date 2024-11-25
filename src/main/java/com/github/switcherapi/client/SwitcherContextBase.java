@@ -65,7 +65,7 @@ import static com.github.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
  * // Initialize the Switcher Client using ContextBuilder
  * public void configureClient() {
  *  	Features.configure(ContextBuilder.builder()
- *   		.contextLocation("com.business.config.Features")
+ *   		.context("com.business.config.Features")
  *   		.apiKey("API_KEY")
  *   		.domain("Playground")
  *   		.component("switcher-playground")
@@ -91,6 +91,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	private static ScheduledExecutorService scheduledExecutorService;
 	private static ExecutorService watcherExecutorService;
 	private static SnapshotWatcher watcherSnapshot;
+	protected static SwitcherContextBase contextBase;
 	
 	static {
 		switcherProperties = new SwitcherPropertiesImpl();
@@ -98,8 +99,9 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 
 	@Override
 	protected void configureClient() {
+		setContextBase(this);
 		configure(ContextBuilder.builder(true)
-				.contextLocation(contextLocation)
+				.context(contextBase.getClass().getName())
 				.url(url)
 				.apiKey(apikey)
 				.domain(domain)
@@ -116,19 +118,32 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 				.truststorePath(truststore.getPath())
 				.truststorePassword(truststore.getPassword()));
 
+		switcherProperties.setValue(ContextKey.CONTEXT_LOCATION, contextBase.getClass().getName());
 		initializeClient();
 	}
-	
+
+	@Override
+	protected void configureClient(String contextFile) {
+		setContextBase(this);
+		loadProperties(contextFile);
+
+		switcherProperties.setValue(ContextKey.CONTEXT_LOCATION, contextBase.getClass().getName());
+		initializeClient();
+	}
+
+	private static synchronized void setContextBase(SwitcherContextBase contextBase) {
+		SwitcherContextBase.contextBase = contextBase;
+	}
+
 	/**
 	 * Load properties from the resources' folder, look up for a given context file name (without extension).<br>
-	 * After loading the properties, it will validate the arguments and load the Switchers in memory.
 	 * <p>
-	 * Use this method optionally if you want to load the settings from a customized file name.
+	 * Use this method optionally if you want to load the settings from properties file.<br>
 	 * </p>
 	 *
 	 * Features must inherit {@link SwitcherContextBase}
 	 * <pre>
-	 * // Load from resources/switcherapi-test.properties 
+	 * // Load from resources/switcherapi-test.properties
 	 * Features.loadProperties("switcherapi-test");
 	 * </pre>
 	 * @param contextFilename to load properties from
@@ -136,15 +151,14 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	public static void loadProperties(String contextFilename) {
 		try (InputStream input = SwitcherContextBase.class
 				.getClassLoader().getResourceAsStream(String.format("%s.properties", contextFilename))) {
-			
+
 			Properties prop = new Properties();
-            prop.load(input);
-            
-            switcherProperties.loadFromProperties(prop);
-    		initializeClient();
-        } catch (IOException io) {
-        	throw new SwitcherContextException(io.getMessage());
-        }
+			prop.load(input);
+
+			switcherProperties.loadFromProperties(prop);
+		} catch (IOException io) {
+			throw new SwitcherContextException(io.getMessage());
+		}
 	}
 	
 	/**
@@ -201,17 +215,29 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * It will ensure that only properly annotated Switchers can be used.
 	 */
 	private static void validateSwitcherKeys() {
-		try {
-			switcherKeys = new HashSet<>();
-			
-			final Class<?> clazz = Class.forName(contextStr(ContextKey.CONTEXT_LOCATION));
-			for (Field field : clazz.getFields()) {
-				if (field.isAnnotationPresent(SwitcherKey.class)) {
-					switcherKeys.add(field.getName());
-				}
+		if (Objects.nonNull(contextBase)) {
+			registerSwitcherKey(contextBase.getClass().getFields());
+		} else {
+			try {
+				final Class<?> clazz = Class.forName(contextStr(ContextKey.CONTEXT_LOCATION));
+				registerSwitcherKey(clazz.getFields());
+			} catch(ClassNotFoundException e){
+				throw new SwitcherContextException(e.getMessage());
 			}
-		} catch (ClassNotFoundException e) {
-			throw new SwitcherContextException(e.getMessage());
+		}
+	}
+
+	/**
+	 * Register Switcher Keys based on the annotation {@link SwitcherKey}
+	 *
+	 * @param fields to be registered
+	 */
+	private static void registerSwitcherKey(Field[] fields) {
+		switcherKeys = new HashSet<>();
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(SwitcherKey.class)) {
+				switcherKeys.add(field.getName());
+			}
 		}
 	}
 	

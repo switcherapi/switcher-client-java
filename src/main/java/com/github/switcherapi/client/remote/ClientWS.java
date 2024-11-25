@@ -53,7 +53,7 @@ public interface ClientWS {
 	 * @param token Access token
 	 * @return the execution based on the configured switcher
 	 */
-	CriteriaResponse executeCriteriaService(final Switcher switcher, final String token);
+	CriteriaResponse executeCriteria(final Switcher switcher, final String token);
 	
 	/**
 	 * Returns the token to access all available endpoints
