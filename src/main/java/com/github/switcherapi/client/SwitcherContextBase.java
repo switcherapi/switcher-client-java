@@ -131,7 +131,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 		initializeClient();
 	}
 
-	private synchronized static void setContextBase(SwitcherContextBase contextBase) {
+	private static synchronized void setContextBase(SwitcherContextBase contextBase) {
 		SwitcherContextBase.contextBase = contextBase;
 	}
 
