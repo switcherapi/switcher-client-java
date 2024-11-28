@@ -1,10 +1,10 @@
 package com.github.switcherapi.client.service.remote;
 
 import com.github.switcherapi.client.exception.SwitcherException;
-import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Snapshot;
-import com.github.switcherapi.client.model.criteria.SwitchersCheck;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.remote.dto.SwitchersCheck;
+import com.github.switcherapi.client.remote.dto.CriteriaRequest;
+import com.github.switcherapi.client.remote.dto.CriteriaResponse;
 
 import java.util.Set;
 
@@ -19,11 +19,11 @@ public interface ClientRemote {
      * validating from the top of the node (Domain) ascending to the lower level
      * (Strategy)
      *
-     * @param switcher Configuration switcher to be validated
+     * @param criteriaRequest Criteria request
      * @return The criteria result
      * @throws SwitcherException If encountered either invalid input or misconfiguration
      */
-    CriteriaResponse executeCriteria(final Switcher switcher);
+    CriteriaResponse executeCriteria(final CriteriaRequest criteriaRequest);
 
     /**
      * Resolve the snapshot from the remote server

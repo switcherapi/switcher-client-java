@@ -5,11 +5,8 @@ import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Snapshot;
-import com.github.switcherapi.client.model.criteria.SwitchersCheck;
-import com.github.switcherapi.client.model.response.AuthRequest;
-import com.github.switcherapi.client.model.response.AuthResponse;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
-import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
+import com.github.switcherapi.client.remote.dto.SwitchersCheck;
+import com.github.switcherapi.client.remote.dto.*;
 import com.google.gson.Gson;
 
 import java.net.URI;
@@ -52,22 +49,22 @@ public class ClientWSImpl implements ClientWS {
 	}
 	
 	@Override
-	public CriteriaResponse executeCriteria(final Switcher switcher, final String token) {
+	public CriteriaResponse executeCriteria(final CriteriaRequest criteriaRequest, final String token) {
 		final String url = switcherProperties.getValue(ContextKey.URL);
 
 		try {
 			final URI uri = new URI(url)
 					.resolve(String.format(CRITERIA_URL, url,
-							Switcher.KEY, switcher.getSwitcherKey(),
+							Switcher.KEY, criteriaRequest.getSwitcherKey(),
 							Switcher.SHOW_REASON, Boolean.TRUE,
-							Switcher.BYPASS_METRIC, switcher.isBypassMetrics()));
+							Switcher.BYPASS_METRIC, criteriaRequest.isBypassMetric()));
 
 			final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
 					.uri(uri)
 					.headers(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token),
 							CONTENT_TYPE[0], CONTENT_TYPE[1])
 					.timeout(Duration.ofMillis(timeoutMs))
-					.POST(HttpRequest.BodyPublishers.ofString(gson.toJson(switcher.getInputRequest())))
+					.POST(HttpRequest.BodyPublishers.ofString(gson.toJson(criteriaRequest.getInputRequest())))
 					.build(), HttpResponse.BodyHandlers.ofString());
 
 			if (response.statusCode() != 200) {
@@ -75,8 +72,8 @@ public class ClientWSImpl implements ClientWS {
 			}
 
 			final CriteriaResponse criteriaResponse = gson.fromJson(response.body(), CriteriaResponse.class);
-			criteriaResponse.setSwitcherKey(switcher.getSwitcherKey());
-			criteriaResponse.setEntry(switcher.getEntry());
+			criteriaResponse.setSwitcherKey(criteriaRequest.getSwitcherKey());
+			criteriaResponse.setEntry(criteriaRequest.getEntry());
 			return criteriaResponse;
 		} catch (Exception e) {
 			return exceptionHandler(e, url);

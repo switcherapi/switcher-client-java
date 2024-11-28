@@ -7,17 +7,17 @@ package com.github.switcherapi.client.model.criteria;
  */
 public class Snapshot {
 
-	private Criteria data;
+	private Data data;
 
 	public Domain getDomain() {
 		return data != null ? data.getDomain() : new Domain();
 	}
 
-	public Criteria getData() {
+	public Data getData() {
 		return data;
 	}
 
-	public void setData(Criteria data) {
+	public void setData(Data data) {
 		this.data = data;
 	}
 

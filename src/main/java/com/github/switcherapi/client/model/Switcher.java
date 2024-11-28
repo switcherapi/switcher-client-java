@@ -3,7 +3,6 @@ package com.github.switcherapi.client.model;
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherException;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
 
 import java.util.*;
 
@@ -24,12 +23,14 @@ public final class Switcher extends SwitcherBuilder {
 	public static final String SHOW_REASON = "showReason";
 	
 	public static final String BYPASS_METRIC = "bypassMetric";
+
+	private final SwitcherExecutor context;
 	
 	private final String switcherKey;
 	
-	private final Set<CriteriaResponse> historyExecution;
+	private final Set<SwitcherResult> historyExecution;
 
-	private AsyncSwitcher asyncSwitcher;
+	private AsyncSwitcher<Switcher> asyncSwitcher;
 	
 	/**
 	 * Use {@link SwitcherContext#getSwitcher(String)} to create this object.
@@ -38,7 +39,8 @@ public final class Switcher extends SwitcherBuilder {
 	 * @param context client context in which the switcher will be executed (local/remote)
 	 */
 	public Switcher(final String switcherKey, final SwitcherExecutor context) {
-		super(context);
+		super(context.getSwitcherProperties());
+		this.context = context;
 		this.switcherKey = switcherKey;
 		this.historyExecution = new HashSet<>();
 		this.entry = new ArrayList<>();
@@ -75,40 +77,40 @@ public final class Switcher extends SwitcherBuilder {
 	
 	@Override
 	public boolean isItOn() throws SwitcherException {
-		final CriteriaResponse response = submit();
+		final SwitcherResult response = submit();
 		return response.isItOn();
 	}
 
 	@Override
-	public CriteriaResponse submit() throws SwitcherException {
+	public SwitcherResult submit() throws SwitcherException {
 		if (SwitcherExecutor.getBypass().containsKey(switcherKey)) {
 			return SwitcherExecutor.getBypass().get(switcherKey).buildFromSwitcher(this);
 		}
 
 		if (canUseAsync()) {
-			if (asyncSwitcher == null) {
-				asyncSwitcher = new AsyncSwitcher(this, super.delay);
+			if (Objects.isNull(asyncSwitcher)) {
+				asyncSwitcher = new AsyncSwitcher<>(this, super.delay);
 			}
 
 			asyncSwitcher.execute();
-			final Optional<CriteriaResponse> response = getFromHistory();
+			final Optional<SwitcherResult> response = getFromHistory();
 			if (response.isPresent()) {
 				return response.get();
 			}
 		}
 
-		final CriteriaResponse response = this.context.executeCriteria(this);
+		final SwitcherResult response = this.context.executeCriteria(this);
 		this.updateHistoryExecution(response);
 		return response;
 	}
 
 	@Override
-	public CriteriaResponse executeCriteria() {
+	public SwitcherResult executeCriteria() {
 		return this.context.executeCriteria(this);
 	}
 
 	@Override
-	public void updateHistoryExecution(final CriteriaResponse response) {
+	public void updateHistoryExecution(final SwitcherResult response) {
 		this.historyExecution.removeIf(item ->
 				this.switcherKey.equals(item.getSwitcherKey()) && this.entry.equals(item.getEntry()));
 
@@ -124,17 +126,6 @@ public final class Switcher extends SwitcherBuilder {
 	public List<Entry> getEntry() {
 		return this.entry;
 	}
-	
-	/**
-	 * This method builds up the request made by the client to reach the Switcher API.
-	 * 
-	 * @return json input request
-	 */
-	public GsonInputRequest getInputRequest() {
-		return new GsonInputRequest(
-				this.entry != null ?
-						this.entry.toArray(new Entry[0]) : null);
-	}
 
 	public boolean isBypassMetrics() {
 		return bypassMetrics;
@@ -148,10 +139,10 @@ public final class Switcher extends SwitcherBuilder {
 		return super.delay > 0 && !this.historyExecution.isEmpty();
 	}
 
-	private Optional<CriteriaResponse> getFromHistory() {
-		for (CriteriaResponse criteriaResponse : historyExecution) {
-			if (criteriaResponse.getEntry().equals(getEntry())) {
-				return Optional.of(criteriaResponse);
+	private Optional<SwitcherResult> getFromHistory() {
+		for (SwitcherResult switcherResult : historyExecution) {
+			if (switcherResult.getEntry().equals(getEntry())) {
+				return Optional.of(switcherResult);
 			}
 		}
 		return Optional.empty();
@@ -161,19 +152,6 @@ public final class Switcher extends SwitcherBuilder {
 	public String toString() {
 		return String.format("Switcher [switcherKey= %s, entry= %s, bypassMetrics= %s]",
 				switcherKey, entry, bypassMetrics);
-	}
-	
-	public static class GsonInputRequest {
-		
-		private final Entry[] entry;
-		
-		public GsonInputRequest(final Entry[] entry) {
-			this.entry = entry;
-		}
-
-		public Entry[] getEntry() {
-			return this.entry;
-		}
 	}
 
 }

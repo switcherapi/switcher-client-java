@@ -1,5 +1,7 @@
 package com.github.switcherapi.client;
 
+import com.github.switcherapi.client.model.ContextKey;
+
 abstract class SwitcherConfig {
 
 	protected String url;
@@ -18,6 +20,35 @@ abstract class SwitcherConfig {
 	SwitcherConfig() {
 		this.snapshot = new SnapshotConfig();
 		this.truststore = new TruststoreConfig();
+	}
+
+	/**
+	 * Update Switcher Configurations state using pre-configured properties.
+	 *
+	 * @param properties Switcher Properties
+	 */
+	protected void updateSwitcherConfig(SwitcherProperties properties) {
+		setUrl(properties.getValue(ContextKey.URL));
+		setApikey(properties.getValue(ContextKey.APIKEY));
+		setDomain(properties.getValue(ContextKey.DOMAIN));
+		setComponent(properties.getValue(ContextKey.COMPONENT));
+		setEnvironment(properties.getValue(ContextKey.ENVIRONMENT));
+		setLocal(properties.getBoolean(ContextKey.LOCAL_MODE));
+		setSilent(properties.getValue(ContextKey.SILENT_MODE));
+		setTimeout(properties.getInt(ContextKey.TIMEOUT_MS));
+		setPoolSize(properties.getInt(ContextKey.POOL_CONNECTION_SIZE));
+
+		SnapshotConfig snapshot = new SnapshotConfig();
+		snapshot.setLocation(properties.getValue(ContextKey.SNAPSHOT_LOCATION));
+		snapshot.setAuto(properties.getBoolean(ContextKey.SNAPSHOT_AUTO_LOAD));
+		snapshot.setSkipValidation(properties.getBoolean(ContextKey.SNAPSHOT_SKIP_VALIDATION));
+		snapshot.setUpdateInterval(properties.getValue(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL));
+		setSnapshot(snapshot);
+
+		TruststoreConfig truststore = new TruststoreConfig();
+		truststore.setPath(properties.getValue(ContextKey.TRUSTSTORE_PATH));
+		truststore.setPassword(properties.getValue(ContextKey.TRUSTSTORE_PASSWORD));
+		setTruststore(truststore);
 	}
 
 	/**

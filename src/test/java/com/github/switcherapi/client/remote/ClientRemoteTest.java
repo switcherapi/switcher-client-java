@@ -4,8 +4,9 @@ import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.criteria.SwitchersCheck;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.remote.dto.SwitchersCheck;
+import com.github.switcherapi.client.remote.dto.CriteriaRequest;
+import com.github.switcherapi.client.model.SwitcherResult;
 import com.github.switcherapi.client.service.SwitcherValidator;
 import com.github.switcherapi.client.service.ValidatorService;
 import com.github.switcherapi.client.service.local.ClientLocal;
@@ -71,10 +72,11 @@ class ClientRemoteTest extends MockWebServerHelper {
 
         SwitcherValidator validatorService = new ValidatorService();
         ClientLocal clientLocal = new ClientLocalService(validatorService);
-        Switcher switcher = new Switcher("KEY", new SwitcherRemoteService(clientRemote, new SwitcherLocalService(clientRemote, clientLocal, Switchers.getSwitcherProperties())));
+        Switcher switcher = new Switcher("KEY", new SwitcherRemoteService(clientRemote,
+                new SwitcherLocalService(clientRemote, clientLocal, Switchers.getSwitcherProperties())));
 
         //test
-        CriteriaResponse actual = clientRemote.executeCriteria(switcher);
+        SwitcherResult actual = SwitcherResult.buildResultFromRemote(clientRemote.executeCriteria(CriteriaRequest.build(switcher)));
         assertTrue(actual.isItOn());
     }
 

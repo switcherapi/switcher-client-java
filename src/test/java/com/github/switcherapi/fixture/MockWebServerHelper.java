@@ -1,10 +1,10 @@
 package com.github.switcherapi.fixture;
 
-import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.criteria.Criteria;
+import com.github.switcherapi.client.model.criteria.Data;
 import com.github.switcherapi.client.model.criteria.Snapshot;
-import com.github.switcherapi.client.model.criteria.SwitchersCheck;
+import com.github.switcherapi.client.remote.dto.SwitchersCheck;
 import com.github.switcherapi.client.remote.ClientWSImpl;
+import com.github.switcherapi.client.remote.dto.CriteriaRequest;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import com.google.gson.Gson;
@@ -72,9 +72,9 @@ public class MockWebServerHelper {
      */
     protected MockResponse generateSnapshotResponse(String snapshotFile, String resourcesPath) {
         final Snapshot mockedSnapshot = new Snapshot();
-        final Criteria criteria = new Criteria();
-        criteria.setDomain(SnapshotLoader.loadSnapshot(resourcesPath + "/" + snapshotFile));
-        mockedSnapshot.setData(criteria);
+        final Data data = new Data();
+        data.setDomain(SnapshotLoader.loadSnapshot(resourcesPath + "/" + snapshotFile));
+        mockedSnapshot.setData(data);
 
         Gson gson = new Gson();
         MockResponse.Builder builder = new MockResponse.Builder();
@@ -109,7 +109,7 @@ public class MockWebServerHelper {
     }
 
     /**
-     * @see ClientWSImpl#executeCriteria(Switcher, String)
+     * @see ClientWSImpl#executeCriteria(CriteriaRequest, String)
      *
      * @param result returned by the criteria execution
      * @param reason if you want to display along with the result
@@ -124,7 +124,7 @@ public class MockWebServerHelper {
     }
 
     /**
-     * @see ClientWSImpl#executeCriteria(Switcher, String)
+     * @see ClientWSImpl#executeCriteria(CriteriaRequest, String)
      *
      * @param result returned by the criteria execution
      * @return Generated mock /criteria response
@@ -134,7 +134,7 @@ public class MockWebServerHelper {
     }
 
     /**
-     * @see ClientWSImpl#executeCriteria(Switcher, String)
+     * @see ClientWSImpl#executeCriteria(CriteriaRequest, String)
      *
      * @param result returned by the criteria execution
      * @param reason returned by the criteria execution
@@ -155,7 +155,7 @@ public class MockWebServerHelper {
     }
 
     /**
-     * @see ClientWSImpl#executeCriteria(Switcher, String)
+     * @see ClientWSImpl#executeCriteria(CriteriaRequest, String)
      *
      * @param metadata returned by the criteria execution
      * @return Generated mock /criteria response
