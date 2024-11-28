@@ -5,7 +5,8 @@ import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.*;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.remote.dto.CriteriaRequest;
+import com.github.switcherapi.client.model.SwitcherResult;
 import com.github.switcherapi.client.service.remote.ClientRemote;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
@@ -99,13 +100,13 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	}
 	
 	@Override
-	public CriteriaResponse executeCriteria(final Switcher switcher) {
+	public SwitcherResult executeCriteria(final Switcher switcher) {
 		SwitcherUtils.debug(logger, "[Local] request: {}", switcher);
 
-		CriteriaResponse response;
+		SwitcherResult response;
 		try {
 			if (switcher.isRemote()) {
-				response = this.clientRemote.executeCriteria(switcher);
+				response = SwitcherResult.buildResultFromRemote(this.clientRemote.executeCriteria(CriteriaRequest.build(switcher)));
 				SwitcherUtils.debug(logger, "[Remote] response: {}", response);
 			} else {
 				response = this.clientLocal.executeCriteria(switcher, this.domain);
@@ -116,7 +117,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 				throw e;
 			}
 
-			response = CriteriaResponse.buildFromDefault(switcher);
+			response = SwitcherResult.buildFromDefault(switcher);
 			SwitcherUtils.debug(logger, "[Default] response: {}", response);
 		}
 		

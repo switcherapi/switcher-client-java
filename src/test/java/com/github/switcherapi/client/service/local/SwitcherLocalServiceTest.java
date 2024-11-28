@@ -62,12 +62,30 @@ class SwitcherLocalServiceTest {
 		
 		assertFalse(service.notifyChange("defect_default.json"));
 	}
+
+	@Test
+	void shouldNotifyWithErrorResources() {
+		SwitchersBase.configure(ContextBuilder.builder()
+				.snapshotLocation("")
+				.environment("defect_default"));
+
+		assertFalse(service.notifyChange("defect_default.json"));
+	}
 	
 	@Test
 	void shouldNotifyWithSuccess() {
 		SwitchersBase.configure(ContextBuilder.builder()
 				.environment("snapshot_watcher"));
 		
+		assertTrue(service.notifyChange("snapshot_watcher.json"));
+	}
+
+	@Test
+	void shouldNotifyWithSuccessResources() {
+		SwitchersBase.configure(ContextBuilder.builder()
+				.snapshotLocation("")
+				.environment("snapshot_watcher"));
+
 		assertTrue(service.notifyChange("snapshot_watcher.json"));
 	}
 	

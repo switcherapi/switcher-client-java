@@ -106,9 +106,8 @@ class SwitcherLocal1Test {
 	void localShouldTest_dateValidation(String useCaseKey, String input, boolean expected) {
 		Switcher switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.DATE, input);
-		
-		switcher.prepareEntry(entry);
-		assertEquals(expected, switcher.isItOn());
+
+		assertEquals(expected, switcher.prepareEntry(entry).isItOn());
 	}
 	
 	@ParameterizedTest()

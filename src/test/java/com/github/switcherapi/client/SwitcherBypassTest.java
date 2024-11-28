@@ -2,7 +2,7 @@ package com.github.switcherapi.client;
 
 import com.github.switcherapi.client.model.StrategyValidator;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.model.SwitcherResult;
 import com.github.switcherapi.client.test.SwitcherTest;
 import com.github.switcherapi.client.test.SwitcherTestValue;
 import com.github.switcherapi.client.test.SwitcherTestWhen;
@@ -184,9 +184,9 @@ class SwitcherBypassTest {
 
 		//test
 		Switcher switcher = getSwitcher(USECASE111);
-		CriteriaResponse criteriaResponse = switcher.submit();
-		assertTrue(criteriaResponse.isItOn());
-		assertEquals("Switcher bypassed", criteriaResponse.getReason());
+		SwitcherResult switcherResult = switcher.submit();
+		assertTrue(switcherResult.isItOn());
+		assertEquals("Switcher bypassed", switcherResult.getReason());
 	}
 
 	@SwitcherTest(switchers = {
@@ -219,8 +219,8 @@ class SwitcherBypassTest {
 
 		//test
 		Switcher switcher = getSwitcher(USECASE111);
-		CriteriaResponse criteriaResponse = switcher.submit();
-		assertEquals("123", criteriaResponse.getMetadata(MetadataSample.class).getTransactionId());
+		SwitcherResult switcherResult = switcher.submit();
+		assertEquals("123", switcherResult.getMetadata(MetadataSample.class).getTransactionId());
 	}
 
 	@SwitcherTest(switchers = {
@@ -234,12 +234,12 @@ class SwitcherBypassTest {
 
 		//test
 		Switcher switcher = getSwitcher(USECASE111);
-		CriteriaResponse criteriaResponse = switcher.submit();
-		assertEquals("123", criteriaResponse.getMetadata(MetadataSample.class).getTransactionId());
+		SwitcherResult switcherResult = switcher.submit();
+		assertEquals("123", switcherResult.getMetadata(MetadataSample.class).getTransactionId());
 
 		switcher = getSwitcher(USECASE112);
-		criteriaResponse = switcher.submit();
-		assertEquals("321", criteriaResponse.getMetadata(MetadataErrorSample.class).getErrorId());
+		switcherResult = switcher.submit();
+		assertEquals("321", switcherResult.getMetadata(MetadataErrorSample.class).getErrorId());
 	}
 
 	@Test

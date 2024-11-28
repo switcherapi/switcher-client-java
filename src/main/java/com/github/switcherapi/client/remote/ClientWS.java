@@ -1,14 +1,11 @@
 package com.github.switcherapi.client.remote;
 
+import com.github.switcherapi.client.model.criteria.Snapshot;
+import com.github.switcherapi.client.remote.dto.SwitchersCheck;
+import com.github.switcherapi.client.remote.dto.*;
+
 import java.util.Optional;
 import java.util.Set;
-
-import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.criteria.Snapshot;
-import com.github.switcherapi.client.model.criteria.SwitchersCheck;
-import com.github.switcherapi.client.model.response.AuthResponse;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
-import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
 
 /**
  * @author Roger Floriano {petruki)
@@ -49,11 +46,11 @@ public interface ClientWS {
 	/**
 	 * Returns the verification configured for a specific switcher (key)
 	 * 
-	 * @param switcher store all necessary input to access the criteria
+	 * @param criteriaRequest Criteria request
 	 * @param token Access token
 	 * @return the execution based on the configured switcher
 	 */
-	CriteriaResponse executeCriteria(final Switcher switcher, final String token);
+	CriteriaResponse executeCriteria(final CriteriaRequest criteriaRequest, final String token);
 	
 	/**
 	 * Returns the token to access all available endpoints

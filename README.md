@@ -154,13 +154,13 @@ Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
 switcher.isItOn();
 ```
 
-Or, you can submit the switcher request and get the criteria response, which contains result, reason and metadata that can be used for any additional verification.
+Or, you can submit the switcher request and get the switcher result, which contains result, reason and metadata that can be used for any additional verification.
 
 ```java
-CriteriaResponse response = switcher.submit();
-response.isItOn(); // true/false
-response.getReason(); // Descriptive response based on result value
-response.getMetadata(YourMetadata.class); // Additional information
+SwitcherResult result = switcher.submit();
+result.isItOn(); // true/false
+result.getReason(); // Descriptive response based on result value
+result.getMetadata(YourMetadata.class); // Additional information
 ```
 
 2. **Strategy validation - preparing input**

@@ -1,14 +1,16 @@
 package com.github.switcherapi.client;
 
-import com.github.switcherapi.SwitchersBase;
+import com.github.switcherapi.SwitchersBaseNative;
 import com.github.switcherapi.fixture.MockWebServerHelper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherConfigNativeTest extends MockWebServerHelper {
 
@@ -24,29 +26,39 @@ class SwitcherConfigNativeTest extends MockWebServerHelper {
 
 	@Test
 	void shouldUseNativeContext() {
-		SwitchersBase context = buildSwitcherClientConfigMinimal(new SwitchersBase(), String.format("http://localhost:%s", mockBackEnd.getPort()));
+		SwitchersBaseNative context = SwitchersBaseNative.buildSwitcherClientConfigMinimal(String.format("http://localhost:%s", mockBackEnd.getPort()));
 		context.configureClient();
 
-		givenResponse(generateMockAuth(10));
-		givenResponse(generateCriteriaResponse("true", false));
+		givenResponse(generateMockAuth(10));  //auth
+		givenResponse(generateCriteriaResponse("true", false)); //criteria
 
-		assertTrue(SwitchersBase.getSwitcher(SwitchersBase.USECASE11).isItOn());
+		assertTrue(SwitchersBaseNative.getSwitcher(SwitchersBaseNative.USECASE11).isItOn());
+	}
+
+	@Test
+	void shouldUseNativeAndValidateSwitchers() {
+		SwitchersBaseNative context = SwitchersBaseNative.buildSwitcherClientConfigMinimal(String.format("http://localhost:%s", mockBackEnd.getPort()));
+		context.configureClient();
+
+		final Set<String> notFound = new HashSet<>();
+		givenResponse(generateMockAuth(10)); //auth
+		givenResponse(generateCheckSwitchersResponse(notFound)); //criteria/check_switchers
+
+		assertDoesNotThrow(SwitchersBaseNative::checkSwitchers);
 	}
 
 	@Test
 	void shouldUseNativeContextFromProperties() {
-		SwitchersBase context = new SwitchersBase();
+		SwitchersBaseNative context = new SwitchersBaseNative();
+		context.registerSwitcherKeys(SwitchersBaseNative.USECASE11);
 		context.configureClient("switcherapi-native");
 
-		assertTrue(SwitchersBase.getSwitcher(SwitchersBase.USECASE11).isItOn());
-	}
-
-	private <T extends SwitcherConfig> T buildSwitcherClientConfigMinimal(T classConfig, String url) {
-		classConfig.setUrl(url);
-		classConfig.setApikey("[API-KEY]");
-		classConfig.setDomain("domain");
-		classConfig.setComponent("component");
-		return classConfig;
+		assertTrue(SwitchersBaseNative.getSwitcher(SwitchersBaseNative.USECASE11).isItOn());
+		assertEquals("switcher-client", context.component);
+		assertEquals("switcher-domain", context.domain);
+		assertEquals("[API_KEY]", context.apikey);
+		assertEquals("http://localhost:3000", context.url);
+		assertEquals("fixture1", context.environment);
 	}
 
 }

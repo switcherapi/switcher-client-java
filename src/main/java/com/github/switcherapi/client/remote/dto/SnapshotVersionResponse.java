@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.model.response;
+package com.github.switcherapi.client.remote.dto;
 
 /**
  * @author Roger Floriano (petruki)

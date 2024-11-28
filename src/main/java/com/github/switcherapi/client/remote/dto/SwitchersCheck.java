@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.model.criteria;
+package com.github.switcherapi.client.remote.dto;
 
 import java.util.Arrays;
 import java.util.Set;

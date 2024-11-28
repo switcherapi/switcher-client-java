@@ -2,7 +2,6 @@ package com.github.switcherapi.client.model;
 
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.exception.SwitcherException;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
  *     <li>Switcher get input/output</li>
  * </ul>
  */
-public interface SwitcherInterface {
+public interface SwitcherInterface<T> {
 
 	/**
 	 * This method builds the Switcher object.<br>
@@ -31,39 +30,40 @@ public interface SwitcherInterface {
 	 * 	.build();
 	 * </pre>
 	 *
-	 * @return {@link Switcher}
+	 * @return instance of SwitcherInterface
+	 * @see Switcher
 	 */
-	Switcher build();
+	T build();
 
 	/**
 	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.
 	 *
 	 * @param entry input object
-	 * @return {@link Switcher}
+	 * @return instance of SwitcherInterface
 	 */
-	Switcher prepareEntry(final List<Entry> entry);
+	T prepareEntry(final List<Entry> entry);
 
 	/**
 	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.
 	 *
 	 * @param entry input object
 	 * @param add if false, the list will be cleaned and the entry provided will be the only input for this Switcher.
-	 * @return {@link Switcher}
+	 * @return instance of SwitcherInterface
 	 */
-	Switcher prepareEntry(final Entry entry, final boolean add);
+	T prepareEntry(final Entry entry, final boolean add);
 
 	/**
 	 * It adds an input to the list of inputs.
 	 * <br>Under the table it calls {@link #prepareEntry(Entry, boolean)} passing true to the second argument.
 	 *
 	 * @param entry input object
-	 * @return {@link Switcher}
+	 * @return instance of SwitcherInterface
 	 */
-	Switcher prepareEntry(final Entry entry);
+	T prepareEntry(final Entry entry);
 
 	/**
 	 * Execute criteria based on a given switcher key provided via {@link SwitcherContext#getSwitcher(String)}.
-	 * <br>The detailed result is available in list of {@link CriteriaResponse}.
+	 * <br>The detailed result is available in list of {@link SwitcherResult}.
 	 *
 	 * @return criteria result
 	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
@@ -72,26 +72,26 @@ public interface SwitcherInterface {
 
 	/**
 	 * Execute criteria based on a given switcher key provided via {@link SwitcherContext#getSwitcher(String)}.
-	 * <br>The detailed result is available in list of {@link CriteriaResponse}.
+	 * <br>The detailed result is available in list of {@link SwitcherResult}.
 	 *
-	 * @return {@link CriteriaResponse}
+	 * @return {@link SwitcherResult}
 	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
 	 */
-	CriteriaResponse submit() throws SwitcherException;
+	SwitcherResult submit() throws SwitcherException;
 
 	/**
 	 * Execute the criteria evaluation.
 	 *
-	 * @return the criteria response
+	 * @return the switcher result
 	 */
-	CriteriaResponse executeCriteria();
+	SwitcherResult executeCriteria();
 
 	/**
 	 * Update the history of executions.
 	 *
 	 * @param response the response to be updated
 	 */
-	void updateHistoryExecution(CriteriaResponse response);
+	void updateHistoryExecution(SwitcherResult response);
 
 	/**
 	 * Get the key of the switcher.

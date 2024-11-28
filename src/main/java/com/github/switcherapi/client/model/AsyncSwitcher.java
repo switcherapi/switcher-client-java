@@ -1,7 +1,6 @@
 package com.github.switcherapi.client.model;
 
 import com.github.switcherapi.client.exception.SwitcherException;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,19 +18,19 @@ import static com.github.switcherapi.client.service.WorkerName.SWITCHER_ASYNC_WO
  * @since 2021-11-27
  *
  */
-public class AsyncSwitcher {
+public class AsyncSwitcher<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(AsyncSwitcher.class);
 
 	private final ExecutorService executorService;
 
-	private final SwitcherInterface switcherInterface;
+	private final SwitcherInterface<T> switcherInterface;
 
 	private final long delay;
 
 	private long nextRun = 0;
 
-	public AsyncSwitcher(final SwitcherInterface switcherInterface, long delay) {
+	public AsyncSwitcher(final SwitcherInterface<T> switcherInterface, long delay) {
 		this.executorService = Executors.newCachedThreadPool(r -> {
 			Thread thread = new Thread(r);
 			thread.setName(SWITCHER_ASYNC_WORKER.toString());
@@ -60,7 +59,7 @@ public class AsyncSwitcher {
 
 	public void run() {
 		try {
-			final CriteriaResponse response = switcherInterface.executeCriteria();
+			final SwitcherResult response = switcherInterface.executeCriteria();
 			switcherInterface.updateHistoryExecution(response);
 		} catch (SwitcherException e) {
 			logger.error(e.getMessage(), e);
