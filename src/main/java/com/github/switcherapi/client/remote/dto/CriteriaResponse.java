@@ -1,9 +1,5 @@
 package com.github.switcherapi.client.remote.dto;
 
-import com.github.switcherapi.client.model.Entry;
-
-import java.util.List;
-
 public class CriteriaResponse {
 
 	private boolean result;
@@ -14,30 +10,16 @@ public class CriteriaResponse {
 
 	private String switcherKey;
 
-	protected List<Entry> entry;
-
 	public boolean getResult() {
 		return result;
-	}
-
-	public void setResult(boolean result) {
-		this.result = result;
 	}
 
 	public String getReason() {
 		return reason;
 	}
 
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-
 	public Object getMetadata() {
 		return metadata;
-	}
-
-	public void setMetadata(Object metadata) {
-		this.metadata = metadata;
 	}
 
 	public String getSwitcherKey() {
@@ -48,12 +30,13 @@ public class CriteriaResponse {
 		this.switcherKey = switcherKey;
 	}
 
-	public List<Entry> getEntry() {
-		return entry;
+	@Override
+	public String toString() {
+		return "CriteriaResponse{" +
+				"result=" + result +
+				", reason='" + reason + '\'' +
+				", metadata=" + metadata +
+				", switcherKey='" + switcherKey + '\'' +
+				'}';
 	}
-
-	public void setEntry(List<Entry> entry) {
-		this.entry = entry;
-	}
-
 }

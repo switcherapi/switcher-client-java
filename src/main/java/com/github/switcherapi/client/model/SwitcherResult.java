@@ -1,9 +1,6 @@
 package com.github.switcherapi.client.model;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import com.github.switcherapi.client.remote.dto.CriteriaResponse;
 import com.google.gson.Gson;
@@ -32,6 +29,7 @@ public class SwitcherResult {
 
 	public SwitcherResult() {
 		entryWhen = new HashMap<>();
+		entry = new ArrayList<>();
 	}
 
 	private SwitcherResult(final boolean result, final String reason, final Switcher switcher) {
@@ -80,7 +78,6 @@ public class SwitcherResult {
 		switcherResult.setResult(criteriaResponse.getResult());
 		switcherResult.setReason(criteriaResponse.getReason());
 		switcherResult.setMetadata(criteriaResponse.getMetadata());
-		switcherResult.setEntry(criteriaResponse.getEntry());
 		return switcherResult;
 	}
 

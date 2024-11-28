@@ -73,7 +73,6 @@ public class ClientWSImpl implements ClientWS {
 
 			final CriteriaResponse criteriaResponse = gson.fromJson(response.body(), CriteriaResponse.class);
 			criteriaResponse.setSwitcherKey(criteriaRequest.getSwitcherKey());
-			criteriaResponse.setEntry(criteriaRequest.getEntry());
 			return criteriaResponse;
 		} catch (Exception e) {
 			return exceptionHandler(e, url);
