@@ -38,17 +38,17 @@ abstract class SwitcherConfig {
 		setTimeout(properties.getInt(ContextKey.TIMEOUT_MS));
 		setPoolSize(properties.getInt(ContextKey.POOL_CONNECTION_SIZE));
 
-		SnapshotConfig snapshot = new SnapshotConfig();
-		snapshot.setLocation(properties.getValue(ContextKey.SNAPSHOT_LOCATION));
-		snapshot.setAuto(properties.getBoolean(ContextKey.SNAPSHOT_AUTO_LOAD));
-		snapshot.setSkipValidation(properties.getBoolean(ContextKey.SNAPSHOT_SKIP_VALIDATION));
-		snapshot.setUpdateInterval(properties.getValue(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL));
-		setSnapshot(snapshot);
+		SnapshotConfig snapshotConfig = new SnapshotConfig();
+		snapshotConfig.setLocation(properties.getValue(ContextKey.SNAPSHOT_LOCATION));
+		snapshotConfig.setAuto(properties.getBoolean(ContextKey.SNAPSHOT_AUTO_LOAD));
+		snapshotConfig.setSkipValidation(properties.getBoolean(ContextKey.SNAPSHOT_SKIP_VALIDATION));
+		snapshotConfig.setUpdateInterval(properties.getValue(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL));
+		setSnapshot(snapshotConfig);
 
-		TruststoreConfig truststore = new TruststoreConfig();
-		truststore.setPath(properties.getValue(ContextKey.TRUSTSTORE_PATH));
-		truststore.setPassword(properties.getValue(ContextKey.TRUSTSTORE_PASSWORD));
-		setTruststore(truststore);
+		TruststoreConfig truststoreConfig = new TruststoreConfig();
+		truststoreConfig.setPath(properties.getValue(ContextKey.TRUSTSTORE_PATH));
+		truststoreConfig.setPassword(properties.getValue(ContextKey.TRUSTSTORE_PASSWORD));
+		setTruststore(truststoreConfig);
 	}
 
 	/**
