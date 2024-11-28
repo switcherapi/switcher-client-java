@@ -5,12 +5,9 @@ import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Snapshot;
-import com.github.switcherapi.client.model.criteria.SwitchersCheck;
-import com.github.switcherapi.client.model.response.AuthResponse;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
-import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
+import com.github.switcherapi.client.remote.dto.SwitchersCheck;
+import com.github.switcherapi.client.remote.dto.*;
 import com.github.switcherapi.client.remote.ClientWS;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,13 +38,13 @@ public class ClientRemoteService implements ClientRemote {
 	}
 
 	@Override
-	public CriteriaResponse executeCriteria(final Switcher switcher)  {
+	public CriteriaResponse executeCriteria(final CriteriaRequest criteriaRequest)  {
 		final TokenStatus tokenStatus = this.isTokenValid();
 
 		try {
 			this.auth(tokenStatus);
 
-			return this.clientWs.executeCriteria(switcher,
+			return this.clientWs.executeCriteria(criteriaRequest,
 					Optional.of(this.authResponse).orElseGet(AuthResponse::new).getToken());
 		} catch (final SwitcherRemoteException e) {
 			if (tokenStatus != TokenStatus.SILENT) {

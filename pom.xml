@@ -83,6 +83,7 @@
 		<sonar.language>java</sonar.language>
 		<sonar.coverage.exclusions>
 			**/model/**/*.java,
+			**/remote/dto/*.java,
 			**/exception/**/*.java,
 			**/service/validators/RegexValidatorV8.java,
 			**/client/remote/Constants.java

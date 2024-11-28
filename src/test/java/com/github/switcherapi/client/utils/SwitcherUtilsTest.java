@@ -123,6 +123,7 @@ class SwitcherUtilsTest {
 	    return Stream.of(
 			Arguments.of("default", "default"),
 			Arguments.of("${PORT:8080}", "8080"),
+			Arguments.of("${SNAPSHOT_LOCAL:}", ""),
 			Arguments.of("${ENVIRONMENT}", "staging")
 	    );
 	}

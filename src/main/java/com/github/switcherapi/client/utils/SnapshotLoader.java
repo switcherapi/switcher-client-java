@@ -13,6 +13,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 /**
  * @author Roger Floriano (petruki)
@@ -53,11 +54,42 @@ public class SnapshotLoader {
 	 */
 	public static Domain loadSnapshot(final String snapshotLocation, final String environment)
 			throws SwitcherSnapshotLoadException, IOException {
-		try (FileReader fileReader = new FileReader(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment))) {
+		final String path = String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment);
+
+		try (FileReader fileReader = new FileReader(path)) {
 			final Snapshot data = gson.fromJson(fileReader, Snapshot.class);
 			return data.getDomain();
 		} catch (JsonSyntaxException | JsonIOException e) {
 			throw new SwitcherSnapshotLoadException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
+		} catch (FileNotFoundException e) {
+			return loadSnapshotFromResources(snapshotLocation, environment);
+		}
+	}
+
+	/**
+	 * Load snapshot from the resources folder
+	 *
+	 * @param snapshotLocation Snapshot folder
+	 * @param environment name that is represented as [environment].json
+	 * @return Serialized Domain object
+	 * @throws SwitcherSnapshotLoadException when JSON file has errors
+	 * @throws IOException when failing to read JSON file
+	 */
+	private static Domain loadSnapshotFromResources(final String snapshotLocation, final String environment)
+			throws SwitcherSnapshotLoadException, IOException {
+		final String path = String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment);
+
+		try (InputStream is = SnapshotLoader.class.getResourceAsStream(path)) {
+			if (Objects.isNull(is)) {
+				throw new FileNotFoundException(path);
+			}
+
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+				final Snapshot data = gson.fromJson(reader, Snapshot.class);
+				return data.getDomain();
+			} catch (JsonSyntaxException | JsonIOException e) {
+				throw new SwitcherSnapshotLoadException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
+			}
 		}
 	}
 	

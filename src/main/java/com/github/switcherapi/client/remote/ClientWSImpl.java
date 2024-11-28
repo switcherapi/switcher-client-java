@@ -5,11 +5,8 @@ import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.criteria.Snapshot;
-import com.github.switcherapi.client.model.criteria.SwitchersCheck;
-import com.github.switcherapi.client.model.response.AuthRequest;
-import com.github.switcherapi.client.model.response.AuthResponse;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
-import com.github.switcherapi.client.model.response.SnapshotVersionResponse;
+import com.github.switcherapi.client.remote.dto.SwitchersCheck;
+import com.github.switcherapi.client.remote.dto.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -48,22 +45,21 @@ public class ClientWSImpl implements ClientWS {
 	}
 
 	@Override
-	public CriteriaResponse executeCriteria(final Switcher switcher, final String token) {
+	public CriteriaResponse executeCriteria(final CriteriaRequest criteriaRequest, final String token) {
 		final String url = switcherProperties.getValue(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, url))
-				.queryParam(Switcher.KEY, switcher.getSwitcherKey())
+				.queryParam(Switcher.KEY, criteriaRequest.getSwitcherKey())
 				.queryParam(Switcher.SHOW_REASON, Boolean.TRUE)
-				.queryParam(Switcher.BYPASS_METRIC, switcher.isBypassMetrics());
+				.queryParam(Switcher.BYPASS_METRIC, criteriaRequest.isBypassMetric());
 
 		try {
 			final Response response = myResource.request(MediaType.APPLICATION_JSON)
 					.header(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token))
-					.post(Entity.json(switcher.getInputRequest()));
+					.post(Entity.json(criteriaRequest.getInputRequest()));
 
 			if (response.getStatus() == 200) {
 				final CriteriaResponse criteriaResponse = response.readEntity(CriteriaResponse.class);
-				criteriaResponse.setSwitcherKey(switcher.getSwitcherKey());
-				criteriaResponse.setEntry(switcher.getEntry());
+				criteriaResponse.setSwitcherKey(criteriaRequest.getSwitcherKey());
 				response.close();
 
 				return criteriaResponse;
