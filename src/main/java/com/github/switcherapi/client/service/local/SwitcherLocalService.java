@@ -2,11 +2,16 @@ package com.github.switcherapi.client.service.local;
 
 import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.SwitcherProperties;
-import com.github.switcherapi.client.exception.*;
+import com.github.switcherapi.client.exception.SwitcherException;
+import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
+import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
+import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.model.SwitcherRequest;
+import com.github.switcherapi.client.model.SwitcherResult;
+import com.github.switcherapi.client.service.SwitcherFactory;
 import com.github.switcherapi.client.service.remote.ClientRemote;
+import com.github.switcherapi.client.utils.Mapper;
 import com.github.switcherapi.client.utils.SnapshotEventHandler;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
@@ -99,13 +104,13 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	}
 	
 	@Override
-	public CriteriaResponse executeCriteria(final Switcher switcher) {
+	public SwitcherResult executeCriteria(final SwitcherRequest switcher) {
 		SwitcherUtils.debug(logger, "[Local] request: {}", switcher);
 
-		CriteriaResponse response;
+		SwitcherResult response;
 		try {
 			if (switcher.isRemote()) {
-				response = this.clientRemote.executeCriteria(switcher);
+				response = Mapper.mapFrom(this.clientRemote.executeCriteria(Mapper.mapFrom(switcher)));
 				SwitcherUtils.debug(logger, "[Remote] response: {}", response);
 			} else {
 				response = this.clientLocal.executeCriteria(switcher, this.domain);
@@ -116,7 +121,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 				throw e;
 			}
 
-			response = CriteriaResponse.buildFromDefault(switcher);
+			response = SwitcherFactory.buildFromDefault(switcher);
 			SwitcherUtils.debug(logger, "[Default] response: {}", response);
 		}
 		

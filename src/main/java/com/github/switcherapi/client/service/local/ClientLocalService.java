@@ -3,12 +3,13 @@ package com.github.switcherapi.client.service.local;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.model.Entry;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.criteria.Config;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Group;
 import com.github.switcherapi.client.model.criteria.Strategy;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.model.SwitcherResult;
+import com.github.switcherapi.client.service.SwitcherFactory;
 import com.github.switcherapi.client.service.SwitcherValidator;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -61,9 +62,9 @@ public class ClientLocalService implements ClientLocal {
 	}
 
 	@Override
-	public CriteriaResponse executeCriteria(final Switcher switcher, final Domain domain) {
+	public SwitcherResult executeCriteria(final SwitcherRequest switcher, final Domain domain) {
 		if (!domain.isActivated()) {
-			return CriteriaResponse.buildResultFail(DISABLED_DOMAIN, switcher);
+			return SwitcherFactory.buildResultFail(DISABLED_DOMAIN, switcher);
 		}
 
 		Config config;
@@ -71,27 +72,27 @@ public class ClientLocalService implements ClientLocal {
 			config = findConfigInGroup(group, switcher.getSwitcherKey());
 
 			if (config != null) {
-				return getCriteriaResponse(switcher, group, config);
+				return getSwitcherResult(switcher, group, config);
 			}
 		}
 
 		throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
 	}
 
-	private CriteriaResponse getCriteriaResponse(Switcher switcher, Group group, Config config) {
+	private SwitcherResult getSwitcherResult(SwitcherRequest switcher, Group group, Config config) {
 		if (!group.isActivated()) {
-			return CriteriaResponse.buildResultFail(DISABLED_GROUP, switcher);
+			return SwitcherFactory.buildResultFail(DISABLED_GROUP, switcher);
 		}
 
 		if (!config.isActivated()) {
-			return CriteriaResponse.buildResultFail(DISABLED_CONFIG, switcher);
+			return SwitcherFactory.buildResultFail(DISABLED_CONFIG, switcher);
 		}
 
 		if (ArrayUtils.isNotEmpty(config.getStrategies())) {
 			return this.processOperation(config.getStrategies(), switcher.getEntry(), switcher);
 		}
 
-		return CriteriaResponse.buildResultSuccess(switcher);
+		return SwitcherFactory.buildResultSuccess(switcher);
 	}
 
 	private Config findConfigInGroup(final Group group, final String switcherKey) {
@@ -106,11 +107,11 @@ public class ClientLocalService implements ClientLocal {
 	 * 
 	 * @param configStrategies to be processed
 	 * @param input            sent by the client
-	 * @return CriteriaResponse containing the result of the execution
+	 * @return SwitcherResult containing the result of the execution
 	 * @throws SwitcherException If encountered either invalid input or misconfiguration
 	 */
-	private CriteriaResponse processOperation(final Strategy[] configStrategies, final List<Entry> input,
-			final Switcher switcher) {
+	private SwitcherResult processOperation(final Strategy[] configStrategies, final List<Entry> input,
+											final SwitcherRequest switcher) {
 		SwitcherUtils.debug(logger, LOG_PROCESS_OP_TEMPLATE, Arrays.toString(configStrategies));
 
 		for (final Strategy strategy : configStrategies) {
@@ -129,11 +130,11 @@ public class ClientLocalService implements ClientLocal {
 			}
 		}
 
-		return CriteriaResponse.buildResultSuccess(switcher);
+		return SwitcherFactory.buildResultSuccess(switcher);
 	}
 	
-	private CriteriaResponse strategyFailed(Switcher switcher, Strategy strategy, String pattern) {
-		return CriteriaResponse.buildResultFail(String.format(pattern, strategy.getStrategy()), switcher);
+	private SwitcherResult strategyFailed(SwitcherRequest switcher, Strategy strategy, String pattern) {
+		return SwitcherFactory.buildResultFail(String.format(pattern, strategy.getStrategy()), switcher);
 	}
 	
 	private Entry tryGetSwitcherInput(final List<Entry> input, Strategy strategy) {

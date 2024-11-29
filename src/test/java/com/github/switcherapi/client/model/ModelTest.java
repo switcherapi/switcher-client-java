@@ -3,7 +3,7 @@ package com.github.switcherapi.client.model;
 import org.junit.jupiter.api.Test;
 
 import com.github.switcherapi.client.model.criteria.Config;
-import com.github.switcherapi.client.model.criteria.Criteria;
+import com.github.switcherapi.client.model.criteria.Data;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Group;
 import com.github.switcherapi.client.model.criteria.Snapshot;
@@ -76,13 +76,13 @@ class ModelTest {
 		assertEquals(10000000000L, domain.getVersion());
 		assertSame(groups, domain.getGroup());
 		
-		final Criteria criteria = new Criteria();
-		criteria.setDomain(domain);
+		final Data data = new Data();
+		data.setDomain(domain);
 		
 		final Snapshot snapshot = new Snapshot();
-		snapshot.setData(criteria);
+		snapshot.setData(data);
 		
-		assertSame(criteria, snapshot.getData());
+		assertSame(data, snapshot.getData());
 	}
 
 }

@@ -5,7 +5,7 @@ import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.remote.ClientWS;
 import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.service.SwitcherValidator;
@@ -73,7 +73,6 @@ import static com.github.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
  *
  *  	Features.initializeClient();
  * }
- *
  * </pre>
  *
  * @see SwitcherKey
@@ -86,7 +85,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	
 	protected static SwitcherProperties switcherProperties;
 	protected static Set<String> switcherKeys;
-	protected static Map<String, Switcher> switchers;
+	protected static Map<String, SwitcherRequest> switchers;
 	protected static SwitcherExecutor instance;
 	private static ScheduledExecutorService scheduledExecutorService;
 	private static ExecutorService watcherExecutorService;
@@ -119,21 +118,28 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 				.truststorePath(truststore.getPath())
 				.truststorePassword(truststore.getPassword()));
 
-		switcherProperties.setValue(ContextKey.CONTEXT_LOCATION, contextBase.getClass().getName());
 		initializeClient();
 	}
 
 	@Override
 	protected void configureClient(String contextFile) {
 		setContextBase(this);
-		loadProperties(contextFile);
 
+		loadProperties(contextFile);
 		switcherProperties.setValue(ContextKey.CONTEXT_LOCATION, contextBase.getClass().getName());
+
+		updateSwitcherConfig(switcherProperties);
 		initializeClient();
 	}
 
-	private static synchronized void setContextBase(SwitcherContextBase contextBase) {
-		SwitcherContextBase.contextBase = contextBase;
+	/**
+	 * Manually register Switcher Keys.<br>
+	 * Use this method before calling {@link #configureClient()} to register the Switcher Keys.
+	 *
+	 * @param switcherKeys to be registered
+	 */
+	protected void registerSwitcherKeys(String... switcherKeys) {
+		setSwitcherKeys(new HashSet<>(Arrays.asList(switcherKeys)));
 	}
 
 	/**
@@ -173,7 +179,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 */
 	public static void initializeClient() {
 		validateContext();
-		validateSwitcherKeys();
+		registerSwitcherKeys();
 		instance = buildInstance();
 		
 		loadSwitchers();
@@ -195,9 +201,10 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 
 		if (contextBol(ContextKey.LOCAL_MODE)) {
 			return new SwitcherLocalService(clientRemote, clientLocal, switcherProperties);
-		} else {
-			return new SwitcherRemoteService(clientRemote, new SwitcherLocalService(clientRemote, clientLocal, switcherProperties));
 		}
+
+		return new SwitcherRemoteService(clientRemote, new SwitcherLocalService(clientRemote,
+				clientLocal, switcherProperties));
 	}
 	
 	/**
@@ -212,10 +219,9 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	}
 	
 	/**
-	 * Validate Switcher Keys.<br>
-	 * It will ensure that only properly annotated Switchers can be used.
+	 * Register Switcher Keys based on context properties
 	 */
-	private static void validateSwitcherKeys() {
+	private static void registerSwitcherKeys() {
 		if (Objects.nonNull(contextBase)) {
 			registerSwitcherKey(contextBase.getClass().getFields());
 		} else {
@@ -234,7 +240,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * @param fields to be registered
 	 */
 	private static void registerSwitcherKey(Field[] fields) {
-		switcherKeys = new HashSet<>();
+		switcherKeys = Optional.ofNullable(switcherKeys).orElse(new HashSet<>());
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(SwitcherKey.class)) {
 				switcherKeys.add(field.getName());
@@ -246,13 +252,13 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * Load Switcher instances into a map cache
 	 */
 	private static void loadSwitchers() {
-		if (switchers == null) {
+		if (Objects.isNull(switchers)) {
 			switchers = new HashMap<>();
 		}
 		
 		switchers.clear();
 		for (String key : switcherKeys) {
-			switchers.put(key, new Switcher(key, instance));
+			switchers.put(key, new SwitcherRequest(key, instance));
 		}
 	}
 
@@ -348,14 +354,14 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * @return a ready to use Switcher
 	 * @throws SwitcherKeyNotFoundException in case the key was not properly loaded
 	 */
-	public static Switcher getSwitcher(String key, boolean keepEntries) {
+	public static SwitcherRequest getSwitcher(String key, boolean keepEntries) {
 		SwitcherUtils.debug(logger, "key: {} - keepEntries: {}", key, keepEntries);
 		
 		if (!switchers.containsKey(key)) {
 			throw new SwitcherKeyNotFoundException(key);
 		}
 		
-		final Switcher switcher = switchers.get(key);
+		final SwitcherRequest switcher = switchers.get(key);
 		if (!keepEntries) {
 			switcher.resetEntry();
 		}
@@ -369,7 +375,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * @param key name
 	 * @return a ready to use Switcher
 	 */
-	public static Switcher getSwitcher(String key) {
+	public static SwitcherRequest getSwitcher(String key) {
 		return getSwitcher(key, false);
 	}
 	
@@ -414,7 +420,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 			throw new SwitcherException("Cannot watch snapshot when using remote", new UnsupportedOperationException());
 		}
 
-		if (watcherSnapshot == null) {
+		if (Objects.isNull(watcherSnapshot)) {
 			watcherSnapshot = new SnapshotWatcher((SwitcherLocalService) instance, handler,
 					contextStr(ContextKey.SNAPSHOT_LOCATION));
 		}
@@ -429,7 +435,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * @throws SwitcherException if watch thread never started
 	 */
 	public static void stopWatchingSnapshot() {
-		if (watcherSnapshot != null) {
+		if (Objects.nonNull(watcherSnapshot)) {
 			watcherExecutorService.shutdownNow();
 			watcherSnapshot.terminate();
 			watcherSnapshot = null;
@@ -497,10 +503,18 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * Cancel existing scheduled task for updating local Snapshot
 	 */
 	public static void terminateSnapshotAutoUpdateWorker() {
-		if (scheduledExecutorService != null) {
+		if (Objects.nonNull(scheduledExecutorService)) {
 			scheduledExecutorService.shutdownNow();
 			scheduledExecutorService = null;
 		}
+	}
+
+	private static synchronized void setContextBase(SwitcherContextBase contextBase) {
+		SwitcherContextBase.contextBase = contextBase;
+	}
+
+	private static synchronized void setSwitcherKeys(Set<String> switcherKeys) {
+		SwitcherContextBase.switcherKeys = switcherKeys;
 	}
 	
 }

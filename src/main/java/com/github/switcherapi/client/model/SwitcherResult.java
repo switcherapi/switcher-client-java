@@ -1,21 +1,18 @@
-package com.github.switcherapi.client.model.response;
+package com.github.switcherapi.client.model;
+
+import com.google.gson.Gson;
 
 import java.util.*;
-
-import com.github.switcherapi.client.model.Entry;
-import com.github.switcherapi.client.model.StrategyValidator;
-import com.github.switcherapi.client.model.Switcher;
-import com.google.gson.Gson;
 
 /**
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class CriteriaResponse {
+public class SwitcherResult {
 
-	private static final String DEFAULT_REASON = "Default result";
+	public static final String DEFAULT_REASON = "Default result";
 
-	private static final String DEFAULT_SUCCESS = "Success";
+	public static final String DEFAULT_SUCCESS = "Success";
 
 	private boolean result;
 
@@ -29,26 +26,27 @@ public class CriteriaResponse {
 
 	protected Map<String, List<String>> entryWhen;
 
-	public CriteriaResponse() {
+	public SwitcherResult() {
 		entryWhen = new HashMap<>();
+		entry = new ArrayList<>();
 	}
 
-	public CriteriaResponse(final boolean result, final String reason, final Switcher switcher) {
+	public SwitcherResult(String switcherKey, boolean result, String reason, List<Entry> entry) {
 		this();
 		this.result = result;
 		this.reason = reason;
-		this.switcherKey = switcher.getSwitcherKey();
-		this.entry = switcher.getEntry();
+		this.switcherKey = switcherKey;
+		this.entry = entry;
 	}
 
-	public CriteriaResponse buildFromSwitcher(Switcher switcher) {
-		this.switcherKey = switcher.getSwitcherKey();
-		this.entry = switcher.getEntry();
+	public SwitcherResult buildFromSwitcher(String switcherKey, List<Entry> entry) {
+		this.switcherKey = switcherKey;
+		this.entry = entry;
 
 		if (Objects.nonNull(entry)) {
 			for (Entry inputEntry : entry) {
 				if (!isEntryMatching(inputEntry)) {
-					return new CriteriaResponse(!this.result, this.reason, switcher);
+					return new SwitcherResult(switcherKey, !this.result, this.reason, entry);
 				}
 			}
 		}
@@ -59,18 +57,6 @@ public class CriteriaResponse {
 	private boolean isEntryMatching(Entry inputEntry) {
 		return entryWhen.isEmpty() || entryWhen.containsKey(inputEntry.getStrategy()) &&
 				entryWhen.get(inputEntry.getStrategy()).contains(inputEntry.getInput());
-	}
-
-	public static CriteriaResponse buildFromDefault(Switcher switcher) {
-		return new CriteriaResponse(Boolean.parseBoolean(switcher.getDefaultResult()), DEFAULT_REASON, switcher);
-	}
-
-	public static CriteriaResponse buildResultFail(String reason, Switcher switcher) {
-		return new CriteriaResponse(Boolean.FALSE, reason, switcher);
-	}
-
-	public static CriteriaResponse buildResultSuccess(Switcher switcher) {
-		return new CriteriaResponse(Boolean.TRUE, DEFAULT_SUCCESS, switcher);
 	}
 
 	public boolean isItOn() {
@@ -114,11 +100,11 @@ public class CriteriaResponse {
 		this.entry = entry;
 	}
 
-	public CriteriaResponse when(StrategyValidator strategy, String input) {
+	public SwitcherResult when(StrategyValidator strategy, String input) {
 		return when(strategy, Collections.singletonList(input));
 	}
 
-	public CriteriaResponse when(StrategyValidator strategy, List<String> inputs) {
+	public SwitcherResult when(StrategyValidator strategy, List<String> inputs) {
 		entryWhen.put(strategy.toString(), inputs);
 		return this;
 	}
@@ -137,7 +123,7 @@ public class CriteriaResponse {
 		if (getClass() != obj.getClass())
 			return false;
 		
-		final CriteriaResponse other = (CriteriaResponse) obj;
+		final SwitcherResult other = (SwitcherResult) obj;
 		return Objects.equals(entry, other.entry) && 
 				result == other.result && 
 				Objects.equals(switcherKey, other.switcherKey);
@@ -145,7 +131,7 @@ public class CriteriaResponse {
 
 	@Override
 	public String toString() {
-		return "CriteriaResponse [result=" + result +
+		return "SwitcherResult [result=" + result +
 				", reason=" + reason +
 				", metadata=" + metadata +
 				", switcherKey=" + switcherKey +

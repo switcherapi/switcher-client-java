@@ -3,10 +3,10 @@ package com.github.switcherapi.client;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Snapshot;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.model.SwitcherResult;
 import com.github.switcherapi.client.service.remote.ClientRemote;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -30,7 +31,7 @@ public abstract class SwitcherExecutor {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SwitcherExecutor.class);
 	
-	private static final Map<String, CriteriaResponse> bypass = new HashMap<>();
+	private static final Map<String, SwitcherResult> bypass = new HashMap<>();
 
 	protected final SwitcherProperties switcherProperties;
 
@@ -46,7 +47,7 @@ public abstract class SwitcherExecutor {
 	 * @param switcher to be evaluated
 	 * @return Criteria response containing the evaluation details
 	 */
-	public abstract CriteriaResponse executeCriteria(final Switcher switcher);
+	public abstract SwitcherResult executeCriteria(final SwitcherRequest switcher);
 	
 	/**
 	 * Check the snapshot versions against the Remote configuration.
@@ -77,10 +78,10 @@ public abstract class SwitcherExecutor {
 	protected boolean checkSnapshotVersion(ClientRemote clientRemote, final Domain domain) {
 		final String environment = switcherProperties.getValue(ContextKey.ENVIRONMENT);
 		SwitcherUtils.debug(logger, "verifying snapshot version - environment: {}", environment);
-		
+
 		return clientRemote.checkSnapshotVersion(domain.getVersion());
 	}
-	
+
 	protected Domain initializeSnapshotFromAPI(ClientRemote clientRemote)
 			throws SwitcherRemoteException, SwitcherSnapshotWriteException {
 		final String environment = switcherProperties.getValue(ContextKey.ENVIRONMENT);
@@ -89,15 +90,11 @@ public abstract class SwitcherExecutor {
 		final Snapshot snapshot = clientRemote.resolveSnapshot();
 		final String snapshotLocation = switcherProperties.getValue(ContextKey.SNAPSHOT_LOCATION);
 
-		if (snapshotLocation != null) {
+		if (Objects.nonNull(snapshotLocation)) {
 			SnapshotLoader.saveSnapshot(snapshot, snapshotLocation, environment);
 		}
 
 		return snapshot.getDomain();
-	}
-
-	public boolean isLocalEnabled() {
-		return switcherProperties.getBoolean(ContextKey.LOCAL_MODE);
 	}
 	
 	/**
@@ -105,9 +102,9 @@ public abstract class SwitcherExecutor {
 	 * 
 	 * @param key name of the key that you want to change the result
 	 * @param expectedResult that will be returned when performing isItOn
-	 * @return CriteriaResponse with the manipulated result
+	 * @return SwitcherResult with the manipulated result
 	 */
-	public static CriteriaResponse assume(final String key, boolean expectedResult) {
+	public static SwitcherResult assume(final String key, boolean expectedResult) {
 		return assume(key, expectedResult, null);
 	}
 
@@ -117,20 +114,20 @@ public abstract class SwitcherExecutor {
 	 * @param key name of the key that you want to change the result
 	 * @param metadata additional information about the assumption (JSON)
 	 * @param expectedResult that will be returned when performing isItOn
-	 * @return CriteriaResponse with the manipulated result
+	 * @return SwitcherResult with the manipulated result
 	 */
-	public static CriteriaResponse assume(final String key, boolean expectedResult, String metadata) {
-		CriteriaResponse criteriaResponse =  new CriteriaResponse();
-		criteriaResponse.setResult(expectedResult);
-		criteriaResponse.setReason("Switcher bypassed");
+	public static SwitcherResult assume(final String key, boolean expectedResult, String metadata) {
+		SwitcherResult switcherResult =  new SwitcherResult();
+		switcherResult.setResult(expectedResult);
+		switcherResult.setReason("Switcher bypassed");
 
 		if (StringUtils.isNotBlank(metadata)) {
 			Gson gson = new Gson();
-			criteriaResponse.setMetadata(gson.fromJson(metadata, Object.class));
+			switcherResult.setMetadata(gson.fromJson(metadata, Object.class));
 		}
 
-		bypass.put(key, criteriaResponse);
-		return criteriaResponse;
+		bypass.put(key, switcherResult);
+		return switcherResult;
 	}
 	
 	/**
@@ -142,7 +139,7 @@ public abstract class SwitcherExecutor {
 		bypass.remove(key);
 	}
 
-	public static Map<String, CriteriaResponse> getBypass() {
+	public static Map<String, SwitcherResult> getBypass() {
 		return bypass;
 	}
 

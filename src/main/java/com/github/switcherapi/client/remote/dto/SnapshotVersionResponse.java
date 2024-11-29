@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.model.response;
+package com.github.switcherapi.client.remote.dto;
 
 /**
  * @author Roger Floriano (petruki)
@@ -16,4 +16,10 @@ public class SnapshotVersionResponse {
 		this.status = status;
 	}
 
+	@Override
+	public String toString() {
+		return "SnapshotVersionResponse{" +
+				"status=" + status +
+				'}';
+	}
 }

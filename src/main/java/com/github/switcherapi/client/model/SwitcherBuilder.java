@@ -1,6 +1,6 @@
 package com.github.switcherapi.client.model;
 
-import com.github.switcherapi.client.SwitcherExecutor;
+import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,9 +13,9 @@ import java.util.List;
  * 
  * @author Roger Floriano (petruki)
  */
-public abstract class SwitcherBuilder implements SwitcherInterface {
+public abstract class SwitcherBuilder implements Switcher {
 
-	protected final SwitcherExecutor context;
+	protected final SwitcherProperties properties;
 	
 	protected long delay;
 
@@ -26,9 +26,9 @@ public abstract class SwitcherBuilder implements SwitcherInterface {
 	protected String defaultResult;
 	
 	protected List<Entry> entry;
-	
-	protected SwitcherBuilder(final SwitcherExecutor context) {
-		this.context = context;
+
+	protected SwitcherBuilder(final SwitcherProperties properties) {
+		this.properties = properties;
 		this.entry = new ArrayList<>();
 		this.delay = 0;
 	}
@@ -53,7 +53,7 @@ public abstract class SwitcherBuilder implements SwitcherInterface {
 	 * @throws SwitcherContextException if Switcher is not configured to run locally using local mode
 	 */
 	public SwitcherBuilder remote(boolean remote) {
-		if (!this.context.isLocalEnabled()) {
+		if (!this.properties.getBoolean(ContextKey.LOCAL_MODE)) {
 			throw new SwitcherContextException("Switcher is not configured to run locally");
 		}
 
@@ -175,7 +175,4 @@ public abstract class SwitcherBuilder implements SwitcherInterface {
 		return defaultResult;
 	}
 
-	public SwitcherExecutor getContext() {
-		return context;
-	}
 }

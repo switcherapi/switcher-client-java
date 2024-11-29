@@ -10,11 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 
-import java.util.Date;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,9 +23,9 @@ public class SwitcherUtils {
 
 	private static final String[] DURATION_UNIT = { "s", "m", "h", "d" };
 	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+)}";
-	private static final String ENV_DEFAULT_VARIABLE_PATTERN = "\\$\\{(\\w+):(.+)}";
+	private static final String ENV_DEFAULT_VARIABLE_PATTERN = "\\$\\{(\\w+):(.+)?}";
 	private static final String PAYLOAD_PATTERN = "%s.%s";
-	
+
 	private SwitcherUtils() {}
 	
 	public static Date addTimeDuration(final String addValue, final Date date) 
@@ -101,12 +98,12 @@ public class SwitcherUtils {
 	        return null;
 	    }
 
-	    final StringBuilder sBuilder = resolveEnvironmentVariable(value);
-	    if (sBuilder.toString().isEmpty()) {
+	    final Object[] sBuilder = resolveEnvironmentVariable(value);
+	    if (sBuilder[1].equals(Boolean.FALSE) && sBuilder[0].toString().isEmpty()) {
 			return value;
 		}
-	       
-	    return sBuilder.toString();
+
+	    return sBuilder[0].toString();
 	}
 
 	/**
@@ -118,9 +115,7 @@ public class SwitcherUtils {
 	 * @param args arguments to be replaced in the message
 	 */
 	public static void debug(Logger logger, String message, Object... args) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(message, args);
-		}
+		logger.debug(message, args);
 	}
 
 	/**
@@ -128,9 +123,9 @@ public class SwitcherUtils {
 	 * System environment or default argument.
 	 * 
 	 * @param value assigned from the properties file
-	 * @return Resolved value
+	 * @return Array-pair: Resolved value and a boolean to indicate if it was resolved by var notation ${VAR:VALUE}
 	 */
-	private static StringBuilder resolveEnvironmentVariable(final String value) {
+	private static Object[] resolveEnvironmentVariable(final String value) {
 		Pattern pattern = Pattern.compile(ENV_VARIABLE_PATTERN);
 	    Matcher matcher = pattern.matcher(value);
 	    StringBuilder sBuilder = new StringBuilder();
@@ -143,11 +138,21 @@ public class SwitcherUtils {
         	pattern = Pattern.compile(ENV_DEFAULT_VARIABLE_PATTERN);
         	matcher = pattern.matcher(value);
         	
-        	 if (matcher.find() && setWithSystemEnv(matcher, sBuilder) && matcher.group(2) != null) {
-				 sBuilder.append(matcher.group(2));
+        	 if (matcher.find() && setWithSystemEnv(matcher, sBuilder)) {
+				 // when a value is assigned to variable, e.g. ${PORT:8080}
+				 if (Objects.nonNull(matcher.group(2))) {
+					 sBuilder.append(matcher.group(2));
+					 return new Object[] { sBuilder.toString(), Boolean.TRUE };
+				 }
+
+				 // when nothing is assigned to variable, e.g. ${PORT:}
+				 if (Objects.nonNull(matcher.group(1))) {
+					 return new Object[] { StringUtils.EMPTY, Boolean.TRUE };
+				 }
 			 }
         }
-		return sBuilder;
+
+		return new Object[] { sBuilder.toString(), Boolean.FALSE };
 	}
 
 	/**
@@ -158,10 +163,11 @@ public class SwitcherUtils {
 	 * @return true if System.getenv returns a value
 	 */
 	private static boolean setWithSystemEnv(Matcher matcher, StringBuilder sBuilder) {
-		if (Objects.nonNull(matcher.group(1))) {
-			String envVarName = matcher.group(1);
-			String envVarValue = System.getenv(envVarName);
-			sBuilder.append(null == envVarValue ? StringUtils.EMPTY : envVarValue);		
+		final String envVarName = matcher.group(1);
+
+		if (Objects.nonNull(envVarName)) {
+			sBuilder.append(Optional.ofNullable(System.getenv(envVarName))
+					.orElse(StringUtils.EMPTY));
 		}
 		
 		return StringUtils.isEmpty(sBuilder.toString());

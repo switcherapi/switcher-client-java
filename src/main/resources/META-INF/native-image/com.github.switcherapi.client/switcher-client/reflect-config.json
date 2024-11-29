@@ -1,0 +1,175 @@
+[
+  {
+    "name": "com.github.switcherapi.client.model.Entry",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.remote.dto.CriteriaRequest.GsonInputRequest"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.github.switcherapi.client.remote.dto.CriteriaRequest.GsonInputRequest",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.model.Switcher"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.github.switcherapi.client.model.criteria.Config",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.model.criteria.Snapshot"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.github.switcherapi.client.model.criteria.Criteria",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.model.criteria.Snapshot"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.github.switcherapi.client.model.criteria.Domain",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.model.criteria.Snapshot"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.github.switcherapi.client.model.criteria.Group",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.model.criteria.Snapshot"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.github.switcherapi.client.model.criteria.Snapshot",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.SwitcherExecutor"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.github.switcherapi.client.model.criteria.Strategy",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.model.criteria.Snapshot"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.github.switcherapi.client.model.criteria.SwitcherElement",
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.github.switcherapi.client.remote.dto.SwitchersCheck",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.remote.ClientWSImpl"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.github.switcherapi.client.remote.dto.AuthRequest",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.remote.ClientWSImpl"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.github.switcherapi.client.remote.dto.AuthResponse",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.remote.ClientWSImpl"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.github.switcherapi.client.remote.dto.SnapshotVersionResponse",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.remote.ClientWSImpl"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.github.switcherapi.client.remote.dto.CriteriaResponse",
+    "condition": {
+      "typeReachable": "com.github.switcherapi.client.remote.ClientWSImpl"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  }
+]

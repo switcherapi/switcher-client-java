@@ -2,8 +2,8 @@ package com.github.switcherapi.client.utils;
 
 import com.github.switcherapi.SwitchersBase;
 import com.github.switcherapi.client.ContextBuilder;
-import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.criteria.Criteria;
+import com.github.switcherapi.client.model.SwitcherRequest;
+import com.github.switcherapi.client.model.criteria.Data;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.fixture.CountDownHelper;
 import com.google.gson.Gson;
@@ -64,20 +64,20 @@ class SnapshotWatcherTest {
 	
 	static void generateFixture() {
 		final Snapshot mockedSnapshot = new Snapshot();
-		final Criteria criteria = new Criteria();
-		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_watcher.json"));
-		mockedSnapshot.setData(criteria);
+		final Data data = new Data();
+		data.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_watcher.json"));
+		mockedSnapshot.setData(data);
 		
 		SnapshotLoader.saveSnapshot(mockedSnapshot, SNAPSHOTS_LOCAL, "generated_watcher_default");
 	}
 	
 	void changeFixture() {
 		final Snapshot mockedSnapshot = new Snapshot();
-		final Criteria criteria = new Criteria();
-		criteria.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_watcher.json"));
-		mockedSnapshot.setData(criteria);
+		final Data data = new Data();
+		data.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_watcher.json"));
+		mockedSnapshot.setData(data);
 		
-		criteria.getDomain().setActivated(false);
+		data.getDomain().setActivated(false);
 		
 		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		writeFixture(gson.toJson(mockedSnapshot));
@@ -98,7 +98,7 @@ class SnapshotWatcherTest {
 	
 	@Test
 	void shouldNotReloadDomainAfterChangingSnapshot() {
-		Switcher switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		
 		//initial value is true
 		assertTrue(switcher.isItOn());
@@ -116,7 +116,7 @@ class SnapshotWatcherTest {
 	
 	@Test
 	void shouldReloadDomainAfterChangingSnapshot() {
-		Switcher switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		
 		//initial value is true
 		assertTrue(switcher.isItOn());

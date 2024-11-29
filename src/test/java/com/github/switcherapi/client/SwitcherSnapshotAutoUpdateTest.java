@@ -1,7 +1,7 @@
 package com.github.switcherapi.client;
 
 import com.github.switcherapi.Switchers;
-import com.github.switcherapi.client.model.criteria.Criteria;
+import com.github.switcherapi.client.model.criteria.Data;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.utils.SnapshotLoader;
@@ -60,9 +60,9 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 
 	static void generateFixture(String environment) {
 		final Snapshot mockedSnapshot = new Snapshot();
-		final Criteria criteria = new Criteria();
-		criteria.setDomain(DOMAIN_OUTDATED);
-		mockedSnapshot.setData(criteria);
+		final Data data = new Data();
+		data.setDomain(DOMAIN_OUTDATED);
+		mockedSnapshot.setData(data);
 
 		SnapshotLoader.saveSnapshot(mockedSnapshot, SNAPSHOTS_LOCAL, environment);
 	}

@@ -1,4 +1,4 @@
-package com.github.switcherapi.client.model.response;
+package com.github.switcherapi.client.remote.dto;
 
 /**
  * @author Roger Floriano (petruki)
@@ -26,4 +26,11 @@ public class AuthResponse {
 		return (this.exp * 1000) < System.currentTimeMillis();
 	}
 
+	@Override
+	public String toString() {
+		return "AuthResponse{" +
+				"token='" + token + '\'' +
+				", exp=" + exp +
+				'}';
+	}
 }

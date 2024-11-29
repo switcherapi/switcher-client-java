@@ -126,7 +126,7 @@ class SwitcherSnapshotValidationTest extends MockWebServerHelper {
 	void shouldNotValidateAndLoadSnapshot_serviceUnavailable() {
 		//given
 		Switchers.configure(ContextBuilder.builder()
-				.local(true)
+				.local(false)
 				.snapshotAutoLoad(false)
 				.snapshotLocation(RESOURCES_PATH)
 				.environment("default"));

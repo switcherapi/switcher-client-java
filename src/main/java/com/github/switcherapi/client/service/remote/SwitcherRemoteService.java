@@ -4,9 +4,12 @@ import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.model.criteria.SwitchersCheck;
-import com.github.switcherapi.client.model.response.CriteriaResponse;
+import com.github.switcherapi.client.model.SwitcherRequest;
+import com.github.switcherapi.client.model.SwitcherResult;
+import com.github.switcherapi.client.remote.dto.CriteriaResponse;
+import com.github.switcherapi.client.remote.dto.SwitchersCheck;
+import com.github.switcherapi.client.service.SwitcherFactory;
+import com.github.switcherapi.client.utils.Mapper;
 import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,31 +37,31 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	}
 
 	@Override
-	public CriteriaResponse executeCriteria(final Switcher switcher) {
+	public SwitcherResult executeCriteria(final SwitcherRequest switcher) {
 		SwitcherUtils.debug(logger, "[Remote] request: {}", switcher);
 		
 		try {
-			final CriteriaResponse response = this.clientRemote.executeCriteria(switcher);
+			final CriteriaResponse response = this.clientRemote.executeCriteria(Mapper.mapFrom(switcher));
 			SwitcherUtils.debug(logger, "[Remote] response: {}", response);
 			
-			return response;
+			return Mapper.mapFrom(response);
 		} catch (final SwitcherRemoteException e) {
 			logger.error("Failed to execute criteria - Cause: {}", e.getMessage(), e.getCause());
 			return tryExecuteLocalCriteria(switcher, e);
 		}
 	}
 	
-	private CriteriaResponse tryExecuteLocalCriteria(final Switcher switcher,
-													 final SwitcherRemoteException e) {
+	private SwitcherResult tryExecuteLocalCriteria(final SwitcherRequest switcher,
+												   final SwitcherRemoteException e) {
 		if (StringUtils.isNotBlank(switcherProperties.getValue(ContextKey.SILENT_MODE))) {
-			final CriteriaResponse response = this.switcherLocal.executeCriteria(switcher);
+			final SwitcherResult response = this.switcherLocal.executeCriteria(switcher);
 			SwitcherUtils.debug(logger, "[Silent] response: {}", response);
 
 			return response;
 		}
 
 		if (StringUtils.isNotBlank(switcher.getDefaultResult())) {
-			final CriteriaResponse response = CriteriaResponse.buildFromDefault(switcher);
+			final SwitcherResult response = SwitcherFactory.buildFromDefault(switcher);
 			SwitcherUtils.debug(logger, "[Default] response: {}", response);
 
 			return response;
