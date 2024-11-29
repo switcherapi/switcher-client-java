@@ -8,8 +8,9 @@ public final class Constants {
 	public static final int DEFAULT_POOL_SIZE = 2;
 	public static final String HEADER_AUTHORIZATION = "Authorization";
 	public static final String HEADER_APIKEY = "switcher-api-key";
+	public static final String HEADER_CONTENT_TYPE = "Content-Type";
+	public static final String HEADER_JSON = "application/json";
 	public static final String TOKEN_TEXT = "Bearer %s";
-	public static final String[] CONTENT_TYPE = { "Content-Type", "application/json" };
 
 	public static final String QUERY =
 			"{\"query\":\"{ domain(name: \\\"%s\\\", environment: \\\"%s\\\", _component: \\\"%s\\\") { " +

@@ -84,7 +84,7 @@ public final class Switcher extends SwitcherBuilder {
 	@Override
 	public SwitcherResult submit() throws SwitcherException {
 		if (SwitcherExecutor.getBypass().containsKey(switcherKey)) {
-			return SwitcherExecutor.getBypass().get(switcherKey).buildFromSwitcher(this);
+			return SwitcherExecutor.getBypass().get(switcherKey).buildFromSwitcher(switcherKey, entry);
 		}
 
 		if (canUseAsync()) {

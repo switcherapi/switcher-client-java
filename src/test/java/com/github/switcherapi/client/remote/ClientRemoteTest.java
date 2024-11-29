@@ -4,9 +4,8 @@ import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.model.Switcher;
-import com.github.switcherapi.client.remote.dto.SwitchersCheck;
-import com.github.switcherapi.client.remote.dto.CriteriaRequest;
 import com.github.switcherapi.client.model.SwitcherResult;
+import com.github.switcherapi.client.remote.dto.SwitchersCheck;
 import com.github.switcherapi.client.service.SwitcherValidator;
 import com.github.switcherapi.client.service.ValidatorService;
 import com.github.switcherapi.client.service.local.ClientLocal;
@@ -15,6 +14,7 @@ import com.github.switcherapi.client.service.local.SwitcherLocalService;
 import com.github.switcherapi.client.service.remote.ClientRemote;
 import com.github.switcherapi.client.service.remote.ClientRemoteService;
 import com.github.switcherapi.client.service.remote.SwitcherRemoteService;
+import com.github.switcherapi.client.utils.Mapper;
 import com.github.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
 import org.junit.jupiter.api.AfterAll;
@@ -76,7 +76,7 @@ class ClientRemoteTest extends MockWebServerHelper {
                 new SwitcherLocalService(clientRemote, clientLocal, Switchers.getSwitcherProperties())));
 
         //test
-        SwitcherResult actual = SwitcherResult.buildResultFromRemote(clientRemote.executeCriteria(CriteriaRequest.build(switcher)));
+        SwitcherResult actual = Mapper.mapFrom(clientRemote.executeCriteria(Mapper.mapFrom(switcher)));
         assertTrue(actual.isItOn());
     }
 
