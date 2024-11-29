@@ -1,7 +1,7 @@
 package com.github.switcherapi.client;
 
 import com.github.switcherapi.Switchers;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.SwitcherResult;
 import com.github.switcherapi.fixture.MetadataErrorSample;
 import com.github.switcherapi.fixture.MetadataSample;
@@ -58,7 +58,7 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("true", "Success"));
 
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		SwitcherResult response = switcher.submit();
 
 		assertTrue(response.isItOn());
@@ -74,7 +74,7 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("false", "Strategy VALUE_VALIDATION does not agree"));
 
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		SwitcherResult response = switcher
 				.checkValue("value")
 				.checkNumeric("10")
@@ -93,7 +93,7 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse(new MetadataSample("123")));
 
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		SwitcherResult response = switcher.submit();
 
 		assertEquals("123", response.getMetadata(MetadataSample.class).getTransactionId());
@@ -108,7 +108,7 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse(new MetadataErrorSample("123")));
 
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		SwitcherResult response = switcher.submit();
 
 		assertNotNull(response.getMetadata(MetadataSample.class));

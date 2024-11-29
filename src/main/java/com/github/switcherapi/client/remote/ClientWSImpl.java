@@ -3,7 +3,7 @@ package com.github.switcherapi.client.remote;
 import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.remote.dto.SwitchersCheck;
 import com.github.switcherapi.client.remote.dto.*;
@@ -55,9 +55,9 @@ public class ClientWSImpl implements ClientWS {
 		try {
 			final URI uri = new URI(url)
 					.resolve(String.format(CRITERIA_URL, url,
-							Switcher.KEY, criteriaRequest.getSwitcherKey(),
-							Switcher.SHOW_REASON, Boolean.TRUE,
-							Switcher.BYPASS_METRIC, criteriaRequest.isBypassMetric()));
+							SwitcherRequest.KEY, criteriaRequest.getSwitcherKey(),
+							SwitcherRequest.SHOW_REASON, Boolean.TRUE,
+							SwitcherRequest.BYPASS_METRIC, criteriaRequest.isBypassMetric()));
 
 			final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
 					.uri(uri)

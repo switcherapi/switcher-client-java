@@ -18,19 +18,19 @@ import static com.github.switcherapi.client.service.WorkerName.SWITCHER_ASYNC_WO
  * @since 2021-11-27
  *
  */
-public class AsyncSwitcher<T> {
+public class AsyncSwitcher {
 
 	private static final Logger logger = LoggerFactory.getLogger(AsyncSwitcher.class);
 
 	private final ExecutorService executorService;
 
-	private final SwitcherInterface<T> switcherInterface;
+	private final Switcher switcher;
 
 	private final long delay;
 
 	private long nextRun = 0;
 
-	public AsyncSwitcher(final SwitcherInterface<T> switcherInterface, long delay) {
+	public AsyncSwitcher(final Switcher switcher, long delay) {
 		this.executorService = Executors.newCachedThreadPool(r -> {
 			Thread thread = new Thread(r);
 			thread.setName(SWITCHER_ASYNC_WORKER.toString());
@@ -38,7 +38,7 @@ public class AsyncSwitcher<T> {
 			return thread;
 		});
 
-		this.switcherInterface = switcherInterface;
+		this.switcher = switcher;
 		this.delay = delay;
 	}
 
@@ -59,8 +59,8 @@ public class AsyncSwitcher<T> {
 
 	public void run() {
 		try {
-			final SwitcherResult response = switcherInterface.executeCriteria();
-			switcherInterface.updateHistoryExecution(response);
+			final SwitcherResult response = switcher.executeCriteria();
+			switcher.updateHistoryExecution(response);
 		} catch (SwitcherException e) {
 			logger.error(e.getMessage(), e);
 		}

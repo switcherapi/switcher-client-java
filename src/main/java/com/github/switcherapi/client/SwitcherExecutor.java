@@ -3,7 +3,7 @@ package com.github.switcherapi.client;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotWriteException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.model.SwitcherResult;
@@ -47,7 +47,7 @@ public abstract class SwitcherExecutor {
 	 * @param switcher to be evaluated
 	 * @return Criteria response containing the evaluation details
 	 */
-	public abstract SwitcherResult executeCriteria(final Switcher switcher);
+	public abstract SwitcherResult executeCriteria(final SwitcherRequest switcher);
 	
 	/**
 	 * Check the snapshot versions against the Remote configuration.

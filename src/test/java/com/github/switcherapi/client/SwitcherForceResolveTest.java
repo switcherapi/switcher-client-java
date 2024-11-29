@@ -1,7 +1,7 @@
 package com.github.switcherapi.client;
 
 import com.github.switcherapi.Switchers;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
 import org.apache.commons.lang3.StringUtils;
@@ -47,7 +47,7 @@ class SwitcherForceResolveTest extends MockWebServerHelper {
 
 	@Test
 	void shouldResolveLocally() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE11);
 		assertTrue(switcher.remote(false).isItOn());
 	}
 	
@@ -60,7 +60,7 @@ class SwitcherForceResolveTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("false", false));
 		
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE11);
 		assertFalse(switcher.remote(true).isItOn());
 	}
 

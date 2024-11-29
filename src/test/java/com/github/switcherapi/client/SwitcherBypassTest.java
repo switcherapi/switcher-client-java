@@ -1,6 +1,7 @@
 package com.github.switcherapi.client;
 
 import com.github.switcherapi.client.model.StrategyValidator;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.SwitcherResult;
 import com.github.switcherapi.client.test.SwitcherTest;
@@ -43,7 +44,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 		
 		//test
-		Switcher switcher = getSwitcher(USECASE11);
+		SwitcherRequest switcher = getSwitcher(USECASE11);
 		assertTrue(switcher.isItOn());
 		
 		SwitcherExecutor.assume(USECASE11, false);
@@ -56,7 +57,7 @@ class SwitcherBypassTest {
 		SwitcherContext.configure(ContextBuilder.builder().snapshotLocation(SNAPSHOTS_LOCAL).environment(FIXTURE2));
 		SwitcherContext.initializeClient();
 		
-		Switcher switcher = getSwitcher(USECASE111);
+		SwitcherRequest switcher = getSwitcher(USECASE111);
 		assertFalse(switcher.isItOn());
 		
 		SwitcherExecutor.assume(USECASE111, true);
@@ -70,7 +71,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 		
 		//test
-		Switcher switcher = getSwitcher(USECASE11);
+		SwitcherRequest switcher = getSwitcher(USECASE11);
 		assertTrue(switcher.isItOn());
 		
 		SwitcherExecutor.assume(USECASE11, false);
@@ -87,7 +88,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 		
 		//test
-		Switcher switcher = getSwitcher(USECASE111);
+		SwitcherRequest switcher = getSwitcher(USECASE111);
 		assertFalse(switcher.isItOn());
 		
 		SwitcherExecutor.assume(USECASE111, true);
@@ -104,7 +105,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 		
 		//test
-		Switcher switcher = getSwitcher(USECASE111);
+		SwitcherRequest switcher = getSwitcher(USECASE111);
 		assertFalse(switcher.isItOn());
 	}
 
@@ -172,7 +173,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE111);
+		SwitcherRequest switcher = getSwitcher(USECASE111);
 		assertTrue(switcher.isItOn());
 	}
 
@@ -183,7 +184,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE111);
+		SwitcherRequest switcher = getSwitcher(USECASE111);
 		SwitcherResult switcherResult = switcher.submit();
 		assertTrue(switcherResult.isItOn());
 		assertEquals("Switcher bypassed", switcherResult.getReason());
@@ -199,7 +200,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE111);
+		SwitcherRequest switcher = getSwitcher(USECASE111);
 		assertTrue(switcher.isItOn());
 
 		switcher = getSwitcher(USECASE112);
@@ -218,7 +219,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE111);
+		SwitcherRequest switcher = getSwitcher(USECASE111);
 		SwitcherResult switcherResult = switcher.submit();
 		assertEquals("123", switcherResult.getMetadata(MetadataSample.class).getTransactionId());
 	}
@@ -233,7 +234,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE111);
+		SwitcherRequest switcher = getSwitcher(USECASE111);
 		SwitcherResult switcherResult = switcher.submit();
 		assertEquals("123", switcherResult.getMetadata(MetadataSample.class).getTransactionId());
 
@@ -279,7 +280,7 @@ class SwitcherBypassTest {
 	 * It is used to AB Test behavior when the same result is expected.
 	 */
 	private String workBothWay() {
-		Switcher switcher = getSwitcher(USECASE111);
+		SwitcherRequest switcher = getSwitcher(USECASE111);
 
 		// Using String.format
 		if (switcher.isItOn()) {

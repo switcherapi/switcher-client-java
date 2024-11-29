@@ -2,7 +2,7 @@ package com.github.switcherapi.client.utils;
 
 import com.github.switcherapi.SwitchersBase;
 import com.github.switcherapi.client.ContextBuilder;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.criteria.Data;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.fixture.CountDownHelper;
@@ -98,7 +98,7 @@ class SnapshotWatcherTest {
 	
 	@Test
 	void shouldNotReloadDomainAfterChangingSnapshot() {
-		Switcher switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		
 		//initial value is true
 		assertTrue(switcher.isItOn());
@@ -116,7 +116,7 @@ class SnapshotWatcherTest {
 	
 	@Test
 	void shouldReloadDomainAfterChangingSnapshot() {
-		Switcher switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		
 		//initial value is true
 		assertTrue(switcher.isItOn());

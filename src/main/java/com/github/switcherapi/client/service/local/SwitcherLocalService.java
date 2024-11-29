@@ -7,7 +7,7 @@ import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.SwitcherResult;
 import com.github.switcherapi.client.service.SwitcherFactory;
 import com.github.switcherapi.client.service.remote.ClientRemote;
@@ -104,7 +104,7 @@ public class SwitcherLocalService extends SwitcherExecutor {
 	}
 	
 	@Override
-	public SwitcherResult executeCriteria(final Switcher switcher) {
+	public SwitcherResult executeCriteria(final SwitcherRequest switcher) {
 		SwitcherUtils.debug(logger, "[Local] request: {}", switcher);
 
 		SwitcherResult response;

@@ -3,7 +3,7 @@ package com.github.switcherapi.client.remote;
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.SwitcherProperties;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.SwitcherResult;
 import com.github.switcherapi.client.remote.dto.SwitchersCheck;
 import com.github.switcherapi.client.service.SwitcherValidator;
@@ -72,7 +72,7 @@ class ClientRemoteTest extends MockWebServerHelper {
 
         SwitcherValidator validatorService = new ValidatorService();
         ClientLocal clientLocal = new ClientLocalService(validatorService);
-        Switcher switcher = new Switcher("KEY", new SwitcherRemoteService(clientRemote,
+        SwitcherRequest switcher = new SwitcherRequest("KEY", new SwitcherRemoteService(clientRemote,
                 new SwitcherLocalService(clientRemote, clientLocal, Switchers.getSwitcherProperties())));
 
         //test

@@ -13,7 +13,7 @@ import java.util.List;
  * 
  * @author Roger Floriano (petruki)
  */
-public abstract class SwitcherBuilder implements SwitcherInterface<Switcher> {
+public abstract class SwitcherBuilder implements Switcher {
 
 	protected final SwitcherProperties properties;
 	

@@ -4,7 +4,7 @@ import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.SwitcherResult;
 import com.github.switcherapi.client.remote.dto.CriteriaResponse;
 import com.github.switcherapi.client.remote.dto.SwitchersCheck;
@@ -37,7 +37,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	}
 
 	@Override
-	public SwitcherResult executeCriteria(final Switcher switcher) {
+	public SwitcherResult executeCriteria(final SwitcherRequest switcher) {
 		SwitcherUtils.debug(logger, "[Remote] request: {}", switcher);
 		
 		try {
@@ -51,7 +51,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 		}
 	}
 	
-	private SwitcherResult tryExecuteLocalCriteria(final Switcher switcher,
+	private SwitcherResult tryExecuteLocalCriteria(final SwitcherRequest switcher,
 												   final SwitcherRemoteException e) {
 		if (StringUtils.isNotBlank(switcherProperties.getValue(ContextKey.SILENT_MODE))) {
 			final SwitcherResult response = this.switcherLocal.executeCriteria(switcher);
