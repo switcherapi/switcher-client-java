@@ -16,4 +16,10 @@ public class SnapshotVersionResponse {
 		this.status = status;
 	}
 
+	@Override
+	public String toString() {
+		return "SnapshotVersionResponse{" +
+				"status=" + status +
+				'}';
+	}
 }

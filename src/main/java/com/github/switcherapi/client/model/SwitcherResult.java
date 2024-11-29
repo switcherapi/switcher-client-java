@@ -1,9 +1,8 @@
 package com.github.switcherapi.client.model;
 
-import java.util.*;
-
-import com.github.switcherapi.client.remote.dto.CriteriaResponse;
 import com.google.gson.Gson;
+
+import java.util.*;
 
 /**
  * @author Roger Floriano (petruki)
@@ -11,9 +10,9 @@ import com.google.gson.Gson;
  */
 public class SwitcherResult {
 
-	private static final String DEFAULT_REASON = "Default result";
+	public static final String DEFAULT_REASON = "Default result";
 
-	private static final String DEFAULT_SUCCESS = "Success";
+	public static final String DEFAULT_SUCCESS = "Success";
 
 	private boolean result;
 
@@ -32,22 +31,22 @@ public class SwitcherResult {
 		entry = new ArrayList<>();
 	}
 
-	private SwitcherResult(final boolean result, final String reason, final Switcher switcher) {
+	public SwitcherResult(String switcherKey, boolean result, String reason, List<Entry> entry) {
 		this();
 		this.result = result;
 		this.reason = reason;
-		this.switcherKey = switcher.getSwitcherKey();
-		this.entry = switcher.getEntry();
+		this.switcherKey = switcherKey;
+		this.entry = entry;
 	}
 
-	public SwitcherResult buildFromSwitcher(Switcher switcher) {
-		this.switcherKey = switcher.getSwitcherKey();
-		this.entry = switcher.getEntry();
+	public SwitcherResult buildFromSwitcher(String switcherKey, List<Entry> entry) {
+		this.switcherKey = switcherKey;
+		this.entry = entry;
 
 		if (Objects.nonNull(entry)) {
 			for (Entry inputEntry : entry) {
 				if (!isEntryMatching(inputEntry)) {
-					return new SwitcherResult(!this.result, this.reason, switcher);
+					return new SwitcherResult(switcherKey, !this.result, this.reason, entry);
 				}
 			}
 		}
@@ -58,27 +57,6 @@ public class SwitcherResult {
 	private boolean isEntryMatching(Entry inputEntry) {
 		return entryWhen.isEmpty() || entryWhen.containsKey(inputEntry.getStrategy()) &&
 				entryWhen.get(inputEntry.getStrategy()).contains(inputEntry.getInput());
-	}
-
-	public static SwitcherResult buildFromDefault(Switcher switcher) {
-		return new SwitcherResult(Boolean.parseBoolean(switcher.getDefaultResult()), DEFAULT_REASON, switcher);
-	}
-
-	public static SwitcherResult buildResultFail(String reason, Switcher switcher) {
-		return new SwitcherResult(Boolean.FALSE, reason, switcher);
-	}
-
-	public static SwitcherResult buildResultSuccess(Switcher switcher) {
-		return new SwitcherResult(Boolean.TRUE, DEFAULT_SUCCESS, switcher);
-	}
-
-	public static SwitcherResult buildResultFromRemote(CriteriaResponse criteriaResponse) {
-		SwitcherResult switcherResult = new SwitcherResult();
-		switcherResult.setSwitcherKey(criteriaResponse.getSwitcherKey());
-		switcherResult.setResult(criteriaResponse.getResult());
-		switcherResult.setReason(criteriaResponse.getReason());
-		switcherResult.setMetadata(criteriaResponse.getMetadata());
-		return switcherResult;
 	}
 
 	public boolean isItOn() {

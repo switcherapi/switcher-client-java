@@ -24,7 +24,7 @@ public class SnapshotLoader {
 	private static final String SNAPSHOT_FILE_FORMAT = "%s/%s.json";
 
 	private static final Gson gson = new Gson();
-	
+
 	private SnapshotLoader() {}
 
 	/**

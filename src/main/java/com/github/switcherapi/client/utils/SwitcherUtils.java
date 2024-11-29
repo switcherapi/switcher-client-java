@@ -25,7 +25,7 @@ public class SwitcherUtils {
 	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+)}";
 	private static final String ENV_DEFAULT_VARIABLE_PATTERN = "\\$\\{(\\w+):(.+)?}";
 	private static final String PAYLOAD_PATTERN = "%s.%s";
-	
+
 	private SwitcherUtils() {}
 	
 	public static Date addTimeDuration(final String addValue, final Date date) 
