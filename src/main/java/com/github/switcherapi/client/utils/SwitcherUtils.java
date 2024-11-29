@@ -19,14 +19,12 @@ import java.util.regex.Pattern;
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class SwitcherUtils {
+public class SwitcherUtils extends Utils {
 
 	private static final String[] DURATION_UNIT = { "s", "m", "h", "d" };
 	private static final String ENV_VARIABLE_PATTERN = "\\$\\{(\\w+)}";
 	private static final String ENV_DEFAULT_VARIABLE_PATTERN = "\\$\\{(\\w+):(.+)?}";
 	private static final String PAYLOAD_PATTERN = "%s.%s";
-	
-	private SwitcherUtils() {}
 	
 	public static Date addTimeDuration(final String addValue, final Date date) 
 			throws SwitcherInvalidDateTimeArgumentException {

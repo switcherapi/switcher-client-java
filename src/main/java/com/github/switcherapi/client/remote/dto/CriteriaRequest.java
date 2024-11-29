@@ -1,7 +1,6 @@
 package com.github.switcherapi.client.remote.dto;
 
 import com.github.switcherapi.client.model.Entry;
-import com.github.switcherapi.client.model.Switcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,24 +14,28 @@ public class CriteriaRequest {
 
 	private boolean bypassMetric;
 
-	public static CriteriaRequest build(final Switcher switcher) {
-		final CriteriaRequest request = new CriteriaRequest();
-		request.switcherKey = switcher.getSwitcherKey();
-		request.entry = switcher.getEntry();
-		request.bypassMetric = switcher.isBypassMetrics();
-		return request;
-	}
-
 	public String getSwitcherKey() {
 		return switcherKey;
+	}
+
+	public void setSwitcherKey(String switcherKey) {
+		this.switcherKey = switcherKey;
 	}
 
 	public List<Entry> getEntry() {
 		return entry;
 	}
 
+	public void setEntry(List<Entry> entry) {
+		this.entry = entry;
+	}
+
 	public boolean isBypassMetric() {
 		return bypassMetric;
+	}
+
+	public void setBypassMetric(boolean bypassMetric) {
+		this.bypassMetric = bypassMetric;
 	}
 
 	/**

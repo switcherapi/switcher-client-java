@@ -62,7 +62,7 @@ public class ClientWSImpl implements ClientWS {
 			final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
 					.uri(uri)
 					.headers(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token),
-							CONTENT_TYPE[0], CONTENT_TYPE[1])
+							HEADER_CONTENT_TYPE, HEADER_JSON)
 					.timeout(Duration.ofMillis(timeoutMs))
 					.POST(HttpRequest.BodyPublishers.ofString(gson.toJson(criteriaRequest.getInputRequest())))
 					.build(), HttpResponse.BodyHandlers.ofString());
@@ -92,7 +92,7 @@ public class ClientWSImpl implements ClientWS {
 			final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
 					.uri(URI.create(String.format(AUTH_URL, url)))
 					.headers(HEADER_APIKEY, switcherProperties.getValue(ContextKey.APIKEY),
-							CONTENT_TYPE[0], CONTENT_TYPE[1])
+							HEADER_CONTENT_TYPE, HEADER_JSON)
 					.timeout(Duration.ofMillis(timeoutMs))
 					.POST(HttpRequest.BodyPublishers.ofString(gson.toJson(authRequest))
 					).build(), HttpResponse.BodyHandlers.ofString());
@@ -115,7 +115,7 @@ public class ClientWSImpl implements ClientWS {
 			final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
 					.uri(URI.create(String.format(SNAPSHOT_URL, url)))
 					.headers(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token),
-							CONTENT_TYPE[0], CONTENT_TYPE[1])
+							HEADER_CONTENT_TYPE, HEADER_JSON)
 					.timeout(Duration.ofMillis(timeoutMs))
 					.POST(HttpRequest.BodyPublishers.ofString(String.format(QUERY,
 							switcherProperties.getValue(ContextKey.DOMAIN),
@@ -141,7 +141,7 @@ public class ClientWSImpl implements ClientWS {
 			final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
 					.uri(URI.create(String.format(SNAPSHOT_VERSION_CHECK, url, version)))
 					.headers(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token),
-							CONTENT_TYPE[0], CONTENT_TYPE[1])
+							HEADER_CONTENT_TYPE, HEADER_JSON)
 					.timeout(Duration.ofMillis(timeoutMs))
 					.GET().build(), HttpResponse.BodyHandlers.ofString());
 
@@ -181,7 +181,7 @@ public class ClientWSImpl implements ClientWS {
 					.uri(URI.create(String.format(CHECK_SWITCHERS, url)))
 					.timeout(Duration.ofMillis(timeoutMs))
 					.headers(HEADER_AUTHORIZATION, String.format(TOKEN_TEXT, token),
-							CONTENT_TYPE[0], CONTENT_TYPE[1])
+							HEADER_CONTENT_TYPE, HEADER_JSON)
 					.POST(HttpRequest.BodyPublishers.ofString(gson.toJson(new SwitchersCheck(switchers)))
 					).build(), HttpResponse.BodyHandlers.ofString());
 
