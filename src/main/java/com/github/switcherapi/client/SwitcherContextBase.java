@@ -5,7 +5,7 @@ import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.remote.ClientWS;
 import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.service.SwitcherValidator;
@@ -85,7 +85,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	
 	protected static SwitcherProperties switcherProperties;
 	protected static Set<String> switcherKeys;
-	protected static Map<String, Switcher> switchers;
+	protected static Map<String, SwitcherRequest> switchers;
 	protected static SwitcherExecutor instance;
 	private static ScheduledExecutorService scheduledExecutorService;
 	private static ExecutorService watcherExecutorService;
@@ -258,7 +258,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 		
 		switchers.clear();
 		for (String key : switcherKeys) {
-			switchers.put(key, new Switcher(key, instance));
+			switchers.put(key, new SwitcherRequest(key, instance));
 		}
 	}
 
@@ -354,14 +354,14 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * @return a ready to use Switcher
 	 * @throws SwitcherKeyNotFoundException in case the key was not properly loaded
 	 */
-	public static Switcher getSwitcher(String key, boolean keepEntries) {
+	public static SwitcherRequest getSwitcher(String key, boolean keepEntries) {
 		SwitcherUtils.debug(logger, "key: {} - keepEntries: {}", key, keepEntries);
 		
 		if (!switchers.containsKey(key)) {
 			throw new SwitcherKeyNotFoundException(key);
 		}
 		
-		final Switcher switcher = switchers.get(key);
+		final SwitcherRequest switcher = switchers.get(key);
 		if (!keepEntries) {
 			switcher.resetEntry();
 		}
@@ -375,7 +375,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * @param key name
 	 * @return a ready to use Switcher
 	 */
-	public static Switcher getSwitcher(String key) {
+	public static SwitcherRequest getSwitcher(String key) {
 		return getSwitcher(key, false);
 	}
 	

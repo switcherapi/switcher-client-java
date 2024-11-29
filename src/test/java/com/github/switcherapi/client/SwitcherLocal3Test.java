@@ -29,7 +29,7 @@ import com.github.switcherapi.client.exception.SwitcherInvalidStrategyException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.StrategyValidator;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.service.local.SwitcherLocalService;
 
 import static com.github.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
@@ -78,7 +78,7 @@ class SwitcherLocal3Test {
 	@MethodSource("failTestArguments")
 	void localShouldReturnError(String useCaseKey, String strategyValidator,
 			String input, Class<SwitcherException> error) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
 		switcher.prepareEntry(Entry.build(strategyValidator, input));
 		
 		assertThrows(error, switcher::isItOn);
@@ -129,7 +129,7 @@ class SwitcherLocal3Test {
 
 	@Test
 	void localShouldReturnTrue_defaultResult() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.NOT_FOUND_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.NOT_FOUND_KEY);
 		assertTrue(switcher.defaultResult(true).isItOn());
 	}
 

@@ -1,157 +1,110 @@
 package com.github.switcherapi.client.model;
 
 import com.github.switcherapi.client.SwitcherContext;
-import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.exception.SwitcherException;
 
-import java.util.*;
+import java.util.List;
 
 /**
- * Switchers are the entry point to evaluate criteria and return the result.
- * <br>To execute a criteria evaluation, use one of the available methods: {@link #isItOn()}.
- * 
- * @author Roger Floriano (petruki)
- * @since 2019-12-24
- * 
- * @see #isItOn()
- * @see #submit()
+ * The API that handles the switcher operations.
+ *
+ * <ul>
+ *     <li>Switcher creation</li>
+ *     <li>Switcher execution</li>
+ *     <li>Switcher get input/output</li>
+ * </ul>
  */
-public final class Switcher extends SwitcherBuilder {
-	
-	public static final String KEY = "key";
-	
-	public static final String SHOW_REASON = "showReason";
-	
-	public static final String BYPASS_METRIC = "bypassMetric";
+public interface Switcher {
 
-	private final SwitcherExecutor context;
-	
-	private final String switcherKey;
-	
-	private final Set<SwitcherResult> historyExecution;
-
-	private AsyncSwitcher<Switcher> asyncSwitcher;
-	
 	/**
-	 * Use {@link SwitcherContext#getSwitcher(String)} to create this object.
-	 * 
-	 * @param switcherKey name of the key created
-	 * @param context client context in which the switcher will be executed (local/remote)
+	 * This method builds the Switcher object.<br>
+	 * Uses to isolate Switcher creation from the execution.<br>
+	 *
+	 * For example:
+	 * <pre>
+	 * Switcher switcher = SwitcherContext
+	 * 	.getSwitcher(MY_SWITCHER)
+	 * 	.remote(true)
+	 * 	.throttle(1000)
+	 * 	.checkValue("value")
+	 * 	.build();
+	 * </pre>
+	 *
+	 * @return instance of SwitcherInterface
+	 * @see SwitcherRequest
 	 */
-	public Switcher(final String switcherKey, final SwitcherExecutor context) {
-		super(context.getSwitcherProperties());
-		this.context = context;
-		this.switcherKey = switcherKey;
-		this.historyExecution = new HashSet<>();
-		this.entry = new ArrayList<>();
-	}
+	Switcher build();
 
-	@Override
-	public Switcher build() {
-		return this;
-	}
-	
-	@Override
-	public Switcher prepareEntry(final List<Entry> entry) {
-		this.entry = Optional.ofNullable(entry).orElse(new ArrayList<>());
-		return this;
-	}
-	
-	@Override
-	public Switcher prepareEntry(final Entry entry, final boolean add) {
-		if (!add) {
-			this.entry.clear();
-		}
+	/**
+	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.
+	 *
+	 * @param entry input object
+	 * @return instance of SwitcherInterface
+	 */
+	Switcher prepareEntry(final List<Entry> entry);
 
-		if (!this.entry.contains(entry)) {
-			this.entry.add(entry);
-		}
-		
-		return this;
-	}
-	
-	@Override
-	public Switcher prepareEntry(final Entry entry) {
-		return this.prepareEntry(entry, false);
-	}
-	
-	@Override
-	public boolean isItOn() throws SwitcherException {
-		final SwitcherResult response = submit();
-		return response.isItOn();
-	}
+	/**
+	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.
+	 *
+	 * @param entry input object
+	 * @param add if false, the list will be cleaned and the entry provided will be the only input for this Switcher.
+	 * @return instance of SwitcherInterface
+	 */
+	Switcher prepareEntry(final Entry entry, final boolean add);
 
-	@Override
-	public SwitcherResult submit() throws SwitcherException {
-		if (SwitcherExecutor.getBypass().containsKey(switcherKey)) {
-			return SwitcherExecutor.getBypass().get(switcherKey).buildFromSwitcher(switcherKey, entry);
-		}
+	/**
+	 * It adds an input to the list of inputs.
+	 * <br>Under the table it calls {@link #prepareEntry(Entry, boolean)} passing true to the second argument.
+	 *
+	 * @param entry input object
+	 * @return instance of SwitcherInterface
+	 */
+	Switcher prepareEntry(final Entry entry);
 
-		if (canUseAsync()) {
-			if (Objects.isNull(asyncSwitcher)) {
-				asyncSwitcher = new AsyncSwitcher<>(this, super.delay);
-			}
+	/**
+	 * Execute criteria based on a given switcher key provided via {@link SwitcherContext#getSwitcher(String)}.
+	 * <br>The detailed result is available in list of {@link SwitcherResult}.
+	 *
+	 * @return criteria result
+	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
+	 */
+	boolean isItOn() throws SwitcherException;
 
-			asyncSwitcher.execute();
-			final Optional<SwitcherResult> response = getFromHistory();
-			if (response.isPresent()) {
-				return response.get();
-			}
-		}
+	/**
+	 * Execute criteria based on a given switcher key provided via {@link SwitcherContext#getSwitcher(String)}.
+	 * <br>The detailed result is available in list of {@link SwitcherResult}.
+	 *
+	 * @return {@link SwitcherResult}
+	 * @throws SwitcherException connectivity or criteria errors regarding reading malformed snapshots
+	 */
+	SwitcherResult submit() throws SwitcherException;
 
-		final SwitcherResult response = this.context.executeCriteria(this);
-		this.updateHistoryExecution(response);
-		return response;
-	}
+	/**
+	 * Execute the criteria evaluation.
+	 *
+	 * @return the switcher result
+	 */
+	SwitcherResult executeCriteria();
 
-	@Override
-	public SwitcherResult executeCriteria() {
-		return this.context.executeCriteria(this);
-	}
+	/**
+	 * Update the history of executions.
+	 *
+	 * @param response the response to be updated
+	 */
+	void updateHistoryExecution(SwitcherResult response);
 
-	@Override
-	public void updateHistoryExecution(final SwitcherResult response) {
-		this.historyExecution.removeIf(item ->
-				this.switcherKey.equals(item.getSwitcherKey()) && this.entry.equals(item.getEntry()));
+	/**
+	 * Get the key of the switcher.
+	 *
+	 * @return the key of the switcher
+	 */
+	String getSwitcherKey();
 
-		this.historyExecution.add(response);
-	}
-
-	@Override
-	public String getSwitcherKey() {
-		return this.switcherKey;
-	}
-
-	@Override
-	public List<Entry> getEntry() {
-		return this.entry;
-	}
-
-	public boolean isBypassMetrics() {
-		return bypassMetrics;
-	}
-	
-	public void resetEntry() {
-		this.entry = new ArrayList<>();
-	}
-
-	private boolean canUseAsync() {
-		return super.delay > 0 && !this.historyExecution.isEmpty();
-	}
-
-	private Optional<SwitcherResult> getFromHistory() {
-		for (SwitcherResult switcherResult : historyExecution) {
-			if (switcherResult.getEntry().equals(getEntry())) {
-				return Optional.of(switcherResult);
-			}
-		}
-		return Optional.empty();
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Switcher [switcherKey= %s, entry= %s, bypassMetrics= %s]",
-				switcherKey, entry, bypassMetrics);
-	}
+	/**
+	 * Get the entry input list for the switcher.
+	 *
+	 * @return the entry of the switcher
+	 */
+	List<Entry> getEntry();
 
 }

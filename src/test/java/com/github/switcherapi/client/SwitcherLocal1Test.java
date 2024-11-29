@@ -7,7 +7,7 @@ import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.Entry;
 import com.github.switcherapi.client.model.StrategyValidator;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.fixture.Product;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
@@ -49,37 +49,37 @@ class SwitcherLocal1Test {
 	
 	@Test
 	void localShouldReturnTrue() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11, true);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE11, true);
 		assertTrue(switcher.isItOn());
 	}
 	
 	@Test
 	void localShouldReturnFalse() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE12);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE12);
 		assertFalse(switcher.isItOn());
 	}
 	
 	@Test
 	void localShouldReturnFalse_groupDisabled() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE21);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE21);
 		assertFalse(switcher.isItOn());
 	}
 	
 	@Test
 	void localShouldReturnTrue_strategyDisabled() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE71);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE71);
 		assertTrue(switcher.isItOn());
 	}
 	
 	@Test
 	void localShouldNotReturn_keyNotFound() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.NOT_FOUND_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.NOT_FOUND_KEY);
 		assertThrows(SwitcherKeyNotFoundException.class, switcher::isItOn);
 	}
 
 	@Test
 	void localShouldReturnFalse_nullEntryForStrategy() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE31);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE31);
 
 		List<Entry> entry = null;
 		assertFalse(switcher
@@ -104,7 +104,7 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("dateTestArguments")
 	void localShouldTest_dateValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.DATE, input);
 
 		assertEquals(expected, switcher.prepareEntry(entry).isItOn());
@@ -113,14 +113,13 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("dateTestArguments")
 	void localShouldTestChained_dateValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
-		switcher.checkDate(input);
-		assertEquals(expected, switcher.isItOn());
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
+		assertEquals(expected, switcher.checkDate(input).isItOn());
 	}
 	
 	@Test
 	void localShouldReturnFalse_dateValidationWrongFormat() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE33);
 		Entry input = Entry.build(StrategyValidator.DATE, "2019/121/13");
 		
 		switcher.prepareEntry(input);
@@ -147,7 +146,7 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("valueTestArguments")
 	void localShouldTest_valueValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.VALUE, input);
 		
 		switcher.prepareEntry(entry);
@@ -157,7 +156,7 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("valueTestArguments")
 	void localShouldTestChained_valueValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
 		switcher.checkValue(input);
 		assertEquals(expected, switcher.isItOn());
 	}
@@ -188,7 +187,7 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("numericTestArguments")
 	void localShouldTest_numericValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.NUMERIC, input);
 		
 		switcher.prepareEntry(entry);
@@ -198,14 +197,14 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("numericTestArguments")
 	void localShouldTestChained_numericValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
 		switcher.checkNumeric(input);
 		assertEquals(expected, switcher.isItOn());
 	}
 	
 	@Test
 	void localShouldReturnException_invalidNumericInput() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE81);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE81);
 		Entry input = Entry.build(StrategyValidator.NUMERIC, "INVALID_NUMBER");
 		
 		switcher.prepareEntry(input);
@@ -229,7 +228,7 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("timeTestArguments")
 	void localShouldTest_timeValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.TIME, input);
 		
 		switcher.prepareEntry(entry);
@@ -239,14 +238,13 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("timeTestArguments")
 	void localShouldTestChained_timeValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
-		switcher.checkTime(input);
-		assertEquals(expected, switcher.isItOn());
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
+		assertEquals(expected, switcher.checkTime(input).isItOn());
 	}
 	
 	@Test
 	void localShouldReturnFalse_timeValidationWrongFormat() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE53);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE53);
 		Entry input = Entry.build(StrategyValidator.TIME, "2019-12-10");
 		
 		switcher.prepareEntry(input);
@@ -270,7 +268,7 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("networkTestArguments")
 	void localShouldTest_networkValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.NETWORK, input);
 		
 		switcher.prepareEntry(entry);
@@ -280,20 +278,19 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("networkTestArguments")
 	void localShouldTestChained_networkValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
-		switcher.checkNetwork(input);
-		assertEquals(expected, switcher.isItOn());
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
+		assertEquals(expected, switcher.checkNetwork(input).isItOn());
 	}
 	
 	@Test
 	void localShouldReturnFalse_strategyRequiresInput() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE63);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE63);
 		assertFalse(switcher.isItOn());
 	}
 	
 	@Test
 	void localShouldReturnFalse_invalidStrategyInput() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE33);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE33);
 		switcher.prepareEntry(Entry.build(StrategyValidator.INVALID, "Value"));
 		assertFalse(switcher.isItOn());
 	}
@@ -320,7 +317,7 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("regexTestArguments")
 	void localShouldTest_regexValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.REGEX, input);
 		
 		switcher.prepareEntry(entry);
@@ -330,9 +327,8 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("regexTestArguments")
 	void localShouldTestChained_regexValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
-		switcher.checkRegex(input);
-		assertEquals(expected, switcher.isItOn());
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
+		assertEquals(expected, switcher.checkRegex(input).isItOn());
 	}
 	
 	static Stream<Arguments> payloadTestArguments() {
@@ -350,7 +346,7 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("payloadTestArguments")
 	void localShouldTest_payloadValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
 		Entry entry = Entry.build(StrategyValidator.PAYLOAD, input);
 		
 		switcher.prepareEntry(entry);
@@ -360,9 +356,8 @@ class SwitcherLocal1Test {
 	@ParameterizedTest()
 	@MethodSource("payloadTestArguments")
 	void localShouldTestChained_payloadValidation(String useCaseKey, String input, boolean expected) {
-		Switcher switcher = Switchers.getSwitcher(useCaseKey);
-		switcher.checkPayload(input);
-		assertEquals(expected, switcher.isItOn());
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
+		assertEquals(expected, switcher.checkPayload(input).isItOn());
 	}
 
 }

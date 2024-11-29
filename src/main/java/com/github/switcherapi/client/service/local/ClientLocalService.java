@@ -3,7 +3,7 @@ package com.github.switcherapi.client.service.local;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.model.Entry;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.criteria.Config;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Group;
@@ -62,7 +62,7 @@ public class ClientLocalService implements ClientLocal {
 	}
 
 	@Override
-	public SwitcherResult executeCriteria(final Switcher switcher, final Domain domain) {
+	public SwitcherResult executeCriteria(final SwitcherRequest switcher, final Domain domain) {
 		if (!domain.isActivated()) {
 			return SwitcherFactory.buildResultFail(DISABLED_DOMAIN, switcher);
 		}
@@ -79,7 +79,7 @@ public class ClientLocalService implements ClientLocal {
 		throw new SwitcherKeyNotFoundException(switcher.getSwitcherKey());
 	}
 
-	private SwitcherResult getSwitcherResult(Switcher switcher, Group group, Config config) {
+	private SwitcherResult getSwitcherResult(SwitcherRequest switcher, Group group, Config config) {
 		if (!group.isActivated()) {
 			return SwitcherFactory.buildResultFail(DISABLED_GROUP, switcher);
 		}
@@ -111,7 +111,7 @@ public class ClientLocalService implements ClientLocal {
 	 * @throws SwitcherException If encountered either invalid input or misconfiguration
 	 */
 	private SwitcherResult processOperation(final Strategy[] configStrategies, final List<Entry> input,
-											final Switcher switcher) {
+											final SwitcherRequest switcher) {
 		SwitcherUtils.debug(logger, LOG_PROCESS_OP_TEMPLATE, Arrays.toString(configStrategies));
 
 		for (final Strategy strategy : configStrategies) {
@@ -133,7 +133,7 @@ public class ClientLocalService implements ClientLocal {
 		return SwitcherFactory.buildResultSuccess(switcher);
 	}
 	
-	private SwitcherResult strategyFailed(Switcher switcher, Strategy strategy, String pattern) {
+	private SwitcherResult strategyFailed(SwitcherRequest switcher, Strategy strategy, String pattern) {
 		return SwitcherFactory.buildResultFail(String.format(pattern, strategy.getStrategy()), switcher);
 	}
 	

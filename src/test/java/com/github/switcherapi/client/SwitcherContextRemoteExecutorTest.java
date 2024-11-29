@@ -3,7 +3,7 @@ package com.github.switcherapi.client;
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.SwitchersBase;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.fixture.MockWebServerHelper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -47,7 +47,7 @@ class SwitcherContextRemoteExecutorTest extends MockWebServerHelper {
 		SwitchersBase.initializeClient();
 
 		//test
-		Switcher switcher = SwitchersBase.getSwitcher(Switchers.USECASE11);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(Switchers.USECASE11);
 		assertTrue(switcher.isItOn());
 	}
 
@@ -73,7 +73,7 @@ class SwitcherContextRemoteExecutorTest extends MockWebServerHelper {
 		SwitchersBase.initializeClient();
 
 		//test
-		Switcher switcher = SwitchersBase.getSwitcher(Switchers.USECASE11);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(Switchers.USECASE11);
 		Exception ex = assertThrows(SwitcherRemoteException.class, switcher::isItOn);
 		assertEquals("java.net.SocketTimeoutException: Read timed out", ex.getCause().getMessage());
 	}

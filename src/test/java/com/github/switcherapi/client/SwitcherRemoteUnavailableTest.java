@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 
 class SwitcherRemoteUnavailableTest {
 	
@@ -23,7 +23,7 @@ class SwitcherRemoteUnavailableTest {
 		SwitcherContext.initializeClient();
 		
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertThrows(SwitcherRemoteException.class, switcher::isItOn);
 	}
 
