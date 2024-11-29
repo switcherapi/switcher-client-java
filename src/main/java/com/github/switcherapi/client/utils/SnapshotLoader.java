@@ -19,11 +19,13 @@ import java.util.Objects;
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class SnapshotLoader extends Utils {
+public class SnapshotLoader {
 	
 	private static final String SNAPSHOT_FILE_FORMAT = "%s/%s.json";
 
 	private static final Gson gson = new Gson();
+
+	private SnapshotLoader() {}
 
 	/**
 	 * Load a specific snapshot file

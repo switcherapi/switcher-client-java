@@ -2,12 +2,13 @@ package com.github.switcherapi.client.service;
 
 import com.github.switcherapi.client.model.Switcher;
 import com.github.switcherapi.client.model.SwitcherResult;
-import com.github.switcherapi.client.utils.Utils;
 
 import static com.github.switcherapi.client.model.SwitcherResult.DEFAULT_REASON;
 import static com.github.switcherapi.client.model.SwitcherResult.DEFAULT_SUCCESS;
 
-public class SwitcherFactory extends Utils {
+public class SwitcherFactory {
+
+	private SwitcherFactory() {}
 
 	public static SwitcherResult buildFromDefault(Switcher switcher) {
 		return new SwitcherResult(

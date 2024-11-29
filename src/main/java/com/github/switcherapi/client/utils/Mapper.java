@@ -5,7 +5,9 @@ import com.github.switcherapi.client.model.SwitcherResult;
 import com.github.switcherapi.client.remote.dto.CriteriaRequest;
 import com.github.switcherapi.client.remote.dto.CriteriaResponse;
 
-public class Mapper extends Utils {
+public class Mapper {
+
+	private Mapper() {}
 
 	public static CriteriaRequest mapFrom(final Switcher switcher) {
 		CriteriaRequest request = new CriteriaRequest();
