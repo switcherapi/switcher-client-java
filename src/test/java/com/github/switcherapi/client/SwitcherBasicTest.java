@@ -1,7 +1,7 @@
 package com.github.switcherapi.client;
 
 import com.github.switcherapi.Switchers;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
 import org.junit.jupiter.api.AfterAll;
@@ -56,7 +56,7 @@ class SwitcherBasicTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("true", false));
 		
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -69,7 +69,7 @@ class SwitcherBasicTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("false", false));
 		
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertFalse(switcher.isItOn());
 	}
 

@@ -1,7 +1,7 @@
 package com.github.switcherapi.client.service.local;
 
 import com.github.switcherapi.client.exception.SwitcherException;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.SwitcherResult;
 
@@ -34,6 +34,6 @@ public interface ClientLocal {
 	 * @return The criteria result
 	 * @throws SwitcherException If encountered either invalid input or misconfiguration
 	 */
-	SwitcherResult executeCriteria(final Switcher switcher, final Domain domain);
+	SwitcherResult executeCriteria(final SwitcherRequest switcher, final Domain domain);
 
 }

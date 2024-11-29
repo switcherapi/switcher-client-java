@@ -1,7 +1,7 @@
 package com.github.switcherapi.client;
 
 import com.github.switcherapi.Switchers;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.fixture.CountDownHelper;
 import com.github.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
@@ -64,7 +64,7 @@ class SwitcherSilentModeTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("true", false));
 		
 		//test
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE11);
 		assertTrue(switcher.isItOn());
 
 		CountDownHelper.wait(2);

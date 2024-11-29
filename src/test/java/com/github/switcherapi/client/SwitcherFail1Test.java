@@ -3,7 +3,7 @@ package com.github.switcherapi.client;
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.fixture.CountDownHelper;
 import com.github.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
@@ -59,7 +59,7 @@ class SwitcherFail1Test extends MockWebServerHelper {
 		//criteria
 		givenResponse(generateStatusResponse("404"));
 		
-		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertThrows(SwitcherRemoteException.class, switcher::isItOn);
 	}
 
@@ -71,7 +71,7 @@ class SwitcherFail1Test extends MockWebServerHelper {
 		//criteria
 		givenResponse(generateStatusResponse("404"));
 
-		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertTrue(switcher.defaultResult(true).isItOn());
 		assertFalse(switcher.defaultResult(false).isItOn());
 	}
@@ -81,7 +81,7 @@ class SwitcherFail1Test extends MockWebServerHelper {
 		//auth
 		givenResponse(generateStatusResponse("401"));
 		
-		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		assertThrows(SwitcherException.class, switcher::isItOn);
 	}
 	
@@ -93,7 +93,7 @@ class SwitcherFail1Test extends MockWebServerHelper {
 		//criteria
 		givenResponse(generateCriteriaResponse("true", false));
 		
-		Switcher switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
 		
 		//test
 		assertTrue(switcher.isItOn());

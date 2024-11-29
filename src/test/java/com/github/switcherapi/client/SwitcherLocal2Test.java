@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.github.switcherapi.Switchers;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 
 class SwitcherLocal2Test {
 	
@@ -28,7 +28,7 @@ class SwitcherLocal2Test {
 	
 	@Test
 	void localShouldReturnFalse_domainDisabled() {
-		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE111);
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE111);
 		assertFalse(switcher.isItOn());
 	}
 	

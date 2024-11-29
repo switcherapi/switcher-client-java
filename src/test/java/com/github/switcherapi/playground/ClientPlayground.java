@@ -19,7 +19,9 @@ public class ClientPlayground {
 
 	public static void test() {
 		new Features().configureClient();
-		Switcher switcher = getSwitcher(MY_SWITCHER);
+		Switcher switcher = getSwitcher(MY_SWITCHER)
+				.bypassMetrics()
+				.build();
 
 		scheduler.scheduleAtFixedRate(() -> {
 			long time = System.currentTimeMillis();

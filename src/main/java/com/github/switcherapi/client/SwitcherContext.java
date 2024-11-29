@@ -3,7 +3,7 @@ package com.github.switcherapi.client;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 
 /**
  * <b>Switcher Context</b>
@@ -54,7 +54,7 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	 * @return a ready to use Switcher
 	 * @throws SwitcherKeyNotFoundException in case the key was not properly loaded
 	 */
-	public static Switcher getSwitcher(String key, boolean keepEntries) {
+	public static SwitcherRequest getSwitcher(String key, boolean keepEntries) {
 		return SwitcherContextBase.getSwitcher(key, keepEntries);
 	}
 	
@@ -64,7 +64,7 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	 * @param key name
 	 * @return a ready to use Switcher
 	 */
-	public static Switcher getSwitcher(String key) {
+	public static SwitcherRequest getSwitcher(String key) {
 		return SwitcherContextBase.getSwitcher(key);
 	}
 	

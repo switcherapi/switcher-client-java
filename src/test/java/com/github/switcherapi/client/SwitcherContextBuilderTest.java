@@ -3,7 +3,7 @@ package com.github.switcherapi.client;
 import com.github.switcherapi.SwitchersBase;
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +33,7 @@ class SwitcherContextBuilderTest {
 		initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE11);
+		SwitcherRequest switcher = getSwitcher(USECASE11);
 		assertTrue(switcher.isItOn());
 	}
 
