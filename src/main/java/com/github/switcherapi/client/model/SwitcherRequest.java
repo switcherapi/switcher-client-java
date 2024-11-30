@@ -1,9 +1,9 @@
 package com.github.switcherapi.client.model;
 
 import com.github.switcherapi.client.SwitcherContext;
+import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.SwitcherException;
-import com.github.switcherapi.client.service.SwitcherExecutionService;
 import com.github.switcherapi.client.test.SwitcherBypass;
 
 import java.util.*;
@@ -21,12 +21,17 @@ import java.util.*;
 public final class SwitcherRequest extends SwitcherBuilder {
 	
 	public static final String KEY = "key";
+	
 	public static final String SHOW_REASON = "showReason";
+	
 	public static final String BYPASS_METRIC = "bypassMetric";
 
-	private final SwitcherExecutionService switcherExecutor;
+	private final SwitcherExecutor switcherExecutor;
+	
 	private final String switcherKey;
+	
 	private final Set<SwitcherResult> historyExecution;
+
 	private AsyncSwitcher asyncSwitcher;
 	
 	/**
@@ -37,7 +42,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	 * @param switcherProperties properties to be used with executor operations
 	 */
 	public SwitcherRequest(final String switcherKey,
-						   final SwitcherExecutionService switcherExecutor,
+						   final SwitcherExecutor switcherExecutor,
 						   final SwitcherProperties switcherProperties) {
 		super(switcherProperties);
 		this.switcherExecutor = switcherExecutor;
