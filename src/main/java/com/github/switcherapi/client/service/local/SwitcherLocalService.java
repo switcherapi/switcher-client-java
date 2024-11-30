@@ -1,6 +1,6 @@
 package com.github.switcherapi.client.service.local;
 
-import com.github.switcherapi.client.SwitcherExecutor;
+import com.github.switcherapi.client.SwitcherExecutorImpl;
 import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.SwitcherException;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
@@ -27,7 +27,7 @@ import java.util.Set;
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class SwitcherLocalService extends SwitcherExecutor {
+public class SwitcherLocalService extends SwitcherExecutorImpl {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SwitcherLocalService.class);
 

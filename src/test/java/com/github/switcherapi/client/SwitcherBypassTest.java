@@ -1,9 +1,10 @@
 package com.github.switcherapi.client;
 
 import com.github.switcherapi.client.model.StrategyValidator;
-import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.Switcher;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.SwitcherResult;
+import com.github.switcherapi.client.test.SwitcherBypass;
 import com.github.switcherapi.client.test.SwitcherTest;
 import com.github.switcherapi.client.test.SwitcherTestValue;
 import com.github.switcherapi.client.test.SwitcherTestWhen;
@@ -34,7 +35,7 @@ class SwitcherBypassTest {
 	
 	@AfterAll
 	static void resetMock() {
-		SwitcherExecutor.getBypass().clear();
+		SwitcherBypass.getBypass().clear();
 	}
 	
 	@Test
@@ -46,8 +47,8 @@ class SwitcherBypassTest {
 		//test
 		SwitcherRequest switcher = getSwitcher(USECASE11);
 		assertTrue(switcher.isItOn());
-		
-		SwitcherExecutor.assume(USECASE11, false);
+
+		SwitcherBypass.assume(USECASE11, false);
 		assertFalse(switcher.isItOn());
 	}
 	
@@ -59,8 +60,8 @@ class SwitcherBypassTest {
 		
 		SwitcherRequest switcher = getSwitcher(USECASE111);
 		assertFalse(switcher.isItOn());
-		
-		SwitcherExecutor.assume(USECASE111, true);
+
+		SwitcherBypass.assume(USECASE111, true);
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -73,11 +74,11 @@ class SwitcherBypassTest {
 		//test
 		SwitcherRequest switcher = getSwitcher(USECASE11);
 		assertTrue(switcher.isItOn());
-		
-		SwitcherExecutor.assume(USECASE11, false);
+
+		SwitcherBypass.assume(USECASE11, false);
 		assertFalse(switcher.isItOn());
-		
-		SwitcherExecutor.forget(USECASE11);
+
+		SwitcherBypass.forget(USECASE11);
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -90,11 +91,11 @@ class SwitcherBypassTest {
 		//test
 		SwitcherRequest switcher = getSwitcher(USECASE111);
 		assertFalse(switcher.isItOn());
-		
-		SwitcherExecutor.assume(USECASE111, true);
+
+		SwitcherBypass.assume(USECASE111, true);
 		assertTrue(switcher.isItOn());
-		
-		SwitcherExecutor.forget(USECASE111);
+
+		SwitcherBypass.forget(USECASE111);
 		assertFalse(switcher.isItOn());
 	}
 
@@ -252,7 +253,7 @@ class SwitcherBypassTest {
 		//test
 		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1").build();
 
-		SwitcherExecutor.assume(USECASE41, true)
+		SwitcherBypass.assume(USECASE41, true)
 						.when(StrategyValidator.VALUE, "Value1");
 
 		assertTrue(switcher.isItOn());
@@ -267,7 +268,7 @@ class SwitcherBypassTest {
 		//test
 		Switcher switcher = getSwitcher(USECASE41).checkValue("Value2").build();
 
-		SwitcherExecutor.assume(USECASE41, true)
+		SwitcherBypass.assume(USECASE41, true)
 				.when(StrategyValidator.VALUE, "Value1");
 
 		assertFalse(switcher.isItOn());

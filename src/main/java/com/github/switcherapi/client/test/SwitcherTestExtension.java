@@ -1,6 +1,5 @@
 package com.github.switcherapi.client.test;
 
-import com.github.switcherapi.client.SwitcherExecutor;
 import com.github.switcherapi.client.model.SwitcherResult;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.extension.*;
@@ -65,11 +64,11 @@ class SwitcherTestExtension implements TestTemplateInvocationContextProvider,
 
 		if (ArrayUtils.isNotEmpty(keys)) {
 			for (String keyStored : keys) {
-				SwitcherExecutor.forget(keyStored);
+				SwitcherBypass.forget(keyStored);
 			}
 		} else {
 			String switcherKey = store.remove(STORE_KEY, String.class);
-			SwitcherExecutor.forget(switcherKey);
+			SwitcherBypass.forget(switcherKey);
 		}
 	}
 
@@ -79,7 +78,7 @@ class SwitcherTestExtension implements TestTemplateInvocationContextProvider,
 				.toArray(String[]::new);
 
 		for (SwitcherTestValue value : switcherTest.switchers()) {
-			SwitcherResult switcherResult = SwitcherExecutor.assume(value.key(), inverted != value.result(), value.metadata());
+			SwitcherResult switcherResult = SwitcherBypass.assume(value.key(), inverted != value.result(), value.metadata());
 			applySwitcherTestWhen(switcherResult, value.when());
 		}
 
@@ -87,7 +86,7 @@ class SwitcherTestExtension implements TestTemplateInvocationContextProvider,
 	}
 
 	private void mockSingleSwitcher(ExtensionContext context, SwitcherTest switcherTest, boolean inverted) {
-		SwitcherResult switcherResult = SwitcherExecutor.assume(switcherTest.key(), inverted != switcherTest.result(), switcherTest.metadata());
+		SwitcherResult switcherResult = SwitcherBypass.assume(switcherTest.key(), inverted != switcherTest.result(), switcherTest.metadata());
 		applySwitcherTestWhen(switcherResult, switcherTest.when());
 		getStore(context).put(STORE_KEY, switcherTest.key());
 	}

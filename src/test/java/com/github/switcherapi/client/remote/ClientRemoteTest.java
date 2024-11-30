@@ -70,10 +70,13 @@ class ClientRemoteTest extends MockWebServerHelper {
         givenResponse(generateMockAuth(100));
         givenResponse(generateCriteriaResponse("true", false));
 
+        SwitcherProperties switcherProperties = Switchers.getSwitcherProperties();
         SwitcherValidator validatorService = new ValidatorService();
         ClientLocal clientLocal = new ClientLocalService(validatorService);
-        SwitcherRequest switcher = new SwitcherRequest("KEY", new SwitcherRemoteService(clientRemote,
-                new SwitcherLocalService(clientRemote, clientLocal, Switchers.getSwitcherProperties())));
+        SwitcherRequest switcher = new SwitcherRequest(
+                "KEY",
+                new SwitcherRemoteService(clientRemote, new SwitcherLocalService(clientRemote, clientLocal, switcherProperties)),
+                switcherProperties);
 
         //test
         SwitcherResult actual = Mapper.mapFrom(clientRemote.executeCriteria(Mapper.mapFrom(switcher)));

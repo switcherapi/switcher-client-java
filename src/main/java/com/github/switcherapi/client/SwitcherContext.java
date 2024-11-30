@@ -92,7 +92,7 @@ public abstract class SwitcherContext extends SwitcherContextBase {
 	 * @return snapshot version
 	 */
 	public static long getSnapshotVersion() {
-		return SwitcherContextBase.instance.getSnapshotVersion();
+		return SwitcherContextBase.switcherExecutor.getSnapshotVersion();
 	}
 	
 	/**

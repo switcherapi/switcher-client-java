@@ -86,7 +86,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	protected static SwitcherProperties switcherProperties;
 	protected static Set<String> switcherKeys;
 	protected static Map<String, SwitcherRequest> switchers;
-	protected static SwitcherExecutor instance;
+	protected static SwitcherExecutor switcherExecutor;
 	private static ScheduledExecutorService scheduledExecutorService;
 	private static ExecutorService watcherExecutorService;
 	private static SnapshotWatcher watcherSnapshot;
@@ -179,7 +179,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	public static void initializeClient() {
 		validateContext();
 		registerSwitcherKeys();
-		instance = buildInstance();
+		switcherExecutor = buildInstance();
 		
 		loadSwitchers();
 		scheduleSnapshotAutoUpdate(contextStr(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL));
@@ -257,7 +257,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 		
 		switchers.clear();
 		for (String key : switcherKeys) {
-			switchers.put(key, new SwitcherRequest(key, instance));
+			switchers.put(key, new SwitcherRequest(key, switcherExecutor, switcherProperties));
 		}
 	}
 
@@ -279,7 +279,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 		final Runnable runnableSnapshotValidate = () -> {
 			try {
 				if (validateSnapshot()) {
-					callbackFinal.onSnapshotUpdate(instance.getSnapshotVersion());
+					callbackFinal.onSnapshotUpdate(switcherExecutor.getSnapshotVersion());
 				}
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
@@ -385,11 +385,11 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * @return true if snapshot was updated
 	 */
 	public static boolean validateSnapshot() {
-		if (contextBol(ContextKey.SNAPSHOT_SKIP_VALIDATION) || instance.checkSnapshotVersion()) {
+		if (contextBol(ContextKey.SNAPSHOT_SKIP_VALIDATION) || switcherExecutor.checkSnapshotVersion()) {
 			return false;
 		}
 
-		instance.updateSnapshot();
+		switcherExecutor.updateSnapshot();
 		return true;
 	}
 	
@@ -415,12 +415,12 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * @throws SwitcherException if using remote service
 	 */
 	public static void watchSnapshot(SnapshotEventHandler handler) {
-		if (!(instance instanceof SwitcherLocalService)) {
+		if (!(switcherExecutor instanceof SwitcherLocalService)) {
 			throw new SwitcherException("Cannot watch snapshot when using remote", new UnsupportedOperationException());
 		}
 
 		if (Objects.isNull(watcherSnapshot)) {
-			watcherSnapshot = new SnapshotWatcher((SwitcherLocalService) instance, handler,
+			watcherSnapshot = new SnapshotWatcher((SwitcherLocalService) switcherExecutor, handler,
 					contextStr(ContextKey.SNAPSHOT_LOCATION));
 		}
 
@@ -447,7 +447,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * @throws SwitchersValidationException when one or more Switcher Key is not found
 	 */
 	public static void checkSwitchers() {
-		instance.checkSwitchers(switcherKeys);
+		switcherExecutor.checkSwitchers(switcherKeys);
 	}
 	
 	/**

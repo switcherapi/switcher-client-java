@@ -2,7 +2,7 @@
   {
     "name": "com.github.switcherapi.client.model.Entry",
     "condition": {
-      "typeReachable": "com.github.switcherapi.client.remote.dto.CriteriaRequest.GsonInputRequest"
+      "typeReachable": "com.github.switcherapi.client.remote.dto.CriteriaInputRequest"
     },
     "allDeclaredFields": true,
     "methods": [
@@ -13,7 +13,7 @@
     ]
   },
   {
-    "name": "com.github.switcherapi.client.remote.dto.CriteriaRequest.GsonInputRequest",
+    "name": "com.github.switcherapi.client.remote.dto.CriteriaInputRequest",
     "condition": {
       "typeReachable": "com.github.switcherapi.client.model.Switcher"
     },
@@ -39,7 +39,7 @@
     ]
   },
   {
-    "name": "com.github.switcherapi.client.model.criteria.Criteria",
+    "name": "com.github.switcherapi.client.model.criteria.Data",
     "condition": {
       "typeReachable": "com.github.switcherapi.client.model.criteria.Snapshot"
     },
