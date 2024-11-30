@@ -8,6 +8,7 @@ import com.github.switcherapi.client.model.ContextKey;
 import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.remote.ClientWS;
 import com.github.switcherapi.client.remote.ClientWSImpl;
+import com.github.switcherapi.client.service.SwitcherExecutionService;
 import com.github.switcherapi.client.service.SwitcherValidator;
 import com.github.switcherapi.client.service.ValidatorService;
 import com.github.switcherapi.client.service.WorkerName;
@@ -251,13 +252,15 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * Load Switcher instances into a map cache
 	 */
 	private static void loadSwitchers() {
+		final SwitcherExecutionService switcherExecutionService = new SwitcherExecutionService(switcherExecutor);
+
 		if (Objects.isNull(switchers)) {
 			switchers = new HashMap<>();
 		}
 		
 		switchers.clear();
 		for (String key : switcherKeys) {
-			switchers.put(key, new SwitcherRequest(key, switcherExecutor, switcherProperties));
+			switchers.put(key, new SwitcherRequest(key, switcherExecutionService, switcherProperties));
 		}
 	}
 
