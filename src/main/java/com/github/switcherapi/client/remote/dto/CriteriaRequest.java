@@ -43,24 +43,11 @@ public class CriteriaRequest {
 	 *
 	 * @return json input request
 	 */
-	public CriteriaRequest.GsonInputRequest getInputRequest() {
-		return new CriteriaRequest.GsonInputRequest(
+	public CriteriaInputRequest getInputRequest() {
+		return new CriteriaInputRequest(
 				Optional.ofNullable(this.entry)
 						.orElseGet(ArrayList::new)
 						.toArray(new Entry[0]));
-	}
-
-	public static class GsonInputRequest {
-
-		private final Entry[] entry;
-
-		public GsonInputRequest(final Entry[] entry) {
-			this.entry = entry;
-		}
-
-		public Entry[] getEntry() {
-			return this.entry;
-		}
 	}
 
 }

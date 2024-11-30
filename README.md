@@ -285,10 +285,10 @@ Write automated tests using this built-in test annotation to guide your test sce
 ```java
 Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
 
-SwitcherExecutor.assume(FEATURE01, false);
+SwitcherBypass.assume(FEATURE01, false);
 switcher.isItOn(); // 'false'
 
-SwitcherExecutor.forget(FEATURE01);
+SwitcherBypass.forget(FEATURE01);
 switcher.isItOn(); // Now, it's going to return the result retrieved from the API or the Snapshot file
 ```
 
@@ -297,7 +297,7 @@ For more complex scenarios where you need to test features based on specific inp
 ```java
 Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01).checkValue("My value").build();
 
-SwitcherExecutor.assume(FEATURE01, true).when(StrategyValidator.VALUE, "My value");
+SwitcherBypass.assume(FEATURE01, true).when(StrategyValidator.VALUE, "My value");
 switcher.isItOn(); // 'true'
 
 ```
