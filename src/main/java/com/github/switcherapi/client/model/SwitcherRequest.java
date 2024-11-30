@@ -2,7 +2,9 @@ package com.github.switcherapi.client.model;
 
 import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.SwitcherExecutor;
+import com.github.switcherapi.client.SwitcherProperties;
 import com.github.switcherapi.client.exception.SwitcherException;
+import com.github.switcherapi.client.test.SwitcherBypass;
 
 import java.util.*;
 
@@ -37,9 +39,12 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	 * 
 	 * @param switcherKey name of the key created
 	 * @param switcherExecutor client context in which the switcher will be executed (local/remote)
+	 * @param switcherProperties properties to be used with executor operations
 	 */
-	public SwitcherRequest(final String switcherKey, final SwitcherExecutor switcherExecutor) {
-		super(switcherExecutor.getSwitcherProperties());
+	public SwitcherRequest(final String switcherKey,
+						   final SwitcherExecutor switcherExecutor,
+						   final SwitcherProperties switcherProperties) {
+		super(switcherProperties);
 		this.switcherExecutor = switcherExecutor;
 		this.switcherKey = switcherKey;
 		this.historyExecution = new HashSet<>();
@@ -83,8 +88,8 @@ public final class SwitcherRequest extends SwitcherBuilder {
 
 	@Override
 	public SwitcherResult submit() throws SwitcherException {
-		if (SwitcherExecutor.getBypass().containsKey(switcherKey)) {
-			return SwitcherExecutor.getBypass().get(switcherKey).buildFromSwitcher(switcherKey, entry);
+		if (SwitcherBypass.getBypass().containsKey(switcherKey)) {
+			return SwitcherBypass.getBypass().get(switcherKey).buildFromSwitcher(switcherKey, entry);
 		}
 
 		if (canUseAsync()) {
