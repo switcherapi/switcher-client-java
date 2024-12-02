@@ -6,13 +6,14 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class NativeResourceConfigTest {
 
-	private static final Path resourcePath = Path.of("src/main/resources/META-INF/native-image/com.github.switcherapi/switcher-client/resource-config.json");
+	private static final Path resourcePath = Paths.get("src/main/resources/META-INF/native-image/com.github.switcherapi/switcher-client/resource-config.json");
 
 	private static String resourceContent;
 

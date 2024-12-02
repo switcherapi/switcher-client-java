@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NativeReflectConfigTest {
 
-	private static final Path reflectPath = Path.of("src/main/resources/META-INF/native-image/com.github.switcherapi/switcher-client/reflect-config.json");
+	private static final Path reflectPath = Paths.get("src/main/resources/META-INF/native-image/com.github.switcherapi/switcher-client/reflect-config.json");
 
 	private static String reflectContent;
 
