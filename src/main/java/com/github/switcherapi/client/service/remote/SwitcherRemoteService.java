@@ -1,6 +1,7 @@
 package com.github.switcherapi.client.service.remote;
 
 import com.github.switcherapi.client.SwitcherExecutor;
+import com.github.switcherapi.client.SwitcherExecutorImpl;
 import com.github.switcherapi.client.exception.SwitcherRemoteException;
 import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.ContextKey;
@@ -16,13 +17,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class SwitcherRemoteService extends SwitcherExecutor {
+public class SwitcherRemoteService extends SwitcherExecutorImpl {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SwitcherRemoteService.class);
 	
@@ -30,7 +32,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 
 	private final ClientRemote clientRemote;
 	
-	public SwitcherRemoteService(ClientRemote clientRemote, SwitcherExecutor switcherExecutor) {
+	public SwitcherRemoteService(final ClientRemote clientRemote, final SwitcherExecutor switcherExecutor) {
 		super(switcherExecutor.getSwitcherProperties());
 		this.clientRemote = clientRemote;
 		this.switcherLocal = switcherExecutor;
@@ -50,7 +52,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 			return tryExecuteLocalCriteria(switcher, e);
 		}
 	}
-	
+
 	private SwitcherResult tryExecuteLocalCriteria(final SwitcherRequest switcher,
 												   final SwitcherRemoteException e) {
 		if (StringUtils.isNotBlank(switcherProperties.getValue(ContextKey.SILENT_MODE))) {
@@ -73,7 +75,7 @@ public class SwitcherRemoteService extends SwitcherExecutor {
 	@Override
 	public boolean checkSnapshotVersion() {
 		if (StringUtils.isNotBlank(switcherProperties.getValue(ContextKey.SNAPSHOT_LOCATION))
-				&& this.switcherLocal.getDomain() != null) {
+				&& Objects.nonNull(this.switcherLocal.getDomain())) {
 			return super.checkSnapshotVersion(this.clientRemote, this.switcherLocal.getDomain());
 		}
 		
