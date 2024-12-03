@@ -353,3 +353,21 @@ void testMyFeature() {
    assertTrue(instance.myFeature());
 }
 ```
+
+## Native Image
+Switcher Client is fully compatible with GraalVM Native Image out of the box.
+</br>Here is how you can configure the SDK to work with GraalVM:
+```java
+@ConfigurationProperties
+public class MyNativeAppFeatureFlags extends SwitcherContextBase {
+	
+    public static final String MY_SWITCHER = "MY_SWITCHER";
+    @Override 
+    @PostConstruct 
+    protected void configureClient() {
+        super.configureClient();
+        super.registerSwitcherKeys(MY_SWITCHER);
+    }
+}
+```
+Check out more code examples in the [Switcher Tutorials](https://github.com/switcherapi/switcherapi-tutorials) repository.
