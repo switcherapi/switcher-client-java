@@ -173,6 +173,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 				.apiKey("[API_KEY]")
 				.environment("generated_mock_default_5")
 				.local(true)
+				.snapshotLocation("")
 				.snapshotAutoLoad(true)
 				.snapshotAutoUpdateInterval("1m"));
 
@@ -182,6 +183,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 		//test
 		CountDownHelper.wait(2);
 		assertEquals(2, Switchers.getSnapshotVersion());
+		assertTrue(Files.notExists(Paths.get("/generated_mock_default_5.json")));
 	}
 
 	@Test
