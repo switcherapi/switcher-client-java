@@ -8,10 +8,9 @@ import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.client.service.remote.ClientRemote;
 import com.github.switcherapi.client.utils.SnapshotLoader;
 import com.github.switcherapi.client.utils.SwitcherUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Objects;
 
 public abstract class SwitcherExecutorImpl implements SwitcherExecutor {
 	
@@ -40,7 +39,7 @@ public abstract class SwitcherExecutorImpl implements SwitcherExecutor {
 		final Snapshot snapshot = clientRemote.resolveSnapshot();
 		final String snapshotLocation = switcherProperties.getValue(ContextKey.SNAPSHOT_LOCATION);
 
-		if (Objects.nonNull(snapshotLocation)) {
+		if (StringUtils.isNotBlank(snapshotLocation)) {
 			SnapshotLoader.saveSnapshot(snapshot, snapshotLocation, environment);
 		}
 
