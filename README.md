@@ -362,11 +362,12 @@ Switcher Client is fully compatible with GraalVM Native Image out of the box.
 public class MyNativeAppFeatureFlags extends SwitcherContextBase {
 	
     public static final String MY_SWITCHER = "MY_SWITCHER";
+	
     @Override 
     @PostConstruct 
     protected void configureClient() {
-        super.configureClient();
         super.registerSwitcherKeys(MY_SWITCHER);
+        super.configureClient();
     }
 }
 ```
