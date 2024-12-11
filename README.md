@@ -368,8 +368,8 @@ public class MyNativeAppFeatureFlags extends SwitcherContextBase {
     @Override 
     @PostConstruct 
     protected void configureClient() {
-        super.configureClient();
         super.registerSwitcherKeys(MY_SWITCHER);
+        super.configureClient();
     }
 }
 ```
