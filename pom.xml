@@ -8,7 +8,7 @@
 	<groupId>com.github.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.6.2</version>
+	<version>1.6.3-SNAPSHOT</version>
 
 	<name>Switcher Client</name>
 	<description>Switcher Client SDK for working with Switcher API</description>
@@ -52,28 +52,28 @@
 		<argLine />
 
 		<!-- rest/json libs -->
-		<jersey-client.version>2.45</jersey-client.version>
-		<jersey-hk2.version>2.45</jersey-hk2.version>
-		<jersey-media-json-jackson.version>2.45</jersey-media-json-jackson.version>
-		<gson.version>2.11.0</gson.version>
+		<jersey-client.version>2.46</jersey-client.version>
+		<jersey-hk2.version>2.46</jersey-hk2.version>
+		<jersey-media-json-jackson.version>2.46</jersey-media-json-jackson.version>
+		<gson.version>2.12.1</gson.version>
 
 		<!-- utils -->
 		<commons-lang3.version>3.17.0</commons-lang3.version>
 		<commons-net.version>3.11.1</commons-net.version>
-		<slf4j-api.version>2.0.16</slf4j-api.version>
+		<slf4j-api.version>2.0.17</slf4j-api.version>
 
 		<!-- test -->
 		<okhttp.version>5.0.0-alpha.14</okhttp.version>
-		<junit.version>5.11.3</junit.version>
+		<junit.version>5.12.0</junit.version>
 		<junit-pioneer.version>1.9.1</junit-pioneer.version>
 
 		<!-- Plugins -->
-		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+		<maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
 		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-		<maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
+		<maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
 		<maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
-		<maven-surefire-plugin.version>3.3.0</maven-surefire-plugin.version>
-		<maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
+		<maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+		<maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
 		<sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
 
@@ -180,21 +180,28 @@
 			</dependency>
 
 			<dependency>
+				<groupId>org.junit.platform</groupId>
+				<artifactId>junit-platform-launcher</artifactId>
+				<version>1.12.0</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
-				<version>2.17.3</version>
+				<version>2.18.3</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>2.17.3</version>
+				<version>2.18.3</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.fasterxml.jackson.module</groupId>
 				<artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
-				<version>2.17.3</version>
+				<version>2.18.3</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
