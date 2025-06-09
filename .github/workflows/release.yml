@@ -1,0 +1,62 @@
+name: Release CI
+
+on:
+  release:
+    types: [ created ]
+
+jobs:
+  build-test:
+    name: Build & Test - JDK ${{ matrix.java }} on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ '8', '11', '17', '18', '21']
+        os: [ ubuntu-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+
+      - name: Show Versions
+        run: mvn -version
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-${{ matrix.java }}
+          restore-keys: ${{ runner.os }}-m2-
+
+      - name: Build/Test
+        run: mvn -B clean package
+
+  publish:
+    name: Publish Release
+    needs: [ build-test ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Apache Maven Central
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          server-id: ossrh
+          server-username: OSSRH_USERNAME
+          server-password: OSSRH_TOKEN
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Publish to Apache Maven Central
+        run: mvn deploy -DskipTests -Psign
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
