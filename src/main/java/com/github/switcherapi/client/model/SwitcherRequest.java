@@ -104,7 +104,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 			}
 		}
 
-		final SwitcherResult response = this.switcherExecutor.executeCriteria(this);
+		final SwitcherResult response = this.executeCriteria();
 		this.updateHistoryExecution(response);
 		return response;
 	}
