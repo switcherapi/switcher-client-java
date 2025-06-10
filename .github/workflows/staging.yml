@@ -38,8 +38,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-m2
-          restore-keys: ${{ runner.os }}-m2
+          key: ${{ runner.os }}-m2-${{ matrix.java }}
+          restore-keys: ${{ runner.os }}-m2-
 
       - name: Build/Test
         run: mvn -B clean package
