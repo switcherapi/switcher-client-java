@@ -1,9 +1,8 @@
-name: Release CI v1
+name: Release CI
 
 on:
   release:
     types: [created]
-    branches: [master]
 
 jobs:
   build-test:
@@ -11,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: ['8', '11', '17', '21']
+        java: ['11', '17', '21']
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
