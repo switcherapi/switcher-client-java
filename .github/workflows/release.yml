@@ -1,8 +1,9 @@
-name: Release CI
+name: Release CI v1
 
 on:
   release:
-    types: [ created ]
+    types: [created]
+    branches: [master]
 
 jobs:
   build-test:
@@ -10,8 +11,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ '8', '11', '17', '18', '21']
-        os: [ ubuntu-latest, windows-latest ]
+        java: ['8', '11', '17', '21']
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -38,7 +39,7 @@ jobs:
 
   publish:
     name: Publish Release
-    needs: [ build-test ]
+    needs: [build-test]
     runs-on: ubuntu-latest
 
     steps:
@@ -48,15 +49,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-          server-id: ossrh
-          server-username: OSSRH_USERNAME
-          server-password: OSSRH_TOKEN
+          server-id: central
+          server-username: CENTRAL_USERNAME
+          server-password: CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Publish to Apache Maven Central
         run: mvn deploy -DskipTests -Psign
         env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}

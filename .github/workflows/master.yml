@@ -1,10 +1,10 @@
-name: Master CI
+name: Master CI v1
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build-scan:
@@ -34,8 +34,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ '8', '11', '17', '18', '21']
-        os: [ ubuntu-latest, windows-latest ]
+        java: ['8', '11', '17', '21']
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
 
