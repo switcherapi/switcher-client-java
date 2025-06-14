@@ -1,29 +1,32 @@
 {
   "data": {
     "domain": {
-      "name": "Playground",
+      "name": "Switcher API",
       "version": 0,
-      "description": "My playground",
+      "description": "Feature Flag - Toggle - Cloud-based",
       "activated": true,
       "group": [
         {
-          "name": "Experimental",
-          "description": "Open feature flags for experimentation",
+          "name": "Test Project",
+          "description": "Test",
           "activated": true,
           "config": [
             {
-              "key": "MY_SWITCHER",
-              "description": "My first switcher",
+              "key": "CLIENT_JAVA_FEATURE",
+              "description": "Used for Integration test for the Switcher Client Java",
               "activated": true,
               "strategies": [
                 {
                   "strategy": "VALUE_VALIDATION",
                   "operation": "EXIST",
-                  "activated": false,
+                  "activated": true,
                   "values": [
                     "user_1"
                   ]
                 }
+              ],
+              "components": [
+                "switcher-client-java"
               ]
             }
           ]
