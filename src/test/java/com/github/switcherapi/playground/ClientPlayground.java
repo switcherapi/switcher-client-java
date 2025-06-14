@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.switcherapi.playground.Features.MY_SWITCHER;
+import static com.github.switcherapi.playground.Features.CLIENT_JAVA_FEATURE;
 import static com.github.switcherapi.playground.Features.getSwitcher;
 
 public class ClientPlayground {
@@ -19,14 +19,18 @@ public class ClientPlayground {
 
 	public static void test() {
 		new Features().configureClient();
-		Switcher switcher = getSwitcher(MY_SWITCHER)
+		Switcher switcher = getSwitcher(CLIENT_JAVA_FEATURE)
 				.bypassMetrics()
 				.build();
 
 		scheduler.scheduleAtFixedRate(() -> {
-			long time = System.currentTimeMillis();
-            logger.info("Switcher is on: {}", switcher.isItOn());
-            logger.info("Time elapsed: {}", System.currentTimeMillis() - time);
+			try {
+				long time = System.currentTimeMillis();
+				logger.info("Switcher is on: {}", switcher.isItOn());
+				logger.info("Time elapsed: {}", System.currentTimeMillis() - time);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
 		}, 0, 5, TimeUnit.SECONDS);
 	}
 
