@@ -35,6 +35,7 @@ public class ClientLocalService implements ClientLocal {
 	public static final String DISABLED_DOMAIN = "Domain disabled";
 	public static final String DISABLED_GROUP = "Group disabled";
 	public static final String DISABLED_CONFIG = "Config disabled";
+	public static final String HAS_RELAY = "Config has Relay enabled";
 	
 	private static final String STRATEGY_FAIL_PATTERN = "Strategy %s does not agree";
 	private static final String STRATEGY_FAIL_NO_INPUT_PATTERN = "Strategy %s did not receive any input";
@@ -86,6 +87,10 @@ public class ClientLocalService implements ClientLocal {
 
 		if (!config.isActivated()) {
 			return SwitcherFactory.buildResultFail(DISABLED_CONFIG, switcher);
+		}
+
+		if (config.hasRelayEnabled() && switcher.isRelayRestricted()) {
+			return SwitcherFactory.buildResultFail(HAS_RELAY, switcher);
 		}
 
 		if (ArrayUtils.isNotEmpty(config.getStrategies())) {

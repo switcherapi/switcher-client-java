@@ -183,6 +183,15 @@ public class ContextBuilder {
 	}
 
 	/**
+	 * @param restrictRelay true/false When true, it will check snapshot relay status
+	 * @return ContextBuilder
+	 */
+	public ContextBuilder restrictRelay(boolean restrictRelay) {
+		switcherProperties.setValue(ContextKey.RESTRICT_RELAY, restrictRelay);
+		return this;
+	}
+
+	/**
 	 * @param truststorePath Path to the truststore file
 	 * @return ContextBuilder
 	 */

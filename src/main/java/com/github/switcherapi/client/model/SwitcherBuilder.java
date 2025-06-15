@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Builder class that simplifies how input are programmatically wrapped inside the Switcher.
@@ -22,6 +23,8 @@ public abstract class SwitcherBuilder implements Switcher {
 	protected boolean remote;
 
 	protected boolean bypassMetrics;
+
+	protected Boolean restrictRelay;
 
 	protected String defaultResult;
 	
@@ -71,7 +74,18 @@ public abstract class SwitcherBuilder implements Switcher {
 		this.defaultResult = String.valueOf(defaultResult);
 		return this;
 	}
-	
+
+	/**
+	 * Allow local snapshots to ignore or require Relay verification.
+	 *
+	 * @param restrictRelay true to restrict Relay verification
+	 * @return {@link SwitcherBuilder}
+	 */
+	public SwitcherBuilder restrictRelay(boolean restrictRelay) {
+		this.restrictRelay = restrictRelay;
+		return this;
+	}
+
 	/**
 	 * Add a validation to the entry stack
 	 * 
@@ -169,6 +183,14 @@ public abstract class SwitcherBuilder implements Switcher {
 
 	public boolean isRemote() {
 		return remote;
+	}
+
+	public boolean isRelayRestricted() {
+		return restrictRelay;
+	}
+
+	public boolean isRestrictRelaySet() {
+		return Objects.nonNull(restrictRelay);
 	}
 
 	public String getDefaultResult() {
