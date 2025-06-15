@@ -24,6 +24,10 @@ public class Strategy extends SwitcherElement {
 		this.values = values;
 	}
 
+	public Strategy() {
+		this(null, null, null, false, null);
+	}
+
 	public EntryOperation getEntryOperation() {
 		return Arrays.stream(EntryOperation.values())
 				.filter(o -> o.toString().equals(this.operation))

@@ -105,12 +105,13 @@ class RegexValidatorV8Test {
 	}
 
 	private Strategy givenStrategy(EntryOperation operation, List<String> values) {
-		Strategy strategy = new Strategy();
-		strategy.setStrategy(StrategyValidator.REGEX.toString());
-		strategy.setOperation(operation.toString());
-		strategy.setValues(values.toArray(new String[0]));
-
-		return strategy;
+		return new Strategy(
+				StrategyValidator.REGEX.toString(),
+				operation.toString(),
+				"Regex validator strategy for test",
+				Boolean.TRUE,
+				values.toArray(new String[0])
+		);
 	}
 
 	private void assertWorkerNotExists() {

@@ -26,6 +26,10 @@ public class Config extends SwitcherElement {
 		this.relay = relay;
 	}
 
+	public Config() {
+		this(null, null, false, null, null, null);
+	}
+
 	public boolean hasRelayEnabled() {
 		return Objects.nonNull(relay) && relay.isActivated();
 	}

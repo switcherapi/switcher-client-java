@@ -18,6 +18,10 @@ public class Group extends SwitcherElement {
 		this.config = config;
 	}
 
+	public Group() {
+		this(null, null, false, null);
+	}
+
 	public Config[] getConfig() {
 		return config;
 	}

@@ -15,8 +15,16 @@ public class Relay {
 		this.activated = activated;
 	}
 
+	public Relay() {
+		this(null, false);
+	}
+
 	public boolean isActivated() {
 		return activated;
+	}
+
+	public String getType() {
+		return type;
 	}
 
 	@Override
