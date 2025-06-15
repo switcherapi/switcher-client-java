@@ -8,24 +8,22 @@ import java.util.Arrays;
  */
 public class Group extends SwitcherElement {
 
-	private String name;
+	private final String name;
 
-	private Config[] config;
+	private final Config[] config;
+
+	public Group(String name, String description, boolean activated, Config[] config) {
+		super(description, activated);
+		this.name = name;
+		this.config = config;
+	}
 
 	public Config[] getConfig() {
 		return config;
 	}
 
-	public void setConfig(Config[] config) {
-		this.config = config;
-	}
-
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	@Override

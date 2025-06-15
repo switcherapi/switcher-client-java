@@ -14,8 +14,13 @@ class ValidatorsTest {
 	@Test
 	void shouldRegisterCustomValidator() {
 		assertDoesNotThrow(() -> service.registerValidator(new CustomValidator()));
-		Strategy strategy = new Strategy();
-		strategy.setStrategy("CUSTOM");
+		Strategy strategy = new Strategy(
+				"CUSTOM",
+				"INVALID",
+				"Custom Validator Test",
+				true,
+				new String[] { "Value1", "Value2" }
+		);
 		
 		assertTrue(service.execute(strategy, null));
 	}

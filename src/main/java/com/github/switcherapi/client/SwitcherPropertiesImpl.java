@@ -23,6 +23,7 @@ public class SwitcherPropertiesImpl implements SwitcherProperties {
 		setValue(ContextKey.SNAPSHOT_AUTO_LOAD, false);
 		setValue(ContextKey.SNAPSHOT_SKIP_VALIDATION, false);
 		setValue(ContextKey.LOCAL_MODE, false);
+		setValue(ContextKey.RESTRICT_RELAY, true);
 	}
 
 	@Override
@@ -39,6 +40,7 @@ public class SwitcherPropertiesImpl implements SwitcherProperties {
 		setValue(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL, SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL.getParam(), prop));
 		setValue(ContextKey.SILENT_MODE, SwitcherUtils.resolveProperties(ContextKey.SILENT_MODE.getParam(), prop));
 		setValue(ContextKey.LOCAL_MODE, getBoolDefault(SwitcherUtils.resolveProperties(ContextKey.LOCAL_MODE.getParam(), prop), false));
+		setValue(ContextKey.RESTRICT_RELAY, getBoolDefault(SwitcherUtils.resolveProperties(ContextKey.RESTRICT_RELAY.getParam(), prop), true));
 		setValue(ContextKey.REGEX_TIMEOUT, getIntDefault(SwitcherUtils.resolveProperties(ContextKey.REGEX_TIMEOUT.getParam(), prop), DEFAULT_REGEX_TIMEOUT));
 		setValue(ContextKey.TRUSTSTORE_PATH, SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PATH.getParam(), prop));
 		setValue(ContextKey.TRUSTSTORE_PASSWORD, SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));

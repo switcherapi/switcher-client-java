@@ -4,10 +4,7 @@ import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherInvalidNumericFormat;
 import com.github.switcherapi.client.exception.SwitcherInvalidTimeFormat;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
-import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.model.Entry;
-import com.github.switcherapi.client.model.StrategyValidator;
-import com.github.switcherapi.client.model.SwitcherRequest;
+import com.github.switcherapi.client.model.*;
 import com.github.switcherapi.fixture.Product;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
@@ -358,6 +355,43 @@ class SwitcherLocal1Test {
 	void localShouldTestChained_payloadValidation(String useCaseKey, String input, boolean expected) {
 		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
 		assertEquals(expected, switcher.checkPayload(input).isItOn());
+	}
+
+	static Stream<Arguments> relayTestArguments() {
+	    return Stream.of(
+			// Relay enabled should cause local to return false
+			Arguments.of(Switchers.USECASE103, true, false),
+			// Relay enabled should cause local to return true when Switcher restrictRelay is set false
+			Arguments.of(Switchers.USECASE103, false, true),
+			// Relay disabled should cause local to return true
+			Arguments.of(Switchers.USECASE104, false, true),
+			// Relay disabled should cause local to return true regardless of Switcher restrictRelay
+			Arguments.of(Switchers.USECASE104, true, true)
+	    );
+	}
+
+	@ParameterizedTest()
+	@MethodSource("relayTestArguments")
+	void localShouldTest_relayValidation(String useCaseKey, Boolean restrictRelay, boolean expected) {
+		SwitcherContext.configure(ContextBuilder.builder()
+				.restrictRelay(restrictRelay));
+
+		SwitcherContext.initializeClient();
+
+		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
+		assertEquals(expected, switcher.isItOn());
+	}
+
+	@Test
+	void localShouldReturnFalse_relayRestrictDefaultEnabled() {
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE103);
+		assertFalse(switcher.isItOn());
+	}
+
+	@Test
+	void localShouldReturnTrue_relayRestrictProgrammaticallyDisabled() {
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE103);
+		assertTrue(switcher.restrictRelay(false).isItOn());
 	}
 
 }

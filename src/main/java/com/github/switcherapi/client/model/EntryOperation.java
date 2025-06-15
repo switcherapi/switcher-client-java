@@ -1,7 +1,6 @@
 package com.github.switcherapi.client.model;
 
 public enum EntryOperation {
-	
 	EQUAL,
 	NOT_EQUAL,
 	EXIST,
@@ -12,5 +11,4 @@ public enum EntryOperation {
 	HAS_ONE,
 	HAS_ALL,
 	INVALID
-	
 }
