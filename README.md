@@ -29,7 +29,7 @@ https://github.com/switcherapi/switcher-api
 - Able to work local using a snapshot file pulled from your remote Switcher-API Domain.
 - Silent mode is a hybrid configuration that automatically enables contingent sub-processes in case of any connectivity issue.
 - Built-in test annotation for clear and easy implementation of automated testing.
-- Easy to setup. Switcher Context is responsible to manage all the configuration complexity between your application and API.
+- Easy to set up. Switcher Context is responsible to manage all the configuration complexity between your application and API.
 
 # Usage
 
@@ -70,6 +70,7 @@ switcher.domain -> Domain name
 #optional
 switcher.environment -> Environment name
 switcher.local -> true/false When local, it will only use a local snapshot
+switcher.relay.restrict -> true/false When true, it will check snapshot relay status
 switcher.snapshot.location -> Folder from where snapshots will be saved/read
 switcher.snapshot.auto -> true/false Automated lookup for snapshot when initializing the client
 switcher.snapshot.skipvalidation -> true/false Skip snapshotValidation() that can be used for UT executions
@@ -250,9 +251,7 @@ MyAppFeatures.scheduleSnapshotAutoUpdate("5s", new SnapshotCallback() {
 });
 ```
 
-
-
-## Real-time snapshot updater
+## Real-time snapshot reload
 Let the Switcher Client manage your application local snapshot.<br>
 These features allow you to configure the SDK to automatically update the snapshot in the background.
 

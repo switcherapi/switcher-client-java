@@ -18,6 +18,7 @@ public final class Constants {
 					"group { name description activated " +
 					"config { key description activated " +
 					"strategies { strategy activated operation values } " +
+					"relay { type activated } " +
 					"components } } } }\"}";
 
 	private Constants() {}

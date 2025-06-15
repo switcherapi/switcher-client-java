@@ -15,13 +15,17 @@
                             "key": "USECASE11",
                             "description": "Simple test - Config enabled",
                             "activated": true,
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE12",
                             "description": "Simple test - Config disabled",
                             "activated": false,
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         }
                     ]
                 },
@@ -34,7 +38,9 @@
                             "key": "USECASE21",
                             "description": "Simple test - Config enabled",
                             "activated": true,
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         }
                     ]
                 },
@@ -57,7 +63,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE32",
@@ -73,7 +81,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE33",
@@ -90,7 +100,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         }
                     ]
                 },
@@ -109,11 +121,15 @@
                                     "activated": true,
                                     "operation": "EXIST",
                                     "values": [
-                                        "Value1", "Value2", "Value3"
+                                        "Value1",
+                                        "Value2",
+                                        "Value3"
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE42",
@@ -125,11 +141,15 @@
                                     "activated": true,
                                     "operation": "NOT_EXIST",
                                     "values": [
-                                        "Value1", "Value2", "Value3"
+                                        "Value1",
+                                        "Value2",
+                                        "Value3"
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE43",
@@ -145,7 +165,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE44",
@@ -161,7 +183,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         }
                     ]
                 },
@@ -184,7 +208,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE52",
@@ -200,7 +226,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE53",
@@ -217,7 +245,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         }
                     ]
                 },
@@ -241,7 +271,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE62",
@@ -258,7 +290,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE63",
@@ -270,11 +304,15 @@
                                     "activated": true,
                                     "operation": "EXIST",
                                     "values": [
-                                        "10.0.0.1", "10.0.0.2", "10.0.0.3"
+                                        "10.0.0.1",
+                                        "10.0.0.2",
+                                        "10.0.0.3"
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         }
                     ]
                 },
@@ -297,7 +335,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         }
                     ]
                 },
@@ -316,11 +356,15 @@
                                     "activated": true,
                                     "operation": "EXIST",
                                     "values": [
-                                        "1", "2", "3"
+                                        "1",
+                                        "2",
+                                        "3"
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE82",
@@ -332,11 +376,15 @@
                                     "activated": true,
                                     "operation": "NOT_EXIST",
                                     "values": [
-                                        "1", "2", "3"
+                                        "1",
+                                        "2",
+                                        "3"
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE83",
@@ -352,7 +400,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE84",
@@ -368,7 +418,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE85",
@@ -384,7 +436,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE86",
@@ -400,7 +454,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE87",
@@ -412,11 +468,14 @@
                                     "activated": true,
                                     "operation": "BETWEEN",
                                     "values": [
-                                        "1", "3"
+                                        "1",
+                                        "3"
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         }
                     ]
                 },
@@ -435,11 +494,14 @@
                                     "activated": true,
                                     "operation": "EXIST",
                                     "values": [
-                                        "\\bUSER_[0-9]{1,2}\\b", "\\buser-[0-9]{1,2}\\b"
+                                        "\\bUSER_[0-9]{1,2}\\b",
+                                        "\\buser-[0-9]{1,2}\\b"
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE92",
@@ -451,11 +513,14 @@
                                     "activated": true,
                                     "operation": "NOT_EXIST",
                                     "values": [
-                                         "\\bUSER_[0-9]{1,2}\\b", "\\buser-[0-9]{1,2}\\b"
+                                        "\\bUSER_[0-9]{1,2}\\b",
+                                        "\\buser-[0-9]{1,2}\\b"
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE93",
@@ -467,11 +532,13 @@
                                     "activated": true,
                                     "operation": "EQUAL",
                                     "values": [
-                                       "USER_[0-9]{1,2}"
+                                        "USER_[0-9]{1,2}"
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE94",
@@ -487,7 +554,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE95",
@@ -503,7 +572,9 @@
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         }
                     ]
                 },
@@ -522,11 +593,14 @@
                                     "activated": true,
                                     "operation": "HAS_ONE",
                                     "values": [
-                                        "order.tracking.status", "order.tracking.date"
+                                        "order.tracking.status",
+                                        "order.tracking.date"
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE101",
@@ -538,11 +612,13 @@
                                     "activated": true,
                                     "operation": "HAS_ONE",
                                     "values": [
-                                       "product"
+                                        "product"
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
                         },
                         {
                             "key": "USECASE102",
@@ -554,17 +630,50 @@
                                     "activated": true,
                                     "operation": "HAS_ALL",
                                     "values": [
-                                    	"name",
-                                    	"categories",
-                                    	"order",
-                                    	"order.qty",
-                                    	"order.tracking",
+                                        "name",
+                                        "categories",
+                                        "order",
+                                        "order.qty",
+                                        "order.tracking",
                                         "order.tracking.status",
                                         "order.tracking.comments"
                                     ]
                                 }
                             ],
-                            "components": ["switcher-client"]
+                            "components": [
+                                "switcher-client"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Group 11",
+                    "description": "Relay group",
+                    "activated": true,
+                    "config": [
+                        {
+                            "key": "USECASE103",
+                            "description": "Relay enabled",
+                            "activated": true,
+                            "relay": {
+                                "type": "VALIDATOR",
+                                "activated": true
+                            },
+                            "components": [
+                                "switcher-client"
+                            ]
+                        },
+                        {
+                            "key": "USECASE104",
+                            "description": "Relay disabled",
+                            "relay": {
+                                "type": "VALIDATOR",
+                                "activated": false
+                            },
+                            "activated": true,
+                            "components": [
+                                "switcher-client"
+                            ]
                         }
                     ]
                 }

@@ -70,6 +70,11 @@ public enum ContextKey {
 	LOCAL_MODE("switcher.local"),
 
 	/**
+	 * (boolean) Defines if client will trigger local snapshot relay verification (default is true)
+	 */
+	RESTRICT_RELAY("switcher.relay.restrict"),
+
+	/**
 	 * (Number) Defines the Timed Match regex time out.
 	 */
 	REGEX_TIMEOUT("switcher.regextimeout"),

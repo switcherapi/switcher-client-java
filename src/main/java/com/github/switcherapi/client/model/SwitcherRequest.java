@@ -111,6 +111,10 @@ public final class SwitcherRequest extends SwitcherBuilder {
 
 	@Override
 	public SwitcherResult executeCriteria() {
+		if (!isRestrictRelaySet()) {
+			this.restrictRelay(properties.getBoolean(ContextKey.RESTRICT_RELAY));
+		}
+
 		return this.switcherExecutor.executeCriteria(this);
 	}
 

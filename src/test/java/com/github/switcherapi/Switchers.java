@@ -135,5 +135,11 @@ public class Switchers extends SwitcherContext {
 	public static final String USECASE102 = "USECASE102";
 
 	@SwitcherKey
+	public static final String USECASE103 = "USECASE103";
+
+	@SwitcherKey
+	public static final String USECASE104 = "USECASE104";
+
+	@SwitcherKey
 	public static final String NOT_FOUND_KEY = "NOT_FOUND_KEY";
 }
