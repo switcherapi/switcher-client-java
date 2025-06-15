@@ -8,34 +8,33 @@ import java.util.Arrays;
  */
 public class Domain extends SwitcherElement {
 
-	private String name;
+	private final String name;
 
-	private long version;
+	private final long version;
 
-	private Group[] group;
+	private final Group[] group;
+
+	public Domain(String name, String description, boolean activated, long version, Group[] group) {
+		super(description, activated);
+		this.name = name;
+		this.version = version;
+		this.group = group;
+	}
+
+	public Domain() {
+		this(null, null, false, 0L, null);
+	}
 
 	public Group[] getGroup() {
 		return group;
-	}
-
-	public void setGroup(Group[] group) {
-		this.group = group;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public long getVersion() {
 		return version;
-	}
-
-	public void setVersion(long version) {
-		this.version = version;
 	}
 
 	@Override

@@ -11,11 +11,22 @@ import com.github.switcherapi.client.model.StrategyValidator;
  */
 public class Strategy extends SwitcherElement {
 
-	private String strategy;
+	private final String strategy;
 
-	private String operation;
+	private final String operation;
 
-	private String[] values;
+	private final String[] values;
+
+	public Strategy(String strategy, String operation, String description, boolean activated, String[] values) {
+		super(description, activated);
+		this.strategy = strategy;
+		this.operation = operation;
+		this.values = values;
+	}
+
+	public Strategy() {
+		this(null, null, null, false, null);
+	}
 
 	public EntryOperation getEntryOperation() {
 		return Arrays.stream(EntryOperation.values())
@@ -39,20 +50,8 @@ public class Strategy extends SwitcherElement {
 		return operation;
 	}
 
-	public void setOperation(String operation) {
-		this.operation = operation;
-	}
-
 	public String[] getValues() {
 		return values;
-	}
-
-	public void setStrategy(String strategy) {
-		this.strategy = strategy;
-	}
-
-	public void setValues(String[] values) {
-		this.values = values;
 	}
 
 	@Override

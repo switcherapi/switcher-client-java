@@ -4,6 +4,7 @@ import com.github.switcherapi.SwitchersBase;
 import com.github.switcherapi.client.ContextBuilder;
 import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.criteria.Data;
+import com.github.switcherapi.client.model.criteria.Domain;
 import com.github.switcherapi.client.model.criteria.Snapshot;
 import com.github.switcherapi.fixture.CountDownHelper;
 import com.google.gson.Gson;
@@ -76,8 +77,13 @@ class SnapshotWatcherTest {
 		final Data data = new Data();
 		data.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_watcher.json"));
 		mockedSnapshot.setData(data);
-		
-		data.getDomain().setActivated(false);
+
+		data.setDomain(new Domain(
+				data.getDomain().getName(),
+				data.getDomain().getDescription(),
+				!data.getDomain().isActivated(),
+				data.getDomain().getVersion(),
+				data.getDomain().getGroup()));
 		
 		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		writeFixture(gson.toJson(mockedSnapshot));

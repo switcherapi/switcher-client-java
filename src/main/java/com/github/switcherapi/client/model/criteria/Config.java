@@ -1,6 +1,7 @@
 package com.github.switcherapi.client.model.criteria;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author Roger Floriano (petruki)
@@ -8,34 +9,45 @@ import java.util.Arrays;
  */
 public class Config extends SwitcherElement {
 
-	private String key;
+	private final String key;
 
-	private Strategy[] strategies;
+	private final Strategy[] strategies;
 
-	private String[] components;
+	private final String[] components;
+
+	private final Relay relay;
+
+	public Config(String key, String description, boolean activated, Strategy[] strategies, String[] components,
+			Relay relay) {
+		super(description, activated);
+		this.key = key;
+		this.strategies = strategies;
+		this.components = components;
+		this.relay = relay;
+	}
+
+	public Config() {
+		this(null, null, false, null, null, null);
+	}
+
+	public boolean hasRelayEnabled() {
+		return Objects.nonNull(relay) && relay.isActivated();
+	}
 
 	public String getKey() {
 		return key;
+	}
+
+	public Relay getRelay() {
+		return relay;
 	}
 
 	public Strategy[] getStrategies() {
 		return strategies;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
-	}
-
-	public void setStrategies(Strategy[] strategies) {
-		this.strategies = strategies;
-	}
-
 	public String[] getComponents() {
 		return components;
-	}
-
-	public void setComponents(String[] components) {
-		this.components = components;
 	}
 
 	@Override

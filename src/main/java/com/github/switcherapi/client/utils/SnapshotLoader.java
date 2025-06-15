@@ -104,21 +104,29 @@ public class SnapshotLoader {
 	public static void saveSnapshot(final Snapshot snapshot, final String snapshotLocation, 
 			final String environment) throws SwitcherSnapshotWriteException {
 
-		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		final Gson gson = new GsonBuilder()
+				.setPrettyPrinting()
+				.registerTypeAdapter(Domain.class, new SnapshotSerializer())
+				.create();
 
-		try {
-			Path path = Paths.get(snapshotLocation);
-			if (!path.toFile().exists())
-				Files.createDirectories(path);
-		} catch (Exception e) {
-			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
-		}
-		
+		createDirectoryPath(snapshotLocation, environment);
+
 		try (
 				final FileWriter fileWriter = new FileWriter(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment));
 				final BufferedWriter bw = new BufferedWriter(fileWriter);
 				final PrintWriter wr = new PrintWriter(bw)) {
 			wr.write(gson.toJson(snapshot));
+		} catch (Exception e) {
+			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
+		}
+	}
+
+	private static void createDirectoryPath(String snapshotLocation, String environment) {
+		try {
+			Path path = Paths.get(snapshotLocation);
+			if (!path.toFile().exists()) {
+				Files.createDirectories(path);
+			}
 		} catch (Exception e) {
 			throw new SwitcherSnapshotWriteException(String.format(SNAPSHOT_FILE_FORMAT, snapshotLocation, environment), e);
 		}
