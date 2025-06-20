@@ -180,8 +180,11 @@ public class MockWebServerHelper {
         String jsonResponse = "{ \"not_found\": [%s] }";
 
         MockResponse.Builder builder = new MockResponse.Builder();
-        builder.body(String.format(jsonResponse, String.join("\",\"", switchersNotFound)));
         builder.addHeader("Content-Type", "application/json");
+        builder.body(String.format(jsonResponse, switchersNotFound.stream()
+                .map(s -> "\"" + s + "\"")
+                .collect(java.util.stream.Collectors.joining(","))));
+
         return builder.build();
     }
 
