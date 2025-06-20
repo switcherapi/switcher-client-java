@@ -38,6 +38,9 @@ class SwitcherConfigTest {
 
 	private <T extends SwitcherConfig> T buildSwitcherClientConfig(T classConfig, String component,
 																   String domain) {
+		SwitcherConfig.RelayConfig relay = new SwitcherConfig.RelayConfig();
+		relay.setRestrict(false);
+
 		SwitcherConfig.SnapshotConfig snapshot = new SwitcherConfig.SnapshotConfig();
 		snapshot.setLocation(SNAPSHOTS_LOCAL);
 		snapshot.setUpdateInterval(null);
@@ -54,9 +57,11 @@ class SwitcherConfigTest {
 		classConfig.setDomain(domain);
 		classConfig.setEnvironment("fixture1");
 		classConfig.setLocal(true);
+		classConfig.setCheck(false);
 		classConfig.setSilent("5m");
 		classConfig.setTimeout(3000);
 		classConfig.setPoolSize(2);
+		classConfig.setRelay(relay);
 		classConfig.setSnapshot(snapshot);
 		classConfig.setTruststore(truststore);
 		return classConfig;

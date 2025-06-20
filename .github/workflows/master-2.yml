@@ -26,8 +26,6 @@ jobs:
 
       - name: Build/Test & SonarCloud Scan
         run: mvn -B clean verify -Pcoverage,sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-test:
     name: Build & Test - JDK ${{ matrix.java }} on ${{ matrix.os }}
