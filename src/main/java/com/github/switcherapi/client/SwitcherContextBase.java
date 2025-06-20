@@ -107,6 +107,8 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 				.environment(environment)
 				.component(component)
 				.local(local)
+				.checkSwitchers(check)
+				.restrictRelay(relay.isRestrict())
 				.silentMode(silent)
 				.regexTimeout(regexTimeout)
 				.timeoutMs(timeout)
@@ -181,7 +183,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 		validateContext();
 		registerSwitcherKeys();
 		switcherExecutor = buildInstance();
-		
+
 		loadSwitchers();
 		scheduleSnapshotAutoUpdate(contextStr(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL));
 		ContextBuilder.preConfigure(switcherProperties);
@@ -250,8 +252,14 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	
 	/**
 	 * Load Switcher instances into a map cache
+	 *
+	 * @throws SwitchersValidationException if "switcher.check" is enabled and one or more Switcher Keys are not found
 	 */
-	private static void loadSwitchers() {
+	private static void loadSwitchers() throws SwitchersValidationException {
+		if (contextBol(ContextKey.CHECK_SWITCHERS)) {
+			checkSwitchers();
+		}
+
 		if (Objects.isNull(switchers)) {
 			switchers = new HashMap<>();
 		}
@@ -447,7 +455,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * 
 	 * @throws SwitchersValidationException when one or more Switcher Key is not found
 	 */
-	public static void checkSwitchers() {
+	public static void checkSwitchers() throws SwitchersValidationException {
 		switcherExecutor.checkSwitchers(switcherKeys);
 	}
 	

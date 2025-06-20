@@ -1,9 +1,10 @@
 package com.github.switcherapi.client.remote.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.switcherapi.client.remote.ClientWS;
+
 import java.util.Arrays;
 import java.util.Set;
-
-import com.github.switcherapi.client.remote.ClientWS;
 
 /**
  * Request/Response model to use with {@link ClientWS#checkSwitchers(Set, String)}
@@ -21,6 +22,7 @@ public class SwitchersCheck {
 	/**
 	 * Response field
 	 */
+	@JsonProperty("not_found")
 	private String[] notFound;
 	
 	public SwitchersCheck() {}
