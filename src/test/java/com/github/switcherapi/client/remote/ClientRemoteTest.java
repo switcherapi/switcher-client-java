@@ -2,7 +2,9 @@ package com.github.switcherapi.client.remote;
 
 import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.ContextBuilder;
+import com.github.switcherapi.client.SwitcherContext;
 import com.github.switcherapi.client.SwitcherProperties;
+import com.github.switcherapi.client.exception.SwitchersValidationException;
 import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.client.model.SwitcherResult;
 import com.github.switcherapi.client.remote.dto.SwitchersCheck;
@@ -29,8 +31,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.github.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ClientRemoteTest extends MockWebServerHelper {
 
@@ -60,7 +61,7 @@ class ClientRemoteTest extends MockWebServerHelper {
         clientRemote = new ClientRemoteService(ClientWSImpl.build(switcherProperties, executorService, DEFAULT_TIMEOUT), switcherProperties);
         ((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 
-        Switchers.configure(ContextBuilder.builder());
+        Switchers.configure(ContextBuilder.builder().checkSwitchers(false));
         Switchers.initializeClient();
     }
 
@@ -84,7 +85,7 @@ class ClientRemoteTest extends MockWebServerHelper {
     }
 
     @Test
-    void shouldCheckSwitchers() {
+    void shouldCheckSwitchersError() {
         //given
         final Set<String> switcherKeys = new HashSet<>();
         switcherKeys.add("KEY");
@@ -95,6 +96,32 @@ class ClientRemoteTest extends MockWebServerHelper {
         //test
         SwitchersCheck actual = clientRemote.checkSwitchers(switcherKeys);
         assertEquals(1, actual.getNotFound().length);
+    }
+
+    @Test
+    void shouldCheckSwitchersError_throughContextConfiguration() {
+        //given
+        final Set<String> switcherKeys = new HashSet<>();
+        switcherKeys.add("KEY");
+
+        givenResponse(generateMockAuth(100));
+        givenResponse(generateCheckSwitchersResponse(switcherKeys));
+
+        //test
+        Switchers.configure(ContextBuilder.builder().checkSwitchers(true));
+        SwitchersValidationException exception = assertThrows(SwitchersValidationException.class, SwitcherContext::initializeClient);
+        assertEquals("Something went wrong: Unable to load the following Switcher Key(s): [KEY]", exception.getMessage());
+    }
+
+    @Test
+    void shouldCheckSwitchersSuccess_throughContextConfiguration() {
+        //given
+        givenResponse(generateMockAuth(100));
+        givenResponse(generateCheckSwitchersResponse(new HashSet<>()));
+
+        //test
+        Switchers.configure(ContextBuilder.builder().checkSwitchers(true));
+        assertDoesNotThrow(SwitcherContext::initializeClient);
     }
 
 }

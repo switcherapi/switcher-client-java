@@ -70,6 +70,7 @@ switcher.domain -> Domain name
 #optional
 switcher.environment -> Environment name
 switcher.local -> true/false When local, it will only use a local snapshot
+switcher.check -> true/false When true, it will check Switcher Keys
 switcher.relay.restrict -> true/false When true, it will check snapshot relay status
 switcher.snapshot.location -> Folder from where snapshots will be saved/read
 switcher.snapshot.auto -> true/false Automated lookup for snapshot when initializing the client
@@ -312,6 +313,16 @@ In case something is missing, this operation will throw an exception pointing ou
 void testSwitchers() {
 	assertDoesNotThrow(() -> MyAppFeatures.checkSwitchers());
 }
+```
+
+Alternatively, you can also set the Switcher Context configuration to check during the client initialization.
+
+```java
+MyAppFeatures.configure(ContextBuilder.builder()
+    ...
+    .checkSwitchers(true));
+
+MyAppFeatures.initializeClient();
 ```
 
 #### SwitcherTest annotation - Requires JUnit 5 Jupiter

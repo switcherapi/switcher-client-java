@@ -2,7 +2,6 @@ package com.github.switcherapi.fixture;
 
 import com.github.switcherapi.client.model.criteria.Data;
 import com.github.switcherapi.client.model.criteria.Snapshot;
-import com.github.switcherapi.client.remote.dto.SwitchersCheck;
 import com.github.switcherapi.client.remote.ClientWSImpl;
 import com.github.switcherapi.client.remote.dto.CriteriaRequest;
 import com.github.switcherapi.client.utils.SnapshotLoader;
@@ -178,13 +177,10 @@ public class MockWebServerHelper {
      * @return Generated mock /criteria/check_switchers
      */
     protected MockResponse generateCheckSwitchersResponse(Set<String> switchersNotFound) {
-        SwitchersCheck switchersCheckNotFound = new SwitchersCheck();
-        switchersCheckNotFound.setNotFound(
-                switchersNotFound.toArray(new String[0]));
+        String jsonResponse = "{ \"not_found\": [%s] }";
 
-        Gson gson = new Gson();
         MockResponse.Builder builder = new MockResponse.Builder();
-        builder.body(gson.toJson(switchersCheckNotFound));
+        builder.body(String.format(jsonResponse, String.join("\",\"", switchersNotFound)));
         builder.addHeader("Content-Type", "application/json");
         return builder.build();
     }

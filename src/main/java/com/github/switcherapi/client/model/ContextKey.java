@@ -70,6 +70,11 @@ public enum ContextKey {
 	LOCAL_MODE("switcher.local"),
 
 	/**
+	 * (boolean) Defines if client will check the switchers before using them (default is false).
+	 */
+	CHECK_SWITCHERS("switcher.check"),
+
+	/**
 	 * (boolean) Defines if client will trigger local snapshot relay verification (default is true)
 	 */
 	RESTRICT_RELAY("switcher.relay.restrict"),

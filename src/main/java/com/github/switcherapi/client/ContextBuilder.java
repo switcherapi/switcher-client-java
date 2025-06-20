@@ -171,6 +171,15 @@ public class ContextBuilder {
 	}
 
 	/**
+	 * @param checkSwitchers true/false When true, it will check switcher keys
+	 * @return ContextBuilder
+	 */
+	public ContextBuilder checkSwitchers(boolean checkSwitchers) {
+		switcherProperties.setValue(ContextKey.CHECK_SWITCHERS, checkSwitchers);
+		return this;
+	}
+
+	/**
 	 * @param restrictRelay true/false When true, it will check snapshot relay status
 	 * @return ContextBuilder
 	 */
