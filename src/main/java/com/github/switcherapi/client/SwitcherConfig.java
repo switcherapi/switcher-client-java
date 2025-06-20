@@ -11,14 +11,17 @@ abstract class SwitcherConfig {
 	protected String environment;
 
 	protected boolean local;
+	protected boolean check;
 	protected String silent;
 	protected Integer timeout;
 	protected Integer regexTimeout;
 	protected Integer poolSize;
+	protected RelayConfig relay;
 	protected SnapshotConfig snapshot;
 	protected TruststoreConfig truststore;
 
 	SwitcherConfig() {
+		this.relay = new RelayConfig();
 		this.snapshot = new SnapshotConfig();
 		this.truststore = new TruststoreConfig();
 	}
@@ -35,9 +38,14 @@ abstract class SwitcherConfig {
 		setComponent(properties.getValue(ContextKey.COMPONENT));
 		setEnvironment(properties.getValue(ContextKey.ENVIRONMENT));
 		setLocal(properties.getBoolean(ContextKey.LOCAL_MODE));
+		setCheck(properties.getBoolean(ContextKey.CHECK_SWITCHERS));
 		setSilent(properties.getValue(ContextKey.SILENT_MODE));
 		setTimeout(properties.getInt(ContextKey.TIMEOUT_MS));
 		setPoolSize(properties.getInt(ContextKey.POOL_CONNECTION_SIZE));
+
+		RelayConfig relayConfig = new RelayConfig();
+		relayConfig.setRestrict(properties.getBoolean(ContextKey.RESTRICT_RELAY));
+		setRelay(relayConfig);
 
 		SnapshotConfig snapshotConfig = new SnapshotConfig();
 		snapshotConfig.setLocation(properties.getValue(ContextKey.SNAPSHOT_LOCATION));
@@ -93,6 +101,10 @@ abstract class SwitcherConfig {
 		this.local = local;
 	}
 
+	public void setCheck(boolean check) {
+		this.check = check;
+	}
+
 	public void setSilent(String silent) {
 		this.silent = silent;
 	}
@@ -109,12 +121,27 @@ abstract class SwitcherConfig {
 		this.poolSize = poolSize;
 	}
 
+	public void setRelay(RelayConfig relay) {
+		this.relay = relay;
+	}
 	public void setSnapshot(SnapshotConfig snapshot) {
 		this.snapshot = snapshot;
 	}
 
 	public void setTruststore(TruststoreConfig truststore) {
 		this.truststore = truststore;
+	}
+
+	public static class RelayConfig {
+		private boolean restrict;
+
+		public boolean isRestrict() {
+			return restrict;
+		}
+
+		public void setRestrict(boolean restrict) {
+			this.restrict = restrict;
+		}
 	}
 
 	public static class SnapshotConfig {
