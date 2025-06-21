@@ -50,6 +50,7 @@ abstract class SwitcherConfig {
 		snapshotConfig.setLocation(properties.getValue(ContextKey.SNAPSHOT_LOCATION));
 		snapshotConfig.setAuto(properties.getBoolean(ContextKey.SNAPSHOT_AUTO_LOAD));
 		snapshotConfig.setSkipValidation(properties.getBoolean(ContextKey.SNAPSHOT_SKIP_VALIDATION));
+		snapshotConfig.setWatcher(properties.getBoolean(ContextKey.SNAPSHOT_WATCHER));
 		snapshotConfig.setUpdateInterval(properties.getValue(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL));
 		setSnapshot(snapshotConfig);
 
@@ -143,6 +144,7 @@ abstract class SwitcherConfig {
 		private String location;
 		private boolean auto;
 		private boolean skipValidation;
+		private boolean watcher;
 		private String updateInterval;
 
 		public String getLocation() {
@@ -167,6 +169,14 @@ abstract class SwitcherConfig {
 
 		public void setSkipValidation(boolean skipValidation) {
 			this.skipValidation = skipValidation;
+		}
+
+		public boolean isWatcher() {
+			return watcher;
+		}
+
+		public void setWatcher(boolean watcher) {
+			this.watcher = watcher;
 		}
 
 		public String getUpdateInterval() {
