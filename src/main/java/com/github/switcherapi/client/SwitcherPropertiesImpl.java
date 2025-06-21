@@ -2,7 +2,6 @@ package com.github.switcherapi.client;
 
 import com.github.switcherapi.client.exception.SwitcherContextException;
 import com.github.switcherapi.client.model.ContextKey;
-import com.github.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -10,18 +9,24 @@ import java.util.Map;
 import java.util.Properties;
 
 import static com.github.switcherapi.client.remote.Constants.*;
+import static com.github.switcherapi.client.utils.SwitcherUtils.*;
 
 public class SwitcherPropertiesImpl implements SwitcherProperties {
 
 	private final Map<String, Object> properties = new HashMap<>();
 
 	public SwitcherPropertiesImpl() {
+		initDefaults();
+	}
+
+	private void initDefaults() {
 		setValue(ContextKey.ENVIRONMENT, DEFAULT_ENV);
 		setValue(ContextKey.REGEX_TIMEOUT, DEFAULT_REGEX_TIMEOUT);
 		setValue(ContextKey.TIMEOUT_MS, DEFAULT_TIMEOUT);
 		setValue(ContextKey.POOL_CONNECTION_SIZE, DEFAULT_POOL_SIZE);
 		setValue(ContextKey.SNAPSHOT_AUTO_LOAD, false);
 		setValue(ContextKey.SNAPSHOT_SKIP_VALIDATION, false);
+		setValue(ContextKey.SNAPSHOT_WATCHER, false);
 		setValue(ContextKey.LOCAL_MODE, false);
 		setValue(ContextKey.CHECK_SWITCHERS, false);
 		setValue(ContextKey.RESTRICT_RELAY, true);
@@ -29,25 +34,26 @@ public class SwitcherPropertiesImpl implements SwitcherProperties {
 
 	@Override
 	public void loadFromProperties(Properties prop) {
-		setValue(ContextKey.CONTEXT_LOCATION, SwitcherUtils.resolveProperties(ContextKey.CONTEXT_LOCATION.getParam(), prop));
-		setValue(ContextKey.URL, SwitcherUtils.resolveProperties(ContextKey.URL.getParam(), prop));
-		setValue(ContextKey.APIKEY, SwitcherUtils.resolveProperties(ContextKey.APIKEY.getParam(), prop));
-		setValue(ContextKey.DOMAIN, SwitcherUtils.resolveProperties(ContextKey.DOMAIN.getParam(), prop));
-		setValue(ContextKey.COMPONENT, SwitcherUtils.resolveProperties(ContextKey.COMPONENT.getParam(), prop));
-		setValue(ContextKey.ENVIRONMENT, getValueDefault(SwitcherUtils.resolveProperties(ContextKey.ENVIRONMENT.getParam(), prop), DEFAULT_ENV));
-		setValue(ContextKey.SNAPSHOT_LOCATION, SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_LOCATION.getParam(), prop));
-		setValue(ContextKey.SNAPSHOT_SKIP_VALIDATION, getBoolDefault(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_SKIP_VALIDATION.getParam(), prop), false));
-		setValue(ContextKey.SNAPSHOT_AUTO_LOAD, getBoolDefault(SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_LOAD.getParam(), prop), false));
-		setValue(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL, SwitcherUtils.resolveProperties(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL.getParam(), prop));
-		setValue(ContextKey.SILENT_MODE, SwitcherUtils.resolveProperties(ContextKey.SILENT_MODE.getParam(), prop));
-		setValue(ContextKey.LOCAL_MODE, getBoolDefault(SwitcherUtils.resolveProperties(ContextKey.LOCAL_MODE.getParam(), prop), false));
-		setValue(ContextKey.CHECK_SWITCHERS, getBoolDefault(SwitcherUtils.resolveProperties(ContextKey.CHECK_SWITCHERS.getParam(), prop), false));
-		setValue(ContextKey.RESTRICT_RELAY, getBoolDefault(SwitcherUtils.resolveProperties(ContextKey.RESTRICT_RELAY.getParam(), prop), true));
-		setValue(ContextKey.REGEX_TIMEOUT, getIntDefault(SwitcherUtils.resolveProperties(ContextKey.REGEX_TIMEOUT.getParam(), prop), DEFAULT_REGEX_TIMEOUT));
-		setValue(ContextKey.TRUSTSTORE_PATH, SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PATH.getParam(), prop));
-		setValue(ContextKey.TRUSTSTORE_PASSWORD, SwitcherUtils.resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));
-		setValue(ContextKey.TIMEOUT_MS, getIntDefault(SwitcherUtils.resolveProperties(ContextKey.TIMEOUT_MS.getParam(), prop), DEFAULT_TIMEOUT));
-		setValue(ContextKey.POOL_CONNECTION_SIZE, getIntDefault(SwitcherUtils.resolveProperties(ContextKey.POOL_CONNECTION_SIZE.getParam(), prop), DEFAULT_POOL_SIZE));
+		setValue(ContextKey.CONTEXT_LOCATION, resolveProperties(ContextKey.CONTEXT_LOCATION.getParam(), prop));
+		setValue(ContextKey.URL, resolveProperties(ContextKey.URL.getParam(), prop));
+		setValue(ContextKey.APIKEY, resolveProperties(ContextKey.APIKEY.getParam(), prop));
+		setValue(ContextKey.DOMAIN, resolveProperties(ContextKey.DOMAIN.getParam(), prop));
+		setValue(ContextKey.COMPONENT, resolveProperties(ContextKey.COMPONENT.getParam(), prop));
+		setValue(ContextKey.ENVIRONMENT, getValueDefault(resolveProperties(ContextKey.ENVIRONMENT.getParam(), prop), DEFAULT_ENV));
+		setValue(ContextKey.SNAPSHOT_LOCATION, resolveProperties(ContextKey.SNAPSHOT_LOCATION.getParam(), prop));
+		setValue(ContextKey.SNAPSHOT_SKIP_VALIDATION, getBoolDefault(resolveProperties(ContextKey.SNAPSHOT_SKIP_VALIDATION.getParam(), prop), false));
+		setValue(ContextKey.SNAPSHOT_AUTO_LOAD, getBoolDefault(resolveProperties(ContextKey.SNAPSHOT_AUTO_LOAD.getParam(), prop), false));
+		setValue(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL, resolveProperties(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL.getParam(), prop));
+		setValue(ContextKey.SNAPSHOT_WATCHER, getBoolDefault(resolveProperties(ContextKey.SNAPSHOT_WATCHER.getParam(), prop), false));
+		setValue(ContextKey.SILENT_MODE, resolveProperties(ContextKey.SILENT_MODE.getParam(), prop));
+		setValue(ContextKey.LOCAL_MODE, getBoolDefault(resolveProperties(ContextKey.LOCAL_MODE.getParam(), prop), false));
+		setValue(ContextKey.CHECK_SWITCHERS, getBoolDefault(resolveProperties(ContextKey.CHECK_SWITCHERS.getParam(), prop), false));
+		setValue(ContextKey.RESTRICT_RELAY, getBoolDefault(resolveProperties(ContextKey.RESTRICT_RELAY.getParam(), prop), true));
+		setValue(ContextKey.REGEX_TIMEOUT, getIntDefault(resolveProperties(ContextKey.REGEX_TIMEOUT.getParam(), prop), DEFAULT_REGEX_TIMEOUT));
+		setValue(ContextKey.TRUSTSTORE_PATH, resolveProperties(ContextKey.TRUSTSTORE_PATH.getParam(), prop));
+		setValue(ContextKey.TRUSTSTORE_PASSWORD, resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));
+		setValue(ContextKey.TIMEOUT_MS, getIntDefault(resolveProperties(ContextKey.TIMEOUT_MS.getParam(), prop), DEFAULT_TIMEOUT));
+		setValue(ContextKey.POOL_CONNECTION_SIZE, getIntDefault(resolveProperties(ContextKey.POOL_CONNECTION_SIZE.getParam(), prop), DEFAULT_POOL_SIZE));
 	}
 
 	@Override

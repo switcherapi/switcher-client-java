@@ -114,6 +114,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 				.poolConnectionSize(poolSize)
 				.snapshotLocation(snapshot.getLocation())
 				.snapshotAutoLoad(snapshot.isAuto())
+				.snapshotWatcher(snapshot.isWatcher())
 				.snapshotSkipValidation(snapshot.isSkipValidation())
 				.snapshotAutoUpdateInterval(snapshot.getUpdateInterval())
 				.truststorePath(truststore.getPath())
@@ -184,6 +185,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 		switcherExecutor = buildInstance();
 
 		loadSwitchers();
+		scheduleSnapshotWatcher();
 		scheduleSnapshotAutoUpdate(contextStr(ContextKey.SNAPSHOT_AUTO_UPDATE_INTERVAL));
 		ContextBuilder.preConfigure(switcherProperties);
 		SwitcherUtils.debug(logger, "Switcher Client initialized");
@@ -266,6 +268,18 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 		switchers.clear();
 		for (String key : switcherKeys) {
 			switchers.put(key, new SwitcherRequest(key, switcherExecutor, switcherProperties));
+		}
+	}
+
+	/**
+	 * Schedule a task to watch the snapshot file for modifications.<br>
+	 * The task will be executed in a single thread executor service.
+	 * <p>
+	 * (*) Requires client to use local settings
+	 */
+	private static void scheduleSnapshotWatcher() {
+		if (contextBol(ContextKey.SNAPSHOT_WATCHER)) {
+			watchSnapshot();
 		}
 	}
 
@@ -387,8 +401,8 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	}
 	
 	/**
-	 * Validate if the snapshot version is the same as the one in the API.<br>
-	 * If the version is different, it will update the snapshot in memory.
+	 * Validate if the local snapshot version is the same as remote.<br>
+	 * If the version is different, it will update the local snapshot.
 	 * 
 	 * @return true if snapshot was updated
 	 */
@@ -403,7 +417,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	
 	/**
 	 * Start watching snapshot files for modifications.<br>
-	 * When the file is modified the in-memory snapshot will reload
+	 * When the file is modified the local snapshot will reload
 	 *
 	 * <p>
 	 *     (*) Requires client to use local settings
@@ -414,7 +428,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	
 	/**
 	 * Start watching snapshot files for modifications.<br>
-	 * When the file is modified the in-memory snapshot will reload
+	 * When the file is modified the local snapshot will reload
 	 *
 	 * <p>
 	 *     (*) Requires client to use local settings

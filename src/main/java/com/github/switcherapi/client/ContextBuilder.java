@@ -148,6 +148,15 @@ public class ContextBuilder {
 	}
 
 	/**
+	 * @param snapshotWatcher true/false When true, it will watch the snapshot file for changes and update the switchers accordingly
+	 * @return ContextBuilder
+	 */
+	public ContextBuilder snapshotWatcher(boolean snapshotWatcher) {
+		switcherProperties.setValue(ContextKey.SNAPSHOT_WATCHER, snapshotWatcher);
+		return this;
+	}
+
+	/**
 	 * @param retryAfter Enable contingency given the time for the client to retry - e.g. 5s (s: seconds - m: minutes - h: hours)
 	 * @return ContextBuilder
 	 */
