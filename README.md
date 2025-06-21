@@ -74,6 +74,7 @@ switcher.check -> true/false When true, it will check Switcher Keys
 switcher.relay.restrict -> true/false When true, it will check snapshot relay status
 switcher.snapshot.location -> Folder from where snapshots will be saved/read
 switcher.snapshot.auto -> true/false Automated lookup for snapshot when initializing the client
+switcher.snapshot.watcher -> true/false Enable the watcher to monitor the snapshot file for changes during runtime
 switcher.snapshot.skipvalidation -> true/false Skip snapshotValidation() that can be used for UT executions
 switcher.snapshot.updateinterval -> Enable the Snapshot Auto Update given an interval of time - e.g. 1s (s: seconds, m: minutes)
 switcher.silent -> Enable contigency given the time for the client to retry - e.g. 5s (s: seconds - m: minutes - h: hours)
@@ -252,15 +253,24 @@ MyAppFeatures.scheduleSnapshotAutoUpdate("5s", new SnapshotCallback() {
 });
 ```
 
-## Real-time snapshot reload
+## Real-time snapshot reload (Hot-swapping)
 Let the Switcher Client manage your application local snapshot.<br>
-These features allow you to configure the SDK to automatically update the snapshot in the background.
+These features allow you to configure the SDK to automatically update the snapshot during runtime.
 
 1. This feature will update the in-memory Snapshot every time the file is modified.
 
 ```java
 MyAppFeatures.watchSnapshot();
 MyAppFeatures.stopWatchingSnapshot();
+```
+
+Alternatively, you can also set the Switcher Context configuration to start watching the snapshot file during the client initialization.
+
+```java
+MyAppFeatures.configure(ContextBuilder.builder()
+    .snapshotWatcher(true));
+
+MyAppFeatures.initializeClient();
 ```
 
 2. You can also perform snapshot update validation to verify if there are changes to be pulled.
@@ -319,7 +329,6 @@ Alternatively, you can also set the Switcher Context configuration to check duri
 
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
-    ...
     .checkSwitchers(true));
 
 MyAppFeatures.initializeClient();

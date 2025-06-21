@@ -58,6 +58,11 @@ public enum ContextKey {
 	 * (String) Interval given to the library to update the snapshot
 	 */
 	SNAPSHOT_AUTO_UPDATE_INTERVAL("switcher.snapshot.updateinterval"),
+
+	/**
+	 * (boolean) Defines if the client will watch the snapshot file for changes and update the switchers accordingly. (default is false)
+	 */
+	SNAPSHOT_WATCHER("switcher.snapshot.watcher"),
 	
 	/**
 	 * (String) Defines if client will work in silent mode by specifying the time interval to retry
