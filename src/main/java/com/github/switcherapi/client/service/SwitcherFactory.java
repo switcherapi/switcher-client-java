@@ -17,11 +17,11 @@ public class SwitcherFactory {
 				DEFAULT_REASON, switcher.getEntry());
 	}
 
-	public static SwitcherResult buildResultFail(String reason, SwitcherRequest switcher) {
+	public static SwitcherResult buildResultDisabled(String reason, SwitcherRequest switcher) {
 		return new SwitcherResult(switcher.getSwitcherKey(), Boolean.FALSE, reason, switcher.getEntry());
 	}
 
-	public static SwitcherResult buildResultSuccess(SwitcherRequest switcher) {
+	public static SwitcherResult buildResultEnabled(SwitcherRequest switcher) {
 		return new SwitcherResult(switcher.getSwitcherKey(), Boolean.TRUE, DEFAULT_SUCCESS, switcher.getEntry());
 	}
 
