@@ -65,7 +65,7 @@ public class ClientLocalService implements ClientLocal {
 	@Override
 	public SwitcherResult executeCriteria(final SwitcherRequest switcher, final Domain domain) {
 		if (!domain.isActivated()) {
-			return SwitcherFactory.buildResultFail(DISABLED_DOMAIN, switcher);
+			return SwitcherFactory.buildResultDisabled(DISABLED_DOMAIN, switcher);
 		}
 
 		Config config;
@@ -82,22 +82,22 @@ public class ClientLocalService implements ClientLocal {
 
 	private SwitcherResult getSwitcherResult(SwitcherRequest switcher, Group group, Config config) {
 		if (!group.isActivated()) {
-			return SwitcherFactory.buildResultFail(DISABLED_GROUP, switcher);
+			return SwitcherFactory.buildResultDisabled(DISABLED_GROUP, switcher);
 		}
 
 		if (!config.isActivated()) {
-			return SwitcherFactory.buildResultFail(DISABLED_CONFIG, switcher);
+			return SwitcherFactory.buildResultDisabled(DISABLED_CONFIG, switcher);
 		}
 
 		if (config.hasRelayEnabled() && switcher.isRelayRestricted()) {
-			return SwitcherFactory.buildResultFail(HAS_RELAY, switcher);
+			return SwitcherFactory.buildResultDisabled(HAS_RELAY, switcher);
 		}
 
 		if (ArrayUtils.isNotEmpty(config.getStrategies())) {
 			return this.processOperation(config.getStrategies(), switcher.getEntry(), switcher);
 		}
 
-		return SwitcherFactory.buildResultSuccess(switcher);
+		return SwitcherFactory.buildResultEnabled(switcher);
 	}
 
 	private Config findConfigInGroup(final Group group, final String switcherKey) {
@@ -135,11 +135,11 @@ public class ClientLocalService implements ClientLocal {
 			}
 		}
 
-		return SwitcherFactory.buildResultSuccess(switcher);
+		return SwitcherFactory.buildResultEnabled(switcher);
 	}
 	
 	private SwitcherResult strategyFailed(SwitcherRequest switcher, Strategy strategy, String pattern) {
-		return SwitcherFactory.buildResultFail(String.format(pattern, strategy.getStrategy()), switcher);
+		return SwitcherFactory.buildResultDisabled(String.format(pattern, strategy.getStrategy()), switcher);
 	}
 	
 	private Entry tryGetSwitcherInput(final List<Entry> input, Strategy strategy) {
