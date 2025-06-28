@@ -50,11 +50,6 @@ public final class SwitcherRequest extends SwitcherBuilder {
 		this.historyExecution = new HashSet<>();
 		this.entry = new ArrayList<>();
 	}
-
-	@Override
-	public SwitcherRequest build() {
-		return this;
-	}
 	
 	@Override
 	public SwitcherRequest prepareEntry(final List<Entry> entry) {
@@ -134,6 +129,11 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	@Override
 	public List<Entry> getEntry() {
 		return this.entry;
+	}
+
+	@Override
+	public SwitcherResult getLastExecutionResult() {
+		return getFromHistory().orElse(null);
 	}
 
 	public boolean isBypassMetrics() {

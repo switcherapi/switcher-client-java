@@ -4,7 +4,10 @@ import com.github.switcherapi.Switchers;
 import com.github.switcherapi.client.exception.SwitcherInvalidNumericFormat;
 import com.github.switcherapi.client.exception.SwitcherInvalidTimeFormat;
 import com.github.switcherapi.client.exception.SwitcherKeyNotFoundException;
-import com.github.switcherapi.client.model.*;
+import com.github.switcherapi.client.model.ContextKey;
+import com.github.switcherapi.client.model.Entry;
+import com.github.switcherapi.client.model.StrategyValidator;
+import com.github.switcherapi.client.model.SwitcherRequest;
 import com.github.switcherapi.fixture.Product;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
@@ -47,13 +50,23 @@ class SwitcherLocal1Test {
 	@Test
 	void localShouldReturnTrue() {
 		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE11, true);
+
+		assertNull(switcher.getLastExecutionResult());
 		assertTrue(switcher.isItOn());
+
+		// check result history
+		assertTrue(switcher.getLastExecutionResult().isItOn());
 	}
 	
 	@Test
 	void localShouldReturnFalse() {
 		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE12);
+
+		assertNull(switcher.getLastExecutionResult());
 		assertFalse(switcher.isItOn());
+
+		// check result history
+		assertFalse(switcher.getLastExecutionResult().isItOn());
 	}
 	
 	@Test

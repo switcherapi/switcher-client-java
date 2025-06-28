@@ -20,8 +20,7 @@ public class ClientPlayground {
 	public static void test() {
 		new Features().configureClient();
 		Switcher switcher = getSwitcher(CLIENT_JAVA_FEATURE)
-				.bypassMetrics()
-				.build();
+				.bypassMetrics();
 
 		scheduler.scheduleAtFixedRate(() -> {
 			try {
