@@ -58,8 +58,7 @@ class SwitcherThrottleTest extends MockWebServerHelper {
 		//test
 		Switcher switcher = Switchers
 				.getSwitcher(Switchers.REMOTE_KEY)
-				.throttle(1000)
-				.build();
+				.throttle(1000);
 		
 		for (int i = 0; i < 100; i++) {
 			assertTrue(switcher.isItOn());
