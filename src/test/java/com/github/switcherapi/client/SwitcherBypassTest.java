@@ -119,7 +119,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1").build();
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1");
 		assertTrue(switcher.isItOn());
 	}
 
@@ -132,10 +132,10 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1").build();
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1");
 		assertTrue(switcher.isItOn());
 
-		switcher = getSwitcher(USECASE41).checkValue("Value2").build();
+		switcher = getSwitcher(USECASE41).checkValue("Value2");
 		assertTrue(switcher.isItOn());
 	}
 
@@ -150,7 +150,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1").build();
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1");
 		assertTrue(switcher.isItOn());
 	}
 
@@ -163,7 +163,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1").build();
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1");
 		assertFalse(switcher.isItOn());
 	}
 
@@ -251,7 +251,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1").build();
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1");
 
 		SwitcherBypass.assume(USECASE41, true)
 						.when(StrategyValidator.VALUE, "Value1");
@@ -266,7 +266,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE41).checkValue("Value2").build();
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value2");
 
 		SwitcherBypass.assume(USECASE41, true)
 				.when(StrategyValidator.VALUE, "Value1");

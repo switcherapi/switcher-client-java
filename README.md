@@ -190,11 +190,11 @@ getSwitcher(FEATURE01)
 	.isItOn();
 ```
 
-4. **Accessing the response history**
-Switchers stores the last execution result from a given switcher key/entry.
+4. **Accessing the last SwitcherResult**
+Switchers stores the last execution result, which can be retrieved using the following operation.
 
 ```java
-switcher.getHistoryExecution();
+switcher.getLastExecutionResult();
 ```
 
 5. **Throttling**
@@ -305,7 +305,7 @@ switcher.isItOn(); // Now, it's going to return the result retrieved from the AP
 For more complex scenarios where you need to test features based on specific inputs, you can use test conditions.
 
 ```java
-Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01).checkValue("My value").build();
+Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01).checkValue("My value");
 
 SwitcherBypass.assume(FEATURE01, true).when(StrategyValidator.VALUE, "My value");
 switcher.isItOn(); // 'true'

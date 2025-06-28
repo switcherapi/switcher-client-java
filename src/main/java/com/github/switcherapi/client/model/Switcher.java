@@ -13,27 +13,17 @@ import java.util.List;
  *     <li>Switcher execution</li>
  *     <li>Switcher get input/output</li>
  * </ul>
+ *
+ *  For example:
+ *  <pre>
+ *  Switcher switcher = SwitcherContext
+ *  	.getSwitcher(MY_SWITCHER)
+ *  	.remote(true)
+ *  	.throttle(1000)
+ *  	.checkValue("value");
+ * 	</pre>
  */
 public interface Switcher {
-
-	/**
-	 * This method builds the Switcher object.<br>
-	 * Uses to isolate Switcher creation from the execution.<br>
-	 *
-	 * For example:
-	 * <pre>
-	 * Switcher switcher = SwitcherContext
-	 * 	.getSwitcher(MY_SWITCHER)
-	 * 	.remote(true)
-	 * 	.throttle(1000)
-	 * 	.checkValue("value")
-	 * 	.build();
-	 * </pre>
-	 *
-	 * @return instance of SwitcherInterface
-	 * @see SwitcherRequest
-	 */
-	Switcher build();
 
 	/**
 	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.
@@ -106,5 +96,12 @@ public interface Switcher {
 	 * @return the entry of the switcher
 	 */
 	List<Entry> getEntry();
+
+	/**
+	 * Get the last execution result of the switcher.
+	 *
+	 * @return the last SwitcherResult, otherwise null if no executions were made
+	 */
+	SwitcherResult getLastExecutionResult();
 
 }
