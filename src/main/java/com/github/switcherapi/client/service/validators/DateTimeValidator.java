@@ -19,7 +19,7 @@ public abstract class DateTimeValidator extends Validator {
 	protected String getFullDate(final String date) {
 		SwitcherUtils.debug(logger, LOG_DATE, date);
 
-		final String time = RegExUtils.removePattern((CharSequence) date, FULL_DATE_REGEX).trim();
+		final String time = RegExUtils.removePattern(date, FULL_DATE_REGEX).trim();
 		return getFullTime(date, time);
 	}
 
