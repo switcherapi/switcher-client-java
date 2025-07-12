@@ -35,7 +35,7 @@ class SwitcherForceResolveTest extends MockWebServerHelper {
     }
 	
 	@AfterAll
-	static void tearDown() throws IOException {
+	static void tearDown() {
 		MockWebServerHelper.tearDownMockServer();
     }
 	
