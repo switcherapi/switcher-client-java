@@ -26,7 +26,7 @@ public class MockWebServerHelper {
         ((QueueDispatcher) mockBackEnd.getDispatcher()).setFailFast(true);
     }
 
-    protected static void tearDownMockServer() throws IOException {
+    protected static void tearDownMockServer() {
         mockBackEnd.close();
     }
 
