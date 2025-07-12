@@ -8,7 +8,7 @@
 	<groupId>com.github.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>2.3.1</version>
+	<version>2.3.2-SNAPSHOT</version>
 
 	<name>Switcher Client</name>
 	<description>Switcher Client SDK for working with Switcher API</description>
@@ -58,10 +58,10 @@
 		<slf4j-api.version>2.0.17</slf4j-api.version>
 
 		<!-- test -->
-		<okhttp.version>5.0.0-alpha.16</okhttp.version>
-		<junit-jupiter.version>5.13.1</junit-jupiter.version>
+		<okhttp.version>5.1.0</okhttp.version>
+		<junit-jupiter.version>5.13.3</junit-jupiter.version>
 		<junit-pioneer.version>2.3.0</junit-pioneer.version>
-		<junit-platform-launcher.version>1.13.1</junit-platform-launcher.version>
+		<junit-platform-launcher.version>1.13.3</junit-platform-launcher.version>
 
 		<!-- Plugins -->
 		<maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
@@ -71,7 +71,7 @@
 		<maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
 		<sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
-		<central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
+		<central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
 
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
