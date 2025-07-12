@@ -41,7 +41,9 @@ jobs:
           cache: maven
 
       - name: Build/Test & SonarCloud Scan
-        if: ${{ secrets.SONAR_TOKEN != '' }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        if: env.SONAR_TOKEN != ''
         run: |
           mvn -B clean verify -Pcoverage,sonar \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
