@@ -12,7 +12,7 @@ jobs:
   sonar-analysis:
     name: SonarCloud Analysis for PR
     runs-on: ubuntu-latest
-    if: secrets.SONAR_TOKEN != ''
+    if: ${{ secrets.SONAR_TOKEN != '' }}
 
     steps:
       - name: Get PR details
