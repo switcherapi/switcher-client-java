@@ -2,9 +2,9 @@ name: Master CI v2
 
 on:
   push:
-    branches: [master-2]
+    branches: [ master-2 ]
   pull_request:
-    branches: [master-2]
+    branches: [ master-2 ]
 
 jobs:
   build-scan:

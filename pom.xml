@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.github.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.7.1</version>
+	<version>1.7.2-SNAPSHOT</version>
 
 	<name>Switcher Client</name>
 	<description>Switcher Client SDK for working with Switcher API</description>
@@ -59,15 +59,15 @@
 		<gson.version>2.13.1</gson.version>
 
 		<!-- utils -->
-		<commons-lang3.version>3.17.0</commons-lang3.version>
+		<commons-lang3.version>3.18.0</commons-lang3.version>
 		<commons-net.version>3.11.1</commons-net.version>
 		<slf4j-api.version>2.0.17</slf4j-api.version>
 
 		<!-- test -->
-		<okhttp.version>5.0.0-alpha.16</okhttp.version>
-		<junit-jupiter.version>5.13.1</junit-jupiter.version>
+		<okhttp.version>5.1.0</okhttp.version>
+		<junit-jupiter.version>5.13.3</junit-jupiter.version>
 		<junit-pioneer.version>1.9.1</junit-pioneer.version>
-		<junit-platform-launcher.version>1.13.1</junit-platform-launcher.version>
+		<junit-platform-launcher.version>1.13.3</junit-platform-launcher.version>
 
 		<!-- Plugins -->
 		<maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
@@ -77,7 +77,7 @@
 		<maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
 		<sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
-		<central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
+		<central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
 
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
