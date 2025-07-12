@@ -26,12 +26,12 @@ public class MockWebServerHelper {
         ((QueueDispatcher) mockBackEnd.getDispatcher()).setFailFast(true);
     }
 
-    protected static void tearDownMockServer() throws IOException {
-        mockBackEnd.shutdown();
+    protected static void tearDownMockServer() {
+        mockBackEnd.close();
     }
 
     protected void givenResponse(MockResponse response) {
-        ((QueueDispatcher) mockBackEnd.getDispatcher()).enqueueResponse(response);
+        ((QueueDispatcher) mockBackEnd.getDispatcher()).enqueue(response);
     }
 
     protected MockResponse generateTimeOut(int timeoutMs) {
@@ -103,7 +103,7 @@ public class MockWebServerHelper {
      */
     protected MockResponse generateStatusResponse(String code) {
         MockResponse.Builder builder = new MockResponse.Builder();
-        builder.setCode(Integer.parseInt(code));
+        builder.code(Integer.parseInt(code));
         return builder.build();
     }
 
