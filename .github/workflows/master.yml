@@ -10,7 +10,7 @@ jobs:
   build-scan:
     name: SonarCloud Scan
     runs-on: ubuntu-latest
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
+    if: secrets.SONAR_TOKEN != ''
 
     steps:
       - uses: actions/checkout@v4
@@ -35,7 +35,6 @@ jobs:
         java: ['8', '11', '17', '21']
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
 
     steps:
       - uses: actions/checkout@v4

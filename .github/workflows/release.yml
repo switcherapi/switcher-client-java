@@ -13,7 +13,6 @@ jobs:
         java: ['11', '17', '21']
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
 
     steps:
       - uses: actions/checkout@v4
