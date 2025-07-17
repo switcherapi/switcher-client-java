@@ -8,7 +8,7 @@
 	<groupId>com.github.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.7.2-SNAPSHOT</version>
+	<version>1.7.2</version>
 
 	<name>Switcher Client</name>
 	<description>Switcher Client SDK for working with Switcher API</description>
@@ -74,7 +74,7 @@
 		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
 		<maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
-		<maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+		<maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
 		<sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
 		<central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
