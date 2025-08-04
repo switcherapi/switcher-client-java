@@ -12,7 +12,7 @@ A Java SDK for Switcher API
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=switcherapi_switcher-client&metric=alert_status)](https://sonarcloud.io/dashboard?id=switcherapi_switcher-client)
 [![Known Vulnerabilities](https://snyk.io/test/github/switcherapi/switcher-client-java/badge.svg?targetFile=pom.xml)](https://snyk.io/test/github/switcherapi/switcher-client-java?targetFile=pom.xml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.switcherapi/switcher-client.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.github.switcherapi/switcher-client)
+[![Maven Central](https://img.shields.io/maven-central/v/com.switcherapi/switcher-client.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.switcherapi/switcher-client)
 [![Slack: Switcher-HQ](https://img.shields.io/badge/slack-@switcher/hq-blue.svg?logo=slack)](https://switcher-hq.slack.com/)
 
 </div>
@@ -38,7 +38,7 @@ https://github.com/switcherapi/switcher-api
 - Adding as a dependency - Maven
 ```xml
 <dependency>
-  <groupId>com.github.switcherapi</groupId>
+  <groupId>com.switcherapi</groupId>
   <artifactId>switcher-client</artifactId>
   <version>${switcher-client.version}</version>
 </dependency>
@@ -94,7 +94,7 @@ Instead of using SwitcherContext, which is used to automatically load from the s
 
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
-		.contextLocation("com.github.switcherapi.playground.Features")
+		.contextLocation("com.switcherapi.playground.Features")
 		.apiKey("API_KEY")
 		.url("https://switcher-api.com")
 		.domain("Playground")
