@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NativeResourceConfigTest {
 
-	private static final Path resourcePath = Paths.get("src/main/resources/META-INF/native-image/com.github.switcherapi/switcher-client/resource-config.json");
+	private static final Path resourcePath = Paths.get("src/main/resources/META-INF/native-image/com.switcherapi/switcher-client/resource-config.json");
 
 	private static String resourceContent;
 

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NativeReflectConfigTest {
 
-	private static final Path reflectPath = Paths.get("src/main/resources/META-INF/native-image/com.github.switcherapi/switcher-client/reflect-config.json");
+	private static final Path reflectPath = Paths.get("src/main/resources/META-INF/native-image/com.switcherapi/switcher-client/reflect-config.json");
 
 	private static String reflectContent;
 
@@ -25,7 +25,7 @@ class NativeReflectConfigTest {
 
 	@Test
 	void shouldReadReflectConfig() {
-		assertTrue(reflectContent.contains("com.github.switcherapi.client"));
+		assertTrue(reflectContent.contains("com.switcherapi.client"));
 	}
 
 	@Test
