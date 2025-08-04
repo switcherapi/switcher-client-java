@@ -5,10 +5,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.github.switcherapi</groupId>
+	<groupId>com.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>2.3.2</version>
+	<version>2.4.0-SNAPSHOT</version>
 
 	<name>Switcher Client</name>
 	<description>Switcher Client SDK for working with Switcher API</description>
@@ -54,14 +54,14 @@
 		<!-- utils -->
 		<gson.version>2.13.1</gson.version>
 		<commons-lang3.version>3.18.0</commons-lang3.version>
-		<commons-net.version>3.11.1</commons-net.version>
+		<commons-net.version>3.12.0</commons-net.version>
 		<slf4j-api.version>2.0.17</slf4j-api.version>
 
 		<!-- test -->
 		<okhttp.version>5.1.0</okhttp.version>
-		<junit-jupiter.version>5.13.3</junit-jupiter.version>
+		<junit-jupiter.version>5.13.4</junit-jupiter.version>
 		<junit-pioneer.version>2.3.0</junit-pioneer.version>
-		<junit-platform-launcher.version>1.13.3</junit-platform-launcher.version>
+		<junit-platform-launcher.version>1.13.4</junit-platform-launcher.version>
 
 		<!-- Plugins -->
 		<maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
