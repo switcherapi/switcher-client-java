@@ -20,7 +20,7 @@ class ModelTest {
 	@Test
 	void testCriteriaPackage() {
 		String[] strategyValues = new String[] { "Value" };
-		final Strategy strategy = new Strategy(
+		final StrategyConfig strategyConfig = new StrategyConfig(
 				"Strategy",
 				"Operation",
 				"Description",
@@ -28,12 +28,12 @@ class ModelTest {
 				strategyValues
 		);
 		
-		assertSame("Description", strategy.getDescription());
-		assertSame("Operation", strategy.getOperation());
-		assertSame("Strategy", strategy.getStrategy());
-		assertSame(strategyValues, strategy.getValues());
+		assertSame("Description", strategyConfig.getDescription());
+		assertSame("Operation", strategyConfig.getOperation());
+		assertSame("Strategy", strategyConfig.getStrategy());
+		assertSame(strategyValues, strategyConfig.getValues());
 
-		Strategy[] strategies = new Strategy[] { strategy };
+		StrategyConfig[] strategies = new StrategyConfig[] {strategyConfig};
 		String[] configComponents = new String[] { "Component" };
 		Relay relay = new Relay(RelayType.NOTIFICATION.name(), false);
 		final Config config = new Config(

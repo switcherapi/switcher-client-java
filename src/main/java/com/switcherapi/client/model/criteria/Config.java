@@ -11,14 +11,14 @@ public class Config extends SwitcherElement {
 
 	private final String key;
 
-	private final Strategy[] strategies;
+	private final StrategyConfig[] strategies;
 
 	private final String[] components;
 
 	private final Relay relay;
 
-	public Config(String key, String description, boolean activated, Strategy[] strategies, String[] components,
-			Relay relay) {
+	public Config(String key, String description, boolean activated, StrategyConfig[] strategies, String[] components,
+				  Relay relay) {
 		super(description, activated);
 		this.key = key;
 		this.strategies = strategies;
@@ -38,7 +38,7 @@ public class Config extends SwitcherElement {
 		return relay;
 	}
 
-	public Strategy[] getStrategies() {
+	public StrategyConfig[] getStrategies() {
 		return strategies;
 	}
 

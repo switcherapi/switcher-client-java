@@ -3,7 +3,7 @@ package com.switcherapi.client.utils;
 import com.switcherapi.client.model.criteria.Config;
 import com.switcherapi.client.model.criteria.Domain;
 import com.switcherapi.client.model.criteria.Group;
-import com.switcherapi.client.model.criteria.Strategy;
+import com.switcherapi.client.model.criteria.StrategyConfig;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -65,13 +65,13 @@ class SnapshotSerializer implements JsonSerializer<Domain> {
 		JsonArray strategiesArray = new JsonArray();
 
 		if (Objects.nonNull(config.getStrategies())) {
-			for (Strategy strategy : config.getStrategies()) {
+			for (StrategyConfig strategyConfig : config.getStrategies()) {
 				JsonObject strategyObject = new JsonObject();
-				strategyObject.add(Field.STRATEGY.value(), context.serialize(strategy.getStrategy()));
-				strategyObject.add(Field.OPERATION.value(), context.serialize(strategy.getOperation()));
-				strategyObject.add(Field.DESCRIPTION.value(), context.serialize(strategy.getDescription()));
-				strategyObject.add(Field.ACTIVATED.value(), context.serialize(strategy.isActivated()));
-				strategyObject.add(Field.VALUES.value(), context.serialize(strategy.getValues()));
+				strategyObject.add(Field.STRATEGY.value(), context.serialize(strategyConfig.getStrategy()));
+				strategyObject.add(Field.OPERATION.value(), context.serialize(strategyConfig.getOperation()));
+				strategyObject.add(Field.DESCRIPTION.value(), context.serialize(strategyConfig.getDescription()));
+				strategyObject.add(Field.ACTIVATED.value(), context.serialize(strategyConfig.isActivated()));
+				strategyObject.add(Field.VALUES.value(), context.serialize(strategyConfig.getValues()));
 				strategiesArray.add(strategyObject);
 			}
 		}

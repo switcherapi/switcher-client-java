@@ -1,7 +1,7 @@
 package com.switcherapi.client.service;
 
 import com.switcherapi.client.model.Entry;
-import com.switcherapi.client.model.criteria.Strategy;
+import com.switcherapi.client.model.criteria.StrategyConfig;
 import com.switcherapi.client.service.validators.Validator;
 
 /**
@@ -22,10 +22,10 @@ public interface SwitcherValidator {
 	 * validating from the top of the node (Domain) ascending to the lower level
 	 * (Strategy)
 	 *
-	 * @param strategy       Configuration switcher to be validated
+	 * @param strategyConfig       Configuration switcher to be validated
 	 * @param switcherInput  Input to be validated
 	 * @return The criteria result
 	 */
-	boolean execute(final Strategy strategy, final Entry switcherInput);
+	boolean execute(final StrategyConfig strategyConfig, final Entry switcherInput);
 
 }

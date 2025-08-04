@@ -6,7 +6,7 @@ import com.switcherapi.client.exception.SwitcherInvalidTimeFormat;
 import com.switcherapi.client.model.Entry;
 import com.switcherapi.client.model.EntryOperation;
 import com.switcherapi.client.model.StrategyValidator;
-import com.switcherapi.client.model.criteria.Strategy;
+import com.switcherapi.client.model.criteria.StrategyConfig;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.text.ParseException;
@@ -23,40 +23,40 @@ public class TimeValidator extends DateTimeValidator {
 	}
 
 	@Override
-	public boolean process(Strategy strategy, Entry switcherInput) throws SwitcherInvalidOperationException,
+	public boolean process(StrategyConfig strategyConfig, Entry switcherInput) throws SwitcherInvalidOperationException,
 			SwitcherInvalidTimeFormat, SwitcherInvalidOperationInputException {
 
 		try {
 			final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			final String today = format.format(new Date());
-			return selectTimeOperationCase(strategy, switcherInput, today);
+			return selectTimeOperationCase(strategyConfig, switcherInput, today);
 		} catch (ParseException e) {
-			throw new SwitcherInvalidTimeFormat(strategy.getStrategy(), e);
+			throw new SwitcherInvalidTimeFormat(strategyConfig.getStrategy(), e);
 		}
 
 	}
 
-	private boolean selectTimeOperationCase(final Strategy strategy, final Entry switcherInput, final String today)
+	private boolean selectTimeOperationCase(final StrategyConfig strategyConfig, final Entry switcherInput, final String today)
 			throws ParseException {
 		Date stgDate;
 		Date stgDate2;
 		Date inputDate;
 
-		switch (strategy.getEntryOperation()) {
+		switch (strategyConfig.getEntryOperation()) {
 		case LOWER:
-			stgDate = DateUtils.parseDate(getFullTime(today, strategy.getValues()[0]), DATE_FORMAT);
+			stgDate = DateUtils.parseDate(getFullTime(today, strategyConfig.getValues()[0]), DATE_FORMAT);
 			inputDate = DateUtils.parseDate(getFullTime(today, switcherInput.getInput()), DATE_FORMAT);
 
 			return inputDate.before(stgDate);
 		case GREATER:
-			stgDate = DateUtils.parseDate(getFullTime(today, strategy.getValues()[0]), DATE_FORMAT);
+			stgDate = DateUtils.parseDate(getFullTime(today, strategyConfig.getValues()[0]), DATE_FORMAT);
 			inputDate = DateUtils.parseDate(getFullTime(today, switcherInput.getInput()), DATE_FORMAT);
 
 			return inputDate.after(stgDate);
 		case BETWEEN:
-			if (strategy.getValues().length == 2) {
-				stgDate = DateUtils.parseDate(getFullTime(today, strategy.getValues()[0]), DATE_FORMAT);
-				stgDate2 = DateUtils.parseDate(getFullTime(today, strategy.getValues()[1]), DATE_FORMAT);
+			if (strategyConfig.getValues().length == 2) {
+				stgDate = DateUtils.parseDate(getFullTime(today, strategyConfig.getValues()[0]), DATE_FORMAT);
+				stgDate2 = DateUtils.parseDate(getFullTime(today, strategyConfig.getValues()[1]), DATE_FORMAT);
 				inputDate = DateUtils.parseDate(getFullTime(today, switcherInput.getInput()),
 						DATE_FORMAT);
 
@@ -65,7 +65,7 @@ public class TimeValidator extends DateTimeValidator {
 
 			throw new SwitcherInvalidOperationInputException(EntryOperation.BETWEEN.name());
 		default:
-			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
+			throw new SwitcherInvalidOperationException(strategyConfig.getOperation(), strategyConfig.getStrategy());
 		}
 	}
 

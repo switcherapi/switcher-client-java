@@ -7,7 +7,7 @@ import com.switcherapi.client.model.SwitcherRequest;
 import com.switcherapi.client.model.criteria.Config;
 import com.switcherapi.client.model.criteria.Domain;
 import com.switcherapi.client.model.criteria.Group;
-import com.switcherapi.client.model.criteria.Strategy;
+import com.switcherapi.client.model.criteria.StrategyConfig;
 import com.switcherapi.client.model.SwitcherResult;
 import com.switcherapi.client.service.SwitcherFactory;
 import com.switcherapi.client.service.SwitcherValidator;
@@ -115,40 +115,40 @@ public class ClientLocalService implements ClientLocal {
 	 * @return SwitcherResult containing the result of the execution
 	 * @throws SwitcherException If encountered either invalid input or misconfiguration
 	 */
-	private SwitcherResult processOperation(final Strategy[] configStrategies, final List<Entry> input,
+	private SwitcherResult processOperation(final StrategyConfig[] configStrategies, final List<Entry> input,
 											final SwitcherRequest switcher) {
 		SwitcherUtils.debug(logger, LOG_PROCESS_OP_TEMPLATE, Arrays.toString(configStrategies));
 
-		for (final Strategy strategy : configStrategies) {
-			if (!strategy.isActivated()) {
+		for (final StrategyConfig strategyConfig : configStrategies) {
+			if (!strategyConfig.isActivated()) {
 				continue;
 			}
 
-			final Entry switcherInput = tryGetSwitcherInput(input, strategy);
+			final Entry switcherInput = tryGetSwitcherInput(input, strategyConfig);
 			
 			if (switcherInput == null) {
-				return strategyFailed(switcher, strategy, STRATEGY_FAIL_NO_INPUT_PATTERN);
+				return strategyFailed(switcher, strategyConfig, STRATEGY_FAIL_NO_INPUT_PATTERN);
 			}
 
-			if (!validatorService.execute(strategy, switcherInput)) {
-				return strategyFailed(switcher, strategy, STRATEGY_FAIL_PATTERN);
+			if (!validatorService.execute(strategyConfig, switcherInput)) {
+				return strategyFailed(switcher, strategyConfig, STRATEGY_FAIL_PATTERN);
 			}
 		}
 
 		return SwitcherFactory.buildResultEnabled(switcher);
 	}
 	
-	private SwitcherResult strategyFailed(SwitcherRequest switcher, Strategy strategy, String pattern) {
-		return SwitcherFactory.buildResultDisabled(String.format(pattern, strategy.getStrategy()), switcher);
+	private SwitcherResult strategyFailed(SwitcherRequest switcher, StrategyConfig strategyConfig, String pattern) {
+		return SwitcherFactory.buildResultDisabled(String.format(pattern, strategyConfig.getStrategy()), switcher);
 	}
 	
-	private Entry tryGetSwitcherInput(final List<Entry> input, Strategy strategy) {
+	private Entry tryGetSwitcherInput(final List<Entry> input, StrategyConfig strategyConfig) {
 		if (input == null) {
 			return null;
 		}
 		
 		return input.stream()
-				.filter(i -> i.getStrategy().equals(strategy.getStrategy()))
+				.filter(i -> i.getStrategy().equals(strategyConfig.getStrategy()))
 				.findFirst()
 				.orElse(null);
 	}

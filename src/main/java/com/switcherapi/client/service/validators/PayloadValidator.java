@@ -3,7 +3,7 @@ package com.switcherapi.client.service.validators;
 import com.switcherapi.client.exception.SwitcherInvalidOperationException;
 import com.switcherapi.client.model.Entry;
 import com.switcherapi.client.model.StrategyValidator;
-import com.switcherapi.client.model.criteria.Strategy;
+import com.switcherapi.client.model.criteria.StrategyConfig;
 import com.switcherapi.client.utils.SwitcherUtils;
 
 import java.util.Arrays;
@@ -17,31 +17,31 @@ public class PayloadValidator extends Validator {
 	}
 
 	@Override
-	public boolean process(Strategy strategy, Entry switcherInput) {
-		switch (strategy.getEntryOperation()) {
+	public boolean process(StrategyConfig strategyConfig, Entry switcherInput) {
+		switch (strategyConfig.getEntryOperation()) {
 		case HAS_ONE:
-			return hasOne(strategy, switcherInput);
+			return hasOne(strategyConfig, switcherInput);
 		case HAS_ALL:
-			return hasAll(strategy, switcherInput);
+			return hasAll(strategyConfig, switcherInput);
 		default:
-			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
+			throw new SwitcherInvalidOperationException(strategyConfig.getOperation(), strategyConfig.getStrategy());
 		}
 	}
 	
-	private boolean hasOne(Strategy strategy, Entry switcherInput) {
+	private boolean hasOne(StrategyConfig strategyConfig, Entry switcherInput) {
 		try {
 			final Set<String> keySet = SwitcherUtils.payloadReader(switcherInput.getInput(), null);
-			return Arrays.stream(strategy.getValues())
+			return Arrays.stream(strategyConfig.getValues())
 				.anyMatch(keySet::contains);
 		} catch (Exception e) {
 			return false;
 		}
 	}
 	
-	private boolean hasAll(Strategy strategy, Entry switcherInput) {
+	private boolean hasAll(StrategyConfig strategyConfig, Entry switcherInput) {
 		try {
 			final Set<String> keySet = SwitcherUtils.payloadReader(switcherInput.getInput(), null);
-			return Arrays.stream(strategy.getValues())
+			return Arrays.stream(strategyConfig.getValues())
 				.allMatch(keySet::contains);
 		} catch (Exception e) {
 			return false;

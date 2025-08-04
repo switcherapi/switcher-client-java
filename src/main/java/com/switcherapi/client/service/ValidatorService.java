@@ -3,7 +3,7 @@ package com.switcherapi.client.service;
 import com.switcherapi.client.exception.SwitcherInvalidStrategyException;
 import com.switcherapi.client.model.Entry;
 import com.switcherapi.client.model.StrategyValidator;
-import com.switcherapi.client.model.criteria.Strategy;
+import com.switcherapi.client.model.criteria.StrategyConfig;
 import com.switcherapi.client.service.validators.*;
 
 import java.util.EnumMap;
@@ -33,13 +33,13 @@ public class ValidatorService implements SwitcherValidator {
 	}
 
 	@Override
-	public boolean execute(final Strategy strategy, final Entry switcherInput) 
+	public boolean execute(final StrategyConfig strategyConfig, final Entry switcherInput)
 			throws SwitcherInvalidStrategyException {
-		if (!validators.containsKey(strategy.getStrategyValidator())) {
-			throw new SwitcherInvalidStrategyException(strategy.getStrategy());
+		if (!validators.containsKey(strategyConfig.getStrategyValidator())) {
+			throw new SwitcherInvalidStrategyException(strategyConfig.getStrategy());
 		}
 
-		return validators.get(strategy.getStrategyValidator()).execute(strategy, switcherInput);
+		return validators.get(strategyConfig.getStrategyValidator()).execute(strategyConfig, switcherInput);
 	}
 
 }

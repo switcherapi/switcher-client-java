@@ -141,7 +141,7 @@ class SwitcherBypassTest {
 
 	@SwitcherTest(key = USECASE41, switchers =
 		@SwitcherTestValue(key = USECASE41, when = {
-			@SwitcherTestWhen(strategy = StrategyValidator.VALUE, input = "Value1")
+			@SwitcherTestWhen(strategy = StrategyValidator.VALUE, input = "Value2")
 		})
 	)
 	void shouldReturnTrue_usingMultipleSwitchersAnnotationWhenValueMatches() {
@@ -150,7 +150,7 @@ class SwitcherBypassTest {
 		SwitcherContext.initializeClient();
 
 		//test
-		Switcher switcher = getSwitcher(USECASE41).checkValue("Value1");
+		Switcher switcher = getSwitcher(USECASE41).checkValue("Value2");
 		assertTrue(switcher.isItOn());
 	}
 

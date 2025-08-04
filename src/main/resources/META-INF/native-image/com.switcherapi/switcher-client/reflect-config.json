@@ -91,7 +91,7 @@
     ]
   },
   {
-    "name": "com.switcherapi.client.model.criteria.Strategy",
+    "name": "com.switcherapi.client.model.criteria.StrategyConfig",
     "condition": {
       "typeReachable": "com.switcherapi.client.model.criteria.Snapshot"
     },

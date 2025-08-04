@@ -3,7 +3,7 @@ package com.switcherapi.client.service.validators;
 import com.switcherapi.client.exception.SwitcherInvalidOperationException;
 import com.switcherapi.client.model.Entry;
 import com.switcherapi.client.model.StrategyValidator;
-import com.switcherapi.client.model.criteria.Strategy;
+import com.switcherapi.client.model.criteria.StrategyConfig;
 
 import java.util.Arrays;
 
@@ -17,20 +17,20 @@ public class RegexValidator extends Validator {
 	}
 
 	@Override
-	public boolean process(Strategy strategy, Entry switcherInput) throws SwitcherInvalidOperationException {
-		switch (strategy.getEntryOperation()) {
+	public boolean process(StrategyConfig strategyConfig, Entry switcherInput) throws SwitcherInvalidOperationException {
+		switch (strategyConfig.getEntryOperation()) {
 			case EXIST:
-				return Arrays.stream(strategy.getValues()).anyMatch(val -> switcherInput.getInput().matches(val));
+				return Arrays.stream(strategyConfig.getValues()).anyMatch(val -> switcherInput.getInput().matches(val));
 			case NOT_EXIST:
-				return Arrays.stream(strategy.getValues()).noneMatch(val -> switcherInput.getInput().matches(val));
+				return Arrays.stream(strategyConfig.getValues()).noneMatch(val -> switcherInput.getInput().matches(val));
 			case EQUAL:
-				return strategy.getValues().length == 1
-						&& switcherInput.getInput().matches(String.format(DELIMITER_REGEX, strategy.getValues()[0]));
+				return strategyConfig.getValues().length == 1
+						&& switcherInput.getInput().matches(String.format(DELIMITER_REGEX, strategyConfig.getValues()[0]));
 			case NOT_EQUAL:
-				return strategy.getValues().length == 1
-						&& !switcherInput.getInput().matches(String.format(DELIMITER_REGEX, strategy.getValues()[0]));
+				return strategyConfig.getValues().length == 1
+						&& !switcherInput.getInput().matches(String.format(DELIMITER_REGEX, strategyConfig.getValues()[0]));
 			default:
-				throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
+				throw new SwitcherInvalidOperationException(strategyConfig.getOperation(), strategyConfig.getStrategy());
 		}
 	}
 

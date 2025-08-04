@@ -1,6 +1,6 @@
 package com.switcherapi.client.validator;
 
-import com.switcherapi.client.model.criteria.Strategy;
+import com.switcherapi.client.model.criteria.StrategyConfig;
 import com.switcherapi.client.service.ValidatorService;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ class ValidatorsTest {
 	@Test
 	void shouldRegisterCustomValidator() {
 		assertDoesNotThrow(() -> service.registerValidator(new CustomValidator()));
-		Strategy strategy = new Strategy(
+		StrategyConfig strategyConfig = new StrategyConfig(
 				"CUSTOM",
 				"INVALID",
 				"Custom Validator Test",
@@ -22,7 +22,7 @@ class ValidatorsTest {
 				new String[] { "Value1", "Value2" }
 		);
 		
-		assertTrue(service.execute(strategy, null));
+		assertTrue(service.execute(strategyConfig, null));
 	}
 
 }

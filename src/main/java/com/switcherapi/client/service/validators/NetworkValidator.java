@@ -3,7 +3,7 @@ package com.switcherapi.client.service.validators;
 import com.switcherapi.client.exception.SwitcherInvalidOperationException;
 import com.switcherapi.client.model.Entry;
 import com.switcherapi.client.model.StrategyValidator;
-import com.switcherapi.client.model.criteria.Strategy;
+import com.switcherapi.client.model.criteria.StrategyConfig;
 import org.apache.commons.net.util.SubnetUtils;
 import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 
@@ -17,20 +17,20 @@ public class NetworkValidator extends Validator {
 	}
 	
 	@Override
-	public boolean process(final Strategy strategy, final Entry switcherInput) {
-		switch (strategy.getEntryOperation()) {
+	public boolean process(final StrategyConfig strategyConfig, final Entry switcherInput) {
+		switch (strategyConfig.getEntryOperation()) {
 		case EXIST:
-			return verifyIfAddressExistInNetwork(strategy, switcherInput);
+			return verifyIfAddressExistInNetwork(strategyConfig, switcherInput);
 		case NOT_EXIST:
-			return !verifyIfAddressExistInNetwork(strategy, switcherInput);
+			return !verifyIfAddressExistInNetwork(strategyConfig, switcherInput);
 		default:
-			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
+			throw new SwitcherInvalidOperationException(strategyConfig.getOperation(), strategyConfig.getStrategy());
 		}
 	}
 	
-	private boolean verifyIfAddressExistInNetwork(final Strategy strategy, final Entry switcherInput) {
+	private boolean verifyIfAddressExistInNetwork(final StrategyConfig strategyConfig, final Entry switcherInput) {
 		SubnetInfo subnetInfo;
-		for (final String value : strategy.getValues()) {
+		for (final String value : strategyConfig.getValues()) {
 			if (value.matches(CIDR_REGEX)) {
 				subnetInfo = new SubnetUtils(value).getInfo();
 

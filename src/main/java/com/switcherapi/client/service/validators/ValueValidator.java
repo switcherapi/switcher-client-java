@@ -3,7 +3,7 @@ package com.switcherapi.client.service.validators;
 import com.switcherapi.client.exception.SwitcherInvalidOperationException;
 import com.switcherapi.client.model.Entry;
 import com.switcherapi.client.model.StrategyValidator;
-import com.switcherapi.client.model.criteria.Strategy;
+import com.switcherapi.client.model.criteria.StrategyConfig;
 
 import java.util.Arrays;
 
@@ -15,18 +15,18 @@ public class ValueValidator extends Validator {
 	}
 
 	@Override
-	public boolean process(Strategy strategy, Entry switcherInput) {
-		switch (strategy.getEntryOperation()) {
+	public boolean process(StrategyConfig strategyConfig, Entry switcherInput) {
+		switch (strategyConfig.getEntryOperation()) {
 		case EXIST:
-			return Arrays.stream(strategy.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
+			return Arrays.stream(strategyConfig.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
 		case NOT_EXIST:
-			return Arrays.stream(strategy.getValues()).noneMatch(val -> val.equals(switcherInput.getInput()));
+			return Arrays.stream(strategyConfig.getValues()).noneMatch(val -> val.equals(switcherInput.getInput()));
 		case EQUAL:
-			return strategy.getValues().length == 1 && strategy.getValues()[0].equals(switcherInput.getInput());
+			return strategyConfig.getValues().length == 1 && strategyConfig.getValues()[0].equals(switcherInput.getInput());
 		case NOT_EQUAL:
-			return strategy.getValues().length == 1 && !strategy.getValues()[0].equals(switcherInput.getInput());
+			return strategyConfig.getValues().length == 1 && !strategyConfig.getValues()[0].equals(switcherInput.getInput());
 		default:
-			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
+			throw new SwitcherInvalidOperationException(strategyConfig.getOperation(), strategyConfig.getStrategy());
 		}
 	}
 

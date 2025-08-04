@@ -4,7 +4,7 @@ import com.switcherapi.client.exception.SwitcherInvalidNumericFormat;
 import com.switcherapi.client.exception.SwitcherInvalidOperationException;
 import com.switcherapi.client.model.Entry;
 import com.switcherapi.client.model.StrategyValidator;
-import com.switcherapi.client.model.criteria.Strategy;
+import com.switcherapi.client.model.criteria.StrategyConfig;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Arrays;
@@ -17,46 +17,46 @@ public class NumericValidator extends Validator {
 	}
 	
 	@Override
-	public boolean process(final Strategy strategy, final Entry switcherInput) {
+	public boolean process(final StrategyConfig strategyConfig, final Entry switcherInput) {
 		if (!NumberUtils.isCreatable(switcherInput.getInput()))
 			throw new SwitcherInvalidNumericFormat(switcherInput.getInput());
 		
-		switch (strategy.getEntryOperation()) {
+		switch (strategyConfig.getEntryOperation()) {
 		case EXIST:
-			return Arrays.stream(strategy.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
+			return Arrays.stream(strategyConfig.getValues()).anyMatch(val -> val.equals(switcherInput.getInput()));
 		case NOT_EXIST:
-			return Arrays.stream(strategy.getValues()).noneMatch(val -> val.equals(switcherInput.getInput()));
+			return Arrays.stream(strategyConfig.getValues()).noneMatch(val -> val.equals(switcherInput.getInput()));
 		case EQUAL:
-			return strategy.getValues().length == 1 && strategy.getValues()[0].equals(switcherInput.getInput());
+			return strategyConfig.getValues().length == 1 && strategyConfig.getValues()[0].equals(switcherInput.getInput());
 		case NOT_EQUAL:
-			return strategy.getValues().length == 1 && !strategy.getValues()[0].equals(switcherInput.getInput());
+			return strategyConfig.getValues().length == 1 && !strategyConfig.getValues()[0].equals(switcherInput.getInput());
 		case LOWER:
-			if (strategy.getValues().length == 1) {
+			if (strategyConfig.getValues().length == 1) {
 				final double numericInput = NumberUtils.createNumber(switcherInput.getInput()).doubleValue();
-				final double numericValue = NumberUtils.createNumber(strategy.getValues()[0]).doubleValue();
+				final double numericValue = NumberUtils.createNumber(strategyConfig.getValues()[0]).doubleValue();
 				return numericInput < numericValue;
 			}
 			break;
 		case GREATER:
-			if (strategy.getValues().length == 1) {
+			if (strategyConfig.getValues().length == 1) {
 				final double numericInput = NumberUtils.createNumber(switcherInput.getInput()).doubleValue();
-				final double numericValue = NumberUtils.createNumber(strategy.getValues()[0]).doubleValue();
+				final double numericValue = NumberUtils.createNumber(strategyConfig.getValues()[0]).doubleValue();
 				return numericInput > numericValue;
 			}
 			break;
 		case BETWEEN:
-			if (strategy.getValues().length == 2) {
+			if (strategyConfig.getValues().length == 2) {
 				final double numericInput = NumberUtils.createNumber(switcherInput.getInput()).doubleValue();
-				final double numericFirstValue = NumberUtils.createNumber(strategy.getValues()[0]).doubleValue();
-				final double numericSecondValue = NumberUtils.createNumber(strategy.getValues()[1]).doubleValue();
+				final double numericFirstValue = NumberUtils.createNumber(strategyConfig.getValues()[0]).doubleValue();
+				final double numericSecondValue = NumberUtils.createNumber(strategyConfig.getValues()[1]).doubleValue();
 				return numericInput >= numericFirstValue && numericFirstValue <= numericSecondValue;
 			}
 			break;
 		default:
-			throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
+			throw new SwitcherInvalidOperationException(strategyConfig.getOperation(), strategyConfig.getStrategy());
 		}
 		
-		throw new SwitcherInvalidOperationException(strategy.getOperation(), strategy.getStrategy());
+		throw new SwitcherInvalidOperationException(strategyConfig.getOperation(), strategyConfig.getStrategy());
 	}
 	
 }

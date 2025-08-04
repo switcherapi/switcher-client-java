@@ -9,7 +9,7 @@ import com.switcherapi.client.model.StrategyValidator;
  * @author Roger Floriano (petruki)
  * @since 2019-12-24
  */
-public class Strategy extends SwitcherElement {
+public class StrategyConfig extends SwitcherElement {
 
 	private final String strategy;
 
@@ -17,7 +17,7 @@ public class Strategy extends SwitcherElement {
 
 	private final String[] values;
 
-	public Strategy(String strategy, String operation, String description, boolean activated, String[] values) {
+	public StrategyConfig(String strategy, String operation, String description, boolean activated, String[] values) {
 		super(description, activated);
 		this.strategy = strategy;
 		this.operation = operation;
