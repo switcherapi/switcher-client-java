@@ -1,0 +1,18 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "switcherapi.*\\.properties$",
+        "condition": {
+          "typeReachable": "com.switcherapi.client.SwitcherContextBase"
+        }
+      },
+      {
+        "pattern": "snapshots/.*\\.json$",
+        "condition": {
+          "typeReachable": "com.switcherapi.client.SwitcherContextBase"
+        }
+      }
+    ]
+  }
+}

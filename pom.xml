@@ -5,10 +5,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.github.switcherapi</groupId>
+	<groupId>com.switcherapi</groupId>
 	<artifactId>switcher-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.7.2</version>
+	<version>1.8.0-SNAPSHOT</version>
 
 	<name>Switcher Client</name>
 	<description>Switcher Client SDK for working with Switcher API</description>
