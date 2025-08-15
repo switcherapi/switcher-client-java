@@ -8,7 +8,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": []
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -21,7 +24,9 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": []
+        "parameterTypes": [
+          "com.switcherapi.client.model.Entry[]"
+        ]
       }
     ]
   },
@@ -34,7 +39,14 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": []
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String",
+          "boolean",
+          "com.switcherapi.client.model.criteria.StrategyConfig[]",
+          "java.lang.String[]",
+          "com.switcherapi.client.model.criteria.Relay"
+        ]
       }
     ]
   },
@@ -73,7 +85,12 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": []
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String",
+          "boolean",
+          "com.switcherapi.client.model.criteria.Config[]"
+        ]
       }
     ]
   },
@@ -99,7 +116,29 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": []
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String",
+          "java.lang.String",
+          "boolean",
+          "java.lang.String[]"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "com.switcherapi.client.model.criteria.Relay",
+    "condition": {
+      "typeReachable": "com.switcherapi.client.model.criteria.Snapshot"
+    },
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": [
+          "java.lang.String",
+          "boolean"
+        ]
       }
     ]
   },

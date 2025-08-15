@@ -9,8 +9,8 @@ class ModelTest {
 	
 	@Test
 	void testModelEntry() {
-		Entry entry1 = Entry.build(StrategyValidator.DATE, "2019-12-10");
-		Entry entry2 = Entry.build(StrategyValidator.VALUE, "Value");
+		Entry entry1 = Entry.of(StrategyValidator.DATE, "2019-12-10");
+		Entry entry2 = Entry.of(StrategyValidator.VALUE, "Value");
 		
 		assertNotEquals(true, entry1.equals(entry2));
 		assertNotNull(entry1.toString());

@@ -95,7 +95,7 @@ public abstract class SwitcherBuilder implements Switcher {
 	 */
 	public SwitcherBuilder check(StrategyValidator strategy, String input) {
 		if (StringUtils.isNotBlank(input)) {
-			entry.add(Entry.build(strategy, input));
+			entry.add(Entry.of(strategy, input));
 		}
 		
 		return this;
