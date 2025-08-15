@@ -171,8 +171,8 @@ Loading information into the switcher can be made by using *prepareEntry*, in ca
 
 ```java
 List<Entry> entries = new ArrayList<>();
-entries.add(Entry.build(StrategyValidator.DATE, "2019-12-10"));
-entries.add(Entry.build(StrategyValidator.DATE, "2020-12-10"));
+entries.add(Entry.of(StrategyValidator.DATE, "2019-12-10"));
+entries.add(Entry.of(StrategyValidator.DATE, "2020-12-10"));
 
 switcher.prepareEntry(entries);
 switcher.isItOn();

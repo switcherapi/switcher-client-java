@@ -41,7 +41,7 @@ class RegexValidatorV8Test {
 		//given
 		RegexValidatorV8 regexValidator = new RegexValidatorV8();
 		StrategyConfig strategyConfig = givenStrategy(operation, Collections.singletonList(EVIL_REGEX));
-		Entry entry = Entry.build(StrategyValidator.REGEX, EVIL_INPUT);
+		Entry entry = Entry.of(StrategyValidator.REGEX, EVIL_INPUT);
 
 		//test
 		boolean actual = assertTimeoutPreemptively(Duration.ofMillis(5000), () -> regexValidator.process(strategyConfig, entry));
@@ -53,7 +53,7 @@ class RegexValidatorV8Test {
 		//given
 		RegexValidatorV8 regexValidator = new RegexValidatorV8();
 		StrategyConfig strategyConfig = givenStrategy(EntryOperation.EXIST, Collections.singletonList(EVIL_REGEX));
-		Entry entry = Entry.build(StrategyValidator.REGEX, EVIL_INPUT);
+		Entry entry = Entry.of(StrategyValidator.REGEX, EVIL_INPUT);
 
 		//test
 		boolean result = assertTimeoutPreemptively(Duration.ofMillis(4000), () -> regexValidator.process(strategyConfig, entry));
@@ -70,11 +70,11 @@ class RegexValidatorV8Test {
 		StrategyConfig strategyConfig = givenStrategy(EntryOperation.EXIST, Collections.singletonList(EVIL_REGEX));
 
 		//test
-		Entry entry1 = Entry.build(StrategyValidator.REGEX, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		Entry entry1 = Entry.of(StrategyValidator.REGEX, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 		boolean result = assertTimeoutPreemptively(Duration.ofMillis(4000), () -> regexValidator.process(strategyConfig, entry1));
 		assertFalse(result);
 
-		Entry entry2 = Entry.build(StrategyValidator.REGEX, "bbbbaaaaaaaaaaaaaaa");
+		Entry entry2 = Entry.of(StrategyValidator.REGEX, "bbbbaaaaaaaaaaaaaaa");
 		result = assertTimeoutPreemptively(Duration.ofMillis(100), () -> regexValidator.process(strategyConfig, entry2));
 		assertFalse(result);
 	}
@@ -84,7 +84,7 @@ class RegexValidatorV8Test {
 		//given
 		RegexValidatorV8 regexValidator = new RegexValidatorV8();
 		StrategyConfig strategyConfig = givenStrategy(EntryOperation.EXIST, Collections.singletonList(EVIL_REGEX));
-		Entry entry = Entry.build(StrategyValidator.REGEX, null);
+		Entry entry = Entry.of(StrategyValidator.REGEX, null);
 
 		//test
 		boolean result = regexValidator.process(strategyConfig, entry);
@@ -96,7 +96,7 @@ class RegexValidatorV8Test {
 		//given
 		RegexValidatorV8 regexValidator = new RegexValidatorV8();
 		StrategyConfig strategyConfig = givenStrategy(EntryOperation.EXIST, Collections.singletonList(EVIL_REGEX));
-		Entry entry = Entry.build(StrategyValidator.REGEX, EVIL_INPUT);
+		Entry entry = Entry.of(StrategyValidator.REGEX, EVIL_INPUT);
 
 		//test
 		boolean result = regexValidator.process(strategyConfig, entry);
