@@ -46,6 +46,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
+          cache: maven
 
       - name: Show Versions
         run: mvn -version
@@ -58,4 +59,4 @@ jobs:
           restore-keys: ${{ runner.os }}-m2-
 
       - name: Build/Test
-        run: mvn -B clean package
+        run: mvn -B clean verify
