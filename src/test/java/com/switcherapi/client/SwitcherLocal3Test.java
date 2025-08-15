@@ -79,7 +79,7 @@ class SwitcherLocal3Test {
 	void localShouldReturnError(String useCaseKey, String strategyValidator, 
 			String input, Class<SwitcherException> error) {
 		SwitcherRequest switcher = Switchers.getSwitcher(useCaseKey);
-		switcher.prepareEntry(Entry.build(strategyValidator, input));
+		switcher.prepareEntry(Entry.of(strategyValidator, input));
 		
 		assertThrows(error, switcher::isItOn);
 	}
