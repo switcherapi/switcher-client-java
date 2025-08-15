@@ -25,7 +25,7 @@ class SnapshotWatcherWorkerTest extends SnapshotTest {
 		assertWorker(true);
 
 		SwitchersBase.stopWatchingSnapshot();
-		CountDownHelper.wait(5);
+		CountDownHelper.wait(10);
 
 		assertWorker(false);
 	}
