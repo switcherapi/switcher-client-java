@@ -11,7 +11,7 @@ on:
 jobs:
   sonar-analysis:
     name: SonarCloud Analysis for PR
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Get PR details

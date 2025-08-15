@@ -11,27 +11,29 @@ public class Entry {
 	private final String strategy;
 	
 	private final String input;
-	
-	private Entry(final String strategy, final String input) {
+
+	public Entry(String strategy, String input) {
 		this.strategy = strategy;
 		this.input = input;
 	}
-	
-	private Entry(final StrategyValidator strategy, final String input) {
+
+	public Entry(StrategyValidator strategy, String input) {
 		this(strategy.toString(), input);
 	}
 	
 	/**
+	 * Creates a new Entry with the given strategy and input.
+	 *
 	 * @param strategy Validator used to evaluate the Switcher
 	 * @param input follow the required format documented into each strategy type
 	 * @return new Entry
 	 * @see StrategyValidator
 	 */
-	public static Entry build(final StrategyValidator strategy, final String input) {
+	public static Entry of(StrategyValidator strategy, String input) {
 		return new Entry(strategy, input);
 	}
-	
-	public static Entry build(final String strategy, final String input) {
+
+	public static Entry of(String strategy, String input) {
 		return new Entry(strategy, input);
 	}
 	
