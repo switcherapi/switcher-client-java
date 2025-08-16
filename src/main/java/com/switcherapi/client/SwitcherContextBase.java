@@ -293,8 +293,12 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * @return ScheduledFuture instance
 	 */
 	public static ScheduledFuture<?> scheduleSnapshotAutoUpdate(String intervalValue, SnapshotCallback callback) {
-		if (StringUtils.isBlank(intervalValue) || scheduledExecutorService != null) {
+		if (StringUtils.isBlank(intervalValue)) {
 			return null;
+		}
+
+		if (Objects.nonNull(scheduledExecutorService)) {
+			terminateSnapshotAutoUpdateWorker();
 		}
 
 		final long interval = SwitcherUtils.getMillis(intervalValue);
