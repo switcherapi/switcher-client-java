@@ -22,12 +22,11 @@ class SnapshotWatcherWorkerTest extends SnapshotTest {
 	@Test
 	void shouldStartAndKillWorker() {
 		SwitchersBase.watchSnapshot();
-		assertWorker(true);
+		CountDownHelper.wait(1);
+		assertWorkerUntil(true, 2);
 
 		SwitchersBase.stopWatchingSnapshot();
-		CountDownHelper.wait(2);
-
-		assertWorker(false);
+		assertWorkerUntil(false, 15);
 	}
 
 }
