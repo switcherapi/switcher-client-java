@@ -29,7 +29,7 @@ class SnapshotWatcherWorkerTest extends SnapshotTest {
 		Thread.getAllStackTraces().keySet()
 				.forEach(t -> {
 					if (t.getName().equals(WorkerName.SNAPSHOT_WATCH_WORKER.toString())) {
-						System.out.println("Thread: " + t.getName() + " - State: " + t.getState());
+						System.out.println("Thread: " + t.getName() + " - Alive: " + t.isAlive());
 					}
 				});
 
@@ -39,7 +39,7 @@ class SnapshotWatcherWorkerTest extends SnapshotTest {
 		Thread.getAllStackTraces().keySet()
 				.forEach(t -> {
 					if (t.getName().equals(WorkerName.SNAPSHOT_WATCH_WORKER.toString())) {
-						System.out.println("Thread: " + t.getName() + " - State: " + t.getState());
+						System.out.println("Thread: " + t.getName() + " - Alive: " + t.isAlive());
 					}
 				});
 

@@ -4,10 +4,7 @@ import com.switcherapi.SwitchersBase;
 import com.switcherapi.client.ContextBuilder;
 import com.switcherapi.client.model.SwitcherRequest;
 import com.switcherapi.fixture.CountDownHelper;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 
@@ -29,16 +26,16 @@ class SnapshotWatcherTest extends SnapshotTest {
 		
 		SwitchersBase.initializeClient();
 	}
-
-	@AfterAll
-	static void tearDown() {
-		SwitchersBase.stopWatchingSnapshot();
-	}
 	
 	@BeforeEach
 	void prepareTest() {
 		generateFixture();
 		SwitchersBase.watchSnapshot();
+	}
+
+	@AfterEach
+	void cleanUp() {
+		SwitchersBase.stopWatchingSnapshot();
 	}
 	
 	@Test
