@@ -7,7 +7,6 @@ import com.switcherapi.client.model.criteria.Snapshot;
 import com.switcherapi.client.service.WorkerName;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.switcherapi.fixture.CountDownHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,22 +71,6 @@ abstract class SnapshotTest {
 	}
 
 	protected void assertWorker(boolean exists) {
-		assertEquals(exists, Thread.getAllStackTraces().keySet().stream()
-				.anyMatch(t -> t.getName().equals(WorkerName.SNAPSHOT_WATCH_WORKER.toString())));
-	}
-
-	protected void assertWorkerUntil(boolean exists, long seconds) {
-		long count = 0;
-		while (count < seconds) {
-			if (Thread.getAllStackTraces().keySet().stream()
-					.anyMatch(t -> t.getName().equals(WorkerName.SNAPSHOT_WATCH_WORKER.toString())) == exists) {
-				break;
-			}
-
-			CountDownHelper.wait(1);
-			count++;
-		}
-
 		assertEquals(exists, Thread.getAllStackTraces().keySet().stream()
 				.anyMatch(t -> t.getName().equals(WorkerName.SNAPSHOT_WATCH_WORKER.toString())));
 	}

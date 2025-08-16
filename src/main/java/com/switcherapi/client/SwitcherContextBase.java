@@ -461,18 +461,9 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 */
 	public static void stopWatchingSnapshot() {
 		if (Objects.nonNull(watcherSnapshot)) {
-			watcherExecutorService.shutdown();
-			try {
-				if (!watcherExecutorService.awaitTermination(5, TimeUnit.SECONDS)) {
-					watcherExecutorService.shutdownNow();
-				}
-			} catch (InterruptedException e) {
-				watcherExecutorService.shutdownNow();
-				Thread.currentThread().interrupt();
-			} finally {
-				watcherSnapshot.terminate();
-				watcherSnapshot = null;
-			}
+			watcherExecutorService.shutdownNow();
+			watcherSnapshot.terminate();
+			watcherSnapshot = null;
 		}
 	}
 	
