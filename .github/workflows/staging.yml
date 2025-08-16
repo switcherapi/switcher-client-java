@@ -9,7 +9,7 @@ on:
         required: true
         default: '17'
       os:
-        description: 'Operating System (ubuntu-22.04, ubuntu-latest, windows-latest)'
+        description: 'Operating System (ubuntu-latest, windows-latest)'
         required: true
         default: 'ubuntu-latest'
 

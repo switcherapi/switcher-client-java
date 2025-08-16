@@ -219,9 +219,13 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 
 	@Test
 	@Order(6)
-	void shouldPreventSnapshotAutoUpdateToStart_whenAlreadySetup() {
-		//given
+	void shouldRestartSnapshotAutoUpdate_whenAlreadySetup() {
+		//given - initialize (snapshot autoload)
 		givenResponse(generateMockAuth(10)); //auth
+		givenResponse(generateSnapshotResponse("default.json", SNAPSHOTS_LOCAL)); //graphql
+
+		//given - snapshot auto update
+		givenResponse(generateCheckSnapshotVersionResponse(Boolean.toString(false))); //criteria/snapshot_check
 		givenResponse(generateSnapshotResponse("default.json", SNAPSHOTS_LOCAL)); //graphql
 
 		//that
@@ -235,8 +239,9 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 				.snapshotAutoUpdateInterval("1s"));
 
 		Switchers.initializeClient();
+
 		ScheduledFuture<?> snapshotUpdater = Switchers.scheduleSnapshotAutoUpdate("1m");
-		assertNull(snapshotUpdater);
+		assertNotNull(snapshotUpdater);
 	}
 
 }
