@@ -11,7 +11,7 @@ on:
 jobs:
   sonar-analysis:
     name: SonarCloud Analysis for PR
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Get PR details
@@ -43,10 +43,11 @@ jobs:
       - name: Build/Test & SonarCloud Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          PR_ID: ${{ inputs.pr_id }}
         if: env.SONAR_TOKEN != ''
         run: |
           mvn -B clean verify -Pcoverage,sonar \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.pullrequest.key=${{ inputs.pr_id }} \
+            -Dsonar.token=$SONAR_TOKEN \
+            -Dsonar.pullrequest.key=$PR_ID \
             -Dsonar.pullrequest.branch=${{ steps.pr.outputs.head_ref }} \
             -Dsonar.pullrequest.base=${{ steps.pr.outputs.base_ref }}

@@ -11,8 +11,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: ['8', '11', '17', '21']
-        os: [ubuntu-22.04, windows-latest]
+        java: ['11', '17', '21', '25']
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -40,7 +40,7 @@ jobs:
   publish:
     name: Publish Release
     needs: [build-test]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v5
