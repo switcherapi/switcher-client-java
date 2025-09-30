@@ -53,7 +53,7 @@
 
 		<!-- utils -->
 		<gson.version>2.13.2</gson.version>
-		<commons-lang3.version>3.18.0</commons-lang3.version>
+		<commons-lang3.version>3.19.0</commons-lang3.version>
 		<commons-net.version>3.12.0</commons-net.version>
 		<slf4j-api.version>2.0.17</slf4j-api.version>
 
@@ -69,7 +69,7 @@
 		<maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
 		<maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
 		<maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
-		<sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
+		<sonar-maven-plugin.version>5.2.0.4988</sonar-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
 		<central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
 
