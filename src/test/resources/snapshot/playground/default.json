@@ -1,37 +1,35 @@
 {
-  "data": {
-    "domain": {
-      "name": "Switcher API",
-      "version": 0,
-      "description": "Feature Flag - Toggle - Cloud-based",
-      "activated": true,
-      "group": [
-        {
-          "name": "Test Project",
-          "description": "Test",
-          "activated": true,
-          "config": [
-            {
-              "key": "CLIENT_JAVA_FEATURE",
-              "description": "Used for Integration test for the Switcher Client Java",
-              "activated": true,
-              "strategies": [
-                {
-                  "strategy": "VALUE_VALIDATION",
-                  "operation": "EXIST",
-                  "activated": true,
-                  "values": [
-                    "user_1"
-                  ]
-                }
-              ],
-              "components": [
-                "switcher-client-java"
-              ]
-            }
-          ]
-        }
-      ]
-    }
+  "domain": {
+    "name": "Switcher API",
+    "version": 0,
+    "description": "Feature Flag - Toggle - Cloud-based",
+    "activated": true,
+    "group": [
+      {
+        "name": "Test Project",
+        "description": "Test",
+        "activated": true,
+        "config": [
+          {
+            "key": "CLIENT_JAVA_FEATURE",
+            "description": "Used for Integration test for the Switcher Client Java",
+            "activated": true,
+            "strategies": [
+              {
+                "strategy": "VALUE_VALIDATION",
+                "operation": "EXIST",
+                "activated": true,
+                "values": [
+                  "user_1"
+                ]
+              }
+            ],
+            "components": [
+              "switcher-client-java"
+            ]
+          }
+        ]
+      }
+    ]
   }
 }

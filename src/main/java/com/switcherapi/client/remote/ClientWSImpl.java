@@ -111,7 +111,7 @@ public class ClientWSImpl implements ClientWS {
 						switcherProperties.getValue(ContextKey.COMPONENT))));
 
 		if (response.getStatus() == 200) {
-			final Snapshot snapshot = response.readEntity(Snapshot.class);
+			final Snapshot snapshot = response.readEntity(SnapshotDataResponse.class).getData();
 			response.close();
 
 			return snapshot;

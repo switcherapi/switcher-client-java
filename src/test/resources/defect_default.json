@@ -1,7 +1,6 @@
 {
-    data: {
-        domain: {
-            name: "switcher-domain",
-            description: "Fixture #1",
-            activated: true,
-            group: [
+    domain: {
+        name: "switcher-domain",
+        description: "Fixture #1",
+        activated: true,
+        group: [
