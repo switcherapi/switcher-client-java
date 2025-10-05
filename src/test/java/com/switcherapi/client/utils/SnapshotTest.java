@@ -1,7 +1,6 @@
 package com.switcherapi.client.utils;
 
 import com.switcherapi.SwitchersBase;
-import com.switcherapi.client.model.criteria.Data;
 import com.switcherapi.client.model.criteria.Domain;
 import com.switcherapi.client.model.criteria.Snapshot;
 import com.switcherapi.client.service.WorkerName;
@@ -33,25 +32,21 @@ abstract class SnapshotTest {
 
 	protected static void generateFixture() {
 		final Snapshot mockedSnapshot = new Snapshot();
-		final Data data = new Data();
-		data.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_watcher.json"));
-		mockedSnapshot.setData(data);
+		mockedSnapshot.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_watcher.json"));
 
 		SnapshotLoader.saveSnapshot(mockedSnapshot, SNAPSHOTS_LOCAL, "generated_watcher_default");
 	}
 
 	protected void changeFixture() {
 		final Snapshot mockedSnapshot = new Snapshot();
-		final Data data = new Data();
-		data.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_watcher.json"));
-		mockedSnapshot.setData(data);
+		mockedSnapshot.setDomain(SnapshotLoader.loadSnapshot(SNAPSHOTS_LOCAL + "/snapshot_watcher.json"));
 
-		data.setDomain(new Domain(
-				data.getDomain().getName(),
-				data.getDomain().getDescription(),
-				!data.getDomain().isActivated(),
-				data.getDomain().getVersion(),
-				data.getDomain().getGroup()));
+		mockedSnapshot.setDomain(new Domain(
+				mockedSnapshot.getDomain().getName(),
+				mockedSnapshot.getDomain().getDescription(),
+				!mockedSnapshot.getDomain().isActivated(),
+				mockedSnapshot.getDomain().getVersion(),
+				mockedSnapshot.getDomain().getGroup()));
 
 		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		writeFixture(gson.toJson(mockedSnapshot));

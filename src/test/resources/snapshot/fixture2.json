@@ -1,30 +1,28 @@
 {
-    "data": {
-        "domain": {
-            "name": "switcher-domain",
-            "description": "Fixture #2 - Domain disabled",
-            "activated": false,
-            "group": [
-                {
-                    "name": "Group 1",
-                    "description": "Simple test",
-                    "activated": true,
-                    "config": [
-                        {
-                            "key": "USECASE111",
-                            "description": "Simple test - Domain disabled",
-                            "activated": true,
-                            "components": ["switcher-client"]
-                        },
-                        {
-                            "key": "USECASE112",
-                            "description": "Simple test - Domain disabled",
-                            "activated": true,
-                            "components": ["switcher-client"]
-                        }
-                    ]
-                }
-            ]
-        }
+    "domain": {
+        "name": "switcher-domain",
+        "description": "Fixture #2 - Domain disabled",
+        "activated": false,
+        "group": [
+            {
+                "name": "Group 1",
+                "description": "Simple test",
+                "activated": true,
+                "config": [
+                    {
+                        "key": "USECASE111",
+                        "description": "Simple test - Domain disabled",
+                        "activated": true,
+                        "components": ["switcher-client"]
+                    },
+                    {
+                        "key": "USECASE112",
+                        "description": "Simple test - Domain disabled",
+                        "activated": true,
+                        "components": ["switcher-client"]
+                    }
+                ]
+            }
+        ]
     }
 }

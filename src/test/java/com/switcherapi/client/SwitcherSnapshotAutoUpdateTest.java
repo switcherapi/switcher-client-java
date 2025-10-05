@@ -1,7 +1,6 @@
 package com.switcherapi.client;
 
 import com.switcherapi.Switchers;
-import com.switcherapi.client.model.criteria.Data;
 import com.switcherapi.client.model.criteria.Domain;
 import com.switcherapi.client.model.criteria.Snapshot;
 import com.switcherapi.client.utils.SnapshotLoader;
@@ -60,9 +59,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 
 	static void generateFixture(String environment) {
 		final Snapshot mockedSnapshot = new Snapshot();
-		final Data data = new Data();
-		data.setDomain(DOMAIN_OUTDATED);
-		mockedSnapshot.setData(data);
+		mockedSnapshot.setDomain(DOMAIN_OUTDATED);
 
 		SnapshotLoader.saveSnapshot(mockedSnapshot, SNAPSHOTS_LOCAL, environment);
 	}

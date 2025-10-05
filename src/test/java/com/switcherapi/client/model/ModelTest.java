@@ -75,14 +75,6 @@ class ModelTest {
 		assertSame("Name", domain.getName());
 		assertEquals(10000000000L, domain.getVersion());
 		assertSame(groups, domain.getGroup());
-		
-		final Data data = new Data();
-		data.setDomain(domain);
-		
-		final Snapshot snapshot = new Snapshot();
-		snapshot.setData(data);
-		
-		assertSame(data, snapshot.getData());
 	}
 
 }

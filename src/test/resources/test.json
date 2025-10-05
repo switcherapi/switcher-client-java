@@ -1,21 +1,19 @@
 {
-    "data": {
-        "domain": {
-            "name": "switcher-domain",
-            "activated": true,
-            "group": [
-                {
-                    "name": "Group 1",
-                    "activated": true,
-                    "config": [
-                        {
-                            "key": "USECASE11",
-                            "activated": true,
-                            "components": ["switcher-client"]
-                        }
-                    ]
-                }
-            ]
-        }
+    "domain": {
+        "name": "switcher-domain",
+        "activated": true,
+        "group": [
+            {
+                "name": "Group 1",
+                "activated": true,
+                "config": [
+                    {
+                        "key": "USECASE11",
+                        "activated": true,
+                        "components": ["switcher-client"]
+                    }
+                ]
+            }
+        ]
     }
 }
