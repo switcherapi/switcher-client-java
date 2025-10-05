@@ -1,37 +1,35 @@
 {
-  "data": {
-    "domain": {
-      "name": "switcher-domain",
-      "description": "Description of the domain",
-      "activated": true,
-      "version": 1588557288037,
-      "group": [
-        {
-          "name": "Group 1",
-          "description": "Description of the group",
-          "activated": true,
-          "config": [
-            {
-              "key": "USECASE11",
-              "description": "Simple test - Domain disabled",
-              "activated": true,
-              "strategies": [
-                {
-                  "strategy": "VALUE_VALIDATION",
-                  "operation": "EQUAL",
-                  "activated": false,
-                  "values": [
-                    "Value1"
-                  ]
-                }
-              ],
-              "components": [
-                "switcher-client"
-              ]
-            }
-          ]
-        }
-      ]
-    }
+  "domain": {
+    "name": "switcher-domain",
+    "description": "Description of the domain",
+    "activated": true,
+    "version": 1588557288037,
+    "group": [
+      {
+        "name": "Group 1",
+        "description": "Description of the group",
+        "activated": true,
+        "config": [
+          {
+            "key": "USECASE11",
+            "description": "Simple test - Domain disabled",
+            "activated": true,
+            "strategies": [
+              {
+                "strategy": "VALUE_VALIDATION",
+                "operation": "EQUAL",
+                "activated": false,
+                "values": [
+                  "Value1"
+                ]
+              }
+            ],
+            "components": [
+              "switcher-client"
+            ]
+          }
+        ]
+      }
+    ]
   }
 }

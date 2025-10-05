@@ -126,7 +126,7 @@ public class ClientWSImpl implements ClientWS {
 				throw new SwitcherRemoteException(url, response.statusCode());
 			}
 
-			return gson.fromJson(response.body(), Snapshot.class);
+			return gson.fromJson(response.body(), SnapshotDataResponse.class).getData();
 		} catch (Exception e) {
 			return exceptionHandler(e, url);
 		}

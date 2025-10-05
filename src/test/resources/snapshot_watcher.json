@@ -1,24 +1,22 @@
 {
-    "data": {
-        "domain": {
-            "name": "switcher-domain",
-            "description": "Snapshot Watcher",
-            "activated": true,
-            "group": [
-                {
-                    "name": "Group 1",
-                    "description": "Simple test",
-                    "activated": true,
-                    "config": [
-                        {
-                            "key": "USECASE11",
-                            "description": "Simple test - Domain disabled",
-                            "activated": true,
-                            "components": ["switcher-client"]
-                        }
-                    ]
-                }
-            ]
-        }
+    "domain": {
+        "name": "switcher-domain",
+        "description": "Snapshot Watcher",
+        "activated": true,
+        "group": [
+            {
+                "name": "Group 1",
+                "description": "Simple test",
+                "activated": true,
+                "config": [
+                    {
+                        "key": "USECASE11",
+                        "description": "Simple test - Domain disabled",
+                        "activated": true,
+                        "components": ["switcher-client"]
+                    }
+                ]
+            }
+        ]
     }
 }
