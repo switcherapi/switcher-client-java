@@ -1,9 +1,9 @@
 package com.switcherapi.fixture;
 
-import com.switcherapi.client.model.criteria.Data;
 import com.switcherapi.client.model.criteria.Snapshot;
 import com.switcherapi.client.remote.ClientWSImpl;
 import com.switcherapi.client.remote.dto.CriteriaRequest;
+import com.switcherapi.client.remote.dto.SnapshotDataResponse;
 import com.switcherapi.client.utils.SnapshotLoader;
 import com.switcherapi.client.utils.SwitcherUtils;
 import com.google.gson.Gson;
@@ -71,13 +71,14 @@ public class MockWebServerHelper {
      */
     protected MockResponse generateSnapshotResponse(String snapshotFile, String resourcesPath) {
         final Snapshot mockedSnapshot = new Snapshot();
-        final Data data = new Data();
-        data.setDomain(SnapshotLoader.loadSnapshot(resourcesPath + "/" + snapshotFile));
-        mockedSnapshot.setData(data);
+		mockedSnapshot.setDomain(SnapshotLoader.loadSnapshot(resourcesPath + "/" + snapshotFile));
+
+        final SnapshotDataResponse data = new SnapshotDataResponse();
+		data.setData(mockedSnapshot);
 
         Gson gson = new Gson();
         MockResponse.Builder builder = new MockResponse.Builder();
-        builder.body(gson.toJson(mockedSnapshot));
+        builder.body(gson.toJson(data));
         builder.addHeader("Content-Type", "application/json");
         return builder.build();
     }

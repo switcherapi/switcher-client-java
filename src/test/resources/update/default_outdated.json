@@ -1,25 +1,23 @@
 {
-  "data": {
-    "domain": {
-      "name": "switcher-domain",
-      "version": 1,
-      "description": "Snapshot Auto Update",
-      "activated": false,
-      "group": [
-        {
-          "name": "Group 1",
-          "description": "",
-          "activated": true,
-          "config": [
-            {
-              "key": "USECASE_AUTO",
-              "description": "",
-              "activated": true,
-              "components": []
-            }
-          ]
-        }
-      ]
-    }
+  "domain": {
+    "name": "switcher-domain",
+    "version": 1,
+    "description": "Snapshot Auto Update",
+    "activated": false,
+    "group": [
+      {
+        "name": "Group 1",
+        "description": "",
+        "activated": true,
+        "config": [
+          {
+            "key": "USECASE_AUTO",
+            "description": "",
+            "activated": true,
+            "components": []
+          }
+        ]
+      }
+    ]
   }
 }

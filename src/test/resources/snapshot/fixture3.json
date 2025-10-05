@@ -1,193 +1,191 @@
 {
-    "data": {
-        "domain": {
-            "name": "switcher-domain",
-            "version": 1588557288037,
-            "description": "Fixture #3 - Exceptions test",
-            "activated": true,
-            "group": [
-                {
-                    "name": "Group 1",
-                    "description": "Simple test",
-                    "activated": true,
-                    "config": [
-                        {
-                            "key": "USECASE11",
-                            "description": "It contains an invalid strategy validation name",
-                            "activated": true,
-                            "components": ["switcher-client"],
-                            "strategies": [
-                                {
-                                    "strategy": "INVALID_NAME_FOR_VALIDATION",
-                                    "activated": true,
-                                    "operation": "EQUAL",
-                                    "values": [
-                                        "Value1"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "key": "USECASE12",
-                            "description": "It contains an invalid strategy operation",
-                            "activated": true,
-                            "components": ["switcher-client"],
-                            "strategies": [
-                                {
-                                    "strategy": "NETWORK_VALIDATION",
-                                    "activated": true,
-                                    "operation": "BETWEEN",
-                                    "values": [
-                                        "10.0.0.1", "10.0.0.2"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "key": "USECASE13",
-                            "description": "It contains an invalid strategy operation",
-                            "activated": true,
-                            "components": ["switcher-client"],
-                            "strategies": [
-                                {
-                                    "strategy": "VALUE_VALIDATION",
-                                    "activated": true,
-                                    "operation": "BETWEEN",
-                                    "values": [
-                                        "Value1", "Value2"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "key": "USECASE14",
-                            "description": "It contains an invalid strategy operation",
-                            "activated": true,
-                            "components": ["switcher-client"],
-                            "strategies": [
-                                {
-                                    "strategy": "DATE_VALIDATION",
-                                    "activated": true,
-                                    "operation": "EXIST",
-                                    "values": [
-                                        "2019-12-10", "2019-12-10"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "key": "USECASE15",
-                            "description": "It contains an invalid strategy operation",
-                            "activated": true,
-                            "components": ["switcher-client"],
-                            "strategies": [
-                                {
-                                    "strategy": "TIME_VALIDATION",
-                                    "activated": true,
-                                    "operation": "EXIST",
-                                    "values": [
-                                        "12:00", "01:00"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "key": "USECASE16",
-                            "description": "It contains an invalid strategy operation values. Should have 2",
-                            "activated": true,
-                            "components": ["switcher-client"],
-                            "strategies": [
-                                {
-                                    "strategy": "DATE_VALIDATION",
-                                    "activated": true,
-                                    "operation": "BETWEEN",
-                                    "values": [
-                                        "2019-12-10"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "key": "USECASE17",
-                            "description": "It contains an invalid strategy operation values. Should have 2",
-                            "activated": true,
-                            "components": ["switcher-client"],
-                            "strategies": [
-                                {
-                                    "strategy": "TIME_VALIDATION",
-                                    "activated": true,
-                                    "operation": "BETWEEN",
-                                    "values": [
-                                        "12:00"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "key": "USECASE18",
-                            "description": "It contains an invalid strategy operation",
-                            "activated": true,
-                            "components": ["switcher-client"],
-                            "strategies": [
-                                {
-                                    "strategy": "NUMERIC_VALIDATION",
-                                    "activated": true,
-                                    "operation": "NOT_BETWEEN",
-                                    "values": [
-                                        "1", "3"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "key": "USECASE19",
-                            "description": "It contains an invalid number of values for the given operation",
-                            "activated": true,
-                            "components": ["switcher-client"],
-                            "strategies": [
-                                {
-                                    "strategy": "NUMERIC_VALIDATION",
-                                    "activated": true,
-                                    "operation": "BETWEEN",
-                                    "values": [
-                                        "1"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "key": "USECASE20",
-                            "description": "It contains an invalid strategy operation",
-                            "activated": true,
-                            "components": ["switcher-client"],
-                            "strategies": [
-                                {
-                                    "strategy": "REGEX_VALIDATION",
-                                    "activated": true,
-                                    "operation": "BETWEEN",
-                                    "values": [
-                                        "[0-9]", "[a-Z]"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "key": "USECASE21",
-                            "description": "It contains an invalid strategy operation",
-                            "activated": true,
-                            "components": ["switcher-client"],
-                            "strategies": [
-                                {
-                                    "strategy": "PAYLOAD_VALIDATION",
-                                    "activated": true,
-                                    "operation": "BETWEEN",
-                                    "values": []
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
+    "domain": {
+        "name": "switcher-domain",
+        "version": 1588557288037,
+        "description": "Fixture #3 - Exceptions test",
+        "activated": true,
+        "group": [
+            {
+                "name": "Group 1",
+                "description": "Simple test",
+                "activated": true,
+                "config": [
+                    {
+                        "key": "USECASE11",
+                        "description": "It contains an invalid strategy validation name",
+                        "activated": true,
+                        "components": ["switcher-client"],
+                        "strategies": [
+                            {
+                                "strategy": "INVALID_NAME_FOR_VALIDATION",
+                                "activated": true,
+                                "operation": "EQUAL",
+                                "values": [
+                                    "Value1"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "key": "USECASE12",
+                        "description": "It contains an invalid strategy operation",
+                        "activated": true,
+                        "components": ["switcher-client"],
+                        "strategies": [
+                            {
+                                "strategy": "NETWORK_VALIDATION",
+                                "activated": true,
+                                "operation": "BETWEEN",
+                                "values": [
+                                    "10.0.0.1", "10.0.0.2"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "key": "USECASE13",
+                        "description": "It contains an invalid strategy operation",
+                        "activated": true,
+                        "components": ["switcher-client"],
+                        "strategies": [
+                            {
+                                "strategy": "VALUE_VALIDATION",
+                                "activated": true,
+                                "operation": "BETWEEN",
+                                "values": [
+                                    "Value1", "Value2"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "key": "USECASE14",
+                        "description": "It contains an invalid strategy operation",
+                        "activated": true,
+                        "components": ["switcher-client"],
+                        "strategies": [
+                            {
+                                "strategy": "DATE_VALIDATION",
+                                "activated": true,
+                                "operation": "EXIST",
+                                "values": [
+                                    "2019-12-10", "2019-12-10"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "key": "USECASE15",
+                        "description": "It contains an invalid strategy operation",
+                        "activated": true,
+                        "components": ["switcher-client"],
+                        "strategies": [
+                            {
+                                "strategy": "TIME_VALIDATION",
+                                "activated": true,
+                                "operation": "EXIST",
+                                "values": [
+                                    "12:00", "01:00"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "key": "USECASE16",
+                        "description": "It contains an invalid strategy operation values. Should have 2",
+                        "activated": true,
+                        "components": ["switcher-client"],
+                        "strategies": [
+                            {
+                                "strategy": "DATE_VALIDATION",
+                                "activated": true,
+                                "operation": "BETWEEN",
+                                "values": [
+                                    "2019-12-10"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "key": "USECASE17",
+                        "description": "It contains an invalid strategy operation values. Should have 2",
+                        "activated": true,
+                        "components": ["switcher-client"],
+                        "strategies": [
+                            {
+                                "strategy": "TIME_VALIDATION",
+                                "activated": true,
+                                "operation": "BETWEEN",
+                                "values": [
+                                    "12:00"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "key": "USECASE18",
+                        "description": "It contains an invalid strategy operation",
+                        "activated": true,
+                        "components": ["switcher-client"],
+                        "strategies": [
+                            {
+                                "strategy": "NUMERIC_VALIDATION",
+                                "activated": true,
+                                "operation": "NOT_BETWEEN",
+                                "values": [
+                                    "1", "3"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "key": "USECASE19",
+                        "description": "It contains an invalid number of values for the given operation",
+                        "activated": true,
+                        "components": ["switcher-client"],
+                        "strategies": [
+                            {
+                                "strategy": "NUMERIC_VALIDATION",
+                                "activated": true,
+                                "operation": "BETWEEN",
+                                "values": [
+                                    "1"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "key": "USECASE20",
+                        "description": "It contains an invalid strategy operation",
+                        "activated": true,
+                        "components": ["switcher-client"],
+                        "strategies": [
+                            {
+                                "strategy": "REGEX_VALIDATION",
+                                "activated": true,
+                                "operation": "BETWEEN",
+                                "values": [
+                                    "[0-9]", "[a-Z]"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "key": "USECASE21",
+                        "description": "It contains an invalid strategy operation",
+                        "activated": true,
+                        "components": ["switcher-client"],
+                        "strategies": [
+                            {
+                                "strategy": "PAYLOAD_VALIDATION",
+                                "activated": true,
+                                "operation": "BETWEEN",
+                                "values": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     }
 }
