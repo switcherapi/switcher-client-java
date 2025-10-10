@@ -94,7 +94,7 @@ Instead of using SwitcherContext, which is used to automatically load from the s
 
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
-		.contextLocation("com.switcherapi.playground.Features")
+		.context(Features.class.getName())
 		.apiKey("API_KEY")
 		.url("https://switcher-api.com")
 		.domain("Playground")
@@ -130,8 +130,15 @@ class MySwitcherClientConfig extends SwitcherContextBase {
 
 ### Defining your features
 
-Create a class that extends SwitcherContext if you are loading the configuration from the switcherapi.properties file.
-Or use SwitcherContextBase to define the configuration using the ContextBuilder or SwitcherConfig.
+Create a class that extends `SwitcherContext` if you are loading the configuration from the switcherapi.properties file.<br>
+Or use `SwitcherContextBase` to define the configuration using the ContextBuilder or SwitcherConfig.
+
+Switcher Keys are defined using the @SwitcherKey annotation and must be public static final String.<br>
+- Public because you will need to access it from other places of your code.
+- Static because you will access it without instantiating the class.
+- Final because the value must not be changed during runtime.
+
+The attribute name can be defined as you want (e.g. FEATURE01, FEATURE_01, myFeatureOne, etc), but the value must be the exact Switcher Key defined in Switcher Management or snapshot files.
 
 ```java
 public class MyAppFeatures extends SwitcherContext {
