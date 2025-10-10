@@ -19,7 +19,7 @@ class SnapshotWatcherContextTest extends SnapshotTest {
 		generateFixture();
 		
 		SwitchersBase.configure(ContextBuilder.builder(true)
-			.context(SwitchersBase.class.getCanonicalName())
+			.context(SwitchersBase.class.getName())
 			.environment("generated_watcher_default")
 			.snapshotLocation(SNAPSHOTS_LOCAL)
 			.snapshotWatcher(true)

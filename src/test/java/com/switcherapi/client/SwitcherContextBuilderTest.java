@@ -21,7 +21,7 @@ class SwitcherContextBuilderTest {
 	void shouldReturnSuccess() {
 		//given
 		configure(ContextBuilder.builder(true)
-				.context(SwitchersBase.class.getCanonicalName())
+				.context(SwitchersBase.class.getName())
 				.url("http://localhost:3000")
 				.apiKey("API_KEY")
 				.domain("switcher-domain")
@@ -41,7 +41,7 @@ class SwitcherContextBuilderTest {
 	void shouldReturnError_snapshotNotLoaded() {
 		//given
 		configure(ContextBuilder.builder(true)
-				.context(SwitchersBase.class.getCanonicalName())
+				.context(SwitchersBase.class.getName())
 				.url("http://localhost:3000")
 				.apiKey("API_KEY")
 				.domain("switcher-domain")
@@ -59,7 +59,7 @@ class SwitcherContextBuilderTest {
 	void shouldThrowError_wrongContextKeyTypeUsage() {
 		//given
 		configure(ContextBuilder.builder(true)
-				.context(SwitchersBase.class.getCanonicalName())
+				.context(SwitchersBase.class.getName())
 				.domain("switcher-domain")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.local(true));
