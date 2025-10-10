@@ -142,4 +142,8 @@ public class Switchers extends SwitcherContext {
 
 	@SwitcherKey
 	public static final String NOT_FOUND_KEY = "NOT_FOUND_KEY";
+
+	@SwitcherKey
+	public static final String friendlyFeatureName = "USECASE1";
+
 }

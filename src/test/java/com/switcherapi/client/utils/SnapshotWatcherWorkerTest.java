@@ -11,7 +11,7 @@ class SnapshotWatcherWorkerTest extends SnapshotTest {
 	@BeforeAll
 	static void setupContext() {
 		SwitchersBase.configure(ContextBuilder.builder(true)
-			.context(SwitchersBase.class.getCanonicalName())
+			.context(SwitchersBase.class.getName())
 			.snapshotLocation(SNAPSHOTS_LOCAL)
 			.environment("default")
 			.local(true));

@@ -65,7 +65,7 @@ import static com.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
  * // Initialize the Switcher Client using ContextBuilder
  * public void configureClient() {
  *  	Features.configure(ContextBuilder.builder()
- *   		.context("com.business.config.Features")
+ *   		.context(Features.class.getName())
  *   		.apiKey("API_KEY")
  *   		.domain("Playground")
  *   		.component("switcher-playground")
@@ -243,11 +243,21 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * @param fields to be registered
 	 */
 	private static void registerSwitcherKey(Field[] fields) {
-		switcherKeys = Optional.ofNullable(switcherKeys).orElse(new HashSet<>());
+		Set<String> switcherKeys = new HashSet<>();
+
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(SwitcherKey.class)) {
-				switcherKeys.add(field.getName());
+				try {
+					switcherKeys.add(field.get(null).toString());
+				} catch (Exception e) {
+					throw new SwitcherContextException(
+							String.format("Error retrieving Switcher Key value from field %s", field.getName()));
+				}
 			}
+		}
+
+		if (!switcherKeys.isEmpty()) {
+			setSwitcherKeys(switcherKeys);
 		}
 	}
 	
@@ -538,8 +548,13 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 		SwitcherContextBase.contextBase = contextBase;
 	}
 
-	private static synchronized void setSwitcherKeys(Set<String> switcherKeys) {
+	private static synchronized void setSwitcherKeys(Set<String> switcherKeys)
+			throws SwitcherContextException {
 		SwitcherContextBase.switcherKeys = switcherKeys;
+
+		if (switcherKeys.stream().anyMatch(StringUtils::isBlank)) {
+			throw new SwitcherContextException("One or more Switcher Keys are empty");
+		}
 	}
 	
 }

@@ -57,6 +57,17 @@ class SwitcherLocal1Test {
 		// check result history
 		assertTrue(switcher.getLastExecutionResult().isItOn());
 	}
+
+	@Test
+	void localShouldReturnTrueUsingFriendlyConstantName() {
+		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.friendlyFeatureName, true);
+
+		assertNull(switcher.getLastExecutionResult());
+		assertTrue(switcher.isItOn());
+
+		// check result history
+		assertTrue(switcher.getLastExecutionResult().isItOn());
+	}
 	
 	@Test
 	void localShouldReturnFalse() {

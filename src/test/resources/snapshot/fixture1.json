@@ -11,6 +11,14 @@
                 "activated": true,
                 "config": [
                     {
+                      "key": "USECASE1",
+                      "description": "Simple test - Config enabled",
+                      "activated": true,
+                      "components": [
+                            "switcher-client"
+                      ]
+                    },
+                    {
                         "key": "USECASE11",
                         "description": "Simple test - Config enabled",
                         "activated": true,
