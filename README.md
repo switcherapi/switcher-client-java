@@ -9,7 +9,7 @@ A Java SDK for Switcher API
 <div align="center">
 
 [![Master CI](https://github.com/switcherapi/switcher-client-java/actions/workflows/master.yml/badge.svg?branch=master)](https://github.com/switcherapi/switcher-client-java/actions/workflows/master.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=switcherapi_switcher-client&metric=alert_status)](https://sonarcloud.io/dashboard?id=switcherapi_switcher-client)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=switcherapi_switcher-client&branch=master&&metric=alert_status)](https://sonarcloud.io/summary/overall?id=switcherapi_switcher-client&branch=master)
 [![Known Vulnerabilities](https://snyk.io/test/github/switcherapi/switcher-client-java/badge.svg?targetFile=pom.xml)](https://snyk.io/test/github/switcherapi/switcher-client-java?targetFile=pom.xml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Maven Central](https://img.shields.io/maven-central/v/com.switcherapi/switcher-client.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.switcherapi/switcher-client)
@@ -44,9 +44,9 @@ https://github.com/switcherapi/switcher-api
 </dependency>
 ```
 
-### Compatibility with Jakarta EE 9
-Use SDK v1.x for applications not using Jakarta EE 9.<br>
-Use SDK v2.x for Jakarta EE 9 based applications.
+### Compatibility with Jakarta EE 9 and Java versions
+Use SDK v1.x for applications not using Jakarta EE 9 (requires Java 8+).<br>
+Use SDK v2.x for Jakarta EE 9+ based applications (requires Java 17+).
 
 ## Client Context Properties - SwitcherContext
 

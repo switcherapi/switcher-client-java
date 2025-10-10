@@ -64,7 +64,7 @@
 		<slf4j-api.version>2.0.17</slf4j-api.version>
 
 		<!-- test -->
-		<okhttp.version>5.1.0</okhttp.version>
+		<okhttp.version>5.2.0</okhttp.version>
 		<junit-jupiter.version>5.14.0</junit-jupiter.version>
 		<junit-pioneer.version>1.9.1</junit-pioneer.version>
 		<junit-platform-launcher.version>1.14.0</junit-platform-launcher.version>
@@ -262,6 +262,12 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<version>${maven-javadoc-plugin.version}</version>
+                        <configuration>
+                            <doclint>all,-missing</doclint>
+                            <additionalJOptions>
+                                <additionalJOption>-Xdoclint:all,-missing</additionalJOption>
+                            </additionalJOptions>
+                        </configuration>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
