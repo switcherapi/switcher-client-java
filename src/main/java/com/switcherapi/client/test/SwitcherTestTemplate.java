@@ -1,6 +1,7 @@
 package com.switcherapi.client.test;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 
 import java.util.Arrays;
@@ -25,6 +26,7 @@ class SwitcherTestTemplate implements TestTemplateInvocationContext {
     }
 
     @Override
+	@NullMarked
     public String getDisplayName(int invocationIndex) {
         SwitcherTestValue[] switcherTestValues = switcherTest.switchers();
 
