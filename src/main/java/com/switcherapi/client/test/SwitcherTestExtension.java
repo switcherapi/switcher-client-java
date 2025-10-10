@@ -2,11 +2,13 @@ package com.switcherapi.client.test;
 
 import com.switcherapi.client.model.SwitcherResult;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.extension.*;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -29,6 +31,7 @@ class SwitcherTestExtension implements TestTemplateInvocationContextProvider,
 	}
 
 	@Override
+	@NullMarked
 	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 		SwitcherTest switcherTest = context.getRequiredTestMethod().getAnnotation(SwitcherTest.class);
 
@@ -58,9 +61,10 @@ class SwitcherTestExtension implements TestTemplateInvocationContextProvider,
 	}
 
 	@Override
+	@NullMarked
 	public void afterTestExecution(ExtensionContext context) {
 		Store store = getStore(context);
-		String[] keys = store.remove(STORE_KEYS, String[].class);
+		String[] keys = Optional.ofNullable(store.remove(STORE_KEYS, String[].class)).orElse(new String[0]);
 
 		if (ArrayUtils.isNotEmpty(keys)) {
 			for (String keyStored : keys) {
