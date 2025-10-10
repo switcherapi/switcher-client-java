@@ -85,7 +85,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 
 		//that
 		Switchers.configure(ContextBuilder.builder(true)
-				.context(Switchers.class.getCanonicalName())
+				.context(Switchers.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.apiKey("[API_KEY]")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
@@ -110,7 +110,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 
 		//that
 		Switchers.configure(ContextBuilder.builder(true)
-				.context(Switchers.class.getCanonicalName())
+				.context(Switchers.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.apiKey("[API_KEY]")
 				.domain("Test")
@@ -137,7 +137,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 
 		//that
 		Switchers.configure(ContextBuilder.builder(true)
-				.context(Switchers.class.getCanonicalName())
+				.context(Switchers.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.apiKey("[API_KEY]")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
@@ -165,7 +165,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 
 		//that
 		Switchers.configure(ContextBuilder.builder(true)
-				.context(Switchers.class.getCanonicalName())
+				.context(Switchers.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.apiKey("[API_KEY]")
 				.environment("generated_mock_default_5")
@@ -192,7 +192,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 
 		//that
 		Switchers.configure(ContextBuilder.builder(true)
-				.context(Switchers.class.getCanonicalName())
+				.context(Switchers.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.apiKey("[API_KEY]")
 				.environment("generated_mock_default_6")
@@ -227,7 +227,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 
 		//that
 		Switchers.configure(ContextBuilder.builder(true)
-				.context(Switchers.class.getCanonicalName())
+				.context(Switchers.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.apiKey("[API_KEY]")
 				.environment("generated_mock_default_6")

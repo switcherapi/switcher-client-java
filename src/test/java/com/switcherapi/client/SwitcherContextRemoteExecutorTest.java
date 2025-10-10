@@ -35,7 +35,7 @@ class SwitcherContextRemoteExecutorTest extends MockWebServerHelper {
 
 		//given
 		SwitchersBase.configure(ContextBuilder.builder(true)
-				.context(SwitchersBase.class.getCanonicalName())
+				.context(SwitchersBase.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.apiKey("API_KEY")
 				.domain("switcher-domain")
@@ -61,7 +61,7 @@ class SwitcherContextRemoteExecutorTest extends MockWebServerHelper {
 
 		//given
 		SwitchersBase.configure(ContextBuilder.builder(true)
-				.context(SwitchersBase.class.getCanonicalName())
+				.context(SwitchersBase.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.apiKey("API_KEY")
 				.domain("switcher-domain")

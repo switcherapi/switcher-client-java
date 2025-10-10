@@ -12,7 +12,7 @@ public class Features extends SwitcherContextBase {
 	@Override
 	protected void configureClient() {
 		configure(ContextBuilder.builder()
-				.context(Features.class.getCanonicalName())
+				.context(Features.class.getName())
 				.url("https://api.switcherapi.com")
 				.apiKey(System.getenv("switcher.api.key"))
 				.component(System.getenv("switcher.component"))
