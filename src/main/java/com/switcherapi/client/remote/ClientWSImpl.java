@@ -1,12 +1,11 @@
 package com.switcherapi.client.remote;
 
+import com.google.gson.Gson;
 import com.switcherapi.client.SwitcherProperties;
 import com.switcherapi.client.exception.SwitcherRemoteException;
 import com.switcherapi.client.model.ContextKey;
-import com.switcherapi.client.model.SwitcherRequest;
 import com.switcherapi.client.model.criteria.Snapshot;
 import com.switcherapi.client.remote.dto.*;
-import com.google.gson.Gson;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -54,9 +53,9 @@ public class ClientWSImpl implements ClientWS {
 		try {
 			final URI uri = new URI(url)
 					.resolve(String.format(CRITERIA_URL, url,
-							SwitcherRequest.KEY, criteriaRequest.getSwitcherKey(),
-							SwitcherRequest.SHOW_REASON, Boolean.TRUE,
-							SwitcherRequest.BYPASS_METRIC, criteriaRequest.isBypassMetric()));
+							KEY, criteriaRequest.getSwitcherKey(),
+							SHOW_REASON, Boolean.TRUE,
+							BYPASS_METRIC, criteriaRequest.isBypassMetric()));
 
 			final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
 					.uri(uri)
