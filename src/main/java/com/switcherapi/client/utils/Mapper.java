@@ -17,12 +17,14 @@ public class Mapper {
 		return request;
 	}
 
-	public static SwitcherResult mapFrom(final CriteriaResponse criteriaResponse) {
+	public static SwitcherResult mapFrom(final CriteriaResponse criteriaResponse,
+										 final SwitcherRequest switcherRequest) {
 		SwitcherResult switcherResult = new SwitcherResult();
 		switcherResult.setSwitcherKey(criteriaResponse.getSwitcherKey());
 		switcherResult.setResult(criteriaResponse.getResult());
 		switcherResult.setReason(criteriaResponse.getReason());
 		switcherResult.setMetadata(criteriaResponse.getMetadata());
+		switcherResult.setEntry(switcherRequest.getEntry());
 		return switcherResult;
 	}
 }

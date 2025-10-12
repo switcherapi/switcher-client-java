@@ -9,7 +9,7 @@ import com.switcherapi.client.test.SwitcherBypass;
 import java.util.*;
 
 /**
- * SwitcherRequest are the entry point to evaluate criteria and return the result.
+ * SwitcherRequest is the entry point to evaluate criteria and return the result.
  * <br>To execute a criteria evaluation, use one of the available methods: {@link #isItOn()}.
  * 
  * @author Roger Floriano (petruki)
@@ -19,12 +19,6 @@ import java.util.*;
  * @see #submit()
  */
 public final class SwitcherRequest extends SwitcherBuilder {
-	
-	public static final String KEY = "key";
-	
-	public static final String SHOW_REASON = "showReason";
-	
-	public static final String BYPASS_METRIC = "bypassMetric";
 
 	private final SwitcherExecutor switcherExecutor;
 	
@@ -150,7 +144,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 
 	private Optional<SwitcherResult> getFromHistory() {
 		for (SwitcherResult switcherResult : historyExecution) {
-			if (switcherResult.getEntry().equals(getEntry())) {
+			if (switcherResult.getEntry().equals(entry)) {
 				return Optional.of(switcherResult);
 			}
 		}
