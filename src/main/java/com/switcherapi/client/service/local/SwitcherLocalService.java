@@ -104,24 +104,24 @@ public class SwitcherLocalService extends SwitcherExecutorImpl {
 	}
 	
 	@Override
-	public SwitcherResult executeCriteria(final SwitcherRequest switcher) {
-		SwitcherUtils.debug(logger, "[Local] request: {}", switcher);
+	public SwitcherResult executeCriteria(final SwitcherRequest switcherRequest) {
+		SwitcherUtils.debug(logger, "[Local] request: {}", switcherRequest);
 
 		SwitcherResult response;
 		try {
-			if (switcher.isRemote()) {
-				response = Mapper.mapFrom(this.clientRemote.executeCriteria(Mapper.mapFrom(switcher)));
+			if (switcherRequest.isRemote()) {
+				response = Mapper.mapFrom(this.clientRemote.executeCriteria(Mapper.mapFrom(switcherRequest)), switcherRequest);
 				SwitcherUtils.debug(logger, "[Remote] response: {}", response);
 			} else {
-				response = this.clientLocal.executeCriteria(switcher, this.domain);
+				response = this.clientLocal.executeCriteria(switcherRequest, this.domain);
 				SwitcherUtils.debug(logger, "[Local] response: {}", response);
 			}
 		} catch (SwitcherKeyNotFoundException e) {
-			if (StringUtils.isBlank(switcher.getDefaultResult())) {
+			if (StringUtils.isBlank(switcherRequest.getDefaultResult())) {
 				throw e;
 			}
 
-			response = SwitcherFactory.buildFromDefault(switcher);
+			response = SwitcherFactory.buildFromDefault(switcherRequest);
 			SwitcherUtils.debug(logger, "[Default] response: {}", response);
 		}
 		

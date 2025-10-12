@@ -39,17 +39,17 @@ public class SwitcherRemoteService extends SwitcherExecutorImpl {
 	}
 
 	@Override
-	public SwitcherResult executeCriteria(final SwitcherRequest switcher) {
-		SwitcherUtils.debug(logger, "[Remote] request: {}", switcher);
+	public SwitcherResult executeCriteria(final SwitcherRequest switcherRequest) {
+		SwitcherUtils.debug(logger, "[Remote] request: {}", switcherRequest);
 		
 		try {
-			final CriteriaResponse response = this.clientRemote.executeCriteria(Mapper.mapFrom(switcher));
+			final CriteriaResponse response = this.clientRemote.executeCriteria(Mapper.mapFrom(switcherRequest));
 			SwitcherUtils.debug(logger, "[Remote] response: {}", response);
 			
-			return Mapper.mapFrom(response);
+			return Mapper.mapFrom(response, switcherRequest);
 		} catch (final SwitcherRemoteException e) {
 			logger.error("Failed to execute criteria - Cause: {}", e.getMessage(), e.getCause());
-			return tryExecuteLocalCriteria(switcher, e);
+			return tryExecuteLocalCriteria(switcherRequest, e);
 		}
 	}
 

@@ -3,7 +3,6 @@ package com.switcherapi.client.remote;
 import com.switcherapi.client.SwitcherProperties;
 import com.switcherapi.client.exception.SwitcherRemoteException;
 import com.switcherapi.client.model.ContextKey;
-import com.switcherapi.client.model.SwitcherRequest;
 import com.switcherapi.client.model.criteria.Snapshot;
 import com.switcherapi.client.remote.dto.*;
 
@@ -47,9 +46,9 @@ public class ClientWSImpl implements ClientWS {
 	public CriteriaResponse executeCriteria(final CriteriaRequest criteriaRequest, final String token) {
 		final String url = switcherProperties.getValue(ContextKey.URL);
 		final WebTarget myResource = client.target(String.format(CRITERIA_URL, url))
-				.queryParam(SwitcherRequest.KEY, criteriaRequest.getSwitcherKey())
-				.queryParam(SwitcherRequest.SHOW_REASON, Boolean.TRUE)
-				.queryParam(SwitcherRequest.BYPASS_METRIC, criteriaRequest.isBypassMetric());
+				.queryParam(KEY, criteriaRequest.getSwitcherKey())
+				.queryParam(SHOW_REASON, Boolean.TRUE)
+				.queryParam(BYPASS_METRIC, criteriaRequest.isBypassMetric());
 
 		try {
 			final Response response = myResource.request(MediaType.APPLICATION_JSON)

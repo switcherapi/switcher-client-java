@@ -41,6 +41,21 @@ public interface ClientWS {
 	 * Returns array of switcher keys not found
 	 */
 	String CHECK_SWITCHERS = "%s/criteria/switchers_check";
+
+	/**
+	 * Constant for query params (Switcher Key)
+	 */
+	String KEY = "key";
+
+	/**
+	 * Constant for query params (Show Reason)
+	 */
+	String SHOW_REASON = "showReason";
+
+	/**
+	 * Constant for query params (Bypass Metric)
+	 */
+	String BYPASS_METRIC = "bypassMetric";
 	
 	/**
 	 * Returns the verification configured for a specific switcher (key)
