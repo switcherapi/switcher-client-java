@@ -48,16 +48,18 @@ class SwitcherThrottleTest extends MockWebServerHelper {
 	void shouldReturnTrue_withThrottle() {
 		Switchers.initializeClient();
 
-		// Throttled call
+		// Initial remote call
 		givenResponse(generateMockAuth(10)); //auth
-		givenResponse(generateCriteriaResponse("true", false)); //criteria
+		givenResponse(generateCriteriaResponse("true", false)); //criteria - sync (cached)
 		
-		// After throttle
-		givenResponse(generateCriteriaResponse("false", false)); //criteria
+		// Throttle period - should use cache
+		givenResponse(generateCriteriaResponse("false", false)); //criteria - async (background)
+		givenResponse(generateCriteriaResponse("false", false)); //criteria - async after 1 sec (background)
 		
 		//test
 		Switcher switcher = Switchers
 				.getSwitcher(Switchers.REMOTE_KEY)
+				.checkValue("value")
 				.throttle(1000);
 		
 		for (int i = 0; i < 100; i++) {
