@@ -23,7 +23,6 @@ class SwitcherThrottleTest extends MockWebServerHelper {
 		MockWebServerHelper.setupMockServer();
         
         Switchers.loadProperties();
-        Switchers.configure(ContextBuilder.builder().url(String.format("http://localhost:%s", mockBackEnd.getPort())));
     }
 	
 	@AfterAll
@@ -36,6 +35,7 @@ class SwitcherThrottleTest extends MockWebServerHelper {
 		((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 
 		Switchers.configure(ContextBuilder.builder()
+				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
 				.local(false)
 				.snapshotLocation(null)
 				.snapshotSkipValidation(false)
