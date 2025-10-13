@@ -50,7 +50,7 @@ public class Entry {
 		return String.format("Entry [strategy = %s, input = %s]", 
 				strategy, input);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -69,7 +69,7 @@ public class Entry {
 
 			return this.input.equals(entry.getInput());
 		}
-		return true;
+		return false;
 	}
 
 }
