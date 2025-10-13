@@ -5,7 +5,7 @@ import com.switcherapi.client.model.SwitcherResult;
 import com.switcherapi.client.remote.dto.CriteriaRequest;
 import com.switcherapi.client.remote.dto.CriteriaResponse;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Mapper {
 
@@ -28,7 +28,7 @@ public class Mapper {
 		switcherResult.setMetadata(criteriaResponse.getMetadata());
 
 		if (!switcherRequest.getEntry().isEmpty()) {
-			switcherResult.setEntry(List.copyOf(switcherRequest.getEntry()));
+			switcherResult.setEntry(new ArrayList<>(switcherRequest.getEntry()));
 		}
 
 		return switcherResult;
