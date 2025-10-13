@@ -2,6 +2,7 @@ package com.switcherapi.client;
 
 import com.switcherapi.Switchers;
 import com.switcherapi.client.model.Switcher;
+import com.switcherapi.client.model.SwitcherBuilder;
 import com.switcherapi.fixture.CountDownHelper;
 import com.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
@@ -68,6 +69,30 @@ class SwitcherThrottleTest extends MockWebServerHelper {
 
 		CountDownHelper.wait(1);
 		assertFalse(switcher.isItOn());
+	}
+
+	@Test
+	void shouldRetrieveNewResponse_whenStrategyInputChanged() {
+		Switchers.initializeClient();
+
+		// Initial remote call
+		givenResponse(generateMockAuth(10)); //auth
+		givenResponse(generateCriteriaResponse("true", false)); //criteria - sync (cached)
+		givenResponse(generateCriteriaResponse("false", false)); //criteria - async (cached)
+
+		// Throttle period - should use cache
+		givenResponse(generateCriteriaResponse("false", false)); //criteria - async after 1 sec (background)
+
+		//test
+		SwitcherBuilder switcher = Switchers
+				.getSwitcher(Switchers.REMOTE_KEY)
+				.throttle(1000);
+
+		for (int i = 0; i < 100; i++) {
+			assertTrue(switcher.checkValue("value").isItOn());
+		}
+
+		assertFalse(switcher.checkValue("value_changed").isItOn());
 	}
 
 }

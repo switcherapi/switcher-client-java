@@ -5,6 +5,8 @@ import com.switcherapi.client.model.SwitcherResult;
 import com.switcherapi.client.remote.dto.CriteriaRequest;
 import com.switcherapi.client.remote.dto.CriteriaResponse;
 
+import java.util.List;
+
 public class Mapper {
 
 	private Mapper() {}
@@ -24,7 +26,11 @@ public class Mapper {
 		switcherResult.setResult(criteriaResponse.getResult());
 		switcherResult.setReason(criteriaResponse.getReason());
 		switcherResult.setMetadata(criteriaResponse.getMetadata());
-		switcherResult.setEntry(switcherRequest.getEntry());
+
+		if (!switcherRequest.getEntry().isEmpty()) {
+			switcherResult.setEntry(List.copyOf(switcherRequest.getEntry()));
+		}
+
 		return switcherResult;
 	}
 }
