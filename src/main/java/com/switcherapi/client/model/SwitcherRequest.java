@@ -24,7 +24,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	
 	private final String switcherKey;
 	
-	private final Set<SwitcherResult> historyExecution;
+	private final Map<List<Entry>, SwitcherResult> historyExecution;
 
 	private AsyncSwitcher asyncSwitcher;
 	
@@ -41,7 +41,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 		super(switcherProperties);
 		this.switcherExecutor = switcherExecutor;
 		this.switcherKey = switcherKey;
-		this.historyExecution = new HashSet<>();
+		this.historyExecution = new HashMap<>();
 	}
 	
 	@Override
@@ -105,10 +105,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 
 	@Override
 	public void updateHistoryExecution(final SwitcherResult response) {
-		this.historyExecution.removeIf(item ->
-				this.switcherKey.equals(item.getSwitcherKey()) && this.entry.equals(item.getEntry()));
-
-		this.historyExecution.add(response);
+		historyExecution.put(entry, response);
 	}
 
 	@Override
@@ -135,12 +132,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	}
 
 	private Optional<SwitcherResult> getFromHistory() {
-		for (SwitcherResult switcherResult : historyExecution) {
-			if (switcherResult.getEntry().equals(entry)) {
-				return Optional.of(switcherResult);
-			}
-		}
-		return Optional.empty();
+		return Optional.ofNullable(historyExecution.get(entry));
 	}
 
 	@Override
