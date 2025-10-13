@@ -42,7 +42,6 @@ public final class SwitcherRequest extends SwitcherBuilder {
 		this.switcherExecutor = switcherExecutor;
 		this.switcherKey = switcherKey;
 		this.historyExecution = new HashSet<>();
-		this.entry = new ArrayList<>();
 	}
 	
 	@Override
@@ -54,13 +53,10 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	@Override
 	public SwitcherRequest prepareEntry(final Entry entry, final boolean add) {
 		if (!add) {
-			this.entry.clear();
+			this.flush();
 		}
 
-		if (!this.entry.contains(entry)) {
-			this.entry.add(entry);
-		}
-		
+		this.entry.add(entry);
 		return this;
 	}
 	
@@ -132,10 +128,6 @@ public final class SwitcherRequest extends SwitcherBuilder {
 
 	public boolean isBypassMetrics() {
 		return bypassMetrics;
-	}
-	
-	public void resetEntry() {
-		this.entry = new ArrayList<>();
 	}
 
 	private boolean canUseAsync() {

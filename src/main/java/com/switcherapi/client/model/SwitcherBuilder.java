@@ -35,6 +35,16 @@ public abstract class SwitcherBuilder implements Switcher {
 		this.entry = new ArrayList<>();
 		this.delay = 0;
 	}
+
+	/**
+	 * Clear all entries previously added
+	 *
+	 * @return {@link SwitcherBuilder}
+	 */
+	public SwitcherBuilder flush() {
+		this.entry.clear();
+		return this;
+	}
 	
 	/**
 	 * Skip API calls given a delay time
@@ -95,6 +105,7 @@ public abstract class SwitcherBuilder implements Switcher {
 	 */
 	public SwitcherBuilder check(StrategyValidator strategy, String input) {
 		if (StringUtils.isNotBlank(input)) {
+			entry.removeIf(e -> e.getStrategy().equals(strategy.toString()));
 			entry.add(Entry.of(strategy, input));
 		}
 		

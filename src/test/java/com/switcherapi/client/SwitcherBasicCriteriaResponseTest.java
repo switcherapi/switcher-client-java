@@ -1,6 +1,7 @@
 package com.switcherapi.client;
 
 import com.switcherapi.Switchers;
+import com.switcherapi.client.model.SwitcherBuilder;
 import com.switcherapi.client.model.SwitcherRequest;
 import com.switcherapi.client.model.SwitcherResult;
 import com.switcherapi.fixture.MetadataErrorSample;
@@ -81,6 +82,23 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 
 		assertFalse(response.isItOn());
 		assertEquals("Strategy VALUE_VALIDATION does not agree", response.getReason());
+	}
+
+	@Test
+	void shouldFlushStrategyInputs() {
+		SwitcherBuilder switcherBuilder = Switchers
+				.getSwitcher(Switchers.REMOTE_KEY)
+				.checkValue("value")
+				.checkNumeric("10");
+
+		assertEquals(2, switcherBuilder.getEntry().size());
+
+		//test
+		switcherBuilder
+				.flush()
+				.checkValue("anotherValue");
+
+		assertEquals(1, switcherBuilder.getEntry().size());
 	}
 
 	@Test
