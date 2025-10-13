@@ -4,9 +4,7 @@ import com.switcherapi.client.SwitcherProperties;
 import com.switcherapi.client.exception.SwitcherContextException;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Builder class that simplifies how input are programmatically wrapped inside the Switcher.
@@ -17,6 +15,8 @@ import java.util.Objects;
 public abstract class SwitcherBuilder implements Switcher {
 
 	protected final SwitcherProperties properties;
+
+	protected final Map<List<Entry>, SwitcherResult> historyExecution;
 	
 	protected long delay;
 
@@ -32,16 +32,18 @@ public abstract class SwitcherBuilder implements Switcher {
 
 	protected SwitcherBuilder(final SwitcherProperties properties) {
 		this.properties = properties;
+		this.historyExecution = new HashMap<>();
 		this.entry = new ArrayList<>();
 		this.delay = 0;
 	}
 
 	/**
-	 * Clear all entries previously added
+	 * Clear all entries previously added and history of executions.
 	 *
 	 * @return {@link SwitcherBuilder}
 	 */
 	public SwitcherBuilder flush() {
+		this.historyExecution.clear();
 		this.entry.clear();
 		return this;
 	}

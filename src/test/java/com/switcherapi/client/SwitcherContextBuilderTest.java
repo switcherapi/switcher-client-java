@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 
 import static com.switcherapi.SwitchersBase.*;
 import static com.switcherapi.client.SwitcherContextValidator.ERR_LOCAL;
+import static com.switcherapi.client.remote.Constants.DEFAULT_ENV;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherContextBuilderTest {
@@ -26,7 +27,7 @@ class SwitcherContextBuilderTest {
 				.apiKey("API_KEY")
 				.domain("switcher-domain")
 				.component("switcher-client")
-				.environment("default")
+				.environment(DEFAULT_ENV)
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.local(true));
 		
@@ -46,7 +47,7 @@ class SwitcherContextBuilderTest {
 				.apiKey("API_KEY")
 				.domain("switcher-domain")
 				.component("switcher-client")
-				.environment("default")
+				.environment(DEFAULT_ENV)
 				.snapshotLocation(null)
 				.local(true));
 

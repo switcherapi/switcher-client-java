@@ -1,5 +1,6 @@
 package com.switcherapi.client.service.local;
 
+import static com.switcherapi.client.remote.Constants.DEFAULT_ENV;
 import static com.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -39,7 +40,7 @@ class SwitcherLocalServiceTest {
 		SwitchersBase.configure(ContextBuilder.builder()
 				.context(SwitchersBase.class.getName())
 				.snapshotLocation(SNAPSHOTS_LOCAL)
-				.environment("default")
+				.environment(DEFAULT_ENV)
 				.local(true));
 
 		SwitcherProperties properties = SwitchersBase.getSwitcherProperties();
