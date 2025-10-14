@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static com.switcherapi.client.remote.Constants.DEFAULT_ENV;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -52,7 +53,7 @@ class SwitcherSnapshotLookupTest extends MockWebServerHelper {
 				.local(false)
 				.snapshotLocation(null)
 				.snapshotSkipValidation(false)
-				.environment("default")
+				.environment(DEFAULT_ENV)
 				.silentMode(null)
 				.snapshotAutoLoad(false)
 				.snapshotAutoUpdateInterval(null));

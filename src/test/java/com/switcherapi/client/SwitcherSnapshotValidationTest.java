@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import static com.switcherapi.client.remote.Constants.DEFAULT_ENV;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherSnapshotValidationTest extends MockWebServerHelper {
@@ -43,7 +44,7 @@ class SwitcherSnapshotValidationTest extends MockWebServerHelper {
 				.local(false)
 				.snapshotLocation(null)
 				.snapshotSkipValidation(false)
-				.environment("default")
+				.environment(DEFAULT_ENV)
 				.silentMode(null)
 				.snapshotAutoLoad(false)
 				.snapshotAutoUpdateInterval(null));
@@ -105,7 +106,7 @@ class SwitcherSnapshotValidationTest extends MockWebServerHelper {
 				.local(true)
 				.snapshotAutoLoad(false)
 				.snapshotLocation(RESOURCES_PATH)
-				.environment("default"));
+				.environment(DEFAULT_ENV));
 		
 		Switchers.initializeClient();
 		
@@ -129,7 +130,7 @@ class SwitcherSnapshotValidationTest extends MockWebServerHelper {
 				.local(false)
 				.snapshotAutoLoad(false)
 				.snapshotLocation(RESOURCES_PATH)
-				.environment("default"));
+				.environment(DEFAULT_ENV));
 		
 		Switchers.initializeClient();
 		

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static com.switcherapi.client.remote.Constants.DEFAULT_ENV;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherContextRemoteExecutorTest extends MockWebServerHelper {
@@ -40,7 +41,7 @@ class SwitcherContextRemoteExecutorTest extends MockWebServerHelper {
 				.apiKey("API_KEY")
 				.domain("switcher-domain")
 				.component("switcher-client-pool-test")
-				.environment("default")
+				.environment(DEFAULT_ENV)
 				.poolConnectionSize(1)
 				.local(false));
 
@@ -66,7 +67,7 @@ class SwitcherContextRemoteExecutorTest extends MockWebServerHelper {
 				.apiKey("API_KEY")
 				.domain("switcher-domain")
 				.component("switcher-client-timeout-test")
-				.environment("default")
+				.environment(DEFAULT_ENV)
 				.timeoutMs(500)
 				.local(false));
 

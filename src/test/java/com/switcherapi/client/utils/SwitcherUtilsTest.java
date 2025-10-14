@@ -29,6 +29,8 @@ import com.switcherapi.client.exception.SwitcherContextException;
 import com.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.switcherapi.client.model.ContextKey;
 
+import static com.switcherapi.client.remote.Constants.DEFAULT_ENV;
+
 class SwitcherUtilsTest {
 	
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
@@ -121,7 +123,7 @@ class SwitcherUtilsTest {
 	 */
 	static Stream<Arguments> envArguments() {
 	    return Stream.of(
-			Arguments.of("default", "default"),
+			Arguments.of(DEFAULT_ENV, DEFAULT_ENV),
 			Arguments.of("${PORT:8080}", "8080"),
 			Arguments.of("${SNAPSHOT_LOCAL:}", ""),
 			Arguments.of("${ENVIRONMENT}", "staging")
