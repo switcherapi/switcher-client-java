@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.stream.Stream;
 
+import static com.switcherapi.client.remote.Constants.DEFAULT_ENV;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SwitcherUtilsTest {
@@ -116,7 +117,7 @@ class SwitcherUtilsTest {
 	 */
 	static Stream<Arguments> envArguments() {
 	    return Stream.of(
-			Arguments.of("default", "default"),
+			Arguments.of(DEFAULT_ENV, DEFAULT_ENV),
 			Arguments.of("${PORT:8080}", "8080"),
 			Arguments.of("${SNAPSHOT_LOCAL:}", ""),
 			Arguments.of("${ENVIRONMENT}", "staging")
