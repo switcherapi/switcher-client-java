@@ -6,10 +6,7 @@ import com.switcherapi.client.model.SwitcherBuilder;
 import com.switcherapi.fixture.CountDownHelper;
 import com.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 
@@ -17,6 +14,7 @@ import static com.switcherapi.client.remote.Constants.DEFAULT_ENV;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SwitcherThrottleTest extends MockWebServerHelper {
 	
 	@BeforeAll
@@ -44,6 +42,7 @@ class SwitcherThrottleTest extends MockWebServerHelper {
 	}
 	
 	@Test
+	@Order(1)
 	void shouldReturnTrue_withThrottle() {
 		// Initial remote call
 		givenResponse(generateMockAuth(10)); //auth
@@ -69,6 +68,7 @@ class SwitcherThrottleTest extends MockWebServerHelper {
 	}
 
 	@Test
+	@Order(2)
 	void shouldRetrieveNewResponse_whenStrategyInputChanged() {
 		// Initial remote call
 		givenResponse(generateMockAuth(10)); //auth
