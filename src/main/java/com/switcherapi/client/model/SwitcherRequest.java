@@ -23,8 +23,6 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	private final SwitcherExecutor switcherExecutor;
 	
 	private final String switcherKey;
-	
-	private final Map<List<Entry>, SwitcherResult> historyExecution;
 
 	private AsyncSwitcher asyncSwitcher;
 	
@@ -41,7 +39,6 @@ public final class SwitcherRequest extends SwitcherBuilder {
 		super(switcherProperties);
 		this.switcherExecutor = switcherExecutor;
 		this.switcherKey = switcherKey;
-		this.historyExecution = new HashMap<>();
 	}
 	
 	@Override

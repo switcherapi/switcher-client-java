@@ -6,6 +6,8 @@ import com.switcherapi.fixture.CountDownHelper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static com.switcherapi.client.remote.Constants.DEFAULT_ENV;
+
 class SnapshotWatcherWorkerTest extends SnapshotTest {
 
 	@BeforeAll
@@ -13,7 +15,7 @@ class SnapshotWatcherWorkerTest extends SnapshotTest {
 		SwitchersBase.configure(ContextBuilder.builder(true)
 			.context(SwitchersBase.class.getName())
 			.snapshotLocation(SNAPSHOTS_LOCAL)
-			.environment("default")
+			.environment(DEFAULT_ENV)
 			.local(true));
 
 		SwitchersBase.initializeClient();
