@@ -6,7 +6,11 @@ import com.switcherapi.client.SwitcherProperties;
 import com.switcherapi.client.exception.SwitcherException;
 import com.switcherapi.client.test.SwitcherBypass;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * SwitcherRequest is the entry point to evaluate criteria and return the result.
@@ -19,6 +23,8 @@ import java.util.*;
  * @see #submit()
  */
 public final class SwitcherRequest extends SwitcherBuilder {
+
+	private final ConcurrentHashMap<List<Entry>, SwitcherResult> historyExecution;
 
 	private final SwitcherExecutor switcherExecutor;
 	
@@ -39,6 +45,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 		super(switcherProperties);
 		this.switcherExecutor = switcherExecutor;
 		this.switcherKey = switcherKey;
+		this.historyExecution = new ConcurrentHashMap<>();
 	}
 	
 	@Override
@@ -61,7 +68,14 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	public SwitcherRequest prepareEntry(final Entry entry) {
 		return this.prepareEntry(entry, false);
 	}
-	
+
+	@Override
+	public SwitcherBuilder flush() {
+		this.entry.clear();
+		this.historyExecution.clear();
+		return this;
+	}
+
 	@Override
 	public boolean isItOn() throws SwitcherException {
 		final SwitcherResult response = submit();
@@ -80,9 +94,9 @@ public final class SwitcherRequest extends SwitcherBuilder {
 			}
 
 			asyncSwitcher.execute();
-			final Optional<SwitcherResult> response = getFromHistory();
-			if (response.isPresent()) {
-				return response.get();
+			final SwitcherResult response = getFromHistory();
+			if (Objects.nonNull(response)) {
+				return response;
 			}
 		}
 
@@ -117,7 +131,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 
 	@Override
 	public SwitcherResult getLastExecutionResult() {
-		return getFromHistory().orElse(null);
+		return getFromHistory();
 	}
 
 	public boolean isBypassMetrics() {
@@ -128,8 +142,8 @@ public final class SwitcherRequest extends SwitcherBuilder {
 		return super.delay > 0 && !this.historyExecution.isEmpty();
 	}
 
-	private Optional<SwitcherResult> getFromHistory() {
-		return Optional.ofNullable(historyExecution.get(entry));
+	private SwitcherResult getFromHistory() {
+		return historyExecution.get(entry);
 	}
 
 	@Override
