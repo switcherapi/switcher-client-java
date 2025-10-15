@@ -15,8 +15,6 @@ import java.util.*;
 public abstract class SwitcherBuilder implements Switcher {
 
 	protected final SwitcherProperties properties;
-
-	protected final Map<List<Entry>, SwitcherResult> historyExecution;
 	
 	protected long delay;
 
@@ -32,7 +30,6 @@ public abstract class SwitcherBuilder implements Switcher {
 
 	protected SwitcherBuilder(final SwitcherProperties properties) {
 		this.properties = properties;
-		this.historyExecution = new HashMap<>();
 		this.entry = new ArrayList<>();
 		this.delay = 0;
 	}
@@ -42,11 +39,7 @@ public abstract class SwitcherBuilder implements Switcher {
 	 *
 	 * @return {@link SwitcherBuilder}
 	 */
-	public SwitcherBuilder flush() {
-		this.historyExecution.clear();
-		this.entry.clear();
-		return this;
-	}
+	public abstract SwitcherBuilder flush();
 	
 	/**
 	 * Skip API calls given a delay time
