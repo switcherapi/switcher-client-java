@@ -4,11 +4,11 @@ import com.switcherapi.client.exception.SwitcherException;
 import com.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.switcherapi.client.model.Entry;
 import com.switcherapi.client.model.SwitcherRequest;
+import com.switcherapi.client.model.SwitcherResult;
 import com.switcherapi.client.model.criteria.Config;
 import com.switcherapi.client.model.criteria.Domain;
 import com.switcherapi.client.model.criteria.Group;
 import com.switcherapi.client.model.criteria.StrategyConfig;
-import com.switcherapi.client.model.SwitcherResult;
 import com.switcherapi.client.service.SwitcherFactory;
 import com.switcherapi.client.service.SwitcherValidator;
 import com.switcherapi.client.utils.SwitcherUtils;
@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -72,7 +73,7 @@ public class ClientLocalService implements ClientLocal {
 		for (final Group group : domain.getGroup()) {
 			config = findConfigInGroup(group, switcher.getSwitcherKey());
 
-			if (config != null) {
+			if (Objects.nonNull(config)) {
 				return getSwitcherResult(switcher, group, config);
 			}
 		}
@@ -101,10 +102,13 @@ public class ClientLocalService implements ClientLocal {
 	}
 
 	private Config findConfigInGroup(final Group group, final String switcherKey) {
-		return Arrays.stream(group.getConfig())
-				.filter(c -> c.getKey().equals(switcherKey))
-				.findFirst()
-				.orElse(null);
+		for (Config config : group.getConfig()) {
+			if (config.getKey().equals(switcherKey)) {
+				return config;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -126,7 +130,7 @@ public class ClientLocalService implements ClientLocal {
 
 			final Entry switcherInput = tryGetSwitcherInput(input, strategyConfig);
 			
-			if (switcherInput == null) {
+			if (Objects.isNull(switcherInput)) {
 				return strategyFailed(switcher, strategyConfig, STRATEGY_FAIL_NO_INPUT_PATTERN);
 			}
 
@@ -143,7 +147,7 @@ public class ClientLocalService implements ClientLocal {
 	}
 	
 	private Entry tryGetSwitcherInput(final List<Entry> input, StrategyConfig strategyConfig) {
-		if (input == null) {
+		if (Objects.isNull(input)) {
 			return null;
 		}
 		

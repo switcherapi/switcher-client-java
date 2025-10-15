@@ -46,7 +46,7 @@ public class AsyncSwitcher {
 	 * Validate if next run is ready to be performed, otherwise it will skip and delegate the
 	 * Switcher result for the Switcher history execution.
 	 */
-	public synchronized void execute() {
+	public void execute() {
 		SwitcherUtils.debug(logger, "nextRun: {} - currentTimeMillis: {}", nextRun, System.currentTimeMillis());
 		
 		if (nextRun < System.currentTimeMillis()) {
