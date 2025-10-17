@@ -44,7 +44,7 @@ public class AsyncSwitcher {
 
 	/**
 	 * Validate if next run is ready to be performed, otherwise it will skip and delegate the
-	 * Switcher result for the Switcher history execution.
+	 * Switcher result for the Switcher executions map.
 	 */
 	public void execute() {
 		SwitcherUtils.debug(logger, "nextRun: {} - currentTimeMillis: {}", nextRun, System.currentTimeMillis());
@@ -60,7 +60,7 @@ public class AsyncSwitcher {
 	public void run() {
 		try {
 			final SwitcherResult response = switcher.executeCriteria();
-			switcher.updateHistoryExecution(response);
+			switcher.updateExecutions(response);
 		} catch (SwitcherException e) {
 			logger.error(e.getMessage(), e);
 		}

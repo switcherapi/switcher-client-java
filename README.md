@@ -189,7 +189,7 @@ switcher.isItOn();
 Create chained calls to validate the switcher with a more readable and maintainable code.
 
 ```java
-import static **.MyAppFeatures.*;
+import static org.example.MyAppFeatures.*;
 
 getSwitcher(FEATURE01)
 	.checkValue("My value")
@@ -198,10 +198,22 @@ getSwitcher(FEATURE01)
 ```
 
 4. **Accessing the last SwitcherResult**
-Switchers stores the last execution result, which can be retrieved using the following operation.
+Switchers stores the last execution result, which can be retrieved using the following operation. Requires enabling executions history for each Switcher using:
 
 ```java
-switcher.getLastExecutionResult();
+getSwitcher(FEATURE01)
+    .keepExecutions();
+	.checkValue("My value")
+	.checkNetwork("10.0.0.1")
+
+switcher.isItOn();
+switcher.getLastExecutionResult(); // returns the last SwitcherResult
+```
+
+Executions history can also be cleared using:
+
+```java
+switcher.flushExecutions();
 ```
 
 5. **Throttling**

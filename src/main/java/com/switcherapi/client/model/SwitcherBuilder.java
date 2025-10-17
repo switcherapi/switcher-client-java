@@ -22,6 +22,8 @@ public abstract class SwitcherBuilder implements Switcher {
 
 	protected boolean bypassMetrics;
 
+	protected boolean keepExecutions;
+
 	protected Boolean restrictRelay;
 
 	protected String defaultResult;
@@ -35,11 +37,14 @@ public abstract class SwitcherBuilder implements Switcher {
 	}
 
 	/**
-	 * Clear all entries previously added and history of executions.
+	 * Clear all entries previously added
 	 *
 	 * @return {@link SwitcherBuilder}
 	 */
-	public abstract SwitcherBuilder flush();
+	public SwitcherBuilder resetInputs() {
+		this.entry.clear();
+		return this;
+	}
 	
 	/**
 	 * Skip API calls given a delay time
@@ -48,6 +53,7 @@ public abstract class SwitcherBuilder implements Switcher {
 	 * @return {@link SwitcherBuilder}
 	 */
 	public SwitcherBuilder throttle(long delay) {
+		this.keepExecutions();
 		this.delay = delay;
 		return this;
 	}
@@ -184,6 +190,16 @@ public abstract class SwitcherBuilder implements Switcher {
 	 */
 	public SwitcherBuilder bypassMetrics() {
 		this.bypassMetrics = true;
+		return this;
+	}
+
+	/**
+	 * Keep executions in memory
+	 *
+	 * @return {@link SwitcherBuilder}
+	 */
+	public SwitcherBuilder keepExecutions() {
+		this.keepExecutions = true;
 		return this;
 	}
 
