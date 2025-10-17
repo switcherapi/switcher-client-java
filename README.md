@@ -5,7 +5,6 @@
 A Java SDK for Switcher API
 </div>
 
-
 <div align="center">
 
 [![Master CI](https://github.com/switcherapi/switcher-client-java/actions/workflows/master-2.yml/badge.svg)](https://github.com/switcherapi/switcher-client-java/actions/workflows/master-2.yml)
@@ -21,21 +20,47 @@ A Java SDK for Switcher API
 
 ![Switcher API: Java Client: Cloud-based Feature Flag API](https://github.com/switcherapi/switcherapi-assets/blob/master/logo/switcherapi_java_client.png)
 
-# About
-Client Java for working with Switcher-API.
-https://github.com/switcherapi/switcher-api
+# Table of Contents
 
-- Flexible and robust SDK that will keep your code clean and maintainable.
-- Able to work local using a snapshot file pulled from your remote Switcher-API Domain.
-- Silent mode is a hybrid configuration that automatically enables contingent sub-processes in case of any connectivity issue.
-- Built-in test annotation for clear and easy implementation of automated testing.
-- Easy to set up. Switcher Context is responsible to manage all the configuration complexity between your application and API.
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+  - [Using SwitcherContext (Properties-based)](#using-switchercontext-properties-based)
+  - [Using SwitcherContextBase (Programmatic)](#using-switchercontextbase-programmatic)
+  - [Defining Feature Flags](#defining-feature-flags)
+- [Usage Patterns](#usage-patterns)
+- [Operating Modes](#operating-modes)
+  - [Remote Mode](#remote-mode)
+  - [Local Mode](#local-mode)
+  - [Hybrid Mode](#hybrid-mode)
+- [Advanced Features](#advanced-features)
+  - [Real-time Snapshot Management](#real-time-snapshot-management)
+  - [Performance Optimization](#performance-optimization)
+- [Testing](#testing)
+- [Native Image Support](#native-image-support)
 
-# Usage
+# Overview
 
-## Install
-- Using the source code `mvn clean install`
-- Adding as a dependency - Maven
+The Switcher Client SDK is a comprehensive Java library for integrating with [Switcher API](https://github.com/switcherapi/switcher-api), a cloud-based feature flag management system. This SDK enables you to control feature toggles, A/B testing, and configuration management in your Java applications.
+
+# Key Features
+
+- **🔧 Flexible Configuration**: Multiple configuration approaches to fit different application architectures
+- **📁 Local & Remote Operation**: Works with remote API or local snapshot files for offline capability
+- **🔄 Real-time Updates**: Hot-swapping support with automatic snapshot synchronization
+- **🧪 Testing Support**: Built-in testing utilities and annotations for automated testing
+- **⚡ Performance Optimized**: Includes throttling, caching, and async execution capabilities
+- **🛡️ Resilient**: Silent mode with automatic fallback mechanisms for high availability
+- **🔍 Easy Debugging**: Comprehensive execution history and metadata tracking
+
+# Installation
+
+## Maven Dependency
+
+Add the following dependency to your `pom.xml`:
+
 ```xml
 <dependency>
   <groupId>com.switcherapi</groupId>
@@ -44,225 +69,323 @@ https://github.com/switcherapi/switcher-api
 </dependency>
 ```
 
-### Compatibility with Jakarta EE 9 and Java versions
-Use SDK v1.x for applications not using Jakarta EE 9 (requires Java 8+).<br>
-Use SDK v2.x for Jakarta EE 9+ based applications (requires Java 17+).
+## Build from Source
 
-## Client Context Properties - SwitcherContext
-
-Define a feature class that extends SwitcherContext. This implementation will centralize all features in a single place of your application and will have all the operations and features available to access the API either remotely or locally from the snapshot files.
-
-The Client SDK configuration must be defined in a properties file that contains all parameters for your application to start communicating with the API.
-
-### Inside the resources' folder, create a file named: switcherapi.properties.
-
-Configure the parameters according to the definition below. 
-You can also use environment variables using the standard notation ${VALUE:DEFAULT_VALUE}
-
-```
-#required
-switcher.context -> Feature class that extends SwitcherContext/SwitcherContextBase
-switcher.url -> Switcher-API URL
-switcher.apikey -> Switcher-API key generated for the application/component
-switcher.component -> Application/component name
-switcher.domain -> Domain name
-
-#optional
-switcher.environment -> Environment name
-switcher.local -> true/false When local, it will only use a local snapshot
-switcher.check -> true/false When true, it will check Switcher Keys
-switcher.relay.restrict -> true/false When true, it will check snapshot relay status
-switcher.snapshot.location -> Folder from where snapshots will be saved/read
-switcher.snapshot.auto -> true/false Automated lookup for snapshot when initializing the client
-switcher.snapshot.watcher -> true/false Enable the watcher to monitor the snapshot file for changes during runtime
-switcher.snapshot.skipvalidation -> true/false Skip snapshotValidation() that can be used for UT executions
-switcher.snapshot.updateinterval -> Enable the Snapshot Auto Update given an interval of time - e.g. 1s (s: seconds, m: minutes)
-switcher.silent -> Enable contigency given the time for the client to retry - e.g. 5s (s: seconds - m: minutes - h: hours)
-switcher.truststore.path -> Path to the truststore file
-switcher.truststore.password -> Truststore password
-switcher.timeout -> Time in ms given to the API to respond - 3000 default value
-switcher.poolsize -> Number of threads used to execute the API - 2 default value
-
-(Java 8 applications only)
-switcher.regextimeout -> Time in ms given to Timed Match Worker used for local Regex (ReDoS safety mechanism) - 3000 default value
+```bash
+mvn clean install
 ```
 
-## Client Context Properties - SwitcherContextBase
+## Version Compatibility
 
-The Base Context provides with a more flexible way to configure the Client SDK.<br>
-Instead of using SwitcherContext, which is used to automatically load from the switcherapi.properties, you can also use SwitcherContextBase and supply the ContextBuilder to include the settings.
+| SDK Version | Java Version | Jakarta EE | Description |
+|-------------|--------------|------------|-------------|
+| v1.x | Java 8+ | No | For traditional Java EE applications |
+| v2.x | Java 17+ | Yes | For Jakarta EE 9+ applications |
+
+# Quick Start
+
+Here's a minimal example to get you started:
 
 ```java
-MyAppFeatures.configure(ContextBuilder.builder()
-		.context(Features.class.getName())
-		.apiKey("API_KEY")
-		.url("https://switcher-api.com")
-		.domain("Playground")
-		.component("switcher-playground"));
+// 1. Define your feature flags
+public class MyAppFeatures extends SwitcherContext {
+    @SwitcherKey
+    public static final String FEATURE_NEW_UI = "FEATURE_NEW_UI";
+    
+    @SwitcherKey
+    public static final String FEATURE_PREMIUM = "FEATURE_PREMIUM";
+}
 
-MyAppFeatures.initializeClient();
-```
-
-Or simply define a custom file properties to load everything from it.
-```
-// Load from resources/switcherapi-test.properties 
-MyAppFeatures.loadProperties("switcherapi-test");
-```
-
-Or using configureClient() with @PostConstruct to handle all the configuration build boilerplate.
-
-```java
-@ConfigurationProperties
-class MySwitcherClientConfig extends SwitcherContextBase {
-
-	@SwitcherKey
-	public static final String MY_SWITCHER = "MY_SWITCHER";
-	
-	@Override
-	@PostConstruct
-	public void configureClient() {
-		// you can add pre-configuration here
-		super.configureClient();
-		// you can add post-configuration here
-	}
+// 2. Use in your application
+public class MyService {
+    public void processRequest() {
+        if (MyAppFeatures.getSwitcher(FEATURE_NEW_UI).isItOn()) {
+            // Use new UI logic
+        } else {
+            // Use legacy UI logic
+        }
+    }
 }
 ```
 
-### Defining your features
+# Configuration
 
-Create a class that extends `SwitcherContext` if you are loading the configuration from the switcherapi.properties file.<br>
-Or use `SwitcherContextBase` to define the configuration using the ContextBuilder or SwitcherConfig.
+## Using SwitcherContext (Properties-based)
 
-Switcher Keys are defined using the @SwitcherKey annotation and must be public static final String.<br>
-- Public because you will need to access it from other places of your code.
-- Static because you will access it without instantiating the class.
-- Final because the value must not be changed during runtime.
+This approach automatically loads configuration from a properties file, ideal for applications with externalized configuration.
 
-The attribute name can be defined as you want (e.g. FEATURE01, FEATURE_01, myFeatureOne, etc), but the value must be the exact Switcher Key defined in Switcher Management or snapshot files.
+### Step 1: Create Configuration File
+
+Create `src/main/resources/switcherapi.properties`:
+
+```properties
+# Required Configuration
+switcher.context=com.example.MyAppFeatures
+switcher.url=https://api.switcherapi.com
+switcher.apikey=YOUR_API_KEY
+switcher.component=my-application
+switcher.domain=MY_DOMAIN
+
+# Optional Configuration
+switcher.environment=default
+switcher.timeout=3000
+switcher.poolsize=2
+```
+
+### Configuration Properties Reference
+
+| Property | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `switcher.context` | ✅ | -       | Fully qualified class name extending SwitcherContext |
+| `switcher.url` | ✅ | -       | Switcher API endpoint URL |
+| `switcher.apikey` | ✅ | -       | API key for authentication |
+| `switcher.component` | ✅ | -       | Your application/component identifier |
+| `switcher.domain` | ✅ | -       | Domain name in Switcher API |
+| `switcher.environment` | ❌ | default | Environment name (dev, staging, default) |
+| `switcher.local` | ❌ | false   | Enable local-only mode |
+| `switcher.snapshot.location` | ❌ | -       | Directory for snapshot files |
+| `switcher.snapshot.auto` | ❌ | false   | Auto-load snapshots on startup |
+| `switcher.snapshot.watcher` | ❌ | false   | Monitor snapshot files for changes |
+| `switcher.silent` | ❌ | -       | Enable silent mode (e.g., "5s", "2m") |
+| `switcher.timeout` | ❌ | 3000    | API timeout in milliseconds |
+| `switcher.poolsize` | ❌ | 2       | Thread pool size for API calls |
+
+> 💡 **Environment Variables**: Use `${ENV_VAR:default_value}` syntax for environment variable substitution.
+
+### Step 2: Define Feature Class
 
 ```java
 public class MyAppFeatures extends SwitcherContext {
-	
-	@SwitcherKey
-	public static final String MY_SWITCHER = "MY_SWITCHER";
-
+    @SwitcherKey
+    public static final String FEATURE_NEW_UI = "FEATURE_NEW_UI";
+    
+    @SwitcherKey
+    public static final String FEATURE_PREMIUM = "FEATURE_PREMIUM";
 }
-
-Switcher mySwitcher = MyAppFeatures.getSwitcher(MY_SWITCHER);
-mySwitcher.isItOn();
 ```
 
-## Executing
-There are a few different ways to call the API using the java library.
-Here are some examples:
+## Using SwitcherContextBase (Programmatic)
 
-1. **No parameters**
-Invoking the API can be done by obtaining the switcher object and calling *isItOn*.
+This approach provides more flexibility and is ideal for applications requiring dynamic configuration.
+
+### Basic Programmatic Configuration
 
 ```java
-Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
-switcher.isItOn();
+public class MyAppFeatures extends SwitcherContextBase {
+    @SwitcherKey
+    public static final String FEATURE_NEW_UI = "FEATURE_NEW_UI";
+    
+    // Configure programmatically
+    static {
+        configure(ContextBuilder.builder()
+            .context(MyAppFeatures.class.getName())
+            .apiKey("YOUR_API_KEY")
+            .url("https://api.switcherapi.com")
+            .domain("MY_DOMAIN")
+            .component("my-application")
+            .environment("default"));
+        
+        initializeClient();
+    }
+}
 ```
 
-Or, you can submit the switcher request and get the switcher result, which contains result, reason and metadata that can be used for any additional verification.
+### Spring Boot Integration
 
 ```java
+@ConfigurationProperties(prefix = "switcher")
+@Component
+public class MySwitcherConfig extends SwitcherContextBase {
+    
+    @SwitcherKey
+    public static final String FEATURE_NEW_UI = "FEATURE_NEW_UI";
+    
+    @Override
+    @PostConstruct
+    public void configureClient() {
+        // Add any pre-configuration logic here
+        super.configureClient();
+        // Add any post-configuration logic here
+    }
+}
+```
+
+### Custom Properties File
+
+```java
+// Load from custom properties file
+MyAppFeatures.loadProperties("custom-switcher-config");
+```
+
+## Defining Feature Flags
+
+Feature flags must follow specific conventions for proper functionality:
+
+```java
+public class MyAppFeatures extends SwitcherContext {
+    
+    // ✅ Correct: public static final String
+    @SwitcherKey
+    public static final String FEATURE_NEW_UI = "FEATURE_NEW_UI";
+    
+    @SwitcherKey
+    public static final String FEATURE_PREMIUM_ACCESS = "FEATURE_PREMIUM_ACCESS";
+    
+    // ❌ Incorrect examples:
+    // private static final String WRONG = "WRONG";        // Not public
+    // public static String WRONG2 = "WRONG2";             // Not final
+    // public final String WRONG3 = "WRONG3";              // Not static
+}
+```
+
+**Why these conventions matter:**
+- **`public`**: Accessible from other parts of your application
+- **`static`**: No need to instantiate the class to access the constant
+- **`final`**: Prevents accidental modification during runtime
+
+# Usage Patterns
+
+## 1. Basic Flag Checking
+
+```java
+// Simple boolean check
+Switcher switcher = MyAppFeatures.getSwitcher(FEATURE_NEW_UI);
+if (switcher.isItOn()) {
+    // Feature is enabled
+}
+```
+
+## 2. Detailed Result Information
+
+```java
+Switcher switcher = MyAppFeatures.getSwitcher(FEATURE_NEW_UI);
 SwitcherResult result = switcher.submit();
-result.isItOn(); // true/false
-result.getReason(); // Descriptive response based on result value
-result.getMetadata(YourMetadata.class); // Additional information
+
+if (result.isItOn()) {
+    System.out.println("Feature enabled: " + result.getReason());
+    // Access additional metadata if needed
+    MyMetadata metadata = result.getMetadata(MyMetadata.class);
+}
 ```
 
-2. **Strategy validation - preparing input**
-Loading information into the switcher can be made by using *prepareEntry*, in case you want to include input from a different place of your code. Otherwise, it is also possible to include everything in the same call.
+## 3. Strategy Validation with Input Parameters
+
+### Preparing Input Separately
 
 ```java
 List<Entry> entries = new ArrayList<>();
-entries.add(Entry.of(StrategyValidator.DATE, "2019-12-10"));
-entries.add(Entry.of(StrategyValidator.DATE, "2020-12-10"));
+entries.add(Entry.of(StrategyValidator.DATE, "2024-01-01"));
+entries.add(Entry.of(StrategyValidator.TIME, "14:00"));
 
 switcher.prepareEntry(entries);
-switcher.isItOn();
+boolean isEnabled = switcher.isItOn();
 ```
 
-3. **Strategy validation - Fluent style**
-Create chained calls to validate the switcher with a more readable and maintainable code.
+### Fluent API Style (Recommended)
 
 ```java
-import static org.example.MyAppFeatures.*;
+import static com.example.MyAppFeatures.*;
 
-getSwitcher(FEATURE01)
-	.checkValue("My value")
-	.checkNetwork("10.0.0.1")
-	.isItOn();
+boolean isEnabled = getSwitcher(FEATURE_PREMIUM_ACCESS)
+    .checkValue("premium_user")
+    .checkNetwork("192.168.1.0/24")
+    .checkDate("2024-01-01", "2024-12-31")
+    .isItOn();
 ```
 
-4. **Accessing the last SwitcherResult**
-Switchers stores the last execution result, which can be retrieved using the following operation. Requires enabling executions history for each Switcher using:
+## 4. Execution History Tracking
 
 ```java
-getSwitcher(FEATURE01)
-    .keepExecutions();
-	.checkValue("My value")
-	.checkNetwork("10.0.0.1")
+Switcher switcher = getSwitcher(FEATURE_NEW_UI)
+    .keepExecutions()  // Enable execution tracking
+    .checkValue("user_type", "premium");
 
 switcher.isItOn();
-switcher.getLastExecutionResult(); // returns the last SwitcherResult
-```
 
-Executions history can also be cleared using:
+// Access the last execution result
+SwitcherResult lastResult = switcher.getLastExecutionResult();
+System.out.println("Last execution reason: " + lastResult.getReason());
 
-```java
+// Clear history when needed
 switcher.flushExecutions();
 ```
 
-5. **Throttling**
-Run Switchers asynchronously when using throttling. It will return the last known value until the throttle time is over.
+## 5. Performance Optimization with Throttling
 
 ```java
-switcher.throttle(1000).isItOn();
+// Execute asynchronously with 1-second throttle
+// Returns cached result if called within throttle period
+boolean isEnabled = switcher.throttle(1000).isItOn();
 ```
 
-## Local settings
-You can also set the Switcher library to work locally. It will use a local snapshot file to retrieve the switchers configuration.
+# Operating Modes
 
-```java
-MyAppFeatures.configure(ContextBuilder.builder()
-	.local(true)
-	.snapshotLocation("/src/resources"));
+## Remote Mode
 
-MyAppFeatures.initializeClient();
-
-Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
-switcher.isItOn();
-```
-
-## Hybrid settings
-Forcing Switchers to resolve remotely can help you define exclusive features that cannot be resolved locally.<br>
-This feature is ideal if you want to run the SDK in local mode but still want to resolve a specific switcher remotely.
-
-```java
-switcher.forceRemote().isItOn();
-```
-
-Another option is to use in-memory loaded snapshots to resolve the switchers.<br>
-Switcher SDK will schedule a background task to update snapshot in-memory a new version is available.
+Default mode that communicates directly with Switcher API.
 
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
     .url("https://api.switcherapi.com")
-    .apiKey("[API-KEY]")
-    .domain("Playground")
-    .local(true)
-    .snapshotAutoLoad(true)
-    .snapshotAutoUpdateInterval("5s") // You can choose to configure here or using `scheduleSnapshotAutoUpdate`
-    .component("switcher-playground"));
+    .apiKey("YOUR_API_KEY")
+    .domain("MY_DOMAIN")
+    .component("my-app"));
 
 MyAppFeatures.initializeClient();
-MyAppFeatures.scheduleSnapshotAutoUpdate("5s", new SnapshotCallback() {
+```
+
+**Use Cases:**
+- Real-time feature flag updates
+- A/B testing with immediate changes
+- Centralized configuration management
+
+## Local Mode
+
+Uses local snapshot files without API communication.
+
+```java
+MyAppFeatures.configure(ContextBuilder.builder()
+    .local(true)
+    .snapshotLocation("./config/snapshots"));
+
+MyAppFeatures.initializeClient();
+```
+
+**Use Cases:**
+- Offline environments
+- High-performance scenarios where API latency is critical
+- Development and testing environments
+
+## Hybrid Mode
+
+Combines remote and local capabilities for optimal flexibility.
+
+### Force Remote Resolution
+
+```java
+// Force specific switcher to resolve remotely even in local mode
+switcher.forceRemote().isItOn();
+```
+
+### In-Memory Snapshots with Auto-Update
+
+```java
+MyAppFeatures.configure(ContextBuilder.builder()
+    .url("https://api.switcherapi.com")
+    .apiKey("YOUR_API_KEY")
+    .domain("MY_DOMAIN")
+    .local(true)
+    .snapshotAutoLoad(true)
+    .snapshotAutoUpdateInterval("30s")  // Check for updates every 30 seconds
+    .component("my-app"));
+
+MyAppFeatures.initializeClient();
+
+// Optional: Schedule with callback for monitoring
+MyAppFeatures.scheduleSnapshotAutoUpdate("30s", new SnapshotCallback() {
     @Override
     public void onSnapshotUpdate(long version) {
-        logger.info("Snapshot updated: {}", version);
+        logger.info("Snapshot updated to version: {}", version);
     }
 
     @Override
@@ -272,144 +395,211 @@ MyAppFeatures.scheduleSnapshotAutoUpdate("5s", new SnapshotCallback() {
 });
 ```
 
-## Real-time snapshot reload (Hot-swapping)
-Let the Switcher Client manage your application local snapshot.<br>
-These features allow you to configure the SDK to automatically update the snapshot during runtime.
+# Advanced Features
 
-1. This feature will update the in-memory Snapshot every time the file is modified.
+## Real-time Snapshot Management
+
+### File System Watcher
+
+Monitor snapshot files for external changes:
 
 ```java
+// Start watching for file changes
 MyAppFeatures.watchSnapshot();
+
+// Stop watching when no longer needed
 MyAppFeatures.stopWatchingSnapshot();
 ```
 
-Alternatively, you can also set the Switcher Context configuration to start watching the snapshot file during the client initialization.
+Or enable during initialization:
 
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
-    .snapshotWatcher(true));
-
-MyAppFeatures.initializeClient();
+    .snapshotWatcher(true)
+    .snapshotLocation("./config"));
 ```
 
-2. You can also perform snapshot update validation to verify if there are changes to be pulled.
+### Manual Snapshot Validation
 
 ```java
-MyAppFeatures.validateSnapshot();
+// Check if remote snapshot is newer than local
+boolean hasUpdates = MyAppFeatures.validateSnapshot();
+if (hasUpdates) {
+    logger.info("New snapshot version available");
+}
 ```
 
-3. Enable the Client SDK to execute Snapshot Auto Updates in the background using configuration. It basically encapsulates the validateSnapshot feature into a scheduled task managed by the SDK.
+### Automated Background Updates
 
 ```java
-// It will check and update the local/in-memory snapshot to the latest version every second
 MyAppFeatures.configure(ContextBuilder.builder()
-	.snapshotAutoUpdateInterval("1s")
-	.snapshotLocation("/src/resources"));
+    .snapshotAutoUpdateInterval("5m")  // Check every 5 minutes
+    .snapshotLocation("./config"));
 ```
 
-## Built-in test feature
-Write automated tests using this built-in test annotation to guide your test scenario according to what you want to test.
-</br>*SwitcherExecutor* implementation has 2 methods that can make mock tests easier. Use assume to force a value to a switcher and forget to reset its original state.
+## Performance Optimization
+
+### Silent Mode (Resilience)
+
+Automatically fall back to cached results when API is unavailable:
 
 ```java
-Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01);
-
-SwitcherBypass.assume(FEATURE01, false);
-switcher.isItOn(); // 'false'
-
-SwitcherBypass.forget(FEATURE01);
-switcher.isItOn(); // Now, it's going to return the result retrieved from the API or the Snapshot file
+MyAppFeatures.configure(ContextBuilder.builder()
+    .silent("30s")  // Retry API calls every 30 seconds when failing
+    .url("https://api.switcherapi.com")
+    // ... other config
+);
 ```
 
-For more complex scenarios where you need to test features based on specific inputs, you can use test conditions.
+**Time formats supported:**
+- `5s` - 5 seconds
+- `2m` - 2 minutes  
+- `1h` - 1 hour
+
+### Connection Pooling
 
 ```java
-Switcher switcher = MyAppFeatures.getSwitcher(FEATURE01).checkValue("My value");
-
-SwitcherBypass.assume(FEATURE01, true).when(StrategyValidator.VALUE, "My value");
-switcher.isItOn(); // 'true'
-
+MyAppFeatures.configure(ContextBuilder.builder()
+    .timeout(5000)    // 5 second timeout
+    .poolsize(5)      // 5 concurrent connections
+    // ... other config
+);
 ```
-## Smoke test
-Validate Switcher Keys on your testing pipelines before deploying a change.
-Switcher Keys may not be configured correctly and can cause your code to have undesired results.
 
-This feature will validate using the context provided to check if everything is up and running.
-In case something is missing, this operation will throw an exception pointing out which Switcher Keys are not configured.
+# Testing
+
+## Built-in Test Utilities
+
+### SwitcherBypass for Unit Tests
 
 ```java
 @Test
-void testSwitchers() {
-	assertDoesNotThrow(() -> MyAppFeatures.checkSwitchers());
+void testFeatureEnabled() {
+    // Force switcher to return specific value
+    SwitcherBypass.assume(FEATURE_NEW_UI, true);
+    
+    assertTrue(myService.usesNewUI());
+    
+    // Reset to original behavior
+    SwitcherBypass.forget(FEATURE_NEW_UI);
+}
+
+@Test
+void testWithConditions() {
+    Switcher switcher = MyAppFeatures.getSwitcher(FEATURE_PREMIUM_ACCESS)
+        .checkValue("user_type", "premium");
+    
+    // Assume true only when specific condition is met
+    SwitcherBypass.assume(FEATURE_PREMIUM_ACCESS, true)
+        .when(StrategyValidator.VALUE, "premium");
+    
+    assertTrue(switcher.isItOn());
 }
 ```
 
-Alternatively, you can also set the Switcher Context configuration to check during the client initialization.
+### JUnit 5 Integration
+
+#### Single Switcher Test
+
+```java
+@SwitcherTest(key = FEATURE_NEW_UI, result = true)
+void testNewUIFeature() {
+    // FEATURE_NEW_UI will return true during this test
+    assertTrue(myService.usesNewUI());
+    // Automatically resets after test completion
+}
+```
+
+#### Multiple Switchers
+
+```java
+@SwitcherTest(switchers = {
+    @SwitcherTestValue(key = FEATURE_NEW_UI, result = true),
+    @SwitcherTestValue(key = FEATURE_PREMIUM_ACCESS, result = false)
+})
+void testMultipleFeatures() {
+    assertTrue(myService.usesNewUI());
+    assertFalse(myService.hasPremiumAccess());
+}
+```
+
+#### A/B Testing
+
+```java
+@SwitcherTest(key = FEATURE_NEW_UI, abTest = true)
+void testFeatureABTesting() {
+    // Test passes regardless of switcher result
+    // Useful for testing both code paths
+    myService.handleUILogic();
+}
+```
+
+#### Conditional Testing
+
+```java
+@SwitcherTest(
+    key = FEATURE_PREMIUM_ACCESS, 
+    result = true,
+    when = @SwitcherTestWhen(value = "premium_user")
+)
+void testPremiumFeature() {
+    // Test with specific input conditions
+    assertTrue(myService.checkPremiumAccess("premium_user"));
+}
+```
+
+## Smoke Testing
+
+Validate all switcher keys are properly configured:
+
+```java
+@Test
+void validateSwitcherConfiguration() {
+    // Throws exception if any switcher key is not found
+    assertDoesNotThrow(() -> MyAppFeatures.checkSwitchers());
+}
+```
+
+Enable automatic validation during startup:
 
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
-    .checkSwitchers(true));
-
-MyAppFeatures.initializeClient();
+    .checkSwitchers(true)  // Validate on initialization
+    // ... other config
+);
 ```
 
-#### SwitcherTest annotation - Requires JUnit 5 Jupiter
-Predefine Switchers result outside your test methods with the SwitcherTest annotation.
-</br>It encapsulates the test and makes sure that the Switcher returns to its original state after concluding the test.
+# Native Image Support
 
-Simple use case (result is default to true, so it can be omitted):
-```java
-@SwitcherTest(key = MY_SWITCHER, result = true)
-void testMyFeature() {
-   assertTrue(instance.myFeature());
-}
-```
-
-Multiple Switchers where more than one Switcher is used in the test:
-```java
-@SwitcherTest(switchers = {
-    @SwitcherTestValue(key = MY_SWITCHER),
-    @SwitcherTestValue(key = MY_SWITCHER2)
-})
-void testMyFeature() {
-   assertTrue(instance.myFeature());
-}
-```
-
-AB Test scenario where your test should return the same result regardless of the Switcher result:
-```java
-@SwitcherTest(key = MY_SWITCHER, abTest = true)
-void testMyFeature() {
-   assertTrue(instance.myFeature());
-}
-```
-
-Using SwitcherTestWhen to define a specific condition for the test:
-```java
-@SwitcherTest(key = MY_SWITCHER, when = @SwitcherTestWhen(value = "My value"))
-void testMyFeature() {
-   assertTrue(instance.myFeature());
-}
-```
-
-## Native Image
-
-Switcher Client is fully compatible with GraalVM Native Image out of the box.
-</br>Here is how you can configure the SDK to work with GraalVM:
+Switcher Client fully supports GraalVM Native Image compilation:
 
 ```java
 @ConfigurationProperties
-public class MyNativeAppFeatureFlags extends SwitcherContextBase {
-	
-    public static final String MY_SWITCHER = "MY_SWITCHER";
+public class MyNativeAppFeatures extends SwitcherContextBase {
+    
+    @SwitcherKey
+    public static final String FEATURE_NEW_UI = "FEATURE_NEW_UI";
+    
+    @SwitcherKey
+    public static final String FEATURE_PREMIUM = "FEATURE_PREMIUM";
 
     @Override 
     @PostConstruct 
     protected void configureClient() {
-        super.registerSwitcherKeys(MY_SWITCHER);
+        // Register switcher keys for native compilation
+        super.registerSwitcherKeys(FEATURE_NEW_UI, FEATURE_PREMIUM);
         super.configureClient();
     }
 }
 ```
 
-Check out more code examples in the [Switcher Tutorials](https://github.com/switcherapi/switcherapi-tutorials) repository.
+---
+
+## Additional Resources
+
+- 📚 [Switcher Tutorials](https://github.com/switcherapi/switcherapi-tutorials) - Complete code examples and tutorials
+- 🌐 [Switcher API Documentation](https://github.com/switcherapi/switcher-api) - Backend API documentation
+- 💬 [Join our Slack](https://switcher-hq.slack.com/) - Community support and discussions
+- 🐛 [Report Issues](https://github.com/switcherapi/switcher-client-java/issues) - Bug reports and feature requests
+
+---
