@@ -36,15 +36,15 @@ public enum ContextKey {
 	ENVIRONMENT("switcher.environment"),
 	
 	/**
-	 * (String) Folder path where all snapshot files are located.
-	 */
-	SNAPSHOT_LOCATION("switcher.snapshot.location"),
-	
-	/**
 	 * (String) Defines the package and class where a context wrapper is located.
 	 * It is only necessary to use with {@link SwitcherContext}
 	 */
 	CONTEXT_LOCATION("switcher.context"),
+
+	/**
+	 * (String) Folder path where all snapshot files are located.
+	 */
+	SNAPSHOT_LOCATION("switcher.snapshot.location"),
 	
 	/**
 	 * (boolean) Activate snapshot autoload which will try to retrieve the snapshot from the API if the file does not exist.

@@ -134,21 +134,28 @@ switcher.poolsize=2
 
 ### Configuration Properties Reference
 
-| Property | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `switcher.context` | ✅ | -       | Fully qualified class name extending SwitcherContext |
-| `switcher.url` | ✅ | -       | Switcher API endpoint URL |
-| `switcher.apikey` | ✅ | -       | API key for authentication |
-| `switcher.component` | ✅ | -       | Your application/component identifier |
-| `switcher.domain` | ✅ | -       | Domain name in Switcher API |
-| `switcher.environment` | ❌ | default | Environment name (dev, staging, default) |
-| `switcher.local` | ❌ | false   | Enable local-only mode |
-| `switcher.snapshot.location` | ❌ | -       | Directory for snapshot files |
-| `switcher.snapshot.auto` | ❌ | false   | Auto-load snapshots on startup |
-| `switcher.snapshot.watcher` | ❌ | false   | Monitor snapshot files for changes |
-| `switcher.silent` | ❌ | -       | Enable silent mode (e.g., "5s", "2m") |
-| `switcher.timeout` | ❌ | 3000    | API timeout in milliseconds |
-| `switcher.poolsize` | ❌ | 2       | Thread pool size for API calls |
+| Property                            | Required | Default | Description                                                                          |
+|-------------------------------------|----------|---------|--------------------------------------------------------------------------------------|
+| `switcher.context`                  | ✅ | -       | Fully qualified class name extending SwitcherContext                                 |
+| `switcher.url`                      | ✅ | -       | Switcher API endpoint URL                                                            |
+| `switcher.apikey`                   | ✅ | -       | API key for authentication                                                           |
+| `switcher.component`                | ✅ | -       | Your application/component identifier                                                |
+| `switcher.domain`                   | ✅ | -       | Domain name in Switcher API                                                          |
+| `switcher.environment`              | ❌ | default | Environment name (dev, staging, default)                                             |
+| `switcher.local`                    | ❌ | false   | Enable local-only mode                                                               |
+| `switcher.check`                    | ❌ | false   | Validate switcher keys on startup                                                    |
+| `switcher.relay.restrict`           | ❌ | true    | Defines if client will trigger local snapshot relay verification                     |
+| `switcher.snapshot.location`        | ❌ | -       | Directory for snapshot files                                                         |
+| `switcher.snapshot.auto`            | ❌ | false   | Auto-load snapshots on startup                                                       |
+| `switcher.snapshot.skipvalidation`  | ❌ | false   | Skip snapshot validation on load                                                     |
+| `switcher.snapshot.updateinterval`  | ❌ | -       | Interval for automatic snapshot updates (e.g., "5s", "2m")                           |
+| `switcher.snapshot.watcher`         | ❌ | false   | Monitor snapshot files for changes                                                   |
+| `switcher.silent`                   | ❌ | -       | Enable silent mode (e.g., "5s", "2m")                                                |
+| `switcher.timeout`                  | ❌ | 3000    | API timeout in milliseconds                                                          |
+| `switcher.poolsize`                 | ❌ | 2       | Thread pool size for API calls                                                       |
+| `switcher.regextimeout` (v1-only)   | ❌ | 3000    | Time in ms given to Timed Match Worker used for local Regex (ReDoS safety mechanism) |
+| `switcher.truststore.path`          | ❌ | -       | Path to custom truststore file                                                       |
+| `switcher.truststore.password`      | ❌ | -       | Password for custom truststore                                                       |
 
 > 💡 **Environment Variables**: Use `${ENV_VAR:default_value}` syntax for environment variable substitution.
 
