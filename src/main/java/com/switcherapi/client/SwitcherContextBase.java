@@ -399,7 +399,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 		
 		final SwitcherRequest switcher = switchers.get(key);
 		if (!keepEntries) {
-			switcher.flush();
+			switcher.resetInputs();
 		}
 		
 		return switcher;

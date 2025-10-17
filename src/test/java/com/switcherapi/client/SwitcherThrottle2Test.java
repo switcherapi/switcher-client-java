@@ -48,7 +48,8 @@ class SwitcherThrottle2Test extends MockWebServerHelper {
 		//test
 		SwitcherBuilder switcher = SwitchersBase
 				.getSwitcher(SwitchersBase.USECASE11)
-				.flush()
+				.flushExecutions()
+				.resetInputs()
 				.throttle(1000);
 
 		for (int i = 0; i < 100; i++) {

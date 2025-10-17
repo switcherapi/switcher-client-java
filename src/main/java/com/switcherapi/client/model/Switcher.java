@@ -26,6 +26,13 @@ import java.util.List;
 public interface Switcher {
 
 	/**
+	 * Clear executions from SwitcherRequest
+	 *
+	 * @return instance of SwitcherInterface
+	 */
+	Switcher flushExecutions();
+
+	/**
 	 * Prepare the Switcher including a list of inputs necessary to run the criteria afterward.
 	 *
 	 * @param entry input object
@@ -77,11 +84,11 @@ public interface Switcher {
 	SwitcherResult executeCriteria();
 
 	/**
-	 * Update the history of executions.
+	 * Update Switcher executions.
 	 *
 	 * @param response the response to be updated
 	 */
-	void updateHistoryExecution(SwitcherResult response);
+	void updateExecutions(SwitcherResult response);
 
 	/**
 	 * Get the key of the switcher.
