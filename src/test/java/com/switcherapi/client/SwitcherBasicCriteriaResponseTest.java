@@ -96,7 +96,7 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 
 		//test
 		switcherBuilder
-				.flush()
+				.resetInputs()
 				.checkValue("anotherValue");
 
 		assertEquals(1, switcherBuilder.getEntry().size());

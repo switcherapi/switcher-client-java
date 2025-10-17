@@ -7,6 +7,8 @@ import com.switcherapi.client.exception.SwitcherKeyNotFoundException;
 import com.switcherapi.client.model.ContextKey;
 import com.switcherapi.client.model.Entry;
 import com.switcherapi.client.model.StrategyValidator;
+import com.switcherapi.client.model.Switcher;
+import com.switcherapi.client.model.SwitcherBuilder;
 import com.switcherapi.client.model.SwitcherRequest;
 import com.switcherapi.fixture.Product;
 import com.google.gson.Gson;
@@ -49,35 +51,53 @@ class SwitcherLocal1Test {
 	
 	@Test
 	void localShouldReturnTrue() {
-		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE11, true);
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE11, true)
+				.keepExecutions();
 
 		assertNull(switcher.getLastExecutionResult());
 		assertTrue(switcher.isItOn());
 
-		// check result history
+		// check result from executions
 		assertTrue(switcher.getLastExecutionResult().isItOn());
 	}
 
 	@Test
 	void localShouldReturnTrueUsingFriendlyConstantName() {
-		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.friendlyFeatureName, true);
+		Switcher switcher = Switchers.getSwitcher(Switchers.friendlyFeatureName, true)
+				.keepExecutions();
 
 		assertNull(switcher.getLastExecutionResult());
 		assertTrue(switcher.isItOn());
 
-		// check result history
+		// check result from executions
 		assertTrue(switcher.getLastExecutionResult().isItOn());
 	}
 	
 	@Test
 	void localShouldReturnFalse() {
-		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE12);
+		Switcher switcher = Switchers.getSwitcher(Switchers.USECASE12)
+				.keepExecutions();
 
 		assertNull(switcher.getLastExecutionResult());
 		assertFalse(switcher.isItOn());
 
-		// check result history
+		// check result from executions
 		assertFalse(switcher.getLastExecutionResult().isItOn());
+	}
+
+	@Test
+	void localShouldCleanExecutions() {
+		SwitcherBuilder switcher = Switchers.getSwitcher(Switchers.USECASE11, true)
+				.keepExecutions();
+
+		assertNull(switcher.getLastExecutionResult());
+		assertTrue(switcher.isItOn());
+
+		// check result from executions
+		assertTrue(switcher.getLastExecutionResult().isItOn());
+		switcher.flushExecutions();
+
+		assertNull(switcher.getLastExecutionResult());
 	}
 	
 	@Test

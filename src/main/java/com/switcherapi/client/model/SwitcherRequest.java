@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class SwitcherRequest extends SwitcherBuilder {
 
-	private final ConcurrentHashMap<List<Entry>, SwitcherResult> historyExecution;
+	private final ConcurrentHashMap<List<Entry>, SwitcherResult> executionsMap;
 
 	private final SwitcherExecutor switcherExecutor;
 	
@@ -45,7 +45,13 @@ public final class SwitcherRequest extends SwitcherBuilder {
 		super(switcherProperties);
 		this.switcherExecutor = switcherExecutor;
 		this.switcherKey = switcherKey;
-		this.historyExecution = new ConcurrentHashMap<>();
+		this.executionsMap = new ConcurrentHashMap<>();
+	}
+
+	@Override
+	public SwitcherRequest flushExecutions() {
+		this.executionsMap.clear();
+		return this;
 	}
 	
 	@Override
@@ -57,7 +63,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	@Override
 	public SwitcherRequest prepareEntry(final Entry entry, final boolean add) {
 		if (!add) {
-			this.flush();
+			this.resetInputs();
 		}
 
 		this.entry.add(entry);
@@ -67,13 +73,6 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	@Override
 	public SwitcherRequest prepareEntry(final Entry entry) {
 		return this.prepareEntry(entry, false);
-	}
-
-	@Override
-	public SwitcherBuilder flush() {
-		this.entry.clear();
-		this.historyExecution.clear();
-		return this;
 	}
 
 	@Override
@@ -94,14 +93,14 @@ public final class SwitcherRequest extends SwitcherBuilder {
 			}
 
 			asyncSwitcher.execute();
-			final SwitcherResult response = getFromHistory();
+			final SwitcherResult response = executionsMap.get(entry);
 			if (Objects.nonNull(response)) {
 				return response;
 			}
 		}
 
 		final SwitcherResult response = this.executeCriteria();
-		this.updateHistoryExecution(response);
+		this.updateExecutions(response);
 		return response;
 	}
 
@@ -115,8 +114,10 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	}
 
 	@Override
-	public void updateHistoryExecution(final SwitcherResult response) {
-		historyExecution.put(entry, response);
+	public void updateExecutions(final SwitcherResult response) {
+		if (super.keepExecutions) {
+			executionsMap.put(entry, response);
+		}
 	}
 
 	@Override
@@ -131,7 +132,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 
 	@Override
 	public SwitcherResult getLastExecutionResult() {
-		return getFromHistory();
+		return executionsMap.get(entry);
 	}
 
 	public boolean isBypassMetrics() {
@@ -139,11 +140,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	}
 
 	private boolean canUseAsync() {
-		return super.delay > 0 && !this.historyExecution.isEmpty();
-	}
-
-	private SwitcherResult getFromHistory() {
-		return historyExecution.get(entry);
+		return super.delay > 0 && !this.executionsMap.isEmpty();
 	}
 
 	@Override
