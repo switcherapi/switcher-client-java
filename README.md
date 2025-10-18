@@ -201,7 +201,6 @@ public class MyAppFeatures extends SwitcherContextBase {
 
 ```java
 @ConfigurationProperties(prefix = "switcher")
-@Component
 public class MySwitcherConfig extends SwitcherContextBase {
     
     @SwitcherKey
@@ -221,7 +220,7 @@ public class MySwitcherConfig extends SwitcherContextBase {
 
 ```java
 // Load from custom properties file
-MyAppFeatures.loadProperties("custom-switcher-config");
+MyAppFeatures.loadProperties("switcherapi-test");
 ```
 
 ## Defining Feature Flags
@@ -249,6 +248,8 @@ public class MyAppFeatures extends SwitcherContext {
 - **`public`**: Accessible from other parts of your application
 - **`static`**: No need to instantiate the class to access the constant
 - **`final`**: Prevents accidental modification during runtime
+
+You can also name your feature flag attributes differently, but ensure the values match those defined in Switcher API.
 
 # Usage Patterns
 
@@ -296,7 +297,7 @@ import static com.example.MyAppFeatures.*;
 boolean isEnabled = getSwitcher(FEATURE_PREMIUM_ACCESS)
     .checkValue("premium_user")
     .checkNetwork("192.168.1.0/24")
-    .checkDate("2024-01-01", "2024-12-31")
+    .checkDate("2024-01-01")
     .isItOn();
 ```
 
@@ -305,7 +306,7 @@ boolean isEnabled = getSwitcher(FEATURE_PREMIUM_ACCESS)
 ```java
 Switcher switcher = getSwitcher(FEATURE_NEW_UI)
     .keepExecutions()  // Enable execution tracking
-    .checkValue("user_type", "premium");
+    .checkValue("user_type");
 
 switcher.isItOn();
 
@@ -353,7 +354,7 @@ Uses local snapshot files without API communication.
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
     .local(true)
-    .snapshotLocation("./config/snapshots"));
+    .snapshotLocation("./src/main/resources/snapshots"));
 
 MyAppFeatures.initializeClient();
 ```
@@ -423,7 +424,7 @@ Or enable during initialization:
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
     .snapshotWatcher(true)
-    .snapshotLocation("./config"));
+    .snapshotLocation("./src/main/resources/snapshots"));
 ```
 
 ### Manual Snapshot Validation
@@ -441,7 +442,7 @@ if (hasUpdates) {
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
     .snapshotAutoUpdateInterval("5m")  // Check every 5 minutes
-    .snapshotLocation("./config"));
+    .snapshotLocation("./src/main/resources/snapshots"));
 ```
 
 ## Performance Optimization
@@ -452,7 +453,7 @@ Automatically fall back to cached results when API is unavailable:
 
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
-    .silent("30s")  // Retry API calls every 30 seconds when failing
+    .silentMode("30s")  // Retry API calls every 30 seconds when failing
     .url("https://api.switcherapi.com")
     // ... other config
 );
@@ -467,8 +468,8 @@ MyAppFeatures.configure(ContextBuilder.builder()
 
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
-    .timeout(5000)    // 5 second timeout
-    .poolsize(5)      // 5 concurrent connections
+    .timeoutMs(5000)        // 5 second timeout
+    .poolConnectionSize(5)  // 5 concurrent connections
     // ... other config
 );
 ```
@@ -494,7 +495,7 @@ void testFeatureEnabled() {
 @Test
 void testWithConditions() {
     Switcher switcher = MyAppFeatures.getSwitcher(FEATURE_PREMIUM_ACCESS)
-        .checkValue("user_type", "premium");
+        .checkValue("user_type");
     
     // Assume true only when specific condition is met
     SwitcherBypass.assume(FEATURE_PREMIUM_ACCESS, true)
@@ -583,17 +584,13 @@ Switcher Client fully supports GraalVM Native Image compilation:
 ```java
 @ConfigurationProperties
 public class MyNativeAppFeatures extends SwitcherContextBase {
-    
-    @SwitcherKey
+	
     public static final String FEATURE_NEW_UI = "FEATURE_NEW_UI";
-    
-    @SwitcherKey
     public static final String FEATURE_PREMIUM = "FEATURE_PREMIUM";
 
     @Override 
     @PostConstruct 
     protected void configureClient() {
-        // Register switcher keys for native compilation
         super.registerSwitcherKeys(FEATURE_NEW_UI, FEATURE_PREMIUM);
         super.configureClient();
     }
