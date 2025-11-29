@@ -602,7 +602,6 @@ public class MyNativeAppFeatures extends SwitcherContextBase {
 ## Additional Resources
 
 - 📚 [Switcher Tutorials](https://github.com/switcherapi/switcherapi-tutorials) - Complete code examples and tutorials
-- 🌐 [Switcher API Documentation](https://github.com/switcherapi/switcher-api) - Backend API documentation
 - 💬 [Join our Slack](https://switcher-hq.slack.com/) - Community support and discussions
 - 🐛 [Report Issues](https://github.com/switcherapi/switcher-client-java/issues) - Bug reports and feature requests
 
