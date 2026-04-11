@@ -52,15 +52,15 @@
 		<argLine />
 
 		<!-- rest/json libs -->
-		<jersey-client.version>2.47</jersey-client.version>
-		<jersey-hk2.version>2.47</jersey-hk2.version>
-		<jersey-media-json-jackson.version>2.47</jersey-media-json-jackson.version>
+		<jersey-client.version>2.48</jersey-client.version>
+		<jersey-hk2.version>2.48</jersey-hk2.version>
+		<jersey-media-json-jackson.version>2.48</jersey-media-json-jackson.version>
 		<javax.activation-api.version>1.2.0</javax.activation-api.version>
 		<gson.version>2.13.2</gson.version>
 
 		<!-- utils -->
 		<commons-lang3.version>3.20.0</commons-lang3.version>
-		<commons-net.version>3.12.0</commons-net.version>
+		<commons-net.version>3.13.0</commons-net.version>
 		<slf4j-api.version>2.0.17</slf4j-api.version>
 
 		<!-- test -->
@@ -73,7 +73,7 @@
 		<maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
 		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
-		<maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+		<maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
 		<maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
 		<sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
