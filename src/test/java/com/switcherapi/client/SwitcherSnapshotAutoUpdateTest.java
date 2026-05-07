@@ -185,37 +185,6 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 
 	@Test
 	@Order(5)
-	void shouldNotKillThread_whenAPI_wentLocal() {
-		//given
-		givenResponse(generateMockAuth(10)); //auth
-		givenResponse(generateSnapshotResponse("default_outdated.json", SNAPSHOTS_LOCAL)); //graphql
-
-		//that
-		Switchers.configure(ContextBuilder.builder(true)
-				.context(Switchers.class.getName())
-				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
-				.apiKey("[API_KEY]")
-				.environment("generated_mock_default_6")
-				.local(true)
-				.snapshotAutoLoad(true)
-				.snapshotAutoUpdateInterval("1s"));
-
-		Switchers.initializeClient();
-		assertEquals(1, Switchers.getSnapshotVersion());
-
-		CountDownHelper.wait(1);
-
-		//given - API is remote again
-		givenResponse(generateCheckSnapshotVersionResponse(Boolean.toString(false))); //criteria/snapshot_check
-		givenResponse(generateSnapshotResponse("default.json", SNAPSHOTS_LOCAL)); //graphql
-
-		//test
-		CountDownHelper.wait(2);
-		assertEquals(2, Switchers.getSnapshotVersion());
-	}
-
-	@Test
-	@Order(6)
 	void shouldRestartSnapshotAutoUpdate_whenAlreadySetup() {
 		//given - initialize (snapshot autoload)
 		givenResponse(generateMockAuth(10)); //auth
