@@ -47,7 +47,9 @@ public class AsyncSwitcher {
 	 * Switcher result for the Switcher executions map.
 	 */
 	public void execute() {
-		SwitcherUtils.debug(logger, "nextRun: {} - currentTimeMillis: {}", nextRun, System.currentTimeMillis());
+		if (logger.isDebugEnabled()) {
+			SwitcherUtils.debug(logger, "nextRun: {} - currentTimeMillis: {}", nextRun, System.currentTimeMillis());
+		}
 		
 		if (nextRun < System.currentTimeMillis()) {
 			SwitcherUtils.debug(logger, "Running AsyncSwitcher");
