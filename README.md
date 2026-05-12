@@ -34,6 +34,7 @@ A Java SDK for Switcher API
   - [Remote Mode](#remote-mode)
   - [Local Mode](#local-mode)
   - [Hybrid Mode](#hybrid-mode)
+  - [Circuit Breaker](#circuit-breaker-silent-mode)
 - [Advanced Features](#advanced-features)
   - [Real-time Snapshot Management](#real-time-snapshot-management)
   - [Performance Optimization](#performance-optimization)
@@ -402,6 +403,28 @@ MyAppFeatures.scheduleSnapshotAutoUpdate("30s", new SnapshotCallback() {
 });
 ```
 
+## Circuit Breaker: Silent Mode
+
+This feature allows you to specify how long the client SDK should attempt to restore connectivity in case of remote API failures.
+
+When the API is unavailable, the SDK will automatically operate in silent mode, evaluating Switchers using a local snapshot. It is important to note that any Switcher Key configured must be able to resolve without external dependencies (e.g., Switcher Relay).
+
+Make sure to configure the scheduled snapshot auto-update to keep the local snapshot up to date with the remote API.
+
+Here is an example - in-memory snapshot with auto-update every 30 seconds:
+
+```java
+MyAppFeatures.configure(ContextBuilder.builder()
+    .context(MyAppFeatures.class.getName())
+    .apiKey("YOUR_API_KEY")
+    .url("https://api.switcherapi.com")
+    .domain("MY_DOMAIN")
+    .component("my-application")
+    .silentMode("5m")
+    .snapshotAutoUpdateInterval("30s")
+);
+```
+
 # Advanced Features
 
 ## Real-time Snapshot Management
@@ -445,23 +468,6 @@ MyAppFeatures.configure(ContextBuilder.builder()
 ```
 
 ## Performance Optimization
-
-### Silent Mode (Resilience)
-
-Automatically fall back to cached results when API is unavailable:
-
-```java
-MyAppFeatures.configure(ContextBuilder.builder()
-    .silentMode("30s")  // Retry API calls every 30 seconds when failing
-    .url("https://api.switcherapi.com")
-    // ... other config
-);
-```
-
-**Time formats supported:**
-- `5s` - 5 seconds
-- `2m` - 2 minutes  
-- `1h` - 1 hour
 
 ### Connection Pooling
 
