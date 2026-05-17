@@ -9,6 +9,7 @@ A Java SDK for Switcher API
 
 [![Master CI](https://github.com/switcherapi/switcher-client-java/actions/workflows/master-2.yml/badge.svg)](https://github.com/switcherapi/switcher-client-java/actions/workflows/master-2.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=switcherapi_switcher-client&branch=master-2&&metric=alert_status)](https://sonarcloud.io/summary/overall?id=switcherapi_switcher-client&branch=master-2)
+[![Known Vulnerabilities](https://snyk.io/test/github/switcherapi/switcher-client-java/badge.svg)](https://snyk.io/test/github/switcherapi/switcher-client-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Maven Central](https://img.shields.io/maven-central/v/com.switcherapi/switcher-client.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.switcherapi/switcher-client)
 [![Slack: Switcher-HQ](https://img.shields.io/badge/slack-@switcher/hq-blue.svg?logo=slack)](https://switcher-hq.slack.com/)
