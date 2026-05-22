@@ -19,18 +19,16 @@ public class ClientPlayground {
 
 	public static void test() {
 		new Features().configureClient();
-		Switcher switcher = getSwitcher(CLIENT_JAVA_FEATURE)
-				.bypassMetrics();
+		Switcher switcher = getSwitcher(CLIENT_JAVA_FEATURE).bypassMetrics();
 
 		scheduler.scheduleAtFixedRate(() -> {
 			try {
 				long time = System.currentTimeMillis();
-				logger.info("Switcher is on: {}", switcher.isItOn());
-				logger.info("Time elapsed: {}", System.currentTimeMillis() - time);
+				logger.info("Switcher is on: {} - {} ms", switcher.isItOn(), System.currentTimeMillis() - time);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
-		}, 0, 5, TimeUnit.SECONDS);
+		}, 0, 500, TimeUnit.MILLISECONDS);
 	}
 
 	public static void main(String[] args) {

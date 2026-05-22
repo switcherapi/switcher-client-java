@@ -26,6 +26,10 @@ public class AuthResponse {
 		return (this.exp * 1000) < System.currentTimeMillis();
 	}
 
+	public long getExp() {
+		return this.exp;
+	}
+
 	@Override
 	public String toString() {
 		return "AuthResponse{" +

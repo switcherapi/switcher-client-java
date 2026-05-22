@@ -17,7 +17,7 @@ class SwitcherThrottle2Test extends MockWebServerHelper {
 	
 	@BeforeAll
 	static void setup() throws IOException {
-		MockWebServerHelper.setupMockServer();
+		setupMockServer();
 
 		SwitchersBase.configure(ContextBuilder.builder(true)
 				.context(SwitchersBase.class.getName())
@@ -32,7 +32,7 @@ class SwitcherThrottle2Test extends MockWebServerHelper {
 	
 	@AfterAll
 	static void tearDown() {
-		MockWebServerHelper.tearDownMockServer();
+		tearDownMockServer();
     }
 
 	@Test
