@@ -22,7 +22,7 @@ class SwitcherSnapshotValidationTest extends MockWebServerHelper {
 	
 	@BeforeAll
 	static void setup() throws IOException {
-		MockWebServerHelper.setupMockServer();
+		setupMockServer();
         
         Switchers.loadProperties();
         Switchers.configure(ContextBuilder.builder().url(String.format("http://localhost:%s", mockBackEnd.getPort())));
@@ -30,7 +30,7 @@ class SwitcherSnapshotValidationTest extends MockWebServerHelper {
 	
 	@AfterAll
 	static void tearDown() {
-		MockWebServerHelper.tearDownMockServer();
+		tearDownMockServer();
         
         //clean generated outputs
     	SwitcherContext.stopWatchingSnapshot();

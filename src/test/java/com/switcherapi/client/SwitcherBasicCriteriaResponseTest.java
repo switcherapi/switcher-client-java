@@ -24,7 +24,7 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 	
 	@BeforeAll
 	static void setup() throws IOException {
-		MockWebServerHelper.setupMockServer();
+		setupMockServer();
 
 		Switchers.loadProperties(); // Load default properties from resources
 		Switchers.configure(ContextBuilder.builder() // Override default properties
@@ -40,7 +40,7 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 	
 	@AfterAll
 	static void tearDown() {
-		MockWebServerHelper.tearDownMockServer();
+		tearDownMockServer();
     }
 	
 	@BeforeEach

@@ -87,7 +87,8 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	protected static Set<String> switcherKeys;
 	protected static Map<String, SwitcherRequest> switchers;
 	protected static SwitcherExecutor switcherExecutor;
-	private static ScheduledExecutorService scheduledExecutorService;
+	private static ScheduledExecutorService scheduledSnapshotExecutorService;
+	private static ScheduledExecutorService scheduledTokenExecutorService;
 	private static ExecutorService watcherExecutorService;
 	private static SnapshotWatcher watcherSnapshot;
 	protected static SwitcherContextBase contextBase;
@@ -111,6 +112,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 				.restrictRelay(relay.isRestrict())
 				.silentMode(silent)
 				.timeoutMs(timeout)
+				.autoRefreshToken(autoRefreshToken)
 				.poolConnectionSize(poolSize)
 				.snapshotLocation(snapshot.getLocation())
 				.snapshotAutoLoad(snapshot.isAuto())
@@ -197,9 +199,12 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * @return SwitcherExecutor instance
 	 */
 	private static SwitcherExecutor buildInstance() {
+		initTokenExecutorService();
+
 		final ClientWS clientWS = initRemotePoolExecutorService();
 		final SwitcherValidator validatorService = new ValidatorService();
-		final ClientRemote clientRemote = new ClientRemoteService(clientWS, switcherProperties);
+		final ClientRemote clientRemote = new ClientRemoteService(
+				clientWS, switcherProperties, scheduledTokenExecutorService);
 		final ClientLocal clientLocal = new ClientLocalService(validatorService);
 
 		if (contextBol(ContextKey.LOCAL_MODE)) {
@@ -306,7 +311,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 			return null;
 		}
 
-		if (Objects.nonNull(scheduledExecutorService)) {
+		if (Objects.nonNull(scheduledSnapshotExecutorService)) {
 			terminateSnapshotAutoUpdateWorker();
 		}
 
@@ -324,7 +329,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 		};
 
 		initSnapshotExecutorService();
-		return scheduledExecutorService.scheduleAtFixedRate(runnableSnapshotValidate, 0, interval, TimeUnit.MILLISECONDS);
+		return scheduledSnapshotExecutorService.scheduleAtFixedRate(runnableSnapshotValidate, 0, interval, TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -339,12 +344,24 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	}
 
 	/**
-	 * Configure Executor Service for Snapshot Update Worker
+	 * Configure Scheduled Executor Service for Snapshot Update Worker
 	 */
 	private static void initSnapshotExecutorService() {
-		scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(r -> {
+		scheduledSnapshotExecutorService = Executors.newSingleThreadScheduledExecutor(r -> {
 			Thread thread = new Thread(r);
 			thread.setName(WorkerName.SNAPSHOT_UPDATE_WORKER.toString());
+			thread.setDaemon(true);
+			return thread;
+		});
+	}
+
+	/**
+	 * Configure Scheduled Executor Service for Token Refresh Worker
+	 */
+	private static void initTokenExecutorService() {
+		scheduledTokenExecutorService = Executors.newSingleThreadScheduledExecutor(r -> {
+			Thread thread = new Thread(r);
+			thread.setName(WorkerName.SWITCHER_TOKEN_WORKER.toString());
 			thread.setDaemon(true);
 			return thread;
 		});
@@ -538,9 +555,19 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * Cancel existing scheduled task for updating local Snapshot
 	 */
 	public static void terminateSnapshotAutoUpdateWorker() {
-		if (Objects.nonNull(scheduledExecutorService)) {
-			scheduledExecutorService.shutdownNow();
-			scheduledExecutorService = null;
+		if (Objects.nonNull(scheduledSnapshotExecutorService)) {
+			scheduledSnapshotExecutorService.shutdownNow();
+			scheduledSnapshotExecutorService = null;
+		}
+	}
+
+	/**
+	 * Cancel existing scheduled task for token refresh
+	 */
+	public static void terminateTokenRefreshWorker() {
+		if (Objects.nonNull(scheduledTokenExecutorService)) {
+			scheduledTokenExecutorService.shutdownNow();
+			scheduledTokenExecutorService = null;
 		}
 	}
 

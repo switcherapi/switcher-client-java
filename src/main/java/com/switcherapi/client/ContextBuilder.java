@@ -234,4 +234,9 @@ public class ContextBuilder {
 				Optional.ofNullable(poolSize).orElse(DEFAULT_POOL_SIZE));
 		return this;
 	}
+
+	public ContextBuilder autoRefreshToken(boolean autoRefreshToken) {
+		switcherProperties.setValue(ContextKey.AUTO_REFRESH_TOKEN, autoRefreshToken);
+		return this;
+	}
 }

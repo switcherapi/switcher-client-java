@@ -13,12 +13,11 @@ public class Features extends SwitcherContextBase {
 	protected void configureClient() {
 		configure(ContextBuilder.builder()
 				.context(Features.class.getName())
-				.url("https://api.switcherapi.com")
+				.url("http://localhost:3001")
 				.apiKey(System.getenv("switcher.api.key"))
 				.component(System.getenv("switcher.component"))
 				.domain(System.getenv("switcher.domain"))
-				.local(true)
-				.snapshotLocation("./src/test/resources/snapshot/playground"));
+				.autoRefreshToken(true));
 
 		initializeClient();
 	}

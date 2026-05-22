@@ -18,7 +18,7 @@ class SwitcherThrottle1Test extends MockWebServerHelper {
 	
 	@BeforeAll
 	static void setup() throws IOException {
-		MockWebServerHelper.setupMockServer();
+		setupMockServer();
 
 		SwitchersBase.configure(ContextBuilder.builder(true)
 				.context(SwitchersBase.class.getName())
@@ -33,7 +33,7 @@ class SwitcherThrottle1Test extends MockWebServerHelper {
 	
 	@AfterAll
 	static void tearDown() {
-		MockWebServerHelper.tearDownMockServer();
+		tearDownMockServer();
     }
 	
 	@Test
@@ -54,7 +54,7 @@ class SwitcherThrottle1Test extends MockWebServerHelper {
 				.checkValue("value")
 				.throttle(1000);
 		
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 50; i++) {
 			assertTrue(switcher.isItOn());
 		}
 

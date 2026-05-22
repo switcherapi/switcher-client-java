@@ -19,12 +19,12 @@ class SwitcherContextRemoteExecutorTest extends MockWebServerHelper {
 
 	@BeforeAll
 	static void setup() throws IOException {
-		MockWebServerHelper.setupMockServer();
+		setupMockServer();
 	}
 
 	@AfterAll
 	static void tearDown() {
-		MockWebServerHelper.tearDownMockServer();
+		tearDownMockServer();
 	}
 
 	@Test

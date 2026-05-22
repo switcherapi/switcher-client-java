@@ -109,8 +109,13 @@ public enum ContextKey {
 	/**
 	 * (Number) Defines a fixed number of threads for the pool connection (default is 2).
 	 */
-	POOL_CONNECTION_SIZE("switcher.poolsize");
-	
+	POOL_CONNECTION_SIZE("switcher.poolsize"),
+
+	/**
+	 * (boolean) Enables automatic refresh of authentication token (default is false)
+	 */
+	AUTO_REFRESH_TOKEN("switcher.autorefreshtoken");
+
 	private final String param;
 	
 	ContextKey(String param) {

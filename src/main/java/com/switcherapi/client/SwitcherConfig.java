@@ -12,6 +12,7 @@ abstract class SwitcherConfig {
 
 	protected boolean local;
 	protected boolean check;
+	protected boolean autoRefreshToken;
 	protected String silent;
 	protected Integer timeout;
 	protected Integer poolSize;
@@ -38,6 +39,7 @@ abstract class SwitcherConfig {
 		setEnvironment(properties.getValue(ContextKey.ENVIRONMENT));
 		setLocal(properties.getBoolean(ContextKey.LOCAL_MODE));
 		setCheck(properties.getBoolean(ContextKey.CHECK_SWITCHERS));
+		setAutoRefreshToken(properties.getBoolean(ContextKey.AUTO_REFRESH_TOKEN));
 		setSilent(properties.getValue(ContextKey.SILENT_MODE));
 		setTimeout(properties.getInt(ContextKey.TIMEOUT_MS));
 		setPoolSize(properties.getInt(ContextKey.POOL_CONNECTION_SIZE));
@@ -103,6 +105,10 @@ abstract class SwitcherConfig {
 
 	public void setCheck(boolean check) {
 		this.check = check;
+	}
+
+	public void setAutoRefreshToken(boolean autoRefreshToken) {
+		this.autoRefreshToken = autoRefreshToken;
 	}
 
 	public void setSilent(String silent) {

@@ -28,7 +28,7 @@ class SwitcherSnapshotLookupTest extends MockWebServerHelper {
 		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/new_folder"));
 		Files.deleteIfExists(Paths.get(RESOURCES_PATH + "/generated_mock_default.json"));
 
-		MockWebServerHelper.setupMockServer();
+		setupMockServer();
 
 		Switchers.loadProperties();
 		Switchers.configure(ContextBuilder.builder().url(String.format("http://localhost:%s", mockBackEnd.getPort())));
@@ -36,7 +36,7 @@ class SwitcherSnapshotLookupTest extends MockWebServerHelper {
 
 	@AfterAll
 	static void tearDown() throws IOException {
-		MockWebServerHelper.tearDownMockServer();
+		tearDownMockServer();
 
 		//clean generated outputs
 		SwitcherContext.stopWatchingSnapshot();
