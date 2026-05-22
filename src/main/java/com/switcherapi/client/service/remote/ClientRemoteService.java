@@ -6,14 +6,24 @@ import com.switcherapi.client.exception.SwitcherInvalidDateTimeArgumentException
 import com.switcherapi.client.exception.SwitcherRemoteException;
 import com.switcherapi.client.model.ContextKey;
 import com.switcherapi.client.model.criteria.Snapshot;
-import com.switcherapi.client.remote.dto.*;
 import com.switcherapi.client.remote.ClientWS;
+import com.switcherapi.client.remote.dto.AuthResponse;
+import com.switcherapi.client.remote.dto.CriteriaRequest;
+import com.switcherapi.client.remote.dto.CriteriaResponse;
+import com.switcherapi.client.remote.dto.SnapshotVersionResponse;
+import com.switcherapi.client.remote.dto.SwitchersCheck;
 import com.switcherapi.client.utils.SwitcherUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Roger Floriano (petruki)
@@ -21,19 +31,27 @@ import java.util.Set;
  */
 public class ClientRemoteService implements ClientRemote {
 
+	private static final Logger log = LoggerFactory.getLogger(ClientRemoteService.class);
+
+	private final ScheduledExecutorService scheduledExecutorService;
+
 	private final SwitcherProperties switcherProperties;
-	
+
 	private final ClientWS clientWs;
 	
 	private AuthResponse authResponse;
+
+	private ScheduledFuture<?> refreshFuture;
 
 	private enum TokenStatus {
 		VALID, INVALID, SILENT
 	}
 	
-	public ClientRemoteService(ClientWS clientWs, SwitcherProperties switcherProperties) {
+	public ClientRemoteService(ClientWS clientWs, SwitcherProperties switcherProperties,
+							   ScheduledExecutorService scheduledExecutorService) {
 		this.clientWs = clientWs;
 		this.switcherProperties = switcherProperties;
+		this.scheduledExecutorService = scheduledExecutorService;
 	}
 
 	@Override
@@ -92,7 +110,12 @@ public class ClientRemoteService implements ClientRemote {
 
 	private void auth(TokenStatus tokenStatus) {
 		if (tokenStatus == TokenStatus.INVALID) {
+			log.debug("Auth token is invalid or expired. Attempting to authenticate...");
 			this.authResponse = this.clientWs.auth().orElseGet(AuthResponse::new);
+
+			if (isAutoRefreshable()) {
+				scheduleNextAuth();
+			}
 		}
 
 		if (tokenStatus == TokenStatus.SILENT) {
@@ -109,7 +132,7 @@ public class ClientRemoteService implements ClientRemote {
 			return TokenStatus.INVALID;
 		}
 
-		if (optAuthResponse.get().getToken().equals(ContextKey.SILENT_MODE.getParam())
+		if (ContextKey.SILENT_MODE.getParam().equals(optAuthResponse.get().getToken())
 				&& !optAuthResponse.get().isExpired()) {
 			return TokenStatus.SILENT;
 		}
@@ -129,4 +152,35 @@ public class ClientRemoteService implements ClientRemote {
 		}
 	}
 
+	private void scheduleNextAuth() {
+		long msUntilExpiry = (authResponse.getExp() * 1000L) - (System.currentTimeMillis());
+		long refreshAt = Math.max(msUntilExpiry - 5000, 0); // 5s before expiry
+
+		terminateAutoRefresh();
+		refreshFuture = scheduledExecutorService.schedule(() -> {
+			try {
+				log.debug("Auto-refreshing auth token...");
+				this.authResponse = this.clientWs.auth().orElseGet(AuthResponse::new);
+				scheduleNextAuth();
+			} catch (Exception e) {
+				log.error("Failed to auto-refresh auth token: {}", e.getMessage());
+				terminateAutoRefresh();
+			}
+		}, refreshAt, TimeUnit.MILLISECONDS);
+	}
+
+	private boolean isAutoRefreshable() {
+		return switcherProperties.getBoolean(ContextKey.AUTO_REFRESH_TOKEN) &&
+				(Objects.isNull(refreshFuture) || refreshFuture.isDone());
+	}
+
+	private void terminateAutoRefresh() {
+		if (Objects.nonNull(refreshFuture)) {
+			refreshFuture.cancel(true);
+			refreshFuture = null;
+			log.debug("Terminated existing auto-refresh task.");
+		}
+	}
 }
+
+

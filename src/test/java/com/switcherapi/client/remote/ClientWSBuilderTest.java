@@ -32,14 +32,14 @@ class ClientWSBuilderTest {
 
     @Test
     void shouldCreateClientBuilder() {
-        // given
+        //given
         SwitcherContextBase.configure(ContextBuilder.builder()
                 .truststorePath("")
                 .truststorePassword(""));
 
         SwitcherProperties properties = SwitcherContextBase.getSwitcherProperties();
 
-        // test
+        //test
         HttpClient.Builder clientBuilder = ClientWSBuilder.builder(executorService, properties);
         assertNotNull(clientBuilder);
 
@@ -50,7 +50,7 @@ class ClientWSBuilderTest {
 
     @Test
     void shouldCreateClientBuilderSSL() {
-        // given
+        //given
         String truststorePath = Objects.requireNonNull(getClass().getClassLoader()
                 .getResource("keystore.jks")).getPath();
 
@@ -60,7 +60,7 @@ class ClientWSBuilderTest {
 
         SwitcherProperties properties = SwitcherContextBase.getSwitcherProperties();
 
-        // test
+        //test
         HttpClient.Builder clientBuilder = ClientWSBuilder.builder(executorService, properties);
         assertNotNull(clientBuilder);
 
@@ -71,7 +71,7 @@ class ClientWSBuilderTest {
 
     @Test
     void shouldNotCreateClientBuilderSSL_invalidKeystorePassword() {
-        // given
+        //given
         String truststorePath = Objects.requireNonNull(getClass().getClassLoader()
                 .getResource("keystore.jks")).getPath();
 
@@ -81,20 +81,20 @@ class ClientWSBuilderTest {
 
         SwitcherProperties properties = SwitcherContextBase.getSwitcherProperties();
 
-        // test
+        //test
         assertThrows(SwitcherException.class, () -> ClientWSBuilder.builder(executorService, properties));
     }
 
     @Test
     void shouldNotCreateClientBuilderSSL_invalidKeystorePath() {
-        // given
+        //given
         SwitcherContextBase.configure(ContextBuilder.builder()
                 .truststorePath("INVALID")
                 .truststorePassword("changeit"));
 
         SwitcherProperties properties = SwitcherContextBase.getSwitcherProperties();
 
-        // test
+        //test
         assertThrows(SwitcherException.class, () -> ClientWSBuilder.builder(executorService, properties));
     }
 }

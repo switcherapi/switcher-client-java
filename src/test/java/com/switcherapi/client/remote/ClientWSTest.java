@@ -24,7 +24,7 @@ class ClientWSTest extends MockWebServerHelper {
     @BeforeAll
     static void setup() throws IOException {
         executorService = Executors.newSingleThreadExecutor();
-        MockWebServerHelper.setupMockServer();
+        setupMockServer();
 
         Switchers.loadProperties();
         Switchers.configure(ContextBuilder.builder().url(String.format("http://localhost:%s", mockBackEnd.getPort())));
@@ -33,7 +33,7 @@ class ClientWSTest extends MockWebServerHelper {
 
     @AfterAll
     static void tearDown() {
-        MockWebServerHelper.tearDownMockServer();
+        tearDownMockServer();
         executorService.shutdown();
     }
 
@@ -47,22 +47,22 @@ class ClientWSTest extends MockWebServerHelper {
 
     @Test
     void shouldBeAlive() {
-        // given
+        //given
         ClientWS clientWS = ClientWSImpl.build(Switchers.getSwitcherProperties(), executorService, DEFAULT_TIMEOUT);
         givenResponse(generateTimeOut(100));
 
-        // test
+        //test
         boolean response = clientWS.isAlive();
         assertTrue(response);
     }
 
     @Test
     void shouldTimeOut() {
-        // given
+        //given
         ClientWS clientWS = ClientWSImpl.build(Switchers.getSwitcherProperties(), executorService, DEFAULT_TIMEOUT);
         givenResponse(generateTimeOut(3500));
 
-        // test
+        //test
         boolean response = clientWS.isAlive();
         assertFalse(response);
     }
@@ -72,7 +72,7 @@ class ClientWSTest extends MockWebServerHelper {
         ClientWS clientWS = ClientWSImpl.build(Switchers.getSwitcherProperties(), executorService, 4000);
         givenResponse(generateTimeOut(3500));
 
-        // test
+        //test
         boolean response = clientWS.isAlive();
         assertTrue(response);
     }
