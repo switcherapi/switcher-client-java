@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Stream;
 
 import com.switcherapi.client.remote.ClientWS;
@@ -40,10 +41,13 @@ class SwitcherLocal3Test {
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources/snapshot";
 
 	private static ExecutorService executorService;
+
+	private static ScheduledExecutorService scheduledExecutorService;
 	
 	@BeforeAll
 	static void setupContext() {
 		executorService = Executors.newSingleThreadExecutor();
+		scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 		SwitcherContext.loadProperties();
 		SwitcherContext.configure(ContextBuilder.builder()
 				.snapshotLocation(SNAPSHOTS_LOCAL)
@@ -56,6 +60,7 @@ class SwitcherLocal3Test {
 	@AfterAll
 	static void tearDown() {
 		executorService.shutdown();
+		scheduledExecutorService.shutdownNow();
 	}
 	
 	static Stream<Arguments> failTestArguments() {
@@ -96,7 +101,7 @@ class SwitcherLocal3Test {
 		ClientWS clientWS = ClientWSImpl.build(switcherProperties, executorService, DEFAULT_TIMEOUT);
 		SwitcherValidator validatorService = new ValidatorService();
 		SwitcherLocalService switcherLocal = new SwitcherLocalService(
-				new ClientRemoteService(clientWS, switcherProperties),
+				new ClientRemoteService(clientWS, switcherProperties, scheduledExecutorService),
 				new ClientLocalService(validatorService), switcherProperties);
 		switcherLocal.init();
 		
@@ -114,7 +119,7 @@ class SwitcherLocal3Test {
 		ClientWS clientWS = ClientWSImpl.build(switcherProperties, executorService, DEFAULT_TIMEOUT);
 		SwitcherValidator validatorService = new ValidatorService();
 		SwitcherLocalService switcherLocal = new SwitcherLocalService(
-				new ClientRemoteService(clientWS, switcherProperties),
+				new ClientRemoteService(clientWS, switcherProperties, scheduledExecutorService),
 				new ClientLocalService(validatorService), switcherProperties);
 		switcherLocal.init();
 		

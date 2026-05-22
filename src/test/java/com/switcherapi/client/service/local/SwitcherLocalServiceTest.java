@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.switcherapi.client.SwitcherProperties;
@@ -31,12 +32,15 @@ class SwitcherLocalServiceTest {
 	private static final String SNAPSHOTS_LOCAL = Paths.get(StringUtils.EMPTY).toAbsolutePath() + "/src/test/resources";
 
 	private static ExecutorService executorService;
+
+	private static ScheduledExecutorService scheduledExecutorService;
 	
 	private static SwitcherLocalService service;
 	
 	@BeforeAll
 	static void init() {
 		executorService = Executors.newSingleThreadExecutor();
+		scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 		SwitchersBase.configure(ContextBuilder.builder()
 				.context(SwitchersBase.class.getName())
 				.snapshotLocation(SNAPSHOTS_LOCAL)
@@ -47,13 +51,14 @@ class SwitcherLocalServiceTest {
 		ClientWS clientWS = ClientWSImpl.build(properties, executorService, DEFAULT_TIMEOUT);
 		SwitcherValidator validatorService = new ValidatorService();
 		service = new SwitcherLocalService(
-				new ClientRemoteService(clientWS, properties),
+				new ClientRemoteService(clientWS, properties, scheduledExecutorService),
 				new ClientLocalService(validatorService), properties);
 	}
 
 	@AfterAll
 	static void tearDown() {
 		executorService.shutdown();
+		scheduledExecutorService.shutdownNow();
 	}
 
 	@Test

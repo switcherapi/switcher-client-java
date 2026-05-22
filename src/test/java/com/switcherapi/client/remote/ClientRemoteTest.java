@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static com.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,12 +38,15 @@ class ClientRemoteTest extends MockWebServerHelper {
 
     private static ExecutorService executorService;
 
+    private static ScheduledExecutorService scheduledExecutorService;
+
     private ClientRemote clientRemote;
 
     @BeforeAll
     static void setup() throws IOException {
         executorService = Executors.newSingleThreadExecutor();
-        MockWebServerHelper.setupMockServer();
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        setupMockServer();
 
         Switchers.loadProperties();
         Switchers.configure(ContextBuilder.builder().url(String.format("http://localhost:%s", mockBackEnd.getPort())));
@@ -51,14 +55,16 @@ class ClientRemoteTest extends MockWebServerHelper {
 
     @AfterAll
     static void tearDown() {
-        MockWebServerHelper.tearDownMockServer();
+        tearDownMockServer();
         executorService.shutdown();
+        scheduledExecutorService.shutdownNow();
     }
 
     @BeforeEach
     void resetSwitcherContextState() {
         SwitcherProperties switcherProperties = Switchers.getSwitcherProperties();
-        clientRemote = new ClientRemoteService(ClientWSImpl.build(switcherProperties, executorService, DEFAULT_TIMEOUT), switcherProperties);
+        clientRemote = new ClientRemoteService(ClientWSImpl.build(switcherProperties, executorService, DEFAULT_TIMEOUT),
+                switcherProperties, scheduledExecutorService);
         ((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 
         Switchers.configure(ContextBuilder.builder().checkSwitchers(false));
