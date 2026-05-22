@@ -55,13 +55,13 @@
 		<gson.version>2.14.0</gson.version>
 		<commons-lang3.version>3.20.0</commons-lang3.version>
 		<commons-net.version>3.13.0</commons-net.version>
-		<slf4j-api.version>2.0.17</slf4j-api.version>
+		<slf4j-api.version>2.0.18</slf4j-api.version>
 
 		<!-- test -->
 		<okhttp.version>5.3.2</okhttp.version>
-		<junit-jupiter.version>6.0.3</junit-jupiter.version>
+		<junit-jupiter.version>6.1.0</junit-jupiter.version>
 		<junit-pioneer.version>2.3.0</junit-pioneer.version>
-		<junit-platform-launcher.version>6.0.3</junit-platform-launcher.version>
+		<junit-platform-launcher.version>6.1.0</junit-platform-launcher.version>
 
 		<!-- Plugins -->
 		<maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
