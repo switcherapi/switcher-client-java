@@ -91,7 +91,7 @@ class SwitcherRemoteAutoRefreshTokenTest extends MockWebServerHelper {
 				.domain("domain")
 				.apiKey("apiKey")
 				.component("component")
-				.autoRefreshToken(enabled));
+				.authAutoRefresh(enabled));
 
 		SwitchersBase.initializeClient();
 	}
