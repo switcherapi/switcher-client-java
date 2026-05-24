@@ -14,7 +14,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class SwitcherRemoteAutoRefreshTokenTest extends MockWebServerHelper {
+class SwitcherRemoteAuthAutoRefreshTest extends MockWebServerHelper {
 
 	@BeforeEach
 	void setup() throws IOException {
@@ -40,7 +40,7 @@ class SwitcherRemoteAutoRefreshTokenTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("true", false));
 
 		//when
-		givenAutoRefreshToken(true);
+		givenAuthAutoRefresh(true);
 
 		//test
 		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
@@ -58,7 +58,7 @@ class SwitcherRemoteAutoRefreshTokenTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("true", false));
 
 		//when
-		givenAutoRefreshToken(false);
+		givenAuthAutoRefresh(false);
 
 		//test
 		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
@@ -75,7 +75,7 @@ class SwitcherRemoteAutoRefreshTokenTest extends MockWebServerHelper {
 		givenResponse(generateStatusResponse("500"));
 
 		//when
-		givenAutoRefreshToken(true);
+		givenAuthAutoRefresh(true);
 
 		//test
 		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
@@ -84,7 +84,7 @@ class SwitcherRemoteAutoRefreshTokenTest extends MockWebServerHelper {
 		assertThrows(SwitcherRemoteException.class, switcher::isItOn);
 	}
 
-	private void givenAutoRefreshToken(boolean enabled) {
+	private void givenAuthAutoRefresh(boolean enabled) {
 		SwitchersBase.configure(ContextBuilder.builder(true)
 				.context(SwitchersBase.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))

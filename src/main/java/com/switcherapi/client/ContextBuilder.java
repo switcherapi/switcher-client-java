@@ -235,8 +235,12 @@ public class ContextBuilder {
 		return this;
 	}
 
-	public ContextBuilder autoRefreshToken(boolean autoRefreshToken) {
-		switcherProperties.setValue(ContextKey.AUTO_REFRESH_TOKEN, autoRefreshToken);
+	/**
+	 * @param authAutoRefresh true/false When true, it will enable automatic refresh of authentication token
+	 * @return ContextBuilder
+	 */
+	public ContextBuilder authAutoRefresh(boolean authAutoRefresh) {
+		switcherProperties.setValue(ContextKey.AUTH_AUTO_REFRESH, authAutoRefresh);
 		return this;
 	}
 }

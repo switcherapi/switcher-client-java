@@ -170,7 +170,7 @@ public class ClientRemoteService implements ClientRemote {
 	}
 
 	private boolean isAutoRefreshable() {
-		return switcherProperties.getBoolean(ContextKey.AUTO_REFRESH_TOKEN) &&
+		return switcherProperties.getBoolean(ContextKey.AUTH_AUTO_REFRESH) &&
 				(Objects.isNull(refreshFuture) || refreshFuture.isDone());
 	}
 
