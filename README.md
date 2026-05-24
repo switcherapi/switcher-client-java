@@ -145,7 +145,7 @@ switcher.poolsize=2
 | `switcher.environment`             | ❌        | default | Environment name (dev, staging, default)                                             |
 | `switcher.local`                   | ❌        | false   | Enable local-only mode                                                               |
 | `switcher.check`                   | ❌        | false   | Validate switcher keys on startup                                                    |
-| `switcher.autorefreshtoken`        | ❌        | false   | Automatically refresh API token before expiration                                    |
+| `switcher.auth.autorefresh`        | ❌        | false   | Automatically refresh API token before expiration                                    |
 | `switcher.relay.restrict`          | ❌        | true    | Defines if client will trigger local snapshot relay verification                     |
 | `switcher.snapshot.location`       | ❌        | -       | Directory for snapshot files                                                         |
 | `switcher.snapshot.auto`           | ❌        | false   | Auto-load snapshots on startup                                                       |

@@ -112,7 +112,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 				.restrictRelay(relay.isRestrict())
 				.silentMode(silent)
 				.timeoutMs(timeout)
-				.autoRefreshToken(autoRefreshToken)
+				.authAutoRefresh(auth.isAutoRefresh())
 				.poolConnectionSize(poolSize)
 				.snapshotLocation(snapshot.getLocation())
 				.snapshotAutoLoad(snapshot.isAuto())

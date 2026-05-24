@@ -30,7 +30,7 @@ public class SwitcherPropertiesImpl implements SwitcherProperties {
 		setValue(ContextKey.LOCAL_MODE, false);
 		setValue(ContextKey.CHECK_SWITCHERS, false);
 		setValue(ContextKey.RESTRICT_RELAY, true);
-		setValue(ContextKey.AUTO_REFRESH_TOKEN, false);
+		setValue(ContextKey.AUTH_AUTO_REFRESH, false);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class SwitcherPropertiesImpl implements SwitcherProperties {
 		setValue(ContextKey.LOCAL_MODE, getBoolDefault(resolveProperties(ContextKey.LOCAL_MODE.getParam(), prop), false));
 		setValue(ContextKey.CHECK_SWITCHERS, getBoolDefault(resolveProperties(ContextKey.CHECK_SWITCHERS.getParam(), prop), false));
 		setValue(ContextKey.RESTRICT_RELAY, getBoolDefault(resolveProperties(ContextKey.RESTRICT_RELAY.getParam(), prop), true));
-		setValue(ContextKey.AUTO_REFRESH_TOKEN, getBoolDefault(resolveProperties(ContextKey.AUTO_REFRESH_TOKEN.getParam(), prop), false));
+		setValue(ContextKey.AUTH_AUTO_REFRESH, getBoolDefault(resolveProperties(ContextKey.AUTH_AUTO_REFRESH.getParam(), prop), false));
 		setValue(ContextKey.REGEX_TIMEOUT, getIntDefault(resolveProperties(ContextKey.REGEX_TIMEOUT.getParam(), prop), DEFAULT_REGEX_TIMEOUT));
 		setValue(ContextKey.TRUSTSTORE_PATH, resolveProperties(ContextKey.TRUSTSTORE_PATH.getParam(), prop));
 		setValue(ContextKey.TRUSTSTORE_PASSWORD, resolveProperties(ContextKey.TRUSTSTORE_PASSWORD.getParam(), prop));
