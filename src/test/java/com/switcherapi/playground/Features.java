@@ -17,7 +17,7 @@ public class Features extends SwitcherContextBase {
 				.apiKey(System.getenv("switcher.api.key"))
 				.component(System.getenv("switcher.component"))
 				.domain(System.getenv("switcher.domain"))
-				.autoRefreshToken(true));
+				.authAutoRefresh(true));
 
 		initializeClient();
 	}

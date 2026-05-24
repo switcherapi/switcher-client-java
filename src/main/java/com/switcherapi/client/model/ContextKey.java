@@ -114,7 +114,7 @@ public enum ContextKey {
 	/**
 	 * (boolean) Enables automatic refresh of authentication token (default is false)
 	 */
-	AUTO_REFRESH_TOKEN("switcher.autorefreshtoken");
+	AUTH_AUTO_REFRESH("switcher.auth.autorefresh");
 
 	private final String param;
 	

@@ -38,6 +38,9 @@ class SwitcherConfigTest {
 
 	private <T extends SwitcherConfig> T buildSwitcherClientConfig(T classConfig, String component,
 																   String domain) {
+		SwitcherConfig.AuthConfig auth = new SwitcherConfig.AuthConfig();
+		auth.setAutoRefresh(false);
+
 		SwitcherConfig.RelayConfig relay = new SwitcherConfig.RelayConfig();
 		relay.setRestrict(false);
 
@@ -62,6 +65,7 @@ class SwitcherConfigTest {
 		classConfig.setTimeout(3000);
 		classConfig.setRegexTimeout(1000);
 		classConfig.setPoolSize(2);
+		classConfig.setAuth(auth);
 		classConfig.setRelay(relay);
 		classConfig.setSnapshot(snapshot);
 		classConfig.setTruststore(truststore);

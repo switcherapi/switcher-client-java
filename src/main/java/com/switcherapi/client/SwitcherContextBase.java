@@ -113,7 +113,7 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 				.silentMode(silent)
 				.regexTimeout(regexTimeout)
 				.timeoutMs(timeout)
-				.autoRefreshToken(autoRefreshToken)
+				.authAutoRefresh(auth.isAutoRefresh())
 				.poolConnectionSize(poolSize)
 				.snapshotLocation(snapshot.getLocation())
 				.snapshotAutoLoad(snapshot.isAuto())

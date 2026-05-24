@@ -12,16 +12,17 @@ abstract class SwitcherConfig {
 
 	protected boolean local;
 	protected boolean check;
-	protected boolean autoRefreshToken;
 	protected String silent;
 	protected Integer timeout;
 	protected Integer regexTimeout;
 	protected Integer poolSize;
+	protected AuthConfig auth;
 	protected RelayConfig relay;
 	protected SnapshotConfig snapshot;
 	protected TruststoreConfig truststore;
 
 	SwitcherConfig() {
+		this.auth = new AuthConfig();
 		this.relay = new RelayConfig();
 		this.snapshot = new SnapshotConfig();
 		this.truststore = new TruststoreConfig();
@@ -40,10 +41,13 @@ abstract class SwitcherConfig {
 		setEnvironment(properties.getValue(ContextKey.ENVIRONMENT));
 		setLocal(properties.getBoolean(ContextKey.LOCAL_MODE));
 		setCheck(properties.getBoolean(ContextKey.CHECK_SWITCHERS));
-		setAutoRefreshToken(properties.getBoolean(ContextKey.AUTO_REFRESH_TOKEN));
 		setSilent(properties.getValue(ContextKey.SILENT_MODE));
 		setTimeout(properties.getInt(ContextKey.TIMEOUT_MS));
 		setPoolSize(properties.getInt(ContextKey.POOL_CONNECTION_SIZE));
+
+		AuthConfig authConfig = new AuthConfig();
+		authConfig.setAutoRefresh(properties.getBoolean(ContextKey.AUTH_AUTO_REFRESH));
+		setAuth(authConfig);
 
 		RelayConfig relayConfig = new RelayConfig();
 		relayConfig.setRestrict(properties.getBoolean(ContextKey.RESTRICT_RELAY));
@@ -108,8 +112,8 @@ abstract class SwitcherConfig {
 		this.check = check;
 	}
 
-	public void setAutoRefreshToken(boolean autoRefreshToken) {
-		this.autoRefreshToken = autoRefreshToken;
+	public void setAuth(AuthConfig auth) {
+		this.auth = auth;
 	}
 
 	public void setSilent(String silent) {
@@ -137,6 +141,18 @@ abstract class SwitcherConfig {
 
 	public void setTruststore(TruststoreConfig truststore) {
 		this.truststore = truststore;
+	}
+
+	public static class AuthConfig {
+		private boolean autoRefresh;
+
+		public boolean isAutoRefresh() {
+			return autoRefresh;
+		}
+
+		public void setAutoRefresh(boolean autoRefresh) {
+			this.autoRefresh = autoRefresh;
+		}
 	}
 
 	public static class RelayConfig {
