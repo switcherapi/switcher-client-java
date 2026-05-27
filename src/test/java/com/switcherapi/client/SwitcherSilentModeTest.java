@@ -1,6 +1,6 @@
 package com.switcherapi.client;
 
-import com.switcherapi.Switchers;
+import com.switcherapi.SwitchersBase;
 import com.switcherapi.client.model.SwitcherRequest;
 import com.switcherapi.fixture.CountDownHelper;
 import com.switcherapi.fixture.MockWebServerHelper;
@@ -24,9 +24,6 @@ class SwitcherSilentModeTest extends MockWebServerHelper {
 	@BeforeAll
 	static void setup() throws IOException {
 		setupMockServer();
-        
-        Switchers.loadProperties();
-        Switchers.configure(ContextBuilder.builder().url(String.format("http://localhost:%s", mockBackEnd.getPort())));
     }
 	
 	@AfterAll
@@ -38,25 +35,24 @@ class SwitcherSilentModeTest extends MockWebServerHelper {
 	void resetSwitcherContextState() {
 		((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 
-		Switchers.configure(ContextBuilder.builder()
-				.local(false)
-				.snapshotLocation(null)
-				.snapshotSkipValidation(false)
-				.environment(DEFAULT_ENV)
-				.silentMode(null)
-				.snapshotAutoLoad(false)
-				.snapshotAutoUpdateInterval(null));
+		SwitchersBase.configure(ContextBuilder.builder(true)
+				.context(SwitchersBase.class.getName())
+				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
+				.domain("domain")
+				.apiKey("apiKey")
+				.component("component")
+				.environment(DEFAULT_ENV));
 	}
 	
 	@Test
 	void shouldReturnTrue_silentMode() {
 		//given
-		Switchers.configure(ContextBuilder.builder()
+		SwitchersBase.configure(ContextBuilder.builder()
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("fixture1")
 				.silentMode("5s"));
-		
-		Switchers.initializeClient();
+
+		SwitchersBase.initializeClient();
 		
 		//auth
 		givenResponse(generateMockAuth(10));
@@ -65,7 +61,7 @@ class SwitcherSilentModeTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("true", false));
 		
 		//test
-		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.USECASE11);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		assertTrue(switcher.isItOn());
 
 		CountDownHelper.wait(2);

@@ -2,7 +2,6 @@ package com.switcherapi.client.utils;
 
 import com.switcherapi.SwitchersBase;
 import com.switcherapi.client.ContextBuilder;
-import com.switcherapi.fixture.CountDownHelper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -27,9 +26,8 @@ class SnapshotWatcherWorkerTest extends SnapshotTest {
 		assertWorker(true);
 
 		SwitchersBase.stopWatchingSnapshot();
-		CountDownHelper.wait(2);
 
-		assertWorker(false);
+		assertWorker(false, 10);
 	}
 
 }

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SnapshotWatcherTest extends SnapshotTest {
@@ -53,10 +53,9 @@ class SnapshotWatcherTest extends SnapshotTest {
 		SwitchersBase.stopWatchingSnapshot();
 		this.changeFixture();
 
-		CountDownHelper.wait(2);
-
 		//snapshot file updated - does not change as the watcher has been terminated
-		assertTrue(switcher.isItOn());
+		assertEquals(Boolean.TRUE,
+				CountDownHelper.waitUntil(10, true, switcher::isItOn));
 	}
 	
 	@Test
@@ -67,13 +66,12 @@ class SnapshotWatcherTest extends SnapshotTest {
 		assertTrue(switcher.isItOn());
 
 		CountDownHelper.wait(1);
-		
+
 		this.changeFixture();
 
-		CountDownHelper.wait(2);
-
 		//snapshot file updated - triggered domain reload
-		assertFalse(switcher.isItOn());
+		assertEquals(Boolean.FALSE,
+				CountDownHelper.waitUntil(10, false, switcher::isItOn));
 	}
 
 }

@@ -49,7 +49,7 @@ class SwitcherSnapshotAutoUpdate2Test extends MockWebServerHelper {
 		Switchers.configure(ContextBuilder.builder(true)
 				.context(Switchers.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
-				.apiKey("[API_KEY]")
+				.apiKey("apiKey")
 				.environment("generated_mock_default_6")
 				.local(true)
 				.snapshotAutoLoad(true)
@@ -65,8 +65,8 @@ class SwitcherSnapshotAutoUpdate2Test extends MockWebServerHelper {
 		givenResponse(generateSnapshotResponse("default.json", SNAPSHOTS_LOCAL)); //graphql
 
 		//test
-		CountDownHelper.wait(2);
-		assertEquals(2, Switchers.getSnapshotVersion());
+		assertEquals(2,
+				CountDownHelper.waitUntil(10, 2L, Switchers::getSnapshotVersion));
 	}
 
 }

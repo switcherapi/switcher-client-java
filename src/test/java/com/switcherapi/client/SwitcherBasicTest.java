@@ -1,6 +1,6 @@
 package com.switcherapi.client;
 
-import com.switcherapi.Switchers;
+import com.switcherapi.SwitchersBase;
 import com.switcherapi.client.model.SwitcherRequest;
 import com.switcherapi.fixture.MockWebServerHelper;
 import mockwebserver3.QueueDispatcher;
@@ -22,17 +22,14 @@ class SwitcherBasicTest extends MockWebServerHelper {
 	@BeforeAll
 	static void setup() throws IOException {
 		setupMockServer();
-
-		Switchers.loadProperties(); // Load default properties from resources
-		Switchers.configure(ContextBuilder.builder() // Override default properties
+		
+		SwitchersBase.configure(ContextBuilder.builder(true)
+				.context(SwitchersBase.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
-				.local(false)
-				.snapshotLocation(null)
-				.snapshotSkipValidation(false)
-				.environment(DEFAULT_ENV)
-				.silentMode(null)
-				.snapshotAutoLoad(false)
-				.snapshotAutoUpdateInterval(null));
+				.domain("domain")
+				.apiKey("apiKey")
+				.component("component")
+				.environment(DEFAULT_ENV));
     }
 	
 	@AfterAll
@@ -44,7 +41,7 @@ class SwitcherBasicTest extends MockWebServerHelper {
 	void resetSwitcherContextState() {
 		((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 
-		Switchers.initializeClient();
+		SwitchersBase.initializeClient();
 	}
 	
 	@Test
@@ -56,7 +53,7 @@ class SwitcherBasicTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("true", false));
 		
 		//test
-		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		assertTrue(switcher.isItOn());
 	}
 	
@@ -69,7 +66,7 @@ class SwitcherBasicTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("false", false));
 		
 		//test
-		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		assertFalse(switcher.isItOn());
 	}
 

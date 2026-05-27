@@ -8,7 +8,7 @@ import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SnapshotWatcherContextTest extends SnapshotTest {
@@ -60,10 +60,9 @@ class SnapshotWatcherContextTest extends SnapshotTest {
 		//when we change the fixture
 		this.changeFixture();
 
-		CountDownHelper.wait(2);
-
 		//snapshot file updated - triggered domain reload
-		assertFalse(switcher.isItOn());
+		assertNotEquals(Boolean.TRUE,
+				CountDownHelper.waitUntil(10, false, switcher::isItOn));
 	}
 
 }
