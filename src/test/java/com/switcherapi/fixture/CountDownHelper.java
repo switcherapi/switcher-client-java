@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 public class CountDownHelper {
 
@@ -21,5 +22,17 @@ public class CountDownHelper {
         } catch (InterruptedException e) {
             logger.error(e.getMessage(), e);
         }
+    }
+
+    public static <T> T waitUntil(int timeout, T expected, Supplier<T> condition) {
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTime < timeout * 1000L) {
+            T result = condition.get();
+            if (expected.equals(result)) {
+                return result;
+            }
+            wait(1);
+        }
+        return null;
     }
 }

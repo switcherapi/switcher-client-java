@@ -66,10 +66,9 @@ import static com.switcherapi.client.remote.Constants.DEFAULT_TIMEOUT;
  * public void configureClient() {
  *  	Features.configure(ContextBuilder.builder()
  *   		.context(Features.class.getName())
- *   		.apiKey("API_KEY")
- *   		.domain("Playground")
- *   		.component("switcher-playground")
- *   		.environment("default"));
+ *   		.apiKey("[API_KEY]")
+ *   		.domain("[DOMAIN_NAME]")
+ *   		.component("[COMPONENT_NAME]"));
  *
  *  	Features.initializeClient();
  * }

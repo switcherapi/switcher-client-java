@@ -56,7 +56,7 @@ class SwitcherConfigNativeTest extends MockWebServerHelper {
 		assertTrue(SwitchersBaseNative.getSwitcher(SwitchersBaseNative.USECASE11).isItOn());
 		assertEquals("switcher-client", context.component);
 		assertEquals("switcher-domain", context.domain);
-		assertEquals("[API_KEY]", context.apikey);
+		assertEquals("apiKey", context.apikey);
 		assertEquals("http://localhost:3000", context.url);
 		assertEquals("fixture1", context.environment);
 	}

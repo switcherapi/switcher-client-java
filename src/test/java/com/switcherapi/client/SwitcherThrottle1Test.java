@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static com.switcherapi.client.remote.Constants.DEFAULT_ENV;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SwitcherThrottle1Test extends MockWebServerHelper {
@@ -23,9 +23,9 @@ class SwitcherThrottle1Test extends MockWebServerHelper {
 		SwitchersBase.configure(ContextBuilder.builder(true)
 				.context(SwitchersBase.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
-				.apiKey("TEST_API_KEY")
-				.domain("TEST_DOMAIN")
-				.component("TEST_COMPONENT")
+				.apiKey("apiKey")
+				.domain("domain")
+				.component("component")
 				.environment(DEFAULT_ENV));
 
 		SwitchersBase.initializeClient();
@@ -58,8 +58,8 @@ class SwitcherThrottle1Test extends MockWebServerHelper {
 			assertTrue(switcher.isItOn());
 		}
 
-		CountDownHelper.wait(1);
-		assertFalse(switcher.isItOn());
+		assertEquals(Boolean.FALSE,
+				CountDownHelper.waitUntil(10, false, switcher::isItOn));
 	}
 
 }

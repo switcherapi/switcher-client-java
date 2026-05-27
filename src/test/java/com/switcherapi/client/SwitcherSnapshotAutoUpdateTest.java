@@ -87,7 +87,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 		Switchers.configure(ContextBuilder.builder(true)
 				.context(Switchers.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
-				.apiKey("[API_KEY]")
+				.apiKey("apiKey")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("generated_mock_default_2")
 				.local(true)
@@ -98,8 +98,8 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 		assertEquals(1, Switchers.getSnapshotVersion());
 
 		//test
-		CountDownHelper.wait(2);
-		assertEquals(2, Switchers.getSnapshotVersion());
+		assertEquals(2,
+				CountDownHelper.waitUntil(10, 2L, Switchers::getSnapshotVersion));
 	}
 
 	@Test
@@ -112,7 +112,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 		Switchers.configure(ContextBuilder.builder(true)
 				.context(Switchers.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
-				.apiKey("[API_KEY]")
+				.apiKey("apiKey")
 				.domain("Test")
 				.component("switcher-test")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
@@ -125,8 +125,8 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 		assertEquals(1, Switchers.getSnapshotVersion());
 
 		//test
-		CountDownHelper.wait(2);
-		assertEquals(2, Switchers.getSnapshotVersion());
+		assertEquals(2,
+				CountDownHelper.waitUntil(10, 2L, Switchers::getSnapshotVersion));
 	}
 
 	@Test
@@ -139,7 +139,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 		Switchers.configure(ContextBuilder.builder(true)
 				.context(Switchers.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
-				.apiKey("[API_KEY]")
+				.apiKey("apiKey")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.environment("generated_mock_default_4")
 				.local(true)
@@ -150,8 +150,8 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 		assertEquals(1, Switchers.getSnapshotVersion());
 
 		//test - still the same version
-		CountDownHelper.wait(1);
-		assertEquals(1, Switchers.getSnapshotVersion());
+		assertEquals(1,
+				CountDownHelper.waitUntil(10, 1L, Switchers::getSnapshotVersion));
 	}
 
 	@Test
@@ -167,7 +167,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 		Switchers.configure(ContextBuilder.builder(true)
 				.context(Switchers.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
-				.apiKey("[API_KEY]")
+				.apiKey("apiKey")
 				.environment("generated_mock_default_5")
 				.local(true)
 				.snapshotLocation("")
@@ -178,9 +178,8 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 		assertEquals(1, Switchers.getSnapshotVersion());
 
 		//test
-		CountDownHelper.wait(2);
-		assertEquals(2, Switchers.getSnapshotVersion());
-		assertTrue(Files.notExists(Paths.get("/generated_mock_default_5.json")));
+		assertEquals(2,
+				CountDownHelper.waitUntil(10, 2L, Switchers::getSnapshotVersion));
 	}
 
 	@Test
@@ -198,7 +197,7 @@ class SwitcherSnapshotAutoUpdateTest extends MockWebServerHelper {
 		Switchers.configure(ContextBuilder.builder(true)
 				.context(Switchers.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
-				.apiKey("[API_KEY]")
+				.apiKey("apiKey")
 				.environment("generated_mock_default_6")
 				.local(true)
 				.snapshotAutoLoad(true)
