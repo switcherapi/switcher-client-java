@@ -123,9 +123,9 @@ Create `src/main/resources/switcherapi.properties`:
 # Required Configuration
 switcher.context=com.example.MyAppFeatures
 switcher.url=https://api.switcherapi.com
-switcher.apikey=YOUR_API_KEY
-switcher.component=my-application
-switcher.domain=MY_DOMAIN
+switcher.apikey=[API_KEY]
+switcher.component=[COMPONENT_NAME]
+switcher.domain=[DOMAIN_NAME}
 
 # Optional Configuration
 switcher.environment=default
@@ -188,10 +188,10 @@ public class MyAppFeatures extends SwitcherContextBase {
     static {
         configure(ContextBuilder.builder()
             .context(MyAppFeatures.class.getName())
-            .apiKey("YOUR_API_KEY")
+            .apiKey("[API_KEY]")
             .url("https://api.switcherapi.com")
-            .domain("MY_DOMAIN")
-            .component("my-application")
+            .domain("[DOMAIN_NAME]")
+            .component("[COMPONENT_NAME]")
             .environment("default"));
         
         initializeClient();
@@ -337,9 +337,9 @@ Default mode that communicates directly with Switcher API.
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
     .url("https://api.switcherapi.com")
-    .apiKey("YOUR_API_KEY")
-    .domain("MY_DOMAIN")
-    .component("my-app"));
+    .apiKey("[API_KEY]")
+    .domain("[DOMAIN_NAME]")
+    .component("[COMPONENT_NAME]"));
 
 MyAppFeatures.initializeClient();
 ```
@@ -382,12 +382,12 @@ switcher.forceRemote().isItOn();
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
     .url("https://api.switcherapi.com")
-    .apiKey("YOUR_API_KEY")
-    .domain("MY_DOMAIN")
+    .apiKey("[API_KEY]")
+    .domain("[DOMAIN_NAME]")
     .local(true)
     .snapshotAutoLoad(true)
     .snapshotAutoUpdateInterval("30s")  // Check for updates every 30 seconds
-    .component("my-app"));
+    .component("[COMPONENT_NAME]"));
 
 MyAppFeatures.initializeClient();
 
@@ -418,10 +418,10 @@ Here is an example - in-memory snapshot with auto-update every 30 seconds:
 ```java
 MyAppFeatures.configure(ContextBuilder.builder()
     .context(MyAppFeatures.class.getName())
-    .apiKey("YOUR_API_KEY")
+    .apiKey("[API_KEY]")
     .url("https://api.switcherapi.com")
-    .domain("MY_DOMAIN")
-    .component("my-application")
+    .domain("[DOMAIN_NAME")
+    .component("[COMPONENT_NAME]")
     .silentMode("5m")
     .snapshotAutoUpdateInterval("30s")
 );

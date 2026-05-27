@@ -22,9 +22,9 @@ class SwitcherThrottle2Test extends MockWebServerHelper {
 		SwitchersBase.configure(ContextBuilder.builder(true)
 				.context(SwitchersBase.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
-				.apiKey("TEST_API_KEY")
-				.domain("TEST_DOMAIN")
-				.component("TEST_COMPONENT")
+				.apiKey("apiKey")
+				.domain("domain")
+				.component("component")
 				.environment(DEFAULT_ENV));
 
 		SwitchersBase.initializeClient();

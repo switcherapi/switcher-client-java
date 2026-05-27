@@ -1,6 +1,6 @@
 package com.switcherapi.client;
 
-import com.switcherapi.Switchers;
+import com.switcherapi.SwitchersBase;
 import com.switcherapi.client.model.SwitcherBuilder;
 import com.switcherapi.client.model.SwitcherRequest;
 import com.switcherapi.client.model.SwitcherResult;
@@ -21,33 +21,30 @@ import static org.junit.jupiter.api.Assertions.*;
 class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 
 	private boolean authTokenGenerated = false;
-	
+
 	@BeforeAll
 	static void setup() throws IOException {
 		setupMockServer();
 
-		Switchers.loadProperties(); // Load default properties from resources
-		Switchers.configure(ContextBuilder.builder() // Override default properties
+		SwitchersBase.configure(ContextBuilder.builder(true)
+				.context(SwitchersBase.class.getName())
 				.url(String.format("http://localhost:%s", mockBackEnd.getPort()))
-				.local(false)
-				.snapshotLocation(null)
-				.snapshotSkipValidation(false)
-				.environment(DEFAULT_ENV)
-				.silentMode(null)
-				.snapshotAutoLoad(false)
-				.snapshotAutoUpdateInterval(null));
+				.domain("domain")
+				.apiKey("apiKey")
+				.component("component")
+				.environment(DEFAULT_ENV));
     }
-	
+
 	@AfterAll
 	static void tearDown() {
 		tearDownMockServer();
     }
-	
+
 	@BeforeEach
 	void resetSwitcherContextState() {
 		((QueueDispatcher) mockBackEnd.getDispatcher()).clear();
 
-		Switchers.initializeClient();
+		SwitchersBase.initializeClient();
 	}
 
 	@Test
@@ -59,7 +56,7 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("true", "Success"));
 
 		//test
-		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		SwitcherResult response = switcher.submit();
 
 		assertTrue(response.isItOn());
@@ -75,7 +72,7 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse("false", "Strategy VALUE_VALIDATION does not agree"));
 
 		//test
-		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		SwitcherResult response = switcher
 				.checkValue("value")
 				.checkNumeric("10")
@@ -87,8 +84,8 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 
 	@Test
 	void shouldFlushStrategyInputs() {
-		SwitcherBuilder switcherBuilder = Switchers
-				.getSwitcher(Switchers.REMOTE_KEY)
+		SwitcherBuilder switcherBuilder = SwitchersBase
+				.getSwitcher(SwitchersBase.USECASE11)
 				.checkValue("value")
 				.checkNumeric("10");
 
@@ -111,7 +108,7 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse(new MetadataSample("123")));
 
 		//test
-		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		SwitcherResult response = switcher.submit();
 
 		assertEquals("123", response.getMetadata(MetadataSample.class).getTransactionId());
@@ -126,7 +123,7 @@ class SwitcherBasicCriteriaResponseTest extends MockWebServerHelper {
 		givenResponse(generateCriteriaResponse(new MetadataErrorSample("123")));
 
 		//test
-		SwitcherRequest switcher = Switchers.getSwitcher(Switchers.REMOTE_KEY);
+		SwitcherRequest switcher = SwitchersBase.getSwitcher(SwitchersBase.USECASE11);
 		SwitcherResult response = switcher.submit();
 
 		assertNotNull(response.getMetadata(MetadataSample.class));

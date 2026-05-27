@@ -16,9 +16,9 @@ class SnapshotWatcherErrorTest {
 		SwitchersBase.configure(ContextBuilder.builder(true)
 			.context(SwitchersBase.class.getName())
 			.url("https://api.switcherapi.com")
-			.apiKey("[API_KEY]")
-			.domain("Test")
-			.component("switcher-test")
+			.apiKey("apiKey")
+			.domain("domain")
+			.component("component")
 			.local(false));
 
 		SwitchersBase.initializeClient();

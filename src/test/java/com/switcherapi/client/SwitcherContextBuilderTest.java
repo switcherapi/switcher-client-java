@@ -24,9 +24,9 @@ class SwitcherContextBuilderTest {
 		configure(ContextBuilder.builder(true)
 				.context(SwitchersBase.class.getName())
 				.url("http://localhost:3000")
-				.apiKey("API_KEY")
-				.domain("switcher-domain")
-				.component("switcher-client")
+				.apiKey("apiKey")
+				.domain("domain")
+				.component("component")
 				.environment(DEFAULT_ENV)
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.local(true));
@@ -44,9 +44,9 @@ class SwitcherContextBuilderTest {
 		configure(ContextBuilder.builder(true)
 				.context(SwitchersBase.class.getName())
 				.url("http://localhost:3000")
-				.apiKey("API_KEY")
-				.domain("switcher-domain")
-				.component("switcher-client")
+				.apiKey("apiKey")
+				.domain("domain")
+				.component("component")
 				.environment(DEFAULT_ENV)
 				.snapshotLocation(null)
 				.local(true));
@@ -61,7 +61,7 @@ class SwitcherContextBuilderTest {
 		//given
 		configure(ContextBuilder.builder(true)
 				.context(SwitchersBase.class.getName())
-				.domain("switcher-domain")
+				.domain("domain")
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.local(true));
 
