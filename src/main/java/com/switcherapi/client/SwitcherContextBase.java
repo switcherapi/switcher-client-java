@@ -229,11 +229,13 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * Register Switcher Keys based on context properties
 	 */
 	private static void registerSwitcherKeys() {
-		if (Objects.nonNull(contextBase)) {
+		final String contextLocation = contextStr(ContextKey.CONTEXT_LOCATION);
+
+		if (Objects.nonNull(contextBase) && contextBase.getClass().getName().equals(contextLocation)) {
 			registerSwitcherKey(contextBase.getClass().getFields());
 		} else {
 			try {
-				final Class<?> clazz = Class.forName(contextStr(ContextKey.CONTEXT_LOCATION));
+				final Class<?> clazz = Class.forName(contextLocation);
 				registerSwitcherKey(clazz.getFields());
 			} catch(ClassNotFoundException e){
 				throw new SwitcherContextException(e.getMessage());
