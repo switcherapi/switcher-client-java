@@ -6,8 +6,6 @@ import com.switcherapi.client.exception.SwitcherContextException;
 import com.switcherapi.client.exception.SwitcherSnapshotLoadException;
 import com.switcherapi.client.model.ContextKey;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,9 +14,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junitpioneer.jupiter.ClearEnvironmentVariable;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.nio.file.Paths;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.Properties;
 import java.util.stream.Stream;
 
@@ -54,10 +54,14 @@ class SwitcherUtilsTest {
 				SwitcherContext::initializeClient);
 	}
 	
+	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
+	private static final String BASE_DATE = "2019-12-10 10:00:00";
+
 	@Test
-	void shouldReturnInvalidFormat() throws ParseException {
-		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
-		assertThrows(Exception.class, () -> SwitcherUtils.addTimeDuration("1w", date1));
+	void shouldReturnInvalidFormat() {
+		Instant instant = LocalDateTime.parse(BASE_DATE, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+				.toInstant(ZoneOffset.UTC);
+		assertThrows(Exception.class, () -> SwitcherUtils.addTimeDuration("1w", instant));
 	}
 	
 	/**
@@ -77,10 +81,11 @@ class SwitcherUtilsTest {
 	
 	@ParameterizedTest()
 	@MethodSource("timeArguments")
-	void shouldAddTime(String time, String expectedValue) throws ParseException {
-		Date date1 = DateUtils.parseDate("2019-12-10 10:00:00", "yyyy-MM-dd HH:mm:ss");
-		date1 = SwitcherUtils.addTimeDuration(time, date1);
-		String dateString = DateFormatUtils.format(date1, "yyyy-MM-dd HH:mm:ss");
+	void shouldAddTime(String time, String expectedValue) {
+		Instant instant = LocalDateTime.parse(BASE_DATE, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+				.toInstant(ZoneOffset.UTC);
+		Instant result = SwitcherUtils.addTimeDuration(time, instant);
+		String dateString = DATE_FORMAT.format(result);
 		assertEquals(expectedValue, dateString);
 	}
 

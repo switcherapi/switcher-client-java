@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -147,7 +147,7 @@ public class ClientRemoteService implements ClientRemote {
 			final AuthResponse response = new AuthResponse();
 			
 			response.setToken(ContextKey.SILENT_MODE.getParam());
-			response.setExp(SwitcherUtils.addTimeDuration(addValue, new Date()).getTime()/1000);
+			response.setExp(SwitcherUtils.addTimeDuration(addValue, Instant.now()).getEpochSecond());
 			this.authResponse = response;
 		}
 	}
