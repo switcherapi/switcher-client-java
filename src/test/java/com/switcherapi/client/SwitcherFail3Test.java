@@ -16,7 +16,7 @@ class SwitcherFail3Test {
 	@Test
 	void shouldNotRegisterSwitcher_nullKey() {
 		//given
-		TestCaseNull.configure(ContextBuilder.builder()
+		TestCaseNull.configure(ContextBuilder.builder(true)
 				.context(TestCaseNull.class.getName())
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.local(true));
@@ -30,7 +30,7 @@ class SwitcherFail3Test {
 	@Test
 	void shouldNotRegisterSwitcher_emptyKey() {
 		//given
-		TestCaseEmpty.configure(ContextBuilder.builder()
+		TestCaseEmpty.configure(ContextBuilder.builder(true)
 				.context(TestCaseEmpty.class.getName())
 				.snapshotLocation(SNAPSHOTS_LOCAL)
 				.local(true));
