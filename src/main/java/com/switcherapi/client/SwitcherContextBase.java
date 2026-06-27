@@ -254,7 +254,9 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(SwitcherKey.class)) {
 				try {
-					switcherKeys.add(field.get(null).toString());
+					final String keyFound = field.get(null).toString();
+					SwitcherUtils.debug(logger, "Found Switcher Key: {} in field: {}", keyFound, field.getName());
+					switcherKeys.add(keyFound);
 				} catch (Exception e) {
 					throw new SwitcherContextException(
 							String.format("Error retrieving Switcher Key value from field %s", field.getName()));
