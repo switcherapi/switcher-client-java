@@ -249,6 +249,8 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	private static void registerSwitcherKey(Field[] fields) {
 		Set<String> switcherKeys = new HashSet<>();
 
+		SwitcherUtils.debug(logger, "Registering Switcher Keys from context: {}", contextStr(ContextKey.CONTEXT_LOCATION));
+		SwitcherUtils.debug(logger, "Found {} fields in context class", fields.length);
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(SwitcherKey.class)) {
 				try {
