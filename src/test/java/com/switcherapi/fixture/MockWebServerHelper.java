@@ -12,7 +12,7 @@ import mockwebserver3.MockWebServer;
 import mockwebserver3.QueueDispatcher;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -50,7 +50,7 @@ public class MockWebServerHelper {
     protected MockResponse generateMockAuth(int secondsAhead) {
         MockResponse.Builder builder = new MockResponse.Builder();
         builder.body(String.format("{ \"token\": \"%s\", \"exp\": \"%s\" }",
-                "mocked_token", SwitcherUtils.addTimeDuration(secondsAhead + "s", new Date()).getTime()/1000));
+                "mocked_token", SwitcherUtils.addTimeDuration(secondsAhead + "s", Instant.now()).getEpochSecond()));
         builder.addHeader("Content-Type", "application/json");
         return builder.build();
     }
