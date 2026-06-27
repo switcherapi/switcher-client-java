@@ -7,15 +7,17 @@ import com.switcherapi.client.model.Entry;
 import com.switcherapi.client.model.EntryOperation;
 import com.switcherapi.client.model.StrategyValidator;
 import com.switcherapi.client.model.criteria.StrategyConfig;
-import org.apache.commons.lang3.time.DateUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class TimeValidator extends DateTimeValidator {
 
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
 	@Override
 	public StrategyValidator getType() {
@@ -27,40 +29,37 @@ public class TimeValidator extends DateTimeValidator {
 			SwitcherInvalidTimeFormat, SwitcherInvalidOperationInputException {
 
 		try {
-			final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			final String today = format.format(new Date());
+			final String today = LocalDate.now(ZoneId.systemDefault()).toString();
 			return selectTimeOperationCase(strategyConfig, switcherInput, today);
-		} catch (ParseException e) {
+		} catch (DateTimeParseException e) {
 			throw new SwitcherInvalidTimeFormat(strategyConfig.getStrategy(), e);
 		}
 
 	}
 
-	private boolean selectTimeOperationCase(final StrategyConfig strategyConfig, final Entry switcherInput, final String today)
-			throws ParseException {
-		Date stgDate;
-		Date stgDate2;
-		Date inputDate;
+	private boolean selectTimeOperationCase(final StrategyConfig strategyConfig, final Entry switcherInput, final String today) {
+		LocalDateTime stgDate;
+		LocalDateTime stgDate2;
+		LocalDateTime inputDate;
 
 		switch (strategyConfig.getEntryOperation()) {
 		case LOWER:
-			stgDate = DateUtils.parseDate(getFullTime(today, strategyConfig.getValues()[0]), DATE_FORMAT);
-			inputDate = DateUtils.parseDate(getFullTime(today, switcherInput.getInput()), DATE_FORMAT);
+			stgDate = LocalDateTime.parse(getFullTime(today, strategyConfig.getValues()[0]), FORMATTER);
+			inputDate = LocalDateTime.parse(getFullTime(today, switcherInput.getInput()), FORMATTER);
 
-			return inputDate.before(stgDate);
+			return inputDate.isBefore(stgDate);
 		case GREATER:
-			stgDate = DateUtils.parseDate(getFullTime(today, strategyConfig.getValues()[0]), DATE_FORMAT);
-			inputDate = DateUtils.parseDate(getFullTime(today, switcherInput.getInput()), DATE_FORMAT);
+			stgDate = LocalDateTime.parse(getFullTime(today, strategyConfig.getValues()[0]), FORMATTER);
+			inputDate = LocalDateTime.parse(getFullTime(today, switcherInput.getInput()), FORMATTER);
 
-			return inputDate.after(stgDate);
+			return inputDate.isAfter(stgDate);
 		case BETWEEN:
 			if (strategyConfig.getValues().length == 2) {
-				stgDate = DateUtils.parseDate(getFullTime(today, strategyConfig.getValues()[0]), DATE_FORMAT);
-				stgDate2 = DateUtils.parseDate(getFullTime(today, strategyConfig.getValues()[1]), DATE_FORMAT);
-				inputDate = DateUtils.parseDate(getFullTime(today, switcherInput.getInput()),
-						DATE_FORMAT);
+				stgDate = LocalDateTime.parse(getFullTime(today, strategyConfig.getValues()[0]), FORMATTER);
+				stgDate2 = LocalDateTime.parse(getFullTime(today, strategyConfig.getValues()[1]), FORMATTER);
+				inputDate = LocalDateTime.parse(getFullTime(today, switcherInput.getInput()), FORMATTER);
 
-				return inputDate.after(stgDate) && inputDate.before(stgDate2);
+				return inputDate.isAfter(stgDate) && inputDate.isBefore(stgDate2);
 			}
 
 			throw new SwitcherInvalidOperationInputException(EntryOperation.BETWEEN.name());
