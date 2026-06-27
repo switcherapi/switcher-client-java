@@ -7,9 +7,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -28,17 +29,17 @@ public class SwitcherUtils {
 
 	private SwitcherUtils() {}
 	
-	public static Date addTimeDuration(final String addValue, final Date date) 
+	public static Instant addTimeDuration(final String addValue, final Instant instant)
 			throws SwitcherInvalidDateTimeArgumentException {
 		switch (addValue.charAt(addValue.length() - 1)) {
 			case 's':
-				return DateUtils.addSeconds(date, Integer.parseInt(addValue.replace(DURATION_UNIT[0], StringUtils.EMPTY)));
+				return instant.plus(Integer.parseInt(addValue.replace(DURATION_UNIT[0], StringUtils.EMPTY)), ChronoUnit.SECONDS);
 			case 'm':
-				return DateUtils.addMinutes(date, Integer.parseInt(addValue.replace(DURATION_UNIT[1], StringUtils.EMPTY)));
+				return instant.plus(Integer.parseInt(addValue.replace(DURATION_UNIT[1], StringUtils.EMPTY)), ChronoUnit.MINUTES);
 			case 'h':
-				return DateUtils.addHours(date, Integer.parseInt(addValue.replace(DURATION_UNIT[2], StringUtils.EMPTY)));
+				return instant.plus(Integer.parseInt(addValue.replace(DURATION_UNIT[2], StringUtils.EMPTY)), ChronoUnit.HOURS);
 			case 'd':
-				return DateUtils.addDays(date, Integer.parseInt(addValue.replace(DURATION_UNIT[3], StringUtils.EMPTY)));
+				return instant.plus(Integer.parseInt(addValue.replace(DURATION_UNIT[3], StringUtils.EMPTY)), ChronoUnit.DAYS);
 			default:
 				throw new SwitcherInvalidDateTimeArgumentException(addValue);
 		}
