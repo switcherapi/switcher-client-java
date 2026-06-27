@@ -229,11 +229,13 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	 * Register Switcher Keys based on context properties
 	 */
 	private static void registerSwitcherKeys() {
-		if (Objects.nonNull(contextBase)) {
+		final String contextLocation = contextStr(ContextKey.CONTEXT_LOCATION);
+
+		if (Objects.nonNull(contextBase) && contextBase.getClass().getName().equals(contextLocation)) {
 			registerSwitcherKey(contextBase.getClass().getFields());
 		} else {
 			try {
-				final Class<?> clazz = Class.forName(contextStr(ContextKey.CONTEXT_LOCATION));
+				final Class<?> clazz = Class.forName(contextLocation);
 				registerSwitcherKey(clazz.getFields());
 			} catch(ClassNotFoundException e){
 				throw new SwitcherContextException(e.getMessage());
@@ -249,10 +251,14 @@ public abstract class SwitcherContextBase extends SwitcherConfig {
 	private static void registerSwitcherKey(Field[] fields) {
 		Set<String> switcherKeys = new HashSet<>();
 
+		SwitcherUtils.debug(logger, "Registering Switcher Keys from context: {}", contextStr(ContextKey.CONTEXT_LOCATION));
+		SwitcherUtils.debug(logger, "Found {} fields in context class", fields.length);
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(SwitcherKey.class)) {
 				try {
-					switcherKeys.add(field.get(null).toString());
+					final String keyFound = field.get(null).toString();
+					SwitcherUtils.debug(logger, "Found Switcher Key: {} in field: {}", keyFound, field.getName());
+					switcherKeys.add(keyFound);
 				} catch (Exception e) {
 					throw new SwitcherContextException(
 							String.format("Error retrieving Switcher Key value from field %s", field.getName()));
