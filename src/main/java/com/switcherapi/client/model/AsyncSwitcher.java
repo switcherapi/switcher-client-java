@@ -31,7 +31,7 @@ public class AsyncSwitcher {
 	private long nextRun = 0;
 
 	public AsyncSwitcher(final Switcher switcher, long delay) {
-		this.executorService = Executors.newCachedThreadPool(r -> {
+		this.executorService = Executors.newSingleThreadExecutor(r -> {
 			Thread thread = new Thread(r);
 			thread.setName(SWITCHER_ASYNC_WORKER.toString());
 			thread.setDaemon(true);
@@ -47,14 +47,19 @@ public class AsyncSwitcher {
 	 * Switcher result for the Switcher executions map.
 	 */
 	public void execute() {
-		if (logger.isDebugEnabled()) {
-			SwitcherUtils.debug(logger, "nextRun: {} - currentTimeMillis: {}", nextRun, System.currentTimeMillis());
-		}
-		
-		if (nextRun < System.currentTimeMillis()) {
-			SwitcherUtils.debug(logger, "Running AsyncSwitcher");
+		final long currentTime = System.currentTimeMillis();
+		final boolean debugEnabled = logger.isDebugEnabled();
 
-			this.nextRun = System.currentTimeMillis() + this.delay;
+		if (debugEnabled) {
+			SwitcherUtils.debug(logger, "nextRun: {} - currentTimeMillis: {}", nextRun, currentTime);
+		}
+
+		if (nextRun < currentTime) {
+			if (debugEnabled) {
+				SwitcherUtils.debug(logger, "Running AsyncSwitcher");
+			}
+
+			this.nextRun = currentTime + this.delay;
 			this.executorService.submit(this::run);
 		}
 	}
