@@ -8,7 +8,7 @@ import com.switcherapi.client.test.SwitcherBypass;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -83,18 +83,19 @@ public final class SwitcherRequest extends SwitcherBuilder {
 
 	@Override
 	public SwitcherResult submit() throws SwitcherException {
-		if (SwitcherBypass.getBypass().containsKey(switcherKey)) {
-			return SwitcherBypass.getBypass().get(switcherKey).buildFromSwitcher(switcherKey, entry);
+		final Map<String, SwitcherResult> bypass = SwitcherBypass.getBypass();
+		if (!bypass.isEmpty() && bypass.containsKey(switcherKey)) {
+			return bypass.get(switcherKey).buildFromSwitcher(switcherKey, entry);
 		}
 
 		if (canUseAsync()) {
-			if (Objects.isNull(asyncSwitcher)) {
+			if (asyncSwitcher == null) {
 				asyncSwitcher = new AsyncSwitcher(this, super.delay);
 			}
 
 			asyncSwitcher.execute();
 			final SwitcherResult response = executionsMap.get(entry);
-			if (Objects.nonNull(response)) {
+			if (response != null) {
 				return response;
 			}
 		}
