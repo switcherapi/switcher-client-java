@@ -512,7 +512,7 @@ void testWithConditions() {
 }
 ```
 
-### JUnit 5 Integration
+### JUnit Jupiter Integration
 
 #### Single Switcher Test
 
