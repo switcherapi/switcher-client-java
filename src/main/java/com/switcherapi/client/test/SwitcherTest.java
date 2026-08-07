@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * It uses "@Execution(ExecutionMode.SAME_THREAD)" to prevent Switcher race condition when setting up the mock.
  *
  * <p>
- * <b>Requires JUnit 5 Jupiter</b>
+ * <b>Requires JUnit Jupiter</b>
  *
  * @author Roger Floriano (petruki)
  */
