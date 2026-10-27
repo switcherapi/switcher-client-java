@@ -234,6 +234,8 @@
 				<sonar.organization>switcherapi</sonar.organization>
 				<sonar.projectKey>switcherapi_switcher-client</sonar.projectKey>
 				<sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
+				<sonar.java.binaries>${project.build.outputDirectory}</sonar.java.binaries>
+				<sonar.java.test.binaries>${project.build.testOutputDirectory}</sonar.java.test.binaries>
 			</properties>
 			<activation>
 				<activeByDefault>false</activeByDefault>
