@@ -39,18 +39,18 @@ class SwitcherThrottle2Test extends MockWebServerHelper {
 	void shouldRetrieveNewResponse_whenStrategyInputChanged() {
 		// Initial remote call
 		givenResponse(generateMockAuth(10)); //auth
-		givenResponse(generateCriteriaResponse("true", false)); //criteria - sync (cached)
-		givenResponse(generateCriteriaResponse("false", false)); //criteria - async (cached)
+		givenResponse(generateCriteriaResponse("true", false)); //criteria - sync
 
 		// Throttle period - should use cache
-		givenResponse(generateCriteriaResponse("false", false)); //criteria - async after 1 sec (background)
+		givenResponse(generateCriteriaResponse("true", false)); //criteria - async (cached)
+		givenResponse(generateCriteriaResponse("false", false)); //criteria - async after 1.5 sec (background)
 
 		//test
 		SwitcherBuilder switcher = SwitchersBase
 				.getSwitcher(SwitchersBase.USECASE11)
 				.flushExecutions()
 				.resetInputs()
-				.throttle(1000);
+				.throttle(1500);
 
 		for (int i = 0; i < 100; i++) {
 			assertTrue(switcher.checkValue("value").isItOn());

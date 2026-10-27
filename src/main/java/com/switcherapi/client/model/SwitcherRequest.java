@@ -141,7 +141,7 @@ public final class SwitcherRequest extends SwitcherBuilder {
 	}
 
 	private boolean canUseAsync() {
-		return super.delay > 0 && !this.executionsMap.isEmpty();
+		return super.delay > 0L && !this.executionsMap.isEmpty();
 	}
 
 	@Override
