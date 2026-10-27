@@ -186,7 +186,6 @@
 				<sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
 				<sonar.java.binaries>${project.build.outputDirectory}</sonar.java.binaries>
 				<sonar.java.test.binaries>${project.build.testOutputDirectory}</sonar.java.test.binaries>
-				<sonar.java.libraries>${settings.localRepository}/**/*.jar</sonar.java.libraries>
 			</properties>
 			<activation>
 				<activeByDefault>false</activeByDefault>
