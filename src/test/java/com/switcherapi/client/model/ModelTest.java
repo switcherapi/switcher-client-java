@@ -19,7 +19,7 @@ class ModelTest {
 	
 	@Test
 	void testCriteriaPackage() {
-		String[] strategyValues = new String[] { "Value" };
+		String[] strategyValues = { "Value" };
 		final StrategyConfig strategyConfig = new StrategyConfig(
 				"Strategy",
 				"Operation",
@@ -33,8 +33,8 @@ class ModelTest {
 		assertSame("Strategy", strategyConfig.getStrategy());
 		assertSame(strategyValues, strategyConfig.getValues());
 
-		StrategyConfig[] strategies = new StrategyConfig[] {strategyConfig};
-		String[] configComponents = new String[] { "Component" };
+		StrategyConfig[] strategies = {strategyConfig};
+		String[] configComponents = { "Component" };
 		Relay relay = new Relay(RelayType.NOTIFICATION.name(), false);
 		final Config config = new Config(
 				"Key",
@@ -50,7 +50,7 @@ class ModelTest {
 		assertSame(configComponents, config.getComponents());
 		assertSame(strategies, config.getStrategies());
 
-		Config[] configs = new Config[] { config };
+		Config[] configs = { config };
 		final Group group = new Group(
 				"Name",
 				"Description",
@@ -62,7 +62,7 @@ class ModelTest {
 		assertSame("Name", group.getName());
 		assertSame(configs, group.getConfig());
 
-		Group[] groups = new Group[] { group };
+		Group[] groups = { group };
 		final Domain domain = new Domain(
 				"Name",
 				"Description",
